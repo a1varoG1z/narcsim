@@ -30,23 +30,30 @@ Estado del proyecto tras la primera versión jugable (MVP). Marcado ✅ lo imple
 - ✅ **Eventos históricos guionizados** (`js/scriptedEvents.js`): fechas reales que impactan la partida una sola vez — el asesinato de Kiki Camarena (1985) dispara una ofensiva binacional contra Guadalajara; la guerra de Escobar contra la extradición (1989) y el "Proceso 8.000" contra Cali (1995); las muertes de Amado Carrillo Fuentes (1997), Arturo Beltrán Leyva (2009), Nazario Moreno (2010) y Heriberto Lazcano (2012); y la guerra interna Chapitos vs. La Mayiza en Sinaloa (2024). Si estás jugando exactamente como el personaje afectado, el desenlace es un riesgo del 55% (puedes desafiar tu destino histórico) en vez de una certeza — para los NPC, ocurre tal cual pasó en la realidad.
 - ✅ **Simulador de balance sin interfaz** (`scripts/simulate-balance.mjs`): ejecuta decenas de partidas automáticas por época/cártel para comprobar que el dinero, el ejército, el heat y la tasa de arresto/muerte se mantienen en rangos razonables. Útil para futuros ajustes — ejecútalo con `node scripts/simulate-balance.mjs`.
 
+## Tercera pasada: fugas, expansión, vínculos y partidas múltiples
+
+- ✅ **Ocupar territorios neutrales**: ya no hace falta esperar a fundar un cártel para expandirte a una zona libre — cualquier cártel (jugador o IA) puede intentar ocupar un territorio sin dueño que linde con el suyo, con un coste y una probabilidad de éxito.
+- ✅ **Fuga de prisión jugable**: si tu condena es temporal (no cadena perpetua), puedes intentar fugarte en vez de esperar — la probabilidad depende de tu Sigilo/Astucia y de la corrupción policial de tu cártel; si fracasa, la condena se alarga.
+- ✅ **La fuga de El Chapo de Puente Grande (2001)**: si sigue preso para entonces, escapa tal cual ocurrió en la realidad (o con un 80% de probabilidad si eres tú quien lo interpreta).
+- ✅ **Se corrigió un vacío real**: los personajes de cárteles IA con condena temporal nunca se liberaban (solo se comprobaba la excarcelación del propio jugador). Ahora cualquier personaje sale al cumplir su condena, y si era el líder interino de un cártel, recupera el mando.
+- ✅ **Vínculos personales con tu gente**: cada miembro del cártel tiene un "vínculo contigo" (0-100) que fluctúa con la marcha del cártel (dinero, heat) y que puedes fortalecer activamente desde la pestaña Familia ("Pasar tiempo"). Un vínculo fuerte reduce el riesgo de traición calculado a partir de tus atributos; uno débil lo agrava.
+- ✅ **Partidas múltiples**: puedes tener varias partidas guardadas a la vez (una por combinación de época/cártel/personaje que empieces), elegir cuál continuar o borrar desde el menú principal, en vez de un único hueco de guardado.
+
 ## Pendiente / mejoras futuras
 
 ### Mapa
 - ⬜ Mapa geográficamente preciso (actualmente es una disposición esquemática de territorios con adyacencia aproximada, no coordenadas reales).
-- ⬜ Ocupar territorios neutrales/sin dueño (hoy solo se pueden fundar cárteles nuevos ahí al iniciar partida).
 
 ### Guerras y combate
 - 🟡 Resolución de batallas por turno con ponderación de mando y adyacencia. Pendiente: tácticas, terreno, refuerzos, moral, guerras prolongadas con objetivos concretos (no solo conquista de una plaza).
 - ⬜ Historial/relato detallado de cada guerra (bajas totales, duración, tratados).
 
 ### Familia, romances e intriga
-- 🟡 Romance y genealogía básicos. Pendiente: cortejo con decisiones narrativas, infidelidades, divorcios, rivalidades entre hermanos, tramas de honor/venganza.
-- ⬜ Sistema de amistades/confianza explícito entre miembros del cártel (hoy solo hay "lealtad" derivada de atributos).
-- 🟡 Eventos narrativos únicos para figuras históricas reales: ya cubiertos varios hitos clave (ver "Balance y realismo" arriba). Pendiente: más eventos (la fuga de El Chapo de Puente Grande en 2001, el Proceso 8.000 con más detalle, capturas de los Arellano Félix, etc.) y que algunos ofrezcan una decisión interactiva en vez de solo un riesgo automático.
+- 🟡 Romance, genealogía y vínculos básicos ya implementados. Pendiente: cortejo con decisiones narrativas, infidelidades, divorcios, rivalidades entre hermanos, tramas de honor/venganza.
+- 🟡 Eventos narrativos únicos para figuras históricas reales: ya cubiertos varios hitos clave (ver arriba). Pendiente: más eventos (el Proceso 8.000 con más detalle, capturas de los Arellano Félix, el ascenso del CJNG, etc.) y que algunos ofrezcan una decisión interactiva con varias opciones en vez de un riesgo automático binario.
 
 ### Policía / persecución
-- 🟡 El heat sube/baja y los operativos policiales ya escalan con la notoriedad. Pendiente: mecánica de persecución más visible (barra de "expediente", informantes, redadas planeadas vs. sorpresa), fugas de prisión jugables.
+- 🟡 El heat sube/baja, los operativos policiales escalan con la notoriedad y ya se puede intentar una fuga. Pendiente: mecánica de persecución más visible (barra de "expediente", informantes, redadas planeadas vs. sorpresa), fuga posible incluso desde cadena perpetua (como la extradición/traslados en la vida real).
 
 ### Imagen pública y medios
 - 🟡 Imagen pública como estadística simple. Pendiente: sección de medios dedicada (prensa, corridos, narcocultura, reputación internacional) con decisiones propias.
@@ -60,8 +67,7 @@ Estado del proyecto tras la primera versión jugable (MVP). Marcado ✅ lo imple
 - ⬜ Editor visual de nuevas épocas/escenarios desde la propia interfaz (hoy los `.json` de época se editan a mano).
 
 ### Técnico / calidad de vida
-- ⬜ Múltiples slots de partida guardada (hoy solo hay un slot en `localStorage`).
-- ⬜ Tests automatizados (hoy solo se ha verificado manualmente con Playwright).
+- ⬜ Tests automatizados tipo "unit test" (hoy hay verificación manual con Playwright + el simulador de balance, pero no una suite formal con asserts).
 - ⬜ Accesibilidad (lectores de pantalla, contraste AA completo).
 - ⬜ PWA / instalable en pantalla de inicio del móvil.
 

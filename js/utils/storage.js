@@ -1,9 +1,59 @@
-const SAVE_KEY = "narcosim.save.v1";
+const LEGACY_SAVE_KEY = "narcosim.save.v1";
 const SETTINGS_KEY = "narcosim.settings.v1";
+const SLOTS_INDEX_KEY = "narcosim.slots.index.v1";
+const SLOT_PREFIX = "narcosim.slot.";
 
-export function saveGame(state) {
+function readIndex() {
   try {
-    localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+    return JSON.parse(localStorage.getItem(SLOTS_INDEX_KEY)) || [];
+  } catch {
+    return [];
+  }
+}
+
+function writeIndex(idx) {
+  localStorage.setItem(SLOTS_INDEX_KEY, JSON.stringify(idx));
+}
+
+function migrateLegacySave() {
+  if (readIndex().length || !localStorage.getItem(LEGACY_SAVE_KEY)) return;
+  try {
+    const game = JSON.parse(localStorage.getItem(LEGACY_SAVE_KEY));
+    game.saveSlotId = `slot_migrated_${Date.now().toString(36)}`;
+    localStorage.setItem(SLOT_PREFIX + game.saveSlotId, JSON.stringify(game));
+    writeIndex([{ id: game.saveSlotId, name: `${game.eraName} — partida anterior`, eraName: game.eraName, turn: game.turn, year: game.year, updatedAt: Date.now() }]);
+  } catch (err) {
+    console.error("No se pudo migrar la partida anterior", err);
+  }
+  localStorage.removeItem(LEGACY_SAVE_KEY);
+}
+
+/** Returns save-slot metadata (not the full game state), newest first. */
+export function listSaveSlots() {
+  migrateLegacySave();
+  return readIndex().sort((a, b) => b.updatedAt - a.updatedAt);
+}
+
+export function saveGameToSlot(game, name) {
+  try {
+    if (!game.saveSlotId) {
+      game.saveSlotId = `slot_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+    }
+    if (name) game.saveName = name;
+    localStorage.setItem(SLOT_PREFIX + game.saveSlotId, JSON.stringify(game));
+    const idx = readIndex();
+    const meta = {
+      id: game.saveSlotId,
+      name: game.saveName || game.eraName,
+      eraName: game.eraName,
+      turn: game.turn,
+      year: game.year,
+      updatedAt: Date.now(),
+    };
+    const i = idx.findIndex((s) => s.id === game.saveSlotId);
+    if (i >= 0) idx[i] = meta;
+    else idx.push(meta);
+    writeIndex(idx);
     return true;
   } catch (err) {
     console.error("No se pudo guardar la partida", err);
@@ -11,8 +61,8 @@ export function saveGame(state) {
   }
 }
 
-export function loadGame() {
-  const raw = localStorage.getItem(SAVE_KEY);
+export function loadGameSlot(slotId) {
+  const raw = localStorage.getItem(SLOT_PREFIX + slotId);
   if (!raw) return null;
   try {
     return JSON.parse(raw);
@@ -22,12 +72,9 @@ export function loadGame() {
   }
 }
 
-export function clearGame() {
-  localStorage.removeItem(SAVE_KEY);
-}
-
-export function hasSave() {
-  return !!localStorage.getItem(SAVE_KEY);
+export function deleteSaveSlot(slotId) {
+  localStorage.removeItem(SLOT_PREFIX + slotId);
+  writeIndex(readIndex().filter((s) => s.id !== slotId));
 }
 
 export function loadSettings() {

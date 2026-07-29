@@ -150,6 +150,26 @@ export function applyAction(game, cartelId, type, payload = {}) {
       const result = resolveBattle(game, cartel, defender, territory);
       return { ok: true, ...result };
     }
+    case "occupy_territory": {
+      const territory = game.territories[payload.territoryId];
+      if (!territory || territory.controllerId) return { ok: false, message: "Ese territorio ya tiene dueño." };
+      if (!isAttackable(game, cartelId, territory.id)) {
+        return { ok: false, message: "No linda con ninguno de tus dominios: no puedes expandirte ahí todavía." };
+      }
+      const cost = territory.value * 15;
+      if (r.money < cost) return { ok: false, message: `Hace falta $${cost} para esta expedición.` };
+      r.money -= cost;
+      if (chance(0.75)) {
+        territory.controllerId = cartelId;
+        cartel.territories.push(territory.id);
+        r.heat = Math.min(100, r.heat + 5);
+        log(`${cartel.name} ocupa el territorio libre de ${territory.name}.`, "good");
+        return { ok: true, success: true };
+      }
+      r.heat = Math.min(100, r.heat + 3);
+      log(`La expedición de ${cartel.name} para ocupar ${territory.name} fracasa.`, "event");
+      return { ok: true, success: false };
+    }
     default:
       return { ok: false, message: "Acción desconocida." };
   }
@@ -251,6 +271,10 @@ function runAiCartels(game) {
     if (atWar && cartel.territories.length && r.armySize > 50) {
       options.push({ item: "attack_territory", weight: 2 });
     }
+    const neutralReachable = Object.values(game.territories).filter((t) => !t.controllerId && isAttackable(game, cartel.id, t.id));
+    if (neutralReachable.length && r.money >= 200) {
+      options.push({ item: "occupy_territory", weight: 2.5 });
+    }
 
     let choice = weightedChoice(options);
     if (choice === "attack_territory") {
@@ -266,6 +290,14 @@ function runAiCartels(game) {
       choice = "recruit_army"; // no reachable enemy territory this turn: build up forces instead
       if (!canAfford(cartel, choice)) continue;
     }
+    if (choice === "occupy_territory") {
+      if (neutralReachable.length) {
+        applyAction(game, cartel.id, "occupy_territory", { territoryId: pick(neutralReachable).id });
+        continue;
+      }
+      choice = "invest_production";
+      if (!canAfford(cartel, choice)) continue;
+    }
     if (choice) applyAction(game, cartel.id, choice, {});
   }
 }
@@ -279,6 +311,36 @@ function weightedChoice(entries) {
     if (roll <= 0) return e.item;
   }
   return entries[entries.length - 1].item;
+}
+
+/** How much the player's crew personally trusts/likes them, drifting with the cartel's fortunes.
+ * Feeds into betrayal risk in rollLoyaltyEvents and is visible/nudgeable from the Family tab. */
+function driftBonds(game) {
+  const cartel = getPlayerCartel(game);
+  if (!cartel || cartel.destroyed) return;
+  for (const id of cartel.characters) {
+    if (id === game.playerCharacterId) continue;
+    const c = game.characters[id];
+    if (!c || !c.alive) continue;
+    if (c.bondWithPlayer === undefined) c.bondWithPlayer = 50;
+    let delta = randInt(-1, 1);
+    if (cartel.resources.heat > 60) delta -= 1;
+    if (cartel.resources.money > 500) delta += 1;
+    c.bondWithPlayer = clamp(c.bondWithPlayer + delta, 0, 100);
+  }
+}
+
+export function strengthenBond(game, characterId) {
+  const c = game.characters[characterId];
+  if (!c) return { ok: false };
+  if (c.bondWithPlayer === undefined) c.bondWithPlayer = 50;
+  if (c._bondBoostTurn === game.turn) {
+    return { ok: false, message: `Ya has pasado tiempo con ${c.name} este turno.` };
+  }
+  c._bondBoostTurn = game.turn;
+  c.bondWithPlayer = clamp(c.bondWithPlayer + randInt(8, 15), 0, 100);
+  addLog(game, `Fortaleces tu relación con ${c.name}.`, "good");
+  return { ok: true };
 }
 
 function incomeTick(game) {
@@ -360,6 +422,28 @@ function vacateRole(game, cartelId, characterId) {
   }
 }
 
+/** Releases any character (AI-controlled included) whose temporary sentence has run out.
+ * The player's own release is handled by checkRelease, called separately before endTurn so
+ * it can drive the regent/waiting UI; this covers everyone else, who would otherwise stay
+ * "imprisoned" forever once a temporary sentence's release turn had passed. */
+function releaseExpiredPrisoners(game) {
+  for (const c of Object.values(game.characters)) {
+    if (c.id === game.playerCharacterId) continue;
+    if (!c.imprisoned || c.imprisoned.lifeSentence) continue;
+    if (c.imprisoned.releaseTurn === null || game.turn < c.imprisoned.releaseTurn) continue;
+    c.imprisoned = null;
+    const cartel = game.cartels[c.cartelId];
+    if (cartel && cartel.imprisonedLeaderId === c.id) {
+      cartel.roles.leader = c.id;
+      c.role = "leader";
+      cartel.imprisonedLeaderId = null;
+      addLog(game, `${c.name} sale de prisión y retoma el liderazgo de ${cartel.name}.`, "event");
+    } else {
+      addLog(game, `${c.name} sale de prisión.`, "event");
+    }
+  }
+}
+
 function autoSuccession(game, cartelId, deceasedId, reasonLabel) {
   const cartel = game.cartels[cartelId];
   const heirId = pickHeir(game, cartelId, deceasedId);
@@ -401,6 +485,7 @@ export function endTurn(game) {
   deaths.push(...rollScriptedEvents(game, (t, ty) => addLog(game, t, ty), year));
   const arrests = rollPoliceOperations(game, (t, ty) => addLog(game, t, ty), year);
   incomeTick(game);
+  driftBonds(game);
 
   let pendingSuccession = null;
   let pendingRegentChoice = null;
@@ -414,6 +499,8 @@ export function endTurn(game) {
       vacateRole(game, d.cartelId, d.characterId);
       fillVacantRoles(game.cartels[d.cartelId], game.characters, year);
     }
+    const dCartel = game.cartels[d.cartelId];
+    if (dCartel && dCartel.imprisonedLeaderId === d.characterId) dCartel.imprisonedLeaderId = null;
   }
 
   for (const a of arrests) {
@@ -432,11 +519,16 @@ export function endTurn(game) {
         const actingId = cartel.roles.underboss && cartel.roles.underboss !== a.characterId ? cartel.roles.underboss : pickHeir(game, a.cartelId, a.characterId);
         if (actingId) {
           cartel.roles.leader = actingId;
+          game.characters[actingId].role = "leader";
+          cartel.imprisonedLeaderId = a.characterId;
           addLog(game, `${game.characters[actingId].name} queda al mando de ${cartel.name} de forma interina.`, "info");
         }
       }
     }
   }
+
+  releaseExpiredPrisoners(game);
+  restorePlayerLeadership(game);
 
   game.turn += 1;
   game.year = currentYear(game);
@@ -498,7 +590,25 @@ export function resolveRegentChoice(game, useRegent) {
   }
   game.regentCharacterId = heirId;
   game.playerControlMode = "regent";
+  cartel.roles.leader = heirId;
+  game.characters[heirId].role = "leader";
   addLog(game, `${game.characters[heirId].name} gobierna ${cartel.name} de forma interina.`, "event");
+}
+
+/** Restores the original character to the head of the cartel once free, whether via
+ * time served, an escape, or a scripted release — the single source of truth for it. */
+export function restorePlayerLeadership(game) {
+  const cartel = getPlayerCartel(game);
+  const original = game.characters[game.playerCharacterId];
+  if (!cartel || !original || original.imprisoned || game.playerControlMode === "direct") return;
+  if (game.regentCharacterId) {
+    const regent = game.characters[game.regentCharacterId];
+    if (regent && regent.role === "leader") regent.role = null;
+  }
+  cartel.roles.leader = original.id;
+  original.role = "leader";
+  game.playerControlMode = "direct";
+  game.regentCharacterId = null;
 }
 
 export function checkRelease(game) {
@@ -506,10 +616,39 @@ export function checkRelease(game) {
   if (!original || !original.imprisoned || original.imprisoned.lifeSentence) return false;
   if (original.imprisoned.releaseTurn !== null && game.turn >= original.imprisoned.releaseTurn) {
     original.imprisoned = null;
-    game.playerControlMode = "direct";
-    game.regentCharacterId = null;
+    restorePlayerLeadership(game);
     addLog(game, `${original.name} sale de prisión y retoma el control de ${getPlayerCartel(game).name}.`, "event");
     return true;
   }
   return false;
+}
+
+/** Lets the player try to break out of a temporary sentence early instead of waiting it out.
+ * Not available against a life sentence. Chance scales with the character's own stealth and
+ * intrigue plus how much of the police the cartel already has bought off. Success ends the
+ * sentence immediately at the cost of a big heat spike (it makes the news); failure adds time. */
+export function attemptEscape(game) {
+  const original = game.characters[game.playerCharacterId];
+  const cartel = getPlayerCartel(game);
+  if (!original || !original.imprisoned) return { ok: false, message: "No estás en prisión." };
+  if (original.imprisoned.lifeSentence) return { ok: false, message: "Una cadena perpetua no se puede burlar así." };
+
+  const successChance = clamp(
+    (original.stats.stealth * 0.4 + original.stats.intrigue * 0.35 + cartel.resources.corruptPolice * 0.25) / 100 - 0.1,
+    0.05,
+    0.75
+  );
+
+  if (chance(successChance)) {
+    original.imprisoned = null;
+    restorePlayerLeadership(game);
+    cartel.resources.heat = Math.min(100, cartel.resources.heat + randInt(20, 30));
+    addLog(game, `${original.name} protagoniza una fuga espectacular y recupera el control de ${cartel.name}. La noticia recorre el país.`, "good");
+    return { ok: true, success: true };
+  }
+
+  const extra = randInt(4, 10);
+  original.imprisoned.releaseTurn = (original.imprisoned.releaseTurn ?? game.turn) + extra;
+  addLog(game, `El intento de fuga de ${original.name} fracasa: la condena se alarga.`, "event");
+  return { ok: true, success: false };
 }

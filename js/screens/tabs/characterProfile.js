@@ -1,13 +1,15 @@
 import { showModal } from "../../ui/modal.js";
 import { portraitImg, statBar, escapeHtml, roleLabel } from "../../ui/components.js";
 import { STATS, STAT_ORDER, age } from "../../model.js";
-import { currentYear } from "../../state.js";
+import { currentYear, getPlayerCartel } from "../../state.js";
 
 export function showCharacterProfile(app, characterId) {
   const game = app.game;
   const c = game.characters[characterId];
   if (!c) return;
   const year = currentYear(game);
+  const playerCartel = getPlayerCartel(game);
+  const showBond = c.id !== game.playerCharacterId && playerCartel && c.cartelId === playerCartel.id && c.bondWithPlayer !== undefined;
   const cartel = game.cartels[c.cartelId];
   const parents = (c.parents || []).map((id) => game.characters[id]).filter(Boolean);
   const spouse = c.spouseId ? game.characters[c.spouseId] : null;
@@ -29,6 +31,7 @@ export function showCharacterProfile(app, characterId) {
     </div>
     <h3 class="mt-2">Atributos</h3>
     ${STAT_ORDER.map((k) => statBar(STATS[k], c.stats[k])).join("")}
+    ${showBond ? `<h3 class="mt-2">Vínculo contigo</h3>${statBar("Vínculo", c.bondWithPlayer)}` : ""}
     <h3 class="mt-2">Familia</h3>
     <p class="small">
       ${parents.length ? "Padres: " + parents.map((p) => escapeHtml(p.name)).join(", ") + "<br>" : ""}

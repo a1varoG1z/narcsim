@@ -41,6 +41,8 @@ function showTerritoryModal(app, territoryId) {
   const playerCartel = getPlayerCartel(game);
   const isMine = t.controllerId === playerCartel.id;
   const attackable = !isMine && controller && isAttackable(game, playerCartel.id, t.id);
+  const occupiable = !controller && isAttackable(game, playerCartel.id, t.id);
+  const occupyCost = t.value * 15;
   const neighborNames = (t.adj || []).map((id) => game.territories[id]?.name).filter(Boolean).join(", ");
 
   showModal(`
@@ -50,7 +52,8 @@ function showTerritoryModal(app, territoryId) {
     ${neighborNames ? `<p class="small text-dim">Linda con: ${escapeHtml(neighborNames)}</p>` : ""}
     ${attackable ? `<button class="danger block" id="attack-btn">Atacar y disputar este territorio</button>` : ""}
     ${!isMine && controller && !attackable ? `<p class="small text-dim">No tienes ningún territorio colindante: no puedes atacarlo directamente todavía.</p>` : ""}
-    ${!controller ? `<p class="small text-dim">Territorio sin dueño; no se puede ocupar directamente en esta versión.</p>` : ""}
+    ${occupiable ? `<button class="primary block" id="occupy-btn">Ocupar territorio libre ($${occupyCost})</button>` : ""}
+    ${!controller && !occupiable ? `<p class="small text-dim">Territorio libre, pero no linda con ninguno de tus dominios todavía.</p>` : ""}
     <button class="ghost block" id="close-btn">Cerrar</button>
   `);
 
@@ -63,6 +66,25 @@ function showTerritoryModal(app, territoryId) {
       <h2>${result.attackerWins ? "¡Victoria!" : "Derrota"}</h2>
       <p>${result.attackerWins ? `Tu cártel ha conquistado ${escapeHtml(t.name)}.` : `El ataque a ${escapeHtml(t.name)} ha fracasado.`}</p>
       <p class="small text-dim">Bajas propias: ${result.casualtiesAtk} · Bajas enemigas: ${result.casualtiesDef}</p>
+      <button class="primary block" id="ok-btn">Aceptar</button>
+    `);
+    document.getElementById("ok-btn").addEventListener("click", () => {
+      closeModal();
+      app.render();
+    });
+  });
+  document.getElementById("occupy-btn")?.addEventListener("click", () => {
+    const result = applyAction(game, playerCartel.id, "occupy_territory", { territoryId });
+    app.setGame(game);
+    closeModal();
+    if (!result.ok) {
+      alert(result.message);
+      app.render();
+      return;
+    }
+    showModal(`
+      <h2>${result.success ? "¡Territorio ocupado!" : "Expedición fallida"}</h2>
+      <p>${result.success ? `Tu cártel ha extendido su influencia sobre ${escapeHtml(t.name)}.` : `El intento de ocupar ${escapeHtml(t.name)} no ha salido bien esta vez.`}</p>
       <button class="primary block" id="ok-btn">Aceptar</button>
     `);
     document.getElementById("ok-btn").addEventListener("click", () => {

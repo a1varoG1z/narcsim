@@ -1,6 +1,6 @@
 import { escapeHtml } from "../../ui/components.js";
 import { STATS, STAT_ORDER, ROLE_ORDER, ROLES } from "../../model.js";
-import { exportGameToFile, importGameFromFile, clearGame } from "../../utils/storage.js";
+import { exportGameToFile, deleteSaveSlot } from "../../utils/storage.js";
 
 export function render(container, app) {
   const game = app.game;
@@ -97,7 +97,7 @@ export function render(container, app) {
   container.querySelector("#export-btn").addEventListener("click", () => exportGameToFile(game));
   container.querySelector("#reset-btn").addEventListener("click", () => {
     if (!confirm("¿Seguro que quieres borrar la partida actual?")) return;
-    clearGame();
+    if (game.saveSlotId) deleteSaveSlot(game.saveSlotId);
     app.game = null;
     app.navigate("menu");
   });

@@ -78,6 +78,31 @@ export const SCRIPTED_EVENTS = {
         return killScriptedCharacter(game, "amado_carrillo", addLog, "complicaciones de una cirugía plástica clandestina para cambiar de rostro");
       },
     },
+    {
+      id: "fuga-chapo-2001",
+      year: 2001,
+      run(game, addLog) {
+        const c = game.characters.chapo_guzman;
+        if (!c || !c.alive || !c.imprisoned || c.imprisoned.lifeSentence) return [];
+        const isPlayer = c.id === game.playerCharacterId;
+        if (isPlayer && !chance(0.8)) {
+          addLog(`${c.name} planea una fuga de máxima seguridad, pero el operativo se frustra a tiempo.`, "event");
+          return [];
+        }
+        c.imprisoned = null;
+        const cartel = game.cartels[c.cartelId];
+        if (cartel) {
+          cartel.resources.heat = Math.min(100, cartel.resources.heat + 25);
+          if (cartel.imprisonedLeaderId === c.id) {
+            cartel.roles.leader = c.id;
+            c.role = "leader";
+            cartel.imprisonedLeaderId = null;
+          }
+        }
+        addLog(`${c.name} se fuga de la prisión de máxima seguridad, escondido en un carrito de lavandería. La noticia da la vuelta al mundo.`, "good");
+        return [];
+      },
+    },
   ],
   "fragmentacion-2006-2015": [
     {

@@ -87,7 +87,10 @@ export function rollLoyaltyEvents(game, addLog) {
       const holder = game.characters[cartel.roles[role]];
       if (!holder || !holder.alive) continue;
       const disloyalty = clamp((holder.stats.intrigue - leader.stats.loyaltyInspiring) / 100, 0, 1);
-      if (chance(disloyalty * 0.015)) {
+      // A strong personal bond with the (player-controlled) leader tempers disloyalty; a poor one inflames it.
+      const bond = holder.bondWithPlayer ?? 50;
+      const bondFactor = clamp(1 - (bond - 50) / 60, 0.4, 1.6);
+      if (chance(disloyalty * 0.015 * bondFactor)) {
         if (chance(0.15)) {
           coups.push({ cartelId: cartel.id, plotterId: holder.id, leaderId: leader.id });
         } else {

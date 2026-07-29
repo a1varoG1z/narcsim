@@ -1,7 +1,7 @@
 import { makeCharacter, makeCartel } from "./model.js";
 import { fillVacantRoles } from "./npcGenerator.js";
 import { uid, randInt } from "./utils/random.js";
-import { saveGame, loadGame } from "./utils/storage.js";
+import { saveGameToSlot, loadGameSlot } from "./utils/storage.js";
 
 const WAR_OVERRIDES = {
   "fragmentacion-2006-2015": [["zetas", "golfo"], ["sinaloa", "beltran_leyva"], ["familia_michoacana", "zetas"]],
@@ -94,6 +94,8 @@ export function buildGameFromEra(eraData, options) {
 
   return {
     version: 1,
+    saveSlotId: null,
+    saveName: `${characters[playerCharacterId].name} — ${cartels[playerCartelId].name}`,
     eraId: eraData.id,
     eraName: eraData.name,
     period: eraData.period,
@@ -134,9 +136,9 @@ export function addLog(game, text, type = "info") {
 }
 
 export function persist(game) {
-  saveGame(game);
+  saveGameToSlot(game);
 }
 
-export function restore() {
-  return loadGame();
+export function restoreSlot(slotId) {
+  return loadGameSlot(slotId);
 }

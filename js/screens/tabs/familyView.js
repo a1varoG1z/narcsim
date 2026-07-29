@@ -1,8 +1,9 @@
 import { getPlayerCartel, getPlayerCharacter, currentYear } from "../../state.js";
-import { portraitImg, escapeHtml, roleLabel } from "../../ui/components.js";
+import { portraitImg, escapeHtml, roleLabel, statBar } from "../../ui/components.js";
 import { showCharacterProfile } from "./characterProfile.js";
 import { generateNpc, randomName } from "../../npcGenerator.js";
 import { chance } from "../../utils/random.js";
+import { strengthenBond } from "../../turnEngine.js";
 
 export function render(container, app) {
   const game = app.game;
@@ -37,15 +38,25 @@ export function render(container, app) {
     </div>
     <div class="card">
       <h3>Vínculos y lealtades del cártel</h3>
-      <p class="text-dim small">La lealtad de cada miembro depende de tu Liderazgo frente a su Astucia: cuanto más se acerquen o superen tu Liderazgo, mayor riesgo de traición o deserción.</p>
-      ${cartelMembers.filter((m) => m.role).map((m) => {
-        const risk = Math.max(0, m.stats.intrigue - player.stats.loyaltyInspiring);
+      <p class="text-dim small">La lealtad depende de tu Liderazgo frente a su Astucia, atenuada por el vínculo personal que tengas con cada uno. Pasa tiempo con ellos para fortalecerlo.</p>
+      ${cartelMembers.filter((m) => m.role && m.id !== player.id).map((m) => {
+        const bond = m.bondWithPlayer ?? 50;
+        const risk = Math.max(0, m.stats.intrigue - player.stats.loyaltyInspiring) * (1 - (bond - 50) / 60);
         const label = risk > 40 ? "Alto riesgo de traición" : risk > 15 ? "Lealtad incierta" : "Leal";
         const cls = risk > 40 ? "text-danger" : risk > 15 ? "text-dim" : "text-success";
-        return `<div class="person-row" data-view="${m.id}" style="cursor:pointer">
-          ${portraitImg(m)}
-          <div class="info"><div class="name">${escapeHtml(m.name)}</div><div class="role">${roleLabel(m.role)}</div></div>
-          <div class="small ${cls}">${label}</div>
+        return `<div class="person-row">
+          <div style="display:flex;gap:.6rem;flex:1;min-width:0;cursor:pointer" data-view="${m.id}">
+            ${portraitImg(m)}
+            <div class="info">
+              <div class="name">${escapeHtml(m.name)}</div>
+              <div class="role">${roleLabel(m.role)}</div>
+              ${statBar("Vínculo", bond)}
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.3rem">
+            <div class="small ${cls}">${label}</div>
+            <button data-bond="${m.id}" class="tight">Pasar tiempo</button>
+          </div>
         </div>`;
       }).join("")}
     </div>
@@ -53,6 +64,15 @@ export function render(container, app) {
 
   container.querySelectorAll("[data-view]").forEach((el) => {
     el.addEventListener("click", () => showCharacterProfile(app, el.dataset.view));
+  });
+
+  container.querySelectorAll("[data-bond]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const result = strengthenBond(game, btn.dataset.bond);
+      if (!result.ok && result.message) alert(result.message);
+      app.setGame(game);
+      app.render();
+    });
   });
 
   container.querySelector("#seek-romance")?.addEventListener("click", () => {

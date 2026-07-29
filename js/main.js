@@ -1,7 +1,8 @@
-import { buildGameFromEra, restore, persist, getPlayerCartel } from "./state.js";
-import { endTurn, resolveSuccession, resolveRegentChoice, getSuccessionCandidates, checkRelease } from "./turnEngine.js";
+import { buildGameFromEra, restoreSlot, persist, getPlayerCartel } from "./state.js";
+import { endTurn, resolveSuccession, resolveRegentChoice, getSuccessionCandidates, checkRelease, attemptEscape } from "./turnEngine.js";
 import { showModal, closeModal } from "./ui/modal.js";
 import { portraitImg, escapeHtml } from "./ui/components.js";
+import { deleteSaveSlot } from "./utils/storage.js";
 
 import * as mainMenu from "./screens/mainMenu.js";
 import * as eraSelect from "./screens/eraSelect.js";
@@ -20,7 +21,7 @@ const SCREENS = {
 const appEl = document.getElementById("app");
 
 const app = {
-  game: restore(),
+  game: null,
   screen: null,
   screenData: {},
   state: { activeTab: "overview" },
@@ -41,6 +42,17 @@ const app = {
     persist(game);
   },
 
+  loadSlot(slotId) {
+    const game = restoreSlot(slotId);
+    if (!game) {
+      alert("No se pudo cargar esa partida.");
+      return;
+    }
+    this.game = game;
+    this.state.activeTab = "overview";
+    this.navigate("dashboard");
+  },
+
   startExistingGame(eraData, cartelId, characterId) {
     const game = buildGameFromEra(eraData, { mode: "existing", cartelId, characterId });
     this.setGame(game);
@@ -53,6 +65,17 @@ const app = {
     this.setGame(game);
     this.state.activeTab = "overview";
     this.navigate("dashboard");
+  },
+
+  doEscape() {
+    if (!this.game) return;
+    const result = attemptEscape(this.game);
+    if (!result.ok) {
+      alert(result.message);
+      return;
+    }
+    persist(this.game);
+    this.render();
   },
 
   doEndTurn() {
@@ -93,7 +116,7 @@ const app = {
       `, { dismissible: false });
       document.getElementById("modal-ok").addEventListener("click", () => {
         closeModal();
-        localStorage.removeItem("narcosim.save.v1");
+        if (this.game.saveSlotId) deleteSaveSlot(this.game.saveSlotId);
         this.game = null;
         this.navigate("menu");
       });
@@ -165,8 +188,4 @@ const app = {
 
 window.__narcosimApp = app;
 
-if (app.game) {
-  app.navigate("dashboard");
-} else {
-  app.navigate("menu");
-}
+app.navigate("menu");
