@@ -5,6 +5,9 @@ import { generateNpc, randomName } from "../../npcGenerator.js";
 import { chance, clamp } from "../../utils/random.js";
 import { strengthenBond, getDesignatableHeirs, designateHeir, clearDesignatedHeir, mentorHeir, arrangeMarriage, resolveConceptionAttempt } from "../../turnEngine.js";
 import { showModal, closeModal } from "../../ui/modal.js";
+import { loadSettings, saveSettings } from "../../utils/storage.js";
+
+const NEUTRAL_QUICK_WARMTH = 3;
 
 export function render(container, app) {
   const game = app.game;
@@ -149,15 +152,23 @@ function renderPregnancyCard(game, player) {
 function showPartnerSelectModal(app, game, cartel, player, year) {
   const spouse = player.spouseId ? game.characters[player.spouseId] : null;
   const spouseSex = player.sex === "M" ? "F" : "M";
+  const quickMode = !!loadSettings().quickDialogueMode;
 
   showModal(`
     <h2>Formar una familia</h2>
     <p class="small text-dim">Elige con quién intentarlo esta noche.</p>
     ${spouse ? `<button class="block" data-partner="${spouse.id}">Con tu pareja: ${escapeHtml(spouse.name)}</button>` : ""}
     <button class="block" id="new-partner-btn">Buscar a alguien nuevo</button>
-    <button class="ghost block" id="close-btn">Cancelar</button>
+    <label style="display:flex;align-items:center;gap:.5rem;margin-top:.8rem">
+      <input type="checkbox" id="quick-mode-toggle" ${quickMode ? "checked" : ""}>
+      Modo rápido (resolver al instante, sin conversación)
+    </label>
+    <button class="ghost block mt-1" id="close-btn">Cancelar</button>
   `);
 
+  document.getElementById("quick-mode-toggle").addEventListener("change", (e) => {
+    saveSettings({ ...loadSettings(), quickDialogueMode: e.target.checked });
+  });
   document.getElementById("close-btn").addEventListener("click", closeModal);
   document.querySelector(`[data-partner="${spouse?.id}"]`)?.addEventListener("click", () => {
     closeModal();
@@ -204,6 +215,10 @@ function showNewPartnerCandidatesModal(app, game, cartel, spouseSex, year) {
 }
 
 function startConceptionDialogue(app, game, partnerId) {
+  if (loadSettings().quickDialogueMode) {
+    finishConceptionDialogue(app, game, partnerId, "attempt", NEUTRAL_QUICK_WARMTH);
+    return;
+  }
   const tree = game.dialogueTrees?.conception;
   if (!tree || !tree.nodes[tree.start]) {
     alert("No hay un diálogo configurado para este momento. Revísalo en el Editor.");

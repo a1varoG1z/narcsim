@@ -129,7 +129,7 @@ Estado del proyecto tras la primera versión jugable (MVP). Marcado ✅ lo imple
 - 🟡 Accesibilidad: pasada inicial hecha (foco, aria-labels, contraste, cierre con Escape). Pendiente: pruebas reales con lector de pantalla, revisión completa de contraste AA en todos los estados de color.
 - ✅ **Editor de diálogos simplificado**: ya no hace falta escribir JSON — se elige un nodo de la conversación de una lista, se edita su texto y cada opción (texto, a qué nodo lleva o si termina la escena, "calor") con campos normales, se pueden añadir/eliminar nodos y marcar cuál es el inicial. El modo JSON se mantiene como alternativa avanzada, plegada, para pegar un árbol completo de una vez.
 - ✅ **Adjuntar retrato por URL** en el editor, además de subir archivo.
-- ⬜ **Modo rápido/simulado** para cualquier interacción tipo diálogo (empezando por "Formar una familia"): poder resolverla al instante con un resultado razonable, para partidas más rápidas.
+- ✅ **Modo rápido** para "Formar una familia": una casilla junto a la elección de pareja, que se recuerda entre partidas (se guarda como preferencia del jugador, no de la partida), resuelve el intento al instante con un resultado razonable en vez de la conversación completa. Pendiente: aplicar el mismo patrón a futuras interacciones tipo diálogo que se añadan (negociaciones con otros cárteles, etc.).
 - ⬜ **Guardado en GitHub** de la partida (con todo lo editado/jugado) — necesita decidir cómo manejar credenciales de forma segura en un sitio estático sin backend. Además, **exportar/importar diálogos por separado** del resto de la partida, para reutilizar conversaciones ya escritas en otras partidas sin rehacerlas.
 
 ## Nota sobre los datos históricos
