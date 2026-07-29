@@ -11,6 +11,7 @@ import * as decisionsView from "./tabs/decisionsView.js";
 import * as mediaView from "./tabs/mediaView.js";
 import * as economyView from "./tabs/economyView.js";
 import * as editorView from "./tabs/editorView.js";
+import * as fallenView from "./tabs/fallenView.js";
 
 const TABS = [
   { id: "overview", label: "Resumen", mod: overview },
@@ -22,6 +23,7 @@ const TABS = [
   { id: "media", label: "Medios", mod: mediaView },
   { id: "family", label: "Familia", mod: familyView },
   { id: "stats", label: "Estadísticas", mod: statsView },
+  { id: "fallen", label: "Caídos", mod: fallenView },
   { id: "editor", label: "Editor", mod: editorView },
 ];
 

@@ -120,7 +120,7 @@ Estado del proyecto tras la primera versión jugable (MVP). Marcado ✅ lo imple
 - ⬜ **Adjuntar retrato por URL en el editor**, como alternativa a subir un archivo.
 - ✅ Más eras/variantes: añadida la guerra interna de Sinaloa (Chapitos vs. Mayiza, 2024-actualidad) como época jugable propia (ver arriba).
 - ⬜ Editor visual de nuevas épocas/escenarios desde la propia interfaz (hoy los `.json` de época se editan a mano).
-- ⬜ **Sección de fallecidos**: una vista propia con los personajes muertos de la partida, ordenable por importancia/cargo/cártel/causa — hoy solo se ven de pasada en el registro de sucesos y en la ficha de cada uno.
+- ✅ **Sección de fallecidos ("Caídos")**: nueva pestaña con todos los personajes muertos de la partida (de cualquier cártel), ordenable por importancia del cargo que ocupaban, cártel o año de fallecimiento (más reciente/más antiguo primero); cada fila abre la ficha completa del personaje. Pendiente: causa de muerte explícita por personaje (hoy solo se puede inferir del registro de sucesos, no queda asociada de forma consultable al propio personaje).
 - ⬜ **Retratos generados automáticamente** para personajes creados por el juego (no históricos, sin foto subida), en vez del icono genérico actual.
 - ⬜ **Revisión completa de realismo de todos los `.json` de época**: una vez encajen la nueva escala económica, la expansión por todo el mapa y la mayor variedad de acciones (ver arriba), pasar por los 6 archivos de época a la vez para que todo (territorios, adyacencia, cárteles, recursos iniciales, personajes) sea coherente entre sí, en vez de ir tocando números sueltos.
 
