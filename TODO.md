@@ -106,7 +106,7 @@ Estado del proyecto tras la primera versión jugable (MVP). Marcado ✅ lo imple
 ### Logística y economía
 - 🟡 Socios de tráfico, lavado de dinero y producción por territorio ya implementados. Pendiente: rutas concretas dibujadas en el mapa, mercados internacionales diferenciados por región (no solo un bonus agregado de reputación).
 - ⬜ **Dimensión económica mucho más grande**: más categorías de inversión (propiedades, arte, negocios legales, armas, líneas de droga concretas), cada una con su propio riesgo/rentabilidad, en vez de las pocas acciones genéricas actuales.
-- ⬜ **Revisar el realismo de los valores iniciales** (dinero/ejército de partida por cártel/época) frente a la escala histórica real — algunos, como el dinero inicial de Pablo Escobar, pueden estar puestos demasiado bajos.
+- ✅ **Revisado el dinero/ejército inicial del Cártel de Medellín**: subido de 2200 a 3400 (dinero) y de 1400 a 1600 (ejército) para reflejar que, al inicio de esa época, Escobar ya era muy superior en poder de fuego y riqueza al todavía discreto Cártel de Cali — antes estaban casi empatados. El resto de valores iniciales por época ya se revisaron y se consideran razonables.
 
 ### Personajes y datos
 - ⬜ Ampliar el roster de personajes secundarios reales cuando el usuario aporte información adicional (ver nota abajo).

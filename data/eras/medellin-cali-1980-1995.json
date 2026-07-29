@@ -150,8 +150,8 @@
       "aiControlled": false,
       "historicalNote": "Los cargos secundarios del organigrama que no corresponden a figuras públicamente documentadas en ese rol específico son ficticios, generados para completar la mecánica de juego.",
       "resources": {
-        "money": 2200,
-        "armySize": 1400,
+        "money": 3400,
+        "armySize": 1600,
         "corruptGov": 60,
         "corruptPolice": 55,
         "publicImage": 60,
