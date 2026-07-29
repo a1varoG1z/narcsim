@@ -45,9 +45,7 @@ export function render(container, app) {
   `;
 
   container.querySelectorAll("[data-war]").forEach((btn) => btn.addEventListener("click", () => {
-    applyAction(game, cartel.id, "declare_war", { targetCartelId: btn.dataset.war });
-    app.setGame(game);
-    app.render();
+    showDeclareWarModal(app, game, cartel, btn.dataset.war);
   }));
   container.querySelectorAll("[data-peace]").forEach((btn) => btn.addEventListener("click", () => {
     showPeaceModal(app, game, cartel, btn.dataset.peace);
@@ -135,6 +133,41 @@ function showAssassinateModal(app, game, cartel, targetCartelId) {
       }
       app.render();
     });
+  });
+}
+
+function showDeclareWarModal(app, game, cartel, targetCartelId) {
+  const target = game.cartels[targetCartelId];
+  const tension = (cartel.relations[targetCartelId] || { tension: 0 }).tension;
+  const justified = tension > 60;
+
+  const declare = (pretext) => {
+    applyAction(game, cartel.id, "declare_war", { targetCartelId, pretext });
+    app.setGame(game);
+    closeModal();
+    app.render();
+  };
+
+  showModal(`
+    <h2>Declarar la guerra a ${escapeHtml(target.name)}</h2>
+    <p class="small text-dim">¿Cómo la declaras? Afecta a tu imagen pública, al heat que generas y, si golpeas por sorpresa, a tu primer ataque de este mismo turno.</p>
+    <button class="danger block" data-pretext="none">
+      Guerra abierta, sin excusas
+      <div class="small text-dim">Sin efecto en tu imagen. Sube algo el heat.</div>
+    </button>
+    <button class="danger block" data-pretext="accusation">
+      Denunciar públicamente una afrenta
+      <div class="small text-dim">${justified ? "La tensión acumulada hace creíble la acusación: mejora tu imagen." : "Con tan poca tensión previa, nadie se lo cree: te pasa factura en imagen y heat."}</div>
+    </button>
+    <button class="danger block" data-pretext="surprise">
+      Golpear por sorpresa, sin previo aviso
+      <div class="small text-dim">No dices nada en público, pero el heat sube más. Si atacas uno de sus territorios este mismo turno, el factor sorpresa te da ventaja en esa batalla.</div>
+    </button>
+    <button class="ghost block mt-1" id="close-btn">Cancelar</button>
+  `);
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.querySelectorAll("[data-pretext]").forEach((btn) => {
+    btn.addEventListener("click", () => declare(btn.dataset.pretext));
   });
 }
 

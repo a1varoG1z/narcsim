@@ -69,6 +69,52 @@ test("attack_territory on an adjacent enemy territory resolves and opens/updates
   assert.ok(war.casualtiesA + war.casualtiesB > 0, "a battle should produce some casualties");
 });
 
+test("declaring war with a surprise pretext grants a one-time attack bonus against that target this turn", () => {
+  function setupEqualFight(file, attackerId, defenderId) {
+    const game = newGame(file, attackerId);
+    const attacker = game.cartels[attackerId];
+    const defender = game.cartels[defenderId];
+    attacker.resources.armySize = 1000;
+    defender.resources.armySize = 1000;
+    attacker.resources.weaponsBonus = 0;
+    defender.resources.weaponsBonus = 0;
+    // Normalize every present commander/leader stat so both sides compute the exact same
+    // commanderMultiplier, isolating the surprise bonus as the only source of asymmetry.
+    for (const c of [attacker, defender]) {
+      for (const roleKey of ["leader", "militaryChief", "sicariosChief"]) {
+        const holder = game.characters[c.roles[roleKey]];
+        if (!holder) continue;
+        holder.alive = true;
+        holder.imprisoned = null;
+        if (roleKey === "leader") holder.stats.loyaltyInspiring = 70;
+        else { holder.stats.violence = 70; holder.stats.intrigue = 70; }
+      }
+    }
+    return { game, attacker, defender };
+  }
+
+  const originalRandom = Math.random;
+  try {
+    // Math.random = 0 pins the attacker's roll at its floor (0.85x) and the defender's at its
+    // floor (1.0x), so an evenly-matched fight with no bonus is a guaranteed defender win —
+    // giving the surprise bonus (1.25x) room to provably flip the exact same fight.
+    Math.random = () => 0;
+
+    const plain = setupEqualFight("cjng-sinaloa-2015-actualidad.json", "sinaloa", "cdn");
+    const plainResult = applyAction(plain.game, "sinaloa", "attack_territory", { territoryId: "coahuila" });
+    assert.equal(plainResult.attackerWins, false, "an evenly-matched fight with no bonus should go to the defender given the stubbed rolls");
+
+    const surprised = setupEqualFight("cjng-sinaloa-2015-actualidad.json", "sinaloa", "cdn");
+    applyAction(surprised.game, "sinaloa", "declare_war", { targetCartelId: "cdn", pretext: "surprise" });
+    assert.deepEqual(surprised.attacker.surpriseStrikeBonus, { targetId: "cdn", turn: surprised.game.turn });
+    const surpriseResult = applyAction(surprised.game, "sinaloa", "attack_territory", { territoryId: "coahuila" });
+    assert.equal(surpriseResult.attackerWins, true, "the exact same evenly-matched fight should flip to an attacker win once the surprise bonus applies");
+    assert.equal(surprised.attacker.surpriseStrikeBonus, null, "the one-time bonus should be consumed after use");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
 test("occupy_territory rejects territories that already have an owner", () => {
   const game = newGame("mexico-rutas-1990-2006.json", "sinaloa");
   const result = applyAction(game, "sinaloa", "occupy_territory", { territoryId: "chihuahua" });

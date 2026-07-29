@@ -248,6 +248,20 @@ test("declaring war opens a war record and proposing (accepted) peace closes it"
   }
 });
 
+test("declare_war's 'accusation' pretext helps your image when tension justifies it, and hurts it when it's a bluff", () => {
+  const justifiedGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  justifiedGame.cartels.sinaloa.relations.cdn.tension = 80;
+  const imageBefore1 = justifiedGame.cartels.sinaloa.resources.publicImage;
+  applyAction(justifiedGame, "sinaloa", "declare_war", { targetCartelId: "cdn", pretext: "accusation" });
+  assert.ok(justifiedGame.cartels.sinaloa.resources.publicImage > imageBefore1, "a justified accusation (high prior tension) should improve public image");
+
+  const bluffGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  bluffGame.cartels.sinaloa.relations.cdn.tension = 10;
+  const imageBefore2 = bluffGame.cartels.sinaloa.resources.publicImage;
+  applyAction(bluffGame, "sinaloa", "declare_war", { targetCartelId: "cdn", pretext: "accusation" });
+  assert.ok(bluffGame.cartels.sinaloa.resources.publicImage < imageBefore2, "an unjustified accusation (low prior tension) should hurt public image");
+});
+
 test("propose_alliance's 'gift' approach spends the money on the attempt regardless of outcome, and refuses if unaffordable", () => {
   const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
   const cartel = game.cartels.sinaloa;

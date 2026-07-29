@@ -199,10 +199,30 @@ export function applyAction(game, cartelId, type, payload = {}) {
     case "declare_war": {
       const target = game.cartels[payload.targetCartelId];
       if (!target) return { ok: false };
+      const tension = (cartel.relations[target.id] || { tension: 0 }).tension;
       cartel.relations[target.id] = { status: "war", tension: 90 };
       target.relations[cartel.id] = { status: "war", tension: 90 };
       openWar(game, cartelId, target.id);
-      log(`${cartel.name} declara la guerra a ${target.name}.`, "event");
+      const pretext = payload.pretext;
+      if (pretext === "accusation") {
+        const justified = tension > 60;
+        if (justified) {
+          r.publicImage = Math.min(100, r.publicImage + randInt(3, 8));
+          r.heat = Math.min(100, r.heat + randInt(1, 6));
+          log(`${cartel.name} declara la guerra a ${target.name}, denunciando públicamente una afrenta que la opinión pública da por cierta.`, "event");
+        } else {
+          r.publicImage = Math.max(0, r.publicImage - randInt(5, 12));
+          r.heat = Math.min(100, r.heat + randInt(6, 14));
+          log(`${cartel.name} declara la guerra a ${target.name} alegando una afrenta que a nadie le suena creíble.`, "event");
+        }
+      } else if (pretext === "surprise") {
+        r.heat = Math.min(100, r.heat + randInt(7, 16));
+        cartel.surpriseStrikeBonus = { targetId: target.id, turn: game.turn };
+        log(`${cartel.name} declara la guerra a ${target.name} sin previo aviso, golpeando por sorpresa.`, "event");
+      } else {
+        r.heat = Math.min(100, r.heat + randInt(3, 8));
+        log(`${cartel.name} declara la guerra a ${target.name}.`, "event");
+      }
       return { ok: true };
     }
     case "propose_peace": {
@@ -591,7 +611,10 @@ function commanderMultiplier(game, cartel) {
 function resolveBattle(game, attacker, defender, territory) {
   const log = (t, ty) => addLog(game, t, ty);
   const war = openWar(game, attacker.id, defender.id);
-  const atkPower = attacker.resources.armySize * commanderMultiplier(game, attacker) * (0.85 + Math.random() * 0.3);
+  const bonus = attacker.surpriseStrikeBonus;
+  const hasSurpriseBonus = bonus && bonus.targetId === defender.id && bonus.turn === game.turn;
+  if (hasSurpriseBonus) attacker.surpriseStrikeBonus = null; // one-time use, consumed on the first attack against that target this turn
+  const atkPower = attacker.resources.armySize * commanderMultiplier(game, attacker) * (0.85 + Math.random() * 0.3) * (hasSurpriseBonus ? 1.25 : 1);
   const defPower = defender.resources.armySize * commanderMultiplier(game, defender) * (1.0 + Math.random() * 0.3);
   const attackerWins = atkPower > defPower;
   const casualtiesAtk = Math.round(attacker.resources.armySize * randInt(3, 15) / 100);
@@ -609,14 +632,15 @@ function resolveBattle(game, attacker, defender, territory) {
     war.casualtiesA += casualtiesDef;
   }
 
+  const surpriseNote = hasSurpriseBonus ? " El factor sorpresa de su reciente declaración de guerra les da ventaja." : "";
   if (attackerWins) {
     territory.controllerId = attacker.id;
     attacker.territories.push(territory.id);
     defender.territories = defender.territories.filter((t) => t !== territory.id);
     war.territoryChanges.push({ year: currentYear(game), territoryName: territory.name, to: attacker.id });
-    log(`${attacker.name} conquista ${territory.name} tras derrotar a ${defender.name}.`, "event");
+    log(`${attacker.name} conquista ${territory.name} tras derrotar a ${defender.name}.${surpriseNote}`, "event");
   } else {
-    log(`${attacker.name} fracasa en su intento de tomar ${territory.name}.`, "event");
+    log(`${attacker.name} fracasa en su intento de tomar ${territory.name}.${surpriseNote}`, "event");
   }
 
   // Small chance a commander dies in the fighting.
