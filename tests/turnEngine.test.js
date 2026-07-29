@@ -13,6 +13,11 @@ import {
   attemptEscape,
   getWarsForCartel,
   endTurn,
+  getDesignatableHeirs,
+  designateHeir,
+  clearDesignatedHeir,
+  mentorHeir,
+  arrangeMarriage,
 } from "../js/turnEngine.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -110,6 +115,75 @@ test("resolveSuccession transfers control, updates roles and vacates the old lea
   assert.equal(game.playerCharacterId, heir.id);
   assert.equal(game.cartels.guadalajara.roles.leader, heir.id);
   assert.equal(game.playerControlMode, "direct");
+});
+
+test("getDesignatableHeirs lists the player's children, spouse and role-holders but excludes the dead/imprisoned", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa", "ivan_archivaldo");
+  const candidates = getDesignatableHeirs(game);
+  assert.ok(candidates.length > 0);
+  assert.ok(candidates.every((c) => c.alive && !c.imprisoned));
+  const player = game.characters[game.playerCharacterId];
+  assert.ok(!candidates.some((c) => c.id === player.id), "the player themself should never be their own heir option");
+});
+
+test("designateHeir sets the designation and clearDesignatedHeir removes it; resolveSuccession also clears it", () => {
+  const game = newGame("guadalajara-1975-1989.json", "guadalajara", "felix_gallardo");
+  const candidates = getDesignatableHeirs(game);
+  assert.ok(candidates.length > 0);
+  const pick1 = candidates[0];
+
+  const result = designateHeir(game, pick1.id);
+  assert.equal(result.ok, true);
+  assert.equal(game.designatedHeirId, pick1.id);
+
+  clearDesignatedHeir(game);
+  assert.equal(game.designatedHeirId, null);
+
+  designateHeir(game, pick1.id);
+  const successionCandidates = getSuccessionCandidates(game, "guadalajara", "felix_gallardo");
+  resolveSuccession(game, successionCandidates[0].id);
+  assert.equal(game.designatedHeirId, null, "any succession, designated or not, should clear a stale designation");
+});
+
+test("mentorHeir requires a living designated heir, only works once per turn, and boosts bond plus a stat", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa", "ivan_archivaldo");
+  const noHeir = mentorHeir(game);
+  assert.equal(noHeir.ok, false);
+
+  const candidates = getDesignatableHeirs(game);
+  const heir = candidates[0];
+  designateHeir(game, heir.id);
+  heir.bondWithPlayer = 50;
+  const before = { ...heir.stats };
+
+  const first = mentorHeir(game);
+  assert.equal(first.ok, true);
+  assert.ok(heir.bondWithPlayer > 50);
+  assert.ok(heir.stats[first.stat] > (before[first.stat] || 0));
+
+  const second = mentorHeir(game);
+  assert.equal(second.ok, false, "mentoring should be limited to once per turn");
+});
+
+test("arrangeMarriage weds an eligible family member to a new NPC in another cartel and eases tension, but refuses invalid targets", () => {
+  const game = newGame("guadalajara-1975-1989.json", "guadalajara", "felix_gallardo");
+  const player = game.characters[game.playerCharacterId];
+  const child = game.characters[(player.childrenIds || [])[0]];
+  assert.ok(child, "expected the player's character to have at least one child in this era's data");
+
+  const before = game.cartels.guadalajara.relations.golfo.tension;
+  const result = arrangeMarriage(game, child.id, "golfo");
+  assert.equal(result.ok, true);
+  assert.equal(child.spouseId, result.spouseId);
+  assert.equal(game.characters[result.spouseId].cartelId, "golfo");
+  assert.ok(game.cartels.guadalajara.relations.golfo.tension <= before);
+  assert.equal(game.cartels.guadalajara.relations.golfo.tension, game.cartels.golfo.relations.guadalajara.tension);
+
+  const ownCartel = arrangeMarriage(game, child.id, "guadalajara");
+  assert.equal(ownCartel.ok, false, "cannot arrange a marriage into your own cartel");
+
+  const alreadyMarried = arrangeMarriage(game, child.id, "golfo");
+  assert.equal(alreadyMarried.ok, false, "the family member is already married after the first arrangement");
 });
 
 test("endTurn advances the turn/year counter and never lets money or army go negative", () => {

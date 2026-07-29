@@ -88,7 +88,7 @@
       "y": 24,
       "w": 18,
       "h": 16,
-      "controllerId": "cali",
+      "controllerId": "urdinola",
       "value": 13,
       "adj": [
         "valle_cauca",
@@ -198,6 +198,26 @@
         "productionChief": "cali_production_chief",
         "prChief": "cali_pr_chief",
         "intelChief": "cali_intel_chief"
+      }
+    },
+    {
+      "id": "urdinola",
+      "name": "Organización del Norte del Valle (Iván Urdinola)",
+      "color": "#6a7a2f",
+      "aiControlled": true,
+      "historicalNote": "Organización real liderada por Iván Urdinola Grajales, 'El Enano', pionero del narcotráfico en el norte del Valle del Cauca desde principios de los 80, inicialmente próximo a Cali pero con estructura y territorio propios; con el tiempo esta red daría origen al futuro Cartel del Norte del Valle. En la vida real fue capturado en 1992; en el juego su destino depende de tus decisiones. Los cargos secundarios de su organigrama son ficticios.",
+      "resources": {
+        "money": 700,
+        "armySize": 400,
+        "corruptGov": 30,
+        "corruptPolice": 40,
+        "publicImage": 30,
+        "heat": 18
+      },
+      "roles": {
+        "leader": "ivan_urdinola",
+        "underboss": "urdinola_underboss",
+        "financeChief": "urdinola_finance_chief"
       }
     }
   ],
@@ -893,6 +913,78 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, responsable de la célebre red de escuchas telefónicas del cártel.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "ivan_urdinola",
+      "name": "Iván Urdinola Grajales \"El Enano\"",
+      "sex": "M",
+      "birthYear": 1953,
+      "alive": true,
+      "cartelId": "urdinola",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 75,
+        "business": 68,
+        "charisma": 50,
+        "intrigue": 62,
+        "loyaltyInspiring": 58,
+        "stealth": 55
+      },
+      "traits": [
+        "pionero",
+        "violento"
+      ],
+      "notes": "Uno de los pioneros del narcotráfico en el norte del Valle del Cauca, con una organización propia desde principios de los 80. En la vida real fue capturado en 1992; en el juego su destino queda abierto a tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "urdinola_underboss",
+      "name": "Aldemar \"Tres Dedos\" Ospina",
+      "sex": "M",
+      "birthYear": 1949,
+      "alive": true,
+      "cartelId": "urdinola",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 65,
+        "business": 55,
+        "charisma": 45,
+        "intrigue": 58,
+        "loyaltyInspiring": 55,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "urdinola_finance_chief",
+      "name": "Claudia Restrepo Vidal",
+      "sex": "F",
+      "birthYear": 1957,
+      "alive": true,
+      "cartelId": "urdinola",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 75,
+        "charisma": 55,
+        "intrigue": 60,
+        "loyaltyInspiring": 40,
+        "stealth": 50
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

@@ -64,6 +64,17 @@ Estado del proyecto tras la primera versión jugable (MVP). Marcado ✅ lo imple
 - ✅ **Persecución más visible**: el heat ahora muestra una etiqueta descriptiva (Bajo perfil / En el radar / Buscado / Objetivo prioritario / Cacería nacional) y un porcentaje real de "riesgo de operativo este turno", visible en Resumen y en Medios.
 - ✅ **Sexta época jugable: "Los Chapitos contra La Mayiza" (2024-actualidad)**: cubre la guerra civil real dentro del Cártel de Sinaloa desde julio de 2024, cuando Joaquín Guzmán López entregó a El Mayo Zambada a EE.UU. Juegas desde el minuto uno como una de las dos facciones (o fundas tu propio grupo), con El Chapo y El Mayo como patriarcas presos y el CJNG acechando desde fuera. Esto también cubre lo que antes era un evento pendiente de "más eras/variantes".
 
+## Séptima pasada: límite de acciones, economía visible, más rivales, sucesión y editor a fondo
+
+- ✅ **Límite de acciones por turno**: ya no puedes encadenar decisiones económicas/de imagen infinitas en un mismo turno — tienes 3 acciones "de gestión" (producción, tráfico, sobornos, reclutamiento, medios, lavado...) antes de tener que avanzar el turno. Las jugadas de guerra/diplomacia (declarar guerra, atacar, ocupar, proponer paz/alianza) no consumen del cupo, ya que llevan su propio peso estratégico.
+- ✅ **Pestaña "Economía" dedicada**: desglose claro de ingreso por territorio, bonus de exportación, mantenimiento del ejército y balance neto por turno, más el total histórico de dinero lavado — antes esta información solo se podía deducir viendo subir o bajar el dinero.
+- ✅ **Tercer rival en dos épocas**: "El Cártel de Guadalajara" añade la plaza real de Ojinaga liderada por Pablo Acosta Villarreal ("El Zorro de Ojinaga"); "Medellín vs Cali" añade la organización real del Norte del Valle liderada por Iván Urdinola Grajales ("El Enano"), separada de Cali como territorio y cártel propios. Ambas partidas dejan de ser un enfrentamiento de solo dos bandos.
+- ✅ **Designar heredero**: desde la pestaña Familia puedes elegir de antemano quién heredará el cártel (hijos, cónyuge o cualquier jefe de tu organigrama), en vez de depender siempre de la elección automática al morir. Si tu elegido sigue vivo y disponible en el momento de la sucesión, hereda directamente sin pasar por el diálogo de sucesión.
+- ✅ **Instruir a tu heredero**: una vez designado, puedes pasar tiempo con él o ella para reforzar vuestro vínculo y mejorar uno de sus atributos, una vez por turno.
+- ✅ **Matrimonios de alianza**: puedes casar a un familiar soltero en edad de merecer con alguien de otro cártel para rebajar la tensión entre ambas organizaciones, además del cortejo personal del propio jugador.
+- ✅ **Ver cualquier cártel rival**: nueva vista de perfil de cártel (recursos, organigrama completo, territorios) accesible haciendo clic en cualquier cártel desde el Mapa, Estadísticas o Diplomacia — antes solo podías ver el detalle de tu propio cártel.
+- ✅ **Editor interno mucho más completo**: además de cártel y personaje, ahora puedes editar el valor económico y el controlador de cualquier territorio, el estado y la tensión de las relaciones entre cárteles, y los vínculos familiares de un personaje (pareja, padres, añadir/quitar hijos) con subida de foto también disponible fuera de la creación de personaje.
+
 ## Pendiente / mejoras futuras
 
 ### Mapa

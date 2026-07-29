@@ -3,6 +3,7 @@ import { portraitImg, statBar, escapeHtml } from "../../ui/components.js";
 import { STATS, STAT_ORDER, age } from "../../model.js";
 import { fmtMoney, fmtNum, heatLabel } from "../../utils/text.js";
 import { policeOperationChance } from "../../events.js";
+import { getActionsRemaining, ACTIONS_PER_TURN } from "../../turnEngine.js";
 
 export function render(container, app) {
   const game = app.game;
@@ -50,6 +51,7 @@ export function render(container, app) {
       </div>
     </div>
 
+    <p class="text-dim small center">Acciones restantes este turno: ${getActionsRemaining(game)}/${ACTIONS_PER_TURN}</p>
     <button class="primary block" id="end-turn-btn">Avanzar turno (${game.turnMonths} meses) →</button>
   `;
 

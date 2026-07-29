@@ -2,6 +2,7 @@ import { getPlayerCartel } from "../../state.js";
 import { escapeHtml } from "../../ui/components.js";
 import { applyAction, getWarsForCartel } from "../../turnEngine.js";
 import { showModal, closeModal } from "../../ui/modal.js";
+import { showCartelProfile } from "./cartelProfile.js";
 
 const STATUS_LABEL = { war: "En guerra", alliance: "Aliados", neutral: "Neutral" };
 const STATUS_CLASS = { war: "war", alliance: "alliance", neutral: "" };
@@ -19,7 +20,7 @@ export function render(container, app) {
         return `
         <div class="card tight mt-1">
           <div style="display:flex;justify-content:space-between;align-items:center">
-            <h3><span style="display:inline-block;width:10px;height:10px;background:${o.color};border-radius:2px;margin-right:6px"></span>${escapeHtml(o.name)}</h3>
+            <h3 data-view-cartel="${o.id}" style="cursor:pointer"><span style="display:inline-block;width:10px;height:10px;background:${o.color};border-radius:2px;margin-right:6px"></span>${escapeHtml(o.name)}</h3>
             <span class="badge ${STATUS_CLASS[rel.status]}">${STATUS_LABEL[rel.status]}</span>
           </div>
           <p class="small text-dim">Tensión: ${rel.tension}/100 · Ejército: ${o.resources.armySize} · Territorios: ${o.territories.length}</p>
@@ -49,6 +50,9 @@ export function render(container, app) {
     app.setGame(game);
     alert(res.accepted ? "Han aceptado la alianza." : "Han rechazado tu propuesta de alianza.");
     app.render();
+  }));
+  container.querySelectorAll("[data-view-cartel]").forEach((el) => el.addEventListener("click", () => {
+    showCartelProfile(app, el.dataset.viewCartel);
   }));
 }
 

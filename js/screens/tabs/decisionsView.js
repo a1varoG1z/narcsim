@@ -1,5 +1,5 @@
 import { getPlayerCartel } from "../../state.js";
-import { applyAction } from "../../turnEngine.js";
+import { applyAction, getActionsRemaining, ACTIONS_PER_TURN } from "../../turnEngine.js";
 import { showModal, closeModal } from "../../ui/modal.js";
 import { escapeHtml } from "../../ui/components.js";
 
@@ -17,13 +17,15 @@ const LAUNDER_AMOUNTS = [500, 2000, 10000];
 export function render(container, app) {
   const game = app.game;
   const cartel = getPlayerCartel(game);
+  const remaining = getActionsRemaining(game);
+  const exhausted = remaining <= 0;
 
   container.innerHTML = `
     <div class="card">
       <h2>Decisiones de este turno</h2>
-      <p class="text-dim small">Puedes realizar varias acciones antes de avanzar el turno, mientras tengas dinero disponible.</p>
+      <p class="text-dim small">Tienes <strong>${remaining}/${ACTIONS_PER_TURN}</strong> acciones disponibles antes de avanzar el turno. Las decisiones diplomáticas y militares no gastan acciones.</p>
       ${ACTIONS.map((a) => `
-        <button class="block" data-action="${a.type}" ${cartel.resources.money < a.cost ? "disabled" : ""}>
+        <button class="block" data-action="${a.type}" ${cartel.resources.money < a.cost || exhausted ? "disabled" : ""}>
           <strong>${a.label}</strong> ${a.cost ? `— $${a.cost}` : ""}
           <div class="small text-dim">${a.desc}</div>
         </button>
@@ -34,7 +36,7 @@ export function render(container, app) {
       <p class="text-dim small">Convierte dinero caliente en dinero limpio a través de negocios legales. Se cobra una comisión (menor cuanto mejor sea tu jefe económico) y reduce el heat.</p>
       <div class="btn-row">
         ${LAUNDER_AMOUNTS.map((amount) => `
-          <button data-launder="${amount}" ${cartel.resources.money < amount ? "disabled" : ""}>Lavar $${amount}</button>
+          <button data-launder="${amount}" ${cartel.resources.money < amount || exhausted ? "disabled" : ""}>Lavar $${amount}</button>
         `).join("")}
       </div>
       <p class="small text-dim mt-1">Total lavado hasta ahora: $${Math.round(cartel.resources.launderedMoney || 0)}</p>

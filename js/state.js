@@ -119,6 +119,8 @@ export function buildGameFromEra(eraData, options) {
     newCartelTerritories: eraData.newCartelTerritories || [],
     turn: 0,
     year: eraData.startYear,
+    actionsUsedThisTurn: 0,
+    designatedHeirId: null,
     playerCartelId,
     playerCharacterId,
     playerControlMode: "direct",

@@ -1,6 +1,6 @@
 import { getPlayerCartel } from "../../state.js";
 import { statBar, escapeHtml } from "../../ui/components.js";
-import { applyAction } from "../../turnEngine.js";
+import { applyAction, getActionsRemaining, ACTIONS_PER_TURN } from "../../turnEngine.js";
 import { heatLabel } from "../../utils/text.js";
 
 const ACTIONS = [
@@ -15,6 +15,7 @@ export function render(container, app) {
   const game = app.game;
   const cartel = getPlayerCartel(game);
   const r = cartel.resources;
+  const remaining = getActionsRemaining(game);
 
   container.innerHTML = `
     <div class="card">
@@ -27,8 +28,9 @@ export function render(container, app) {
     </div>
     <div class="card">
       <h3>Acciones de imagen</h3>
+      <p class="text-dim small">Acciones disponibles este turno: ${remaining}/${ACTIONS_PER_TURN}.</p>
       ${ACTIONS.map((a) => `
-        <button class="block" data-action="${a.type}" ${r.money < a.cost ? "disabled" : ""}>
+        <button class="block" data-action="${a.type}" ${r.money < a.cost || remaining <= 0 ? "disabled" : ""}>
           <strong>${a.label}</strong> — $${a.cost}
           <div class="small text-dim">${a.desc}</div>
         </button>

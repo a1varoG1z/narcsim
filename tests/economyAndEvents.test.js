@@ -4,7 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildGameFromEra } from "../js/state.js";
-import { applyAction, getWarsForCartel, resolveScriptedChoice, endTurn } from "../js/turnEngine.js";
+import { applyAction, getWarsForCartel, resolveScriptedChoice, endTurn, getActionsRemaining, ACTIONS_PER_TURN } from "../js/turnEngine.js";
 import { rollScriptedEvents } from "../js/scriptedEvents.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -69,6 +69,29 @@ test("traffic_shipment refuses to sell to a cartel you're at war with", () => {
   game.cartels.sinaloa.relations.cjng.status = "war";
   const result = applyAction(game, "sinaloa", "traffic_shipment", { partnerCartelId: "cjng" });
   assert.equal(result.ok, false);
+});
+
+test("the player is capped at ACTIONS_PER_TURN budgeted actions, is refused past the cap, and the budget refills after endTurn", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  game.cartels.sinaloa.resources.money = 100000;
+  assert.equal(getActionsRemaining(game), ACTIONS_PER_TURN);
+
+  for (let i = 0; i < ACTIONS_PER_TURN; i++) {
+    const res = applyAction(game, "sinaloa", "recruit_army");
+    assert.equal(res.ok, true, `action ${i + 1} should still be within budget`);
+  }
+  assert.equal(getActionsRemaining(game), 0);
+
+  const overBudget = applyAction(game, "sinaloa", "recruit_army");
+  assert.equal(overBudget.ok, false);
+  assert.match(overBudget.message, /acciones/i);
+
+  // War/diplomacy moves are deliberately not budgeted.
+  const warAction = applyAction(game, "sinaloa", "declare_war", { targetCartelId: "cjng" });
+  assert.equal(warAction.ok, true);
+
+  endTurn(game);
+  assert.equal(getActionsRemaining(game), ACTIONS_PER_TURN);
 });
 
 test("the Proceso 8000 (1995) event pauses for a player choice when the player controls Cali, and applies immediately for NPC-controlled Cali", () => {

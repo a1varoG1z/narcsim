@@ -3,7 +3,7 @@ import { portraitImg, escapeHtml, roleLabel, statBar } from "../../ui/components
 import { showCharacterProfile } from "./characterProfile.js";
 import { generateNpc, randomName } from "../../npcGenerator.js";
 import { chance, clamp } from "../../utils/random.js";
-import { strengthenBond } from "../../turnEngine.js";
+import { strengthenBond, getDesignatableHeirs, designateHeir, clearDesignatedHeir, mentorHeir, arrangeMarriage } from "../../turnEngine.js";
 import { showModal, closeModal } from "../../ui/modal.js";
 
 export function render(container, app) {
@@ -39,6 +39,8 @@ export function render(container, app) {
       ${player.spouseId && cartel.characters.length ? `<button class="block mt-1" id="try-child">Intentar tener un hijo/a</button>` : ""}
       ${player.spouseId ? `<button class="block mt-1 danger" id="divorce-btn">Pedir el divorcio</button>` : ""}
     </div>
+    ${renderSuccessionCard(game)}
+    ${renderMarriageAllianceCard(game, familyMembers, player, year)}
     <div class="card">
       <h3>Vínculos y lealtades del cártel</h3>
       <p class="text-dim small">La lealtad depende de tu Liderazgo frente a su Astucia, atenuada por el vínculo personal que tengas con cada uno. Pasa tiempo con ellos para fortalecerlo.</p>
@@ -80,6 +82,29 @@ export function render(container, app) {
 
   container.querySelector("#seek-romance")?.addEventListener("click", () => {
     showCourtshipModal(app, game, cartel, player, year);
+  });
+
+  container.querySelector("#choose-heir-btn")?.addEventListener("click", () => {
+    showHeirModal(app, game);
+  });
+
+  container.querySelector("#clear-heir-btn")?.addEventListener("click", () => {
+    clearDesignatedHeir(game);
+    app.setGame(game);
+    app.render();
+  });
+
+  container.querySelector("#mentor-heir-btn")?.addEventListener("click", () => {
+    const result = mentorHeir(game);
+    if (!result.ok && result.message) alert(result.message);
+    app.setGame(game);
+    app.render();
+  });
+
+  container.querySelectorAll("[data-arrange-marriage]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      showArrangeMarriageModal(app, game, cartel, btn.dataset.arrangeMarriage);
+    });
   });
 
   container.querySelector("#divorce-btn")?.addEventListener("click", () => {
@@ -161,6 +186,98 @@ function showCourtshipModal(app, game, cartel, player, year) {
         closeModal();
         app.render();
       });
+    });
+  });
+}
+
+function renderSuccessionCard(game) {
+  const heir = game.designatedHeirId ? game.characters[game.designatedHeirId] : null;
+  return `
+    <div class="card">
+      <h3>Sucesión</h3>
+      <p class="text-dim small">Si mueres, eres arrestado con cadena perpetua, o pierdes el liderazgo, tu cártel pasa a tu heredero designado (si sigue disponible). Si no designas a nadie, el cártel elegirá al candidato más adecuado por ti.</p>
+      ${heir
+        ? `<div class="person-row" style="border:none;padding:0;cursor:pointer" data-view="${heir.id}">
+            ${portraitImg(heir)}
+            <div class="info"><div class="name">${escapeHtml(heir.name)}</div><div class="role">${heir.role ? roleLabel(heir.role) : "Familiar"}</div></div>
+          </div>`
+        : `<p class="small text-dim">No has designado a ningún heredero todavía.</p>`}
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap" class="mt-1">
+        <button class="block" id="choose-heir-btn">${heir ? "Cambiar heredero" : "Designar heredero"}</button>
+        ${heir ? `<button class="block ghost" id="clear-heir-btn">Quitar designación</button>` : ""}
+        ${heir ? `<button class="block ghost" id="mentor-heir-btn">Instruir a tu heredero</button>` : ""}
+      </div>
+    </div>
+  `;
+}
+
+function renderMarriageAllianceCard(game, familyMemberIds, player, year) {
+  const eligible = [...familyMemberIds]
+    .map((id) => game.characters[id])
+    .filter((c) => c && c.id !== player.id && c.alive && !c.spouseId && year - c.birthYear >= 16);
+
+  return `
+    <div class="card">
+      <h3>Matrimonios de alianza</h3>
+      <p class="text-dim small">Casa a un familiar soltero con alguien de otro cártel para reducir la tensión entre ambas organizaciones.</p>
+      ${eligible.length ? eligible.map((c) => `
+        <div class="person-row">
+          <div style="display:flex;gap:.6rem;flex:1;min-width:0">
+            ${portraitImg(c)}
+            <div class="info"><div class="name">${escapeHtml(c.name)}</div><div class="role">${c.role ? roleLabel(c.role) : "Familiar"}</div></div>
+          </div>
+          <button class="tight" data-arrange-marriage="${c.id}">Arreglar matrimonio</button>
+        </div>
+      `).join("") : `<p class="small text-dim">No tienes familiares solteros en edad de casarse.</p>`}
+    </div>
+  `;
+}
+
+function showArrangeMarriageModal(app, game, cartel, familyMemberId) {
+  const member = game.characters[familyMemberId];
+  const targets = Object.values(game.cartels).filter((c) => c.id !== cartel.id && !c.destroyed);
+  showModal(`
+    <h2>Arreglar matrimonio</h2>
+    <p class="small text-dim">Elige con qué cártel quieres sellar la alianza a través de ${escapeHtml(member?.name || "")}.</p>
+    ${targets.length ? targets.map((c) => `
+      <button class="block" data-target-cartel="${c.id}">${escapeHtml(c.name)}</button>
+    `).join("") : `<p class="small text-dim">No hay otros cárteles disponibles.</p>`}
+    <button class="ghost block" id="close-btn">Cancelar</button>
+  `);
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.querySelectorAll("[data-target-cartel]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const result = arrangeMarriage(game, familyMemberId, btn.dataset.targetCartel);
+      closeModal();
+      if (!result.ok && result.message) alert(result.message);
+      app.setGame(game);
+      app.render();
+    });
+  });
+}
+
+function showHeirModal(app, game) {
+  const candidates = getDesignatableHeirs(game);
+  showModal(`
+    <h2>Designar heredero</h2>
+    <p class="small text-dim">Elige quién tomará el control del cártel si te ocurre algo. Solo puedes elegir entre familiares directos y jefes de tu organigrama.</p>
+    ${candidates.length ? candidates.map((c) => `
+      <button class="block" data-heir-pick="${c.id}">
+        <div class="person-row" style="border:none;padding:0">
+          ${portraitImg(c)}
+          <div class="info"><div class="name">${escapeHtml(c.name)}</div><div class="role">${c.role ? roleLabel(c.role) : "Familiar"}</div></div>
+        </div>
+      </button>
+    `).join("") : `<p class="small text-dim">No hay candidatos disponibles ahora mismo.</p>`}
+    <button class="ghost block" id="close-btn">Cancelar</button>
+  `);
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.querySelectorAll("[data-heir-pick]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      designateHeir(game, btn.dataset.heirPick);
+      closeModal();
+      app.setGame(game);
+      app.render();
     });
   });
 }

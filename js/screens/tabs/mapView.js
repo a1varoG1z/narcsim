@@ -2,6 +2,7 @@ import { getPlayerCartel } from "../../state.js";
 import { escapeHtml } from "../../ui/components.js";
 import { showModal, closeModal } from "../../ui/modal.js";
 import { applyAction, isAttackable } from "../../turnEngine.js";
+import { showCartelProfile } from "./cartelProfile.js";
 
 export function render(container, app) {
   const game = app.game;
@@ -23,7 +24,7 @@ export function render(container, app) {
       </div>
       <div class="grid auto mt-1">
         ${Object.values(game.cartels).filter((c) => !c.destroyed).map((c) => `
-          <div class="small"><span style="display:inline-block;width:10px;height:10px;background:${c.color};border-radius:2px;margin-right:4px"></span>${escapeHtml(c.name)}</div>
+          <div class="small" data-view-cartel="${c.id}" style="cursor:pointer"><span style="display:inline-block;width:10px;height:10px;background:${c.color};border-radius:2px;margin-right:4px"></span>${escapeHtml(c.name)}</div>
         `).join("")}
       </div>
     </div>
@@ -31,6 +32,9 @@ export function render(container, app) {
 
   container.querySelectorAll("[data-territory]").forEach((el) => {
     el.addEventListener("click", () => showTerritoryModal(app, el.dataset.territory));
+  });
+  container.querySelectorAll("[data-view-cartel]").forEach((el) => {
+    el.addEventListener("click", () => showCartelProfile(app, el.dataset.viewCartel));
   });
 }
 

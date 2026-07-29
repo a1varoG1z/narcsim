@@ -47,7 +47,21 @@
       "adj": [
         "sonora",
         "durango",
-        "nuevo_leon"
+        "nuevo_leon",
+        "ojinaga"
+      ]
+    },
+    {
+      "id": "ojinaga",
+      "name": "Plaza de Ojinaga",
+      "x": 60,
+      "y": 4,
+      "w": 16,
+      "h": 12,
+      "controllerId": "ojinaga",
+      "value": 9,
+      "adj": [
+        "chihuahua"
       ]
     },
     {
@@ -201,6 +215,26 @@
         "underboss": "golfo_underboss",
         "sicariosChief": "golfo_sicarios_chief",
         "financeChief": "golfo_finance_chief"
+      }
+    },
+    {
+      "id": "ojinaga",
+      "name": "Plaza de Ojinaga (Pablo Acosta)",
+      "color": "#7a3b3b",
+      "aiControlled": true,
+      "historicalNote": "Organización fronteriza real liderada por Pablo Acosta Villarreal, 'El Zorro de Ojinaga', que controló el corredor de contrabando entre Ojinaga (Chihuahua) y Presidio (Texas) a mediados de los 80. En la vida real fue abatido por la Policía Judicial Federal en abril de 1987 tras un tiroteo en Santa Elena; en el juego su destino depende de tus decisiones y las del jugador. Los cargos secundarios de su organigrama son ficticios, ya que no hay registro público fiable de quién los ocupaba.",
+      "resources": {
+        "money": 220,
+        "armySize": 150,
+        "corruptGov": 20,
+        "corruptPolice": 35,
+        "publicImage": 35,
+        "heat": 20
+      },
+      "roles": {
+        "leader": "pablo_acosta",
+        "underboss": "ojinaga_underboss",
+        "financeChief": "ojinaga_finance_chief"
       }
     }
   ],
@@ -704,6 +738,78 @@
         "intrigue": 55,
         "loyaltyInspiring": 45,
         "stealth": 50
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pablo_acosta",
+      "name": "Pablo Acosta Villarreal \"El Zorro de Ojinaga\"",
+      "sex": "M",
+      "birthYear": 1937,
+      "alive": true,
+      "cartelId": "ojinaga",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 70,
+        "business": 62,
+        "charisma": 58,
+        "intrigue": 68,
+        "loyaltyInspiring": 55,
+        "stealth": 78
+      },
+      "traits": [
+        "fronterizo",
+        "escurridizo"
+      ],
+      "notes": "Controló el corredor de contrabando entre Ojinaga y Presidio (Texas) durante los años 80, protegido durante un tiempo por autoridades locales corruptas. En la vida real murió en un tiroteo con la Policía Judicial Federal en abril de 1987; en el juego su destino queda abierto.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "ojinaga_underboss",
+      "name": "Fermín \"El Tuerto\" Reyes",
+      "sex": "M",
+      "birthYear": 1944,
+      "alive": true,
+      "cartelId": "ojinaga",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 60,
+        "business": 55,
+        "charisma": 45,
+        "intrigue": 58,
+        "loyaltyInspiring": 55,
+        "stealth": 60
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "ojinaga_finance_chief",
+      "name": "Herminia Chávez",
+      "sex": "F",
+      "birthYear": 1948,
+      "alive": true,
+      "cartelId": "ojinaga",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 72,
+        "charisma": 50,
+        "intrigue": 60,
+        "loyaltyInspiring": 40,
+        "stealth": 55
       },
       "traits": [],
       "notes": "Personaje ficticio.",

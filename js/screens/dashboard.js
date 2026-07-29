@@ -9,11 +9,13 @@ import * as familyView from "./tabs/familyView.js";
 import * as warsView from "./tabs/warsView.js";
 import * as decisionsView from "./tabs/decisionsView.js";
 import * as mediaView from "./tabs/mediaView.js";
+import * as economyView from "./tabs/economyView.js";
 import * as editorView from "./tabs/editorView.js";
 
 const TABS = [
   { id: "overview", label: "Resumen", mod: overview },
   { id: "decisions", label: "Decisiones", mod: decisionsView },
+  { id: "economy", label: "Economía", mod: economyView },
   { id: "org", label: "Organigrama", mod: orgChart },
   { id: "map", label: "Mapa", mod: mapView },
   { id: "wars", label: "Diplomacia", mod: warsView },

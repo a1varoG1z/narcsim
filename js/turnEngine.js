@@ -1,9 +1,9 @@
 import { chance, randInt, clamp, pick } from "./utils/random.js";
-import { addLog, currentYear, getPlayerCartel } from "./state.js";
+import { addLog, currentYear, getPlayerCartel, getPlayerCharacter } from "./state.js";
 import { rollMortality, rollFamilyEvents, rollLoyaltyEvents, rollPoliceOperations } from "./events.js";
 import { rollScriptedEvents, resolveScriptedChoice as applyScriptedChoice } from "./scriptedEvents.js";
-import { fillVacantRoles } from "./npcGenerator.js";
-import { ROLE_ORDER } from "./model.js";
+import { fillVacantRoles, generateNpc, randomName } from "./npcGenerator.js";
+import { ROLE_ORDER, STAT_ORDER, STATS, clampStat } from "./model.js";
 
 function warKey(a, b) {
   return [a, b].sort().join("|");
@@ -56,7 +56,18 @@ const ACTION_COSTS = {
   social_work: 300,
   international_interview: 200,
   damage_control: 250,
+  launder_money: 0,
 };
+
+/** Actions that count against the per-turn action budget — the day-to-day running of the
+ * cartel. War/diplomacy moves (attack, occupy, declare war, propose peace/alliance) are
+ * deliberately left unbudgeted: they already carry their own strategic weight and consequences. */
+export const BUDGETED_ACTIONS = new Set(Object.keys(ACTION_COSTS));
+export const ACTIONS_PER_TURN = 3;
+
+export function getActionsRemaining(game) {
+  return Math.max(0, ACTIONS_PER_TURN - (game.actionsUsedThisTurn || 0));
+}
 
 export function canAfford(cartel, type) {
   return cartel.resources.money >= (ACTION_COSTS[type] || 0);
@@ -74,7 +85,13 @@ export function applyAction(game, cartelId, type, payload = {}) {
   const cartel = game.cartels[cartelId];
   const r = cartel.resources;
   const log = (t, ty) => addLog(game, t, ty);
+  const isPlayerBudgeted = cartelId === game.playerCartelId && BUDGETED_ACTIONS.has(type);
 
+  if (isPlayerBudgeted && getActionsRemaining(game) <= 0) {
+    return { ok: false, message: "No te quedan acciones este turno. Avanza el turno para continuar." };
+  }
+
+  const result = (function runAction() {
   switch (type) {
     case "invest_production": {
       if (r.money < 150) return { ok: false, message: "No hay dinero suficiente." };
@@ -314,6 +331,12 @@ export function applyAction(game, cartelId, type, payload = {}) {
     default:
       return { ok: false, message: "Acción desconocida." };
   }
+  })();
+
+  if (isPlayerBudgeted && result?.ok) {
+    game.actionsUsedThisTurn = (game.actionsUsedThisTurn || 0) + 1;
+  }
+  return result;
 }
 
 /** Militia numbers alone don't decide a fight: the quality of the commanders and the loyalty the
@@ -496,15 +519,26 @@ export function strengthenBond(game, characterId) {
   return { ok: true };
 }
 
+/** Shared with the UI (Economía tab) so the displayed breakdown always matches what incomeTick
+ * actually applies at the end of the turn. */
+export function getIncomeBreakdown(game, cartel) {
+  const perTerritory = cartel.territories.map((tId) => {
+    const t = game.territories[tId];
+    return { territoryId: tId, name: t?.name || tId, value: t?.value || 0, income: (t?.value || 0) * 10 };
+  });
+  const baseIncome = perTerritory.reduce((s, t) => s + t.income, 0);
+  // International fame opens pricier overseas markets: a modest, capped bonus on top of local sales.
+  const exportBonusRate = clamp((cartel.resources.internationalReputation ?? 15) / 400, 0, 0.25);
+  const exportBonus = Math.round(baseIncome * exportBonusRate);
+  const territoryIncome = baseIncome + exportBonus;
+  const upkeep = Math.round(cartel.resources.armySize * 0.45);
+  return { perTerritory, baseIncome, exportBonusRate, exportBonus, territoryIncome, upkeep, net: territoryIncome - upkeep };
+}
+
 function incomeTick(game) {
   for (const cartel of Object.values(game.cartels)) {
     if (cartel.destroyed) continue;
-    const baseIncome = cartel.territories.reduce((s, tId) => s + (game.territories[tId]?.value || 0) * 10, 0);
-    // International fame opens pricier overseas markets: a modest, capped bonus on top of local sales.
-    const exportBonus = baseIncome * clamp((cartel.resources.internationalReputation ?? 15) / 400, 0, 0.25);
-    const territoryIncome = Math.round(baseIncome + exportBonus);
-    const upkeep = Math.round(cartel.resources.armySize * 0.45);
-    const net = territoryIncome - upkeep;
+    const { territoryIncome, upkeep, net } = getIncomeBreakdown(game, cartel);
     if (cartel.resources.money + net < 0) {
       // Can't make payroll: unpaid sicarios desert instead of the cartel going into debt.
       const shortfall = -(cartel.resources.money + net);
@@ -684,6 +718,16 @@ export function endTurn(game) {
     }
   }
 
+  // A designated heir succeeds automatically, without a modal, as long as they're still eligible.
+  if (pendingSuccession && game.designatedHeirId) {
+    const candidates = getSuccessionCandidates(game, pendingSuccession.cartelId, pendingSuccession.deceasedId);
+    const designated = candidates.find((c) => c.id === game.designatedHeirId);
+    if (designated) {
+      resolveSuccession(game, designated.id);
+      pendingSuccession = null;
+    }
+  }
+
   releaseExpiredPrisoners(game);
   restorePlayerLeadership(game);
 
@@ -692,6 +736,7 @@ export function endTurn(game) {
 
   game.turn += 1;
   game.year = currentYear(game);
+  game.actionsUsedThisTurn = 0;
   if (game.year >= game.endYear && !pendingSuccession) {
     game.gameOver = true;
     game.gameOverReason = "era-end";
@@ -722,6 +767,87 @@ function rollMarriageCrisis(game) {
     return null;
   }
   return { spouseId: spouse.id };
+}
+
+/** Family and role-holders the player could plausibly designate as their heir ahead of time
+ * (not age-gated at designation time — they may still be a minor and grow into eligibility). */
+export function getDesignatableHeirs(game) {
+  const player = getPlayerCharacter(game);
+  const cartel = getPlayerCartel(game);
+  if (!player || !cartel) return [];
+  const ids = new Set();
+  for (const id of player.childrenIds || []) ids.add(id);
+  if (player.spouseId) ids.add(player.spouseId);
+  for (const role of ROLE_ORDER) {
+    if (cartel.roles[role] && cartel.roles[role] !== player.id) ids.add(cartel.roles[role]);
+  }
+  return [...ids].map((id) => game.characters[id]).filter((c) => c && c.alive && !c.imprisoned);
+}
+
+export function designateHeir(game, characterId) {
+  const character = game.characters[characterId];
+  if (!character) return { ok: false, message: "Personaje no encontrado." };
+  game.designatedHeirId = characterId;
+  addLog(game, `Designas a ${character.name} como tu heredero.`, "event");
+  return { ok: true };
+}
+
+export function clearDesignatedHeir(game) {
+  game.designatedHeirId = null;
+}
+
+/** Spending time grooming your heir strengthens the bond that keeps them loyal later and
+ * sharpens one of their stats at random, the way an apprenticeship would. Once per turn. */
+export function mentorHeir(game) {
+  const heir = game.characters[game.designatedHeirId];
+  if (!heir) return { ok: false, message: "No tienes un heredero designado." };
+  if (!heir.alive) return { ok: false, message: "Tu heredero ya no vive." };
+  if (heir._mentorTurn === game.turn) {
+    return { ok: false, message: `Ya has instruido a ${heir.name} este turno.` };
+  }
+  heir._mentorTurn = game.turn;
+  if (heir.bondWithPlayer === undefined) heir.bondWithPlayer = 50;
+  heir.bondWithPlayer = clamp(heir.bondWithPlayer + randInt(5, 10), 0, 100);
+  const statKey = pick(STAT_ORDER);
+  heir.stats[statKey] = clampStat((heir.stats[statKey] || 0) + randInt(2, 5));
+  addLog(game, `Instruyes personalmente a ${heir.name}, mejorando su ${STATS[statKey].toLowerCase()} y vuestro vínculo.`, "good");
+  return { ok: true, stat: statKey };
+}
+
+/** Arranges a diplomatic marriage between an unmarried family member (child, sibling, or
+ * widowed spouse-in-waiting) and a new NPC tied to another cartel — a classic alliance-by-blood
+ * move that eases tension between the two organizations without requiring a war to end first. */
+export function arrangeMarriage(game, familyMemberId, targetCartelId) {
+  const member = game.characters[familyMemberId];
+  const cartel = getPlayerCartel(game);
+  const targetCartel = game.cartels[targetCartelId];
+  if (!member || !member.alive || member.spouseId) {
+    return { ok: false, message: "Ese familiar no está disponible para un matrimonio arreglado." };
+  }
+  if (!targetCartel || targetCartel.destroyed || targetCartelId === game.playerCartelId) {
+    return { ok: false, message: "Ese cártel no es un destino válido para la alianza." };
+  }
+  const spouseSex = member.sex === "M" ? "F" : "M";
+  const spouse = generateNpc({ cartelId: targetCartelId, role: null, currentYear: currentYear(game), minAge: 18, maxAge: 50 });
+  spouse.sex = spouseSex;
+  spouse.name = randomName(spouseSex);
+  spouse.spouseId = member.id;
+  member.spouseId = spouse.id;
+  game.characters[spouse.id] = spouse;
+  targetCartel.characters.push(spouse.id);
+
+  const rel = cartel.relations[targetCartelId];
+  const revRel = targetCartel.relations[cartel.id];
+  if (rel && revRel) {
+    rel.tension = clamp(rel.tension - randInt(15, 30), 0, 100);
+    revRel.tension = rel.tension;
+    if (rel.status !== "war" && rel.tension < 20) {
+      rel.status = "alliance";
+      revRel.status = "alliance";
+    }
+  }
+  addLog(game, `${member.name} contrae un matrimonio arreglado con un miembro de ${targetCartel.name}, estrechando lazos entre ambas familias.`, "good");
+  return { ok: true, spouseId: spouse.id };
 }
 
 export function resolveScriptedChoice(game, eventId, optionId) {
@@ -772,6 +898,7 @@ export function resolveSuccession(game, heirId) {
   game.characters[heirId].role = "leader";
   game.playerCharacterId = heirId;
   game.playerControlMode = "direct";
+  game.designatedHeirId = null;
   fillVacantRoles(cartel, game.characters, currentYear(game));
   addLog(game, `${game.characters[heirId].name} hereda el control de ${cartel.name}.`, "event");
 }
