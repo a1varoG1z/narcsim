@@ -277,8 +277,9 @@ export function render(container, app) {
   }
 
   function nodePreview(id, node, isStart) {
+    if (node.name && node.name.trim()) return `${isStart ? "▶ " : ""}${node.name.trim()}`;
     const text = (node.text || "").replace(/\s+/g, " ").trim();
-    const snippet = text.length > 44 ? text.slice(0, 44) + "…" : text || "(sin texto)";
+    const snippet = text.length > 44 ? text.slice(0, 44) + "…" : text || "(sin nombre ni texto)";
     return `${isStart ? "▶ " : ""}${snippet}`;
   }
 
@@ -313,6 +314,8 @@ export function render(container, app) {
 
     target.innerHTML = `
       ${nodeId === tree.start ? `<p class="small text-success">Este es el nodo inicial de la conversación.</p>` : ""}
+      <label>Nombre del nodo (opcional, solo para ti — te ayuda a encontrarlo en la lista)</label>
+      <input type="text" id="dn-name" placeholder="p. ej. Saludo inicial" value="${escapeHtml(node.name || "")}">
       <label>Texto de este momento de la conversación</label>
       <textarea id="dn-text" rows="3">${escapeHtml(node.text || "")}</textarea>
       <h4 class="mt-1">Opciones que puede elegir el jugador</h4>
@@ -332,6 +335,7 @@ export function render(container, app) {
     `;
 
     target.querySelector("#save-dialogue-node").addEventListener("click", () => {
+      node.name = target.querySelector("#dn-name").value.trim();
       node.text = target.querySelector("#dn-text").value;
       const options = [];
       for (let i = 0; i < slots; i++) {
