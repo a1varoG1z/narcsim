@@ -8,7 +8,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { buildGameFromEra, getPlayerCartel } from "../js/state.js";
-import { endTurn, resolveSuccession, resolveRegentChoice, getSuccessionCandidates, applyAction, canAfford, isAttackable, resolveScriptedChoice } from "../js/turnEngine.js";
+import { endTurn, resolveSuccession, resolveRegentChoice, getSuccessionCandidates, applyAction, canAfford, isAttackable, resolveScriptedChoice, ACTIONS_PER_TURN } from "../js/turnEngine.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ERA_DIR = path.join(__dirname, "..", "data", "eras") + path.sep;
@@ -26,7 +26,7 @@ function playerTurnPolicy(game) {
   if (!cartel || cartel.destroyed) return;
   const r = cartel.resources;
   let actionsThisTurn = 0;
-  const maxActions = 3;
+  const maxActions = ACTIONS_PER_TURN;
 
   if (r.heat > 60 && actionsThisTurn < maxActions) {
     if (canAfford(cartel, "corrupt_police")) { applyAction(game, cartel.id, "corrupt_police"); actionsThisTurn++; }
@@ -40,6 +40,18 @@ function playerTurnPolicy(game) {
   }
   if (actionsThisTurn < maxActions && canAfford(cartel, "recruit_army") && r.armySize < 2000) {
     applyAction(game, cartel.id, "recruit_army"); actionsThisTurn++;
+  }
+  if (actionsThisTurn < maxActions && canAfford(cartel, "invest_property") && !r.propertyIncome) {
+    applyAction(game, cartel.id, "invest_property"); actionsThisTurn++;
+  }
+  if (actionsThisTurn < maxActions && canAfford(cartel, "invest_business") && !r.businessIncome) {
+    applyAction(game, cartel.id, "invest_business"); actionsThisTurn++;
+  }
+  if (actionsThisTurn < maxActions && r.heat > 50 && r.money > 0) {
+    applyAction(game, cartel.id, "launder_money", { amount: Math.round(r.money * 0.2) }); actionsThisTurn++;
+  }
+  if (actionsThisTurn < maxActions && cartel.territories.length && canAfford(cartel, "extort_territory")) {
+    applyAction(game, cartel.id, "extort_territory", { territoryId: cartel.territories[0] }); actionsThisTurn++;
   }
   const warEnemyIds = Object.entries(cartel.relations).filter(([, rel]) => rel.status === "war").map(([id]) => id);
   for (const enemyId of warEnemyIds) {

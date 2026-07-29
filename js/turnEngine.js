@@ -81,7 +81,7 @@ export const ACTION_COSTS = {
  * territorial development are deliberately left unbudgeted: they already carry their own
  * strategic weight and consequences. */
 export const BUDGETED_ACTIONS = new Set(Object.keys(ACTION_COSTS));
-export const ACTIONS_PER_TURN = 5;
+export const ACTIONS_PER_TURN = 10;
 
 export function getActionsRemaining(game) {
   return Math.max(0, ACTIONS_PER_TURN - (game.actionsUsedThisTurn || 0));
