@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildGameFromEra } from "../js/state.js";
+import { buildGameFromEra, addLog } from "../js/state.js";
 import {
   applyAction,
   isAttackable,
@@ -22,6 +22,7 @@ import {
   resolveConceptionAttempt,
   processPregnancies,
   rollNewCartelSpawns,
+  collectSignificantPlayerEvents,
 } from "../js/turnEngine.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -289,5 +290,45 @@ test("endTurn advances the turn/year counter and never lets money or army go neg
     assert.ok(cartel.resources.money >= 0, `${cartel.id} money went negative`);
     assert.ok(cartel.resources.armySize >= 0, `${cartel.id} army went negative`);
     assert.ok(cartel.resources.heat >= 0 && cartel.resources.heat <= 100, `${cartel.id} heat out of range`);
+  }
+});
+
+test("collectSignificantPlayerEvents only surfaces log entries that name the player's cartel or one of its people, deduplicated", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa", "ivan_archivaldo");
+  const cartel = game.cartels.sinaloa;
+  const playerMember = game.characters[cartel.roles.underboss];
+  const startIndex = game.log.length;
+
+  addLog(game, `El CJNG ocupa un territorio neutral lejano.`, "event");
+  addLog(game, `${cartel.name} sufre una redada del CJNG en una de sus plazas.`, "event");
+  addLog(game, `${playerMember.name} muere en un atentado ordenado por el CJNG.`, "death");
+  addLog(game, `${cartel.name} sufre una redada del CJNG en una de sus plazas.`, "event"); // exact duplicate text
+
+  const events = collectSignificantPlayerEvents(game, startIndex);
+  assert.equal(events.length, 2, "should keep the two distinct player-relevant entries and drop the duplicate and the unrelated one");
+  assert.ok(events.some((e) => e.text.includes(cartel.name)));
+  assert.ok(events.some((e) => e.text.includes(playerMember.name)));
+});
+
+test("endTurn's significantEvents, whenever present, always mention the player cartel or one of its people (never unrelated AI noise)", () => {
+  // A soft, non-flaky integration check: it never requires a significant event to happen on any
+  // given run (that depends on AI randomness), only that whichever ones do surface are genuinely
+  // player-relevant. Run across a few different cartel/era combos and enough turns that the
+  // filtering logic gets real exercise against a busy log full of unrelated AI-vs-AI activity.
+  for (const [file, cartelId, characterId] of [
+    ["cjng-sinaloa-2015-actualidad.json", "sinaloa", "ivan_archivaldo"],
+    ["fragmentacion-2006-2015.json", "sinaloa", "chapo_guzman_06"],
+  ]) {
+    const game = newGame(file, cartelId, characterId);
+    const cartel = game.cartels[cartelId];
+    for (let i = 0; i < 20 && !game.gameOver; i++) {
+      const result = endTurn(game);
+      assert.ok(Array.isArray(result.significantEvents));
+      for (const e of result.significantEvents) {
+        const mentionsCartel = e.text.includes(cartel.name);
+        const mentionsMember = cartel.characters.some((id) => game.characters[id] && e.text.includes(game.characters[id].name));
+        assert.ok(mentionsCartel || mentionsMember, `event "${e.text}" should mention the player cartel or one of its people`);
+      }
+    }
   }
 });

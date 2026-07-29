@@ -103,11 +103,35 @@ const app = {
       this.showScriptedChoiceModal(result.pendingScriptedChoice);
       return;
     }
+    if (result.significantEvents && result.significantEvents.length) {
+      this.showTurnSummaryModal(result.significantEvents, result.gameOver);
+      return;
+    }
     if (result.gameOver) {
       this.showGameOverModal();
       return;
     }
     this.render();
+  },
+
+  showTurnSummaryModal(events, gameOver) {
+    const icon = (type) => (type === "death" ? "💀" : type === "good" ? "✅" : "⚠️");
+    showModal(`
+      <h2>Resumen del turno</h2>
+      <p>Esto ha pasado mientras avanzabas el tiempo:</p>
+      <div class="log" style="margin-bottom:1rem">
+        ${events.map((e) => `<div class="entry ${e.type}">${icon(e.type)} ${escapeHtml(e.text)}</div>`).join("")}
+      </div>
+      <button class="primary block" id="turn-summary-ok">Continuar</button>
+    `, { dismissible: false });
+    document.getElementById("turn-summary-ok").addEventListener("click", () => {
+      closeModal();
+      if (gameOver) {
+        this.showGameOverModal();
+      } else {
+        this.render();
+      }
+    });
   },
 
   showSuccessionModal(info) {

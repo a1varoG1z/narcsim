@@ -1071,6 +1071,7 @@ export function endTurn(game) {
 
   const pendingMarriageEvent = !pendingSuccession && !pendingRegentChoice ? rollMarriageCrisis(game) : null;
   const pendingScriptedChoice = !pendingSuccession && !pendingRegentChoice ? scriptedResult.pendingChoice : null;
+  const significantEvents = collectSignificantPlayerEvents(game, startIndex);
 
   game.turn += 1;
   game.year = currentYear(game);
@@ -1087,8 +1088,31 @@ export function endTurn(game) {
     pendingRegentChoice,
     pendingMarriageEvent,
     pendingScriptedChoice,
+    significantEvents,
     gameOver: game.gameOver,
   };
+}
+
+/** Turn-resolution events (AI attacks, sabotage, raids, assassination attempts, battles) that
+ * name the player's cartel or one of its people. Surfaced as a "what happened" modal so a busy
+ * turn doesn't just silently resolve in the background — the player notices rivals moving
+ * against them instead of finding out by accident from the stats a few turns later. */
+export function collectSignificantPlayerEvents(game, startIndex) {
+  const cartel = game.cartels[game.playerCartelId];
+  if (!cartel) return [];
+  const needles = [cartel.name];
+  for (const id of cartel.characters) {
+    const c = game.characters[id];
+    if (c) needles.push(c.name);
+  }
+  const seen = new Set();
+  const events = [];
+  for (const entry of game.log.slice(startIndex)) {
+    if (seen.has(entry.text) || !needles.some((n) => n && entry.text.includes(n))) continue;
+    seen.add(entry.text);
+    events.push(entry);
+  }
+  return events;
 }
 
 /** Chance of an infidelity/relationship crisis for the player's own marriage, scaled inversely
