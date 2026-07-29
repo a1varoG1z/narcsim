@@ -7,18 +7,180 @@
   "turnMonths": 6,
   "description": "El presidente Felipe Calderón lanza una ofensiva militar contra el narcotráfico en 2006, desatando una espiral de violencia sin precedentes. Los Zetas rompen con el Cártel del Golfo en 2010 y se convierten en la organización más sanguinaria del país. La Familia Michoacana (y su escisión, los Caballeros Templarios) y la Organización Beltrán Leyva (escindida de Sinaloa en 2008) añaden más frentes de guerra. En medio del caos, el Cártel de Sinaloa logra mantener y hasta expandir su influencia.",
   "territories": [
-    { "id": "baja_california", "name": "Baja California", "x": 2, "y": 10, "w": 16, "h": 15, "controllerId": null, "value": 15 },
-    { "id": "sonora", "name": "Sonora", "x": 20, "y": 8, "w": 16, "h": 16, "controllerId": "sinaloa", "value": 12 },
-    { "id": "chihuahua", "name": "Chihuahua", "x": 38, "y": 6, "w": 19, "h": 18, "controllerId": "sinaloa", "value": 16 },
-    { "id": "coahuila", "name": "Coahuila", "x": 40, "y": 26, "w": 16, "h": 15, "controllerId": "zetas", "value": 11 },
-    { "id": "nuevo_leon", "name": "Nuevo León", "x": 57, "y": 27, "w": 14, "h": 15, "controllerId": "zetas", "value": 14 },
-    { "id": "tamaulipas", "name": "Tamaulipas", "x": 71, "y": 15, "w": 17, "h": 21, "controllerId": "golfo", "value": 15 },
-    { "id": "veracruz", "name": "Veracruz", "x": 58, "y": 44, "w": 17, "h": 18, "controllerId": "zetas", "value": 16 },
-    { "id": "sinaloa_t", "name": "Sinaloa", "x": 5, "y": 29, "w": 15, "h": 15, "controllerId": "sinaloa", "value": 20 },
-    { "id": "durango", "name": "Durango", "x": 22, "y": 29, "w": 15, "h": 15, "controllerId": "sinaloa", "value": 10 },
-    { "id": "jalisco", "name": "Jalisco", "x": 10, "y": 48, "w": 18, "h": 16, "controllerId": null, "value": 19 },
-    { "id": "michoacan", "name": "Michoacán", "x": 30, "y": 48, "w": 16, "h": 15, "controllerId": "familia_michoacana", "value": 14 },
-    { "id": "guerrero", "name": "Guerrero", "x": 14, "y": 66, "w": 18, "h": 15, "controllerId": "beltran_leyva", "value": 13 }
+    {
+      "id": "baja_california",
+      "name": "Baja California",
+      "x": 2,
+      "y": 10,
+      "w": 16,
+      "h": 15,
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "sonora"
+      ]
+    },
+    {
+      "id": "sonora",
+      "name": "Sonora",
+      "x": 20,
+      "y": 8,
+      "w": 16,
+      "h": 16,
+      "controllerId": "sinaloa",
+      "value": 12,
+      "adj": [
+        "baja_california",
+        "chihuahua",
+        "sinaloa_t"
+      ]
+    },
+    {
+      "id": "chihuahua",
+      "name": "Chihuahua",
+      "x": 38,
+      "y": 6,
+      "w": 19,
+      "h": 18,
+      "controllerId": "sinaloa",
+      "value": 16,
+      "adj": [
+        "sonora",
+        "sinaloa_t",
+        "durango",
+        "coahuila"
+      ]
+    },
+    {
+      "id": "coahuila",
+      "name": "Coahuila",
+      "x": 40,
+      "y": 26,
+      "w": 16,
+      "h": 15,
+      "controllerId": "zetas",
+      "value": 11,
+      "adj": [
+        "chihuahua",
+        "durango",
+        "nuevo_leon"
+      ]
+    },
+    {
+      "id": "nuevo_leon",
+      "name": "Nuevo León",
+      "x": 57,
+      "y": 27,
+      "w": 14,
+      "h": 15,
+      "controllerId": "zetas",
+      "value": 14,
+      "adj": [
+        "coahuila",
+        "tamaulipas"
+      ]
+    },
+    {
+      "id": "tamaulipas",
+      "name": "Tamaulipas",
+      "x": 71,
+      "y": 15,
+      "w": 17,
+      "h": 21,
+      "controllerId": "golfo",
+      "value": 15,
+      "adj": [
+        "nuevo_leon",
+        "veracruz"
+      ]
+    },
+    {
+      "id": "veracruz",
+      "name": "Veracruz",
+      "x": 58,
+      "y": 44,
+      "w": 17,
+      "h": 18,
+      "controllerId": "zetas",
+      "value": 16,
+      "adj": [
+        "tamaulipas"
+      ]
+    },
+    {
+      "id": "sinaloa_t",
+      "name": "Sinaloa",
+      "x": 5,
+      "y": 29,
+      "w": 15,
+      "h": 15,
+      "controllerId": "sinaloa",
+      "value": 20,
+      "adj": [
+        "sonora",
+        "chihuahua",
+        "durango",
+        "jalisco"
+      ]
+    },
+    {
+      "id": "durango",
+      "name": "Durango",
+      "x": 22,
+      "y": 29,
+      "w": 15,
+      "h": 15,
+      "controllerId": "sinaloa",
+      "value": 10,
+      "adj": [
+        "chihuahua",
+        "sinaloa_t",
+        "coahuila",
+        "jalisco"
+      ]
+    },
+    {
+      "id": "jalisco",
+      "name": "Jalisco",
+      "x": 10,
+      "y": 48,
+      "w": 18,
+      "h": 16,
+      "controllerId": null,
+      "value": 19,
+      "adj": [
+        "sinaloa_t",
+        "durango",
+        "michoacan"
+      ]
+    },
+    {
+      "id": "michoacan",
+      "name": "Michoacán",
+      "x": 30,
+      "y": 48,
+      "w": 16,
+      "h": 15,
+      "controllerId": "familia_michoacana",
+      "value": 14,
+      "adj": [
+        "jalisco",
+        "guerrero"
+      ]
+    },
+    {
+      "id": "guerrero",
+      "name": "Guerrero",
+      "x": 14,
+      "y": 66,
+      "w": 18,
+      "h": 15,
+      "controllerId": "beltran_leyva",
+      "value": 13,
+      "adj": [
+        "michoacan"
+      ]
+    }
   ],
   "cartels": [
     {
@@ -27,7 +189,14 @@
       "color": "#7a1f1f",
       "aiControlled": false,
       "historicalNote": "Pese a la guerra generalizada, logra mantener el control del noroeste del país y expandir su influencia internacional. Cargos no documentados públicamente son ficticios.",
-      "resources": { "money": 3200, "armySize": 2200, "corruptGov": 60, "corruptPolice": 60, "publicImage": 42, "heat": 45 },
+      "resources": {
+        "money": 3200,
+        "armySize": 2200,
+        "corruptGov": 60,
+        "corruptPolice": 60,
+        "publicImage": 42,
+        "heat": 45
+      },
       "roles": {
         "leader": "chapo_guzman_06",
         "underboss": "mayo_zambada_06",
@@ -45,7 +214,14 @@
       "color": "#1f1f1f",
       "aiControlled": true,
       "historicalNote": "Fundados por exmilitares de élite como brazo armado del Golfo, rompen relaciones en 2010 y se convierten en cártel independiente, tristemente célebres por su brutalidad.",
-      "resources": { "money": 2000, "armySize": 2400, "corruptGov": 35, "corruptPolice": 45, "publicImage": 12, "heat": 75 },
+      "resources": {
+        "money": 2000,
+        "armySize": 2400,
+        "corruptGov": 35,
+        "corruptPolice": 45,
+        "publicImage": 12,
+        "heat": 75
+      },
       "roles": {
         "leader": "lazcano_06",
         "underboss": "z40_trevino",
@@ -60,7 +236,14 @@
       "color": "#2e5a8a",
       "aiControlled": true,
       "historicalNote": "Debilitado tras la ruptura con Los Zetas, entra en una guerra abierta por el control de Tamaulipas.",
-      "resources": { "money": 900, "armySize": 900, "corruptGov": 30, "corruptPolice": 35, "publicImage": 30, "heat": 55 },
+      "resources": {
+        "money": 900,
+        "armySize": 900,
+        "corruptGov": 30,
+        "corruptPolice": 35,
+        "publicImage": 30,
+        "heat": 55
+      },
       "roles": {
         "leader": "el_coss",
         "underboss": "golfo06_underboss",
@@ -74,7 +257,14 @@
       "color": "#4f7a2e",
       "aiControlled": true,
       "historicalNote": "Organización con retórica pseudo-religiosa fundada por Nazario Moreno; tras su presunta muerte en 2010 (luego confirmada en 2014), una facción se escindiría como Caballeros Templarios.",
-      "resources": { "money": 700, "armySize": 650, "corruptGov": 25, "corruptPolice": 30, "publicImage": 38, "heat": 50 },
+      "resources": {
+        "money": 700,
+        "armySize": 650,
+        "corruptGov": 25,
+        "corruptPolice": 30,
+        "publicImage": 38,
+        "heat": 50
+      },
       "roles": {
         "leader": "nazario_moreno",
         "underboss": "la_tuta",
@@ -88,7 +278,14 @@
       "color": "#8a4f2e",
       "aiControlled": true,
       "historicalNote": "Escindida del Cártel de Sinaloa en 2008 tras la detención de Alfredo Beltrán Leyva; entra en guerra abierta contra sus antiguos socios.",
-      "resources": { "money": 1100, "armySize": 800, "corruptGov": 35, "corruptPolice": 40, "publicImage": 28, "heat": 60 },
+      "resources": {
+        "money": 1100,
+        "armySize": 800,
+        "corruptGov": 35,
+        "corruptPolice": 40,
+        "publicImage": 28,
+        "heat": 60
+      },
       "roles": {
         "leader": "arturo_beltran_leyva",
         "underboss": "hector_beltran_leyva",
@@ -98,33 +295,664 @@
     }
   ],
   "characters": [
-    { "id": "chapo_guzman_06", "name": "Joaquín Guzmán Loera \"El Chapo\"", "sex": "M", "birthYear": 1957, "alive": true, "cartelId": "sinaloa", "role": "leader", "historical": true, "stats": { "violence": 70, "business": 88, "charisma": 72, "intrigue": 96, "loyaltyInspiring": 78, "stealth": 90 }, "traits": ["fugitivo nato", "estratega"], "notes": "Tras su fuga de 2001, consolida a Sinaloa como el cártel más poderoso de México. En la vida real sería recapturado en 2014, se fugaría de nuevo en 2015 y sería finalmente extraditado a EE.UU. en 2017. En el juego su destino depende de tus decisiones.", "parents": [], "spouseId": null, "childrenIds": ["chapo_hijo_1_06", "chapo_hijo_2_06"] },
-    { "id": "chapo_hijo_1_06", "name": "Iván Archivaldo Guzmán", "sex": "M", "birthYear": 1983, "alive": true, "cartelId": "sinaloa", "role": null, "historical": true, "stats": { "violence": 72, "business": 68, "charisma": 62, "intrigue": 72, "loyaltyInspiring": 58, "stealth": 55 }, "traits": ["heredero", "Los Chapitos"], "notes": "Hijo mayor de El Chapo, en la vida real figura central de 'Los Chapitos'.", "parents": ["chapo_guzman_06"], "spouseId": null, "childrenIds": [] },
-    { "id": "chapo_hijo_2_06", "name": "Jesús Alfredo Guzmán Salazar", "sex": "M", "birthYear": 1989, "alive": true, "cartelId": "sinaloa", "role": null, "historical": true, "stats": { "violence": 68, "business": 62, "charisma": 55, "intrigue": 68, "loyaltyInspiring": 52, "stealth": 55 }, "traits": ["heredero", "Los Chapitos"], "notes": "Hijo de El Chapo.", "parents": ["chapo_guzman_06"], "spouseId": null, "childrenIds": [] },
-    { "id": "mayo_zambada_06", "name": "Ismael Zambada García \"El Mayo\"", "sex": "M", "birthYear": 1948, "alive": true, "cartelId": "sinaloa", "role": "underboss", "historical": true, "stats": { "violence": 60, "business": 90, "charisma": 65, "intrigue": 93, "loyaltyInspiring": 80, "stealth": 88 }, "traits": ["discreto", "pragmático"], "notes": "Socio histórico de El Chapo; en la vida real seguiría en libertad hasta su detención en 2024, ya en la siguiente era.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "damaso_lopez", "name": "Dámaso López Núñez \"El Licenciado\"", "sex": "M", "birthYear": 1962, "alive": true, "cartelId": "sinaloa", "role": "corruptionGovChief", "historical": true, "stats": { "violence": 55, "business": 75, "charisma": 65, "intrigue": 85, "loyaltyInspiring": 60, "stealth": 65 }, "traits": [], "notes": "Exfuncionario penitenciario y hombre de confianza de El Chapo, ligado a su fuga de 2001.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "sin06_sicarios_chief", "name": "Gonzalo \"El Macho Prieto\" Inzunza", "sex": "M", "birthYear": 1972, "alive": true, "cartelId": "sinaloa", "role": "sicariosChief", "historical": false, "stats": { "violence": 90, "business": 35, "charisma": 45, "intrigue": 55, "loyaltyInspiring": 60, "stealth": 55 }, "traits": [], "notes": "Personaje ficticio.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "sin06_military_chief", "name": "Ovidio \"El Gordo\" Salcido", "sex": "M", "birthYear": 1968, "alive": true, "cartelId": "sinaloa", "role": "militaryChief", "historical": false, "stats": { "violence": 82, "business": 45, "charisma": 45, "intrigue": 60, "loyaltyInspiring": 62, "stealth": 55 }, "traits": [], "notes": "Personaje ficticio.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "sin06_finance_chief", "name": "Herminia Castro", "sex": "F", "birthYear": 1963, "alive": true, "cartelId": "sinaloa", "role": "financeChief", "historical": false, "stats": { "violence": 15, "business": 88, "charisma": 55, "intrigue": 62, "loyaltyInspiring": 48, "stealth": 50 }, "traits": [], "notes": "Personaje ficticio.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "sin06_trafficking_chief", "name": "Alonso \"El Piloto\" Beraza", "sex": "M", "birthYear": 1962, "alive": true, "cartelId": "sinaloa", "role": "traffickingChief", "historical": false, "stats": { "violence": 40, "business": 77, "charisma": 55, "intrigue": 72, "loyaltyInspiring": 50, "stealth": 66 }, "traits": [], "notes": "Personaje ficticio.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "sin06_police_chief", "name": "Comandante Justino Reyes", "sex": "M", "birthYear": 1960, "alive": true, "cartelId": "sinaloa", "role": "corruptionPoliceChief", "historical": false, "stats": { "violence": 35, "business": 52, "charisma": 55, "intrigue": 76, "loyaltyInspiring": 45, "stealth": 70 }, "traits": [], "notes": "Personaje ficticio.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "lazcano_06", "name": "Heriberto Lazcano \"El Lazca\"", "sex": "M", "birthYear": 1974, "alive": true, "cartelId": "zetas", "role": "leader", "historical": true, "stats": { "violence": 94, "business": 55, "charisma": 42, "intrigue": 70, "loyaltyInspiring": 70, "stealth": 68 }, "traits": ["exmilitar de élite", "fundador"], "notes": "Exmilitar fundador de Los Zetas; en la vida real moriría en un enfrentamiento con la Marina en 2012.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "z40_trevino", "name": "Miguel Ángel Treviño Morales \"Z-40\"", "sex": "M", "birthYear": 1973, "alive": true, "cartelId": "zetas", "role": "underboss", "historical": true, "stats": { "violence": 98, "business": 60, "charisma": 35, "intrigue": 72, "loyaltyInspiring": 55, "stealth": 60 }, "traits": ["extremadamente violento"], "notes": "Uno de los líderes más temidos de Los Zetas; en la vida real sería detenido en 2013.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "z42_trevino", "name": "Omar Treviño Morales \"Z-42\"", "sex": "M", "birthYear": 1978, "alive": true, "cartelId": "zetas", "role": "militaryChief", "historical": true, "stats": { "violence": 90, "business": 55, "charisma": 35, "intrigue": 65, "loyaltyInspiring": 55, "stealth": 62 }, "traits": [], "notes": "Hermano de Miguel Ángel Treviño; en la vida real asumiría el liderazgo del grupo tras la caída de su hermano.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "zetas_sicarios_chief", "name": "Iván \"El Taliban\" Velázquez", "sex": "M", "birthYear": 1976, "alive": true, "cartelId": "zetas", "role": "sicariosChief", "historical": false, "stats": { "violence": 92, "business": 30, "charisma": 35, "intrigue": 55, "loyaltyInspiring": 55, "stealth": 55 }, "traits": [], "notes": "Personaje ficticio.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "zetas_finance_chief", "name": "Norberto \"El Contador\" Villagómez", "sex": "M", "birthYear": 1970, "alive": true, "cartelId": "zetas", "role": "financeChief", "historical": false, "stats": { "violence": 25, "business": 75, "charisma": 45, "intrigue": 60, "loyaltyInspiring": 40, "stealth": 55 }, "traits": [], "notes": "Personaje ficticio.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "el_coss", "name": "Jorge Eduardo Costilla Sánchez \"El Coss\"", "sex": "M", "birthYear": 1971, "alive": true, "cartelId": "golfo", "role": "leader", "historical": true, "stats": { "violence": 70, "business": 70, "charisma": 55, "intrigue": 72, "loyaltyInspiring": 60, "stealth": 58 }, "traits": [], "notes": "Líder del Cártel del Golfo tras la ruptura con Los Zetas; en la vida real sería detenido en 2012.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "golfo06_underboss", "name": "Eugenio \"El Metro\" Sandoval", "sex": "M", "birthYear": 1965, "alive": true, "cartelId": "golfo", "role": "underboss", "historical": false, "stats": { "violence": 65, "business": 55, "charisma": 50, "intrigue": 58, "loyaltyInspiring": 55, "stealth": 52 }, "traits": [], "notes": "Personaje ficticio.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "golfo06_sicarios_chief", "name": "Baltazar \"El Halcón\" Rivas Jr.", "sex": "M", "birthYear": 1970, "alive": true, "cartelId": "golfo", "role": "sicariosChief", "historical": false, "stats": { "violence": 80, "business": 30, "charisma": 40, "intrigue": 52, "loyaltyInspiring": 55, "stealth": 55 }, "traits": [], "notes": "Personaje ficticio.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "golfo06_finance_chief", "name": "Reynaldo Cavazos Jr.", "sex": "M", "birthYear": 1968, "alive": true, "cartelId": "golfo", "role": "financeChief", "historical": false, "stats": { "violence": 20, "business": 70, "charisma": 48, "intrigue": 55, "loyaltyInspiring": 42, "stealth": 48 }, "traits": [], "notes": "Personaje ficticio.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "nazario_moreno", "name": "Nazario Moreno González \"El Chayo\" / \"El Más Loco\"", "sex": "M", "birthYear": 1970, "alive": true, "cartelId": "familia_michoacana", "role": "leader", "historical": true, "stats": { "violence": 75, "business": 65, "charisma": 78, "intrigue": 70, "loyaltyInspiring": 82, "stealth": 60 }, "traits": ["fundador", "pseudo-religioso"], "notes": "Fundador de La Familia Michoacana con una retórica pseudo-mística propia. En la vida real su muerte fue reportada en 2010 y confirmada oficialmente en 2014.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "la_tuta", "name": "Servando Gómez Martínez \"La Tuta\"", "sex": "M", "birthYear": 1966, "alive": true, "cartelId": "familia_michoacana", "role": "underboss", "historical": true, "stats": { "violence": 55, "business": 65, "charisma": 80, "intrigue": 78, "loyaltyInspiring": 70, "stealth": 55 }, "traits": ["exmaestro", "portavoz"], "notes": "Exmaestro rural convertido en líder mediático de La Familia y luego de los Caballeros Templarios.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "familia_sicarios_chief", "name": "Wenceslao \"El Wencho\" Álvarez", "sex": "M", "birthYear": 1972, "alive": true, "cartelId": "familia_michoacana", "role": "sicariosChief", "historical": false, "stats": { "violence": 82, "business": 30, "charisma": 45, "intrigue": 50, "loyaltyInspiring": 55, "stealth": 55 }, "traits": [], "notes": "Personaje ficticio.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "familia_finance_chief", "name": "Rutilo Campos", "sex": "M", "birthYear": 1965, "alive": true, "cartelId": "familia_michoacana", "role": "financeChief", "historical": false, "stats": { "violence": 20, "business": 68, "charisma": 50, "intrigue": 55, "loyaltyInspiring": 45, "stealth": 48 }, "traits": [], "notes": "Personaje ficticio.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "arturo_beltran_leyva", "name": "Arturo Beltrán Leyva \"El Barbas\"", "sex": "M", "birthYear": 1961, "alive": true, "cartelId": "beltran_leyva", "role": "leader", "historical": true, "stats": { "violence": 82, "business": 75, "charisma": 60, "intrigue": 78, "loyaltyInspiring": 65, "stealth": 55 }, "traits": ["fundador"], "notes": "Antiguo aliado de El Chapo, rompe con Sinaloa en 2008 tras la detención de su hermano Alfredo. En la vida real moriría en un operativo de la Marina en diciembre de 2009.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "hector_beltran_leyva", "name": "Héctor Beltrán Leyva \"El H\"", "sex": "M", "birthYear": 1965, "alive": true, "cartelId": "beltran_leyva", "role": "underboss", "historical": true, "stats": { "violence": 60, "business": 72, "charisma": 62, "intrigue": 74, "loyaltyInspiring": 58, "stealth": 58 }, "traits": ["heredero"], "notes": "Hermano de Arturo; en la vida real asumiría el liderazgo de la organización tras su muerte.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "bl_sicarios_chief", "name": "Édgar \"La Barbie\" Valdez", "sex": "M", "birthYear": 1973, "alive": true, "cartelId": "beltran_leyva", "role": "sicariosChief", "historical": true, "stats": { "violence": 88, "business": 45, "charisma": 55, "intrigue": 60, "loyaltyInspiring": 50, "stealth": 55 }, "traits": [], "notes": "Jefe de sicarios estadounidense de origen texano de la organización Beltrán Leyva.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "bl_finance_chief", "name": "Aureliano Guzmán Solís", "sex": "M", "birthYear": 1963, "alive": true, "cartelId": "beltran_leyva", "role": "financeChief", "historical": false, "stats": { "violence": 25, "business": 70, "charisma": 50, "intrigue": 58, "loyaltyInspiring": 45, "stealth": 50 }, "traits": [], "notes": "Personaje ficticio.", "parents": [], "spouseId": null, "childrenIds": [] }
+    {
+      "id": "chapo_guzman_06",
+      "name": "Joaquín Guzmán Loera \"El Chapo\"",
+      "sex": "M",
+      "birthYear": 1957,
+      "alive": true,
+      "cartelId": "sinaloa",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 70,
+        "business": 88,
+        "charisma": 72,
+        "intrigue": 96,
+        "loyaltyInspiring": 78,
+        "stealth": 90
+      },
+      "traits": [
+        "fugitivo nato",
+        "estratega"
+      ],
+      "notes": "Tras su fuga de 2001, consolida a Sinaloa como el cártel más poderoso de México. En la vida real sería recapturado en 2014, se fugaría de nuevo en 2015 y sería finalmente extraditado a EE.UU. en 2017. En el juego su destino depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": [
+        "chapo_hijo_1_06",
+        "chapo_hijo_2_06"
+      ]
+    },
+    {
+      "id": "chapo_hijo_1_06",
+      "name": "Iván Archivaldo Guzmán",
+      "sex": "M",
+      "birthYear": 1983,
+      "alive": true,
+      "cartelId": "sinaloa",
+      "role": null,
+      "historical": true,
+      "stats": {
+        "violence": 72,
+        "business": 68,
+        "charisma": 62,
+        "intrigue": 72,
+        "loyaltyInspiring": 58,
+        "stealth": 55
+      },
+      "traits": [
+        "heredero",
+        "Los Chapitos"
+      ],
+      "notes": "Hijo mayor de El Chapo, en la vida real figura central de 'Los Chapitos'.",
+      "parents": [
+        "chapo_guzman_06"
+      ],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "chapo_hijo_2_06",
+      "name": "Jesús Alfredo Guzmán Salazar",
+      "sex": "M",
+      "birthYear": 1989,
+      "alive": true,
+      "cartelId": "sinaloa",
+      "role": null,
+      "historical": true,
+      "stats": {
+        "violence": 68,
+        "business": 62,
+        "charisma": 55,
+        "intrigue": 68,
+        "loyaltyInspiring": 52,
+        "stealth": 55
+      },
+      "traits": [
+        "heredero",
+        "Los Chapitos"
+      ],
+      "notes": "Hijo de El Chapo.",
+      "parents": [
+        "chapo_guzman_06"
+      ],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "mayo_zambada_06",
+      "name": "Ismael Zambada García \"El Mayo\"",
+      "sex": "M",
+      "birthYear": 1948,
+      "alive": true,
+      "cartelId": "sinaloa",
+      "role": "underboss",
+      "historical": true,
+      "stats": {
+        "violence": 60,
+        "business": 90,
+        "charisma": 65,
+        "intrigue": 93,
+        "loyaltyInspiring": 80,
+        "stealth": 88
+      },
+      "traits": [
+        "discreto",
+        "pragmático"
+      ],
+      "notes": "Socio histórico de El Chapo; en la vida real seguiría en libertad hasta su detención en 2024, ya en la siguiente era.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "damaso_lopez",
+      "name": "Dámaso López Núñez \"El Licenciado\"",
+      "sex": "M",
+      "birthYear": 1962,
+      "alive": true,
+      "cartelId": "sinaloa",
+      "role": "corruptionGovChief",
+      "historical": true,
+      "stats": {
+        "violence": 55,
+        "business": 75,
+        "charisma": 65,
+        "intrigue": 85,
+        "loyaltyInspiring": 60,
+        "stealth": 65
+      },
+      "traits": [],
+      "notes": "Exfuncionario penitenciario y hombre de confianza de El Chapo, ligado a su fuga de 2001.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sin06_sicarios_chief",
+      "name": "Gonzalo \"El Macho Prieto\" Inzunza",
+      "sex": "M",
+      "birthYear": 1972,
+      "alive": true,
+      "cartelId": "sinaloa",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 90,
+        "business": 35,
+        "charisma": 45,
+        "intrigue": 55,
+        "loyaltyInspiring": 60,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sin06_military_chief",
+      "name": "Ovidio \"El Gordo\" Salcido",
+      "sex": "M",
+      "birthYear": 1968,
+      "alive": true,
+      "cartelId": "sinaloa",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 82,
+        "business": 45,
+        "charisma": 45,
+        "intrigue": 60,
+        "loyaltyInspiring": 62,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sin06_finance_chief",
+      "name": "Herminia Castro",
+      "sex": "F",
+      "birthYear": 1963,
+      "alive": true,
+      "cartelId": "sinaloa",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 88,
+        "charisma": 55,
+        "intrigue": 62,
+        "loyaltyInspiring": 48,
+        "stealth": 50
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sin06_trafficking_chief",
+      "name": "Alonso \"El Piloto\" Beraza",
+      "sex": "M",
+      "birthYear": 1962,
+      "alive": true,
+      "cartelId": "sinaloa",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 40,
+        "business": 77,
+        "charisma": 55,
+        "intrigue": 72,
+        "loyaltyInspiring": 50,
+        "stealth": 66
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sin06_police_chief",
+      "name": "Comandante Justino Reyes",
+      "sex": "M",
+      "birthYear": 1960,
+      "alive": true,
+      "cartelId": "sinaloa",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 35,
+        "business": 52,
+        "charisma": 55,
+        "intrigue": 76,
+        "loyaltyInspiring": 45,
+        "stealth": 70
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "lazcano_06",
+      "name": "Heriberto Lazcano \"El Lazca\"",
+      "sex": "M",
+      "birthYear": 1974,
+      "alive": true,
+      "cartelId": "zetas",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 94,
+        "business": 55,
+        "charisma": 42,
+        "intrigue": 70,
+        "loyaltyInspiring": 70,
+        "stealth": 68
+      },
+      "traits": [
+        "exmilitar de élite",
+        "fundador"
+      ],
+      "notes": "Exmilitar fundador de Los Zetas; en la vida real moriría en un enfrentamiento con la Marina en 2012.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "z40_trevino",
+      "name": "Miguel Ángel Treviño Morales \"Z-40\"",
+      "sex": "M",
+      "birthYear": 1973,
+      "alive": true,
+      "cartelId": "zetas",
+      "role": "underboss",
+      "historical": true,
+      "stats": {
+        "violence": 98,
+        "business": 60,
+        "charisma": 35,
+        "intrigue": 72,
+        "loyaltyInspiring": 55,
+        "stealth": 60
+      },
+      "traits": [
+        "extremadamente violento"
+      ],
+      "notes": "Uno de los líderes más temidos de Los Zetas; en la vida real sería detenido en 2013.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "z42_trevino",
+      "name": "Omar Treviño Morales \"Z-42\"",
+      "sex": "M",
+      "birthYear": 1978,
+      "alive": true,
+      "cartelId": "zetas",
+      "role": "militaryChief",
+      "historical": true,
+      "stats": {
+        "violence": 90,
+        "business": 55,
+        "charisma": 35,
+        "intrigue": 65,
+        "loyaltyInspiring": 55,
+        "stealth": 62
+      },
+      "traits": [],
+      "notes": "Hermano de Miguel Ángel Treviño; en la vida real asumiría el liderazgo del grupo tras la caída de su hermano.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "zetas_sicarios_chief",
+      "name": "Iván \"El Taliban\" Velázquez",
+      "sex": "M",
+      "birthYear": 1976,
+      "alive": true,
+      "cartelId": "zetas",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 92,
+        "business": 30,
+        "charisma": 35,
+        "intrigue": 55,
+        "loyaltyInspiring": 55,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "zetas_finance_chief",
+      "name": "Norberto \"El Contador\" Villagómez",
+      "sex": "M",
+      "birthYear": 1970,
+      "alive": true,
+      "cartelId": "zetas",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 25,
+        "business": 75,
+        "charisma": 45,
+        "intrigue": 60,
+        "loyaltyInspiring": 40,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "el_coss",
+      "name": "Jorge Eduardo Costilla Sánchez \"El Coss\"",
+      "sex": "M",
+      "birthYear": 1971,
+      "alive": true,
+      "cartelId": "golfo",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 70,
+        "business": 70,
+        "charisma": 55,
+        "intrigue": 72,
+        "loyaltyInspiring": 60,
+        "stealth": 58
+      },
+      "traits": [],
+      "notes": "Líder del Cártel del Golfo tras la ruptura con Los Zetas; en la vida real sería detenido en 2012.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "golfo06_underboss",
+      "name": "Eugenio \"El Metro\" Sandoval",
+      "sex": "M",
+      "birthYear": 1965,
+      "alive": true,
+      "cartelId": "golfo",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 65,
+        "business": 55,
+        "charisma": 50,
+        "intrigue": 58,
+        "loyaltyInspiring": 55,
+        "stealth": 52
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "golfo06_sicarios_chief",
+      "name": "Baltazar \"El Halcón\" Rivas Jr.",
+      "sex": "M",
+      "birthYear": 1970,
+      "alive": true,
+      "cartelId": "golfo",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 80,
+        "business": 30,
+        "charisma": 40,
+        "intrigue": 52,
+        "loyaltyInspiring": 55,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "golfo06_finance_chief",
+      "name": "Reynaldo Cavazos Jr.",
+      "sex": "M",
+      "birthYear": 1968,
+      "alive": true,
+      "cartelId": "golfo",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 70,
+        "charisma": 48,
+        "intrigue": 55,
+        "loyaltyInspiring": 42,
+        "stealth": 48
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "nazario_moreno",
+      "name": "Nazario Moreno González \"El Chayo\" / \"El Más Loco\"",
+      "sex": "M",
+      "birthYear": 1970,
+      "alive": true,
+      "cartelId": "familia_michoacana",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 75,
+        "business": 65,
+        "charisma": 78,
+        "intrigue": 70,
+        "loyaltyInspiring": 82,
+        "stealth": 60
+      },
+      "traits": [
+        "fundador",
+        "pseudo-religioso"
+      ],
+      "notes": "Fundador de La Familia Michoacana con una retórica pseudo-mística propia. En la vida real su muerte fue reportada en 2010 y confirmada oficialmente en 2014.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "la_tuta",
+      "name": "Servando Gómez Martínez \"La Tuta\"",
+      "sex": "M",
+      "birthYear": 1966,
+      "alive": true,
+      "cartelId": "familia_michoacana",
+      "role": "underboss",
+      "historical": true,
+      "stats": {
+        "violence": 55,
+        "business": 65,
+        "charisma": 80,
+        "intrigue": 78,
+        "loyaltyInspiring": 70,
+        "stealth": 55
+      },
+      "traits": [
+        "exmaestro",
+        "portavoz"
+      ],
+      "notes": "Exmaestro rural convertido en líder mediático de La Familia y luego de los Caballeros Templarios.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "familia_sicarios_chief",
+      "name": "Wenceslao \"El Wencho\" Álvarez",
+      "sex": "M",
+      "birthYear": 1972,
+      "alive": true,
+      "cartelId": "familia_michoacana",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 82,
+        "business": 30,
+        "charisma": 45,
+        "intrigue": 50,
+        "loyaltyInspiring": 55,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "familia_finance_chief",
+      "name": "Rutilo Campos",
+      "sex": "M",
+      "birthYear": 1965,
+      "alive": true,
+      "cartelId": "familia_michoacana",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 68,
+        "charisma": 50,
+        "intrigue": 55,
+        "loyaltyInspiring": 45,
+        "stealth": 48
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "arturo_beltran_leyva",
+      "name": "Arturo Beltrán Leyva \"El Barbas\"",
+      "sex": "M",
+      "birthYear": 1961,
+      "alive": true,
+      "cartelId": "beltran_leyva",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 82,
+        "business": 75,
+        "charisma": 60,
+        "intrigue": 78,
+        "loyaltyInspiring": 65,
+        "stealth": 55
+      },
+      "traits": [
+        "fundador"
+      ],
+      "notes": "Antiguo aliado de El Chapo, rompe con Sinaloa en 2008 tras la detención de su hermano Alfredo. En la vida real moriría en un operativo de la Marina en diciembre de 2009.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "hector_beltran_leyva",
+      "name": "Héctor Beltrán Leyva \"El H\"",
+      "sex": "M",
+      "birthYear": 1965,
+      "alive": true,
+      "cartelId": "beltran_leyva",
+      "role": "underboss",
+      "historical": true,
+      "stats": {
+        "violence": 60,
+        "business": 72,
+        "charisma": 62,
+        "intrigue": 74,
+        "loyaltyInspiring": 58,
+        "stealth": 58
+      },
+      "traits": [
+        "heredero"
+      ],
+      "notes": "Hermano de Arturo; en la vida real asumiría el liderazgo de la organización tras su muerte.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "bl_sicarios_chief",
+      "name": "Édgar \"La Barbie\" Valdez",
+      "sex": "M",
+      "birthYear": 1973,
+      "alive": true,
+      "cartelId": "beltran_leyva",
+      "role": "sicariosChief",
+      "historical": true,
+      "stats": {
+        "violence": 88,
+        "business": 45,
+        "charisma": 55,
+        "intrigue": 60,
+        "loyaltyInspiring": 50,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Jefe de sicarios estadounidense de origen texano de la organización Beltrán Leyva.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "bl_finance_chief",
+      "name": "Aureliano Guzmán Solís",
+      "sex": "M",
+      "birthYear": 1963,
+      "alive": true,
+      "cartelId": "beltran_leyva",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 25,
+        "business": 70,
+        "charisma": 50,
+        "intrigue": 58,
+        "loyaltyInspiring": 45,
+        "stealth": 50
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    }
   ],
-  "newCartelTerritories": ["baja_california", "jalisco"]
+  "newCartelTerritories": [
+    "baja_california",
+    "jalisco"
+  ]
 }

@@ -7,16 +7,150 @@
   "turnMonths": 6,
   "description": "El Cártel de Guadalajara, fundado por Miguel Ángel Félix Gallardo, controla gran parte del narcotráfico mexicano y actúa como puente entre los proveedores colombianos (Cártel de Medellín) y el mercado estadounidense. Es la primera gran organización mexicana centralizada. Su caída, tras el secuestro y asesinato del agente de la DEA Enrique 'Kiki' Camarena en 1985, provocará la fragmentación en los cárteles regionales que dominarán la siguiente era: Sinaloa, Tijuana, Juárez y el Golfo.",
   "territories": [
-    { "id": "baja_california", "name": "Baja California", "x": 2, "y": 14, "w": 17, "h": 16, "controllerId": "guadalajara", "value": 14 },
-    { "id": "sonora", "name": "Sonora", "x": 21, "y": 12, "w": 17, "h": 17, "controllerId": "guadalajara", "value": 12 },
-    { "id": "chihuahua", "name": "Chihuahua", "x": 40, "y": 10, "w": 20, "h": 19, "controllerId": "guadalajara", "value": 13 },
-    { "id": "sinaloa", "name": "Sinaloa", "x": 8, "y": 33, "w": 16, "h": 16, "controllerId": "guadalajara", "value": 18 },
-    { "id": "durango", "name": "Durango", "x": 26, "y": 33, "w": 16, "h": 16, "controllerId": "guadalajara", "value": 10 },
-    { "id": "nuevo_leon", "name": "Nuevo León", "x": 46, "y": 32, "w": 15, "h": 16, "controllerId": "guadalajara", "value": 11 },
-    { "id": "tamaulipas", "name": "Tamaulipas", "x": 62, "y": 20, "w": 18, "h": 22, "controllerId": "golfo", "value": 13 },
-    { "id": "jalisco", "name": "Jalisco", "x": 14, "y": 52, "w": 20, "h": 17, "controllerId": "guadalajara", "value": 20 },
-    { "id": "michoacan", "name": "Michoacán", "x": 36, "y": 52, "w": 17, "h": 16, "controllerId": null, "value": 9 },
-    { "id": "guerrero", "name": "Guerrero", "x": 18, "y": 71, "w": 18, "h": 16, "controllerId": null, "value": 11 }
+    {
+      "id": "baja_california",
+      "name": "Baja California",
+      "x": 2,
+      "y": 14,
+      "w": 17,
+      "h": 16,
+      "controllerId": "guadalajara",
+      "value": 14,
+      "adj": [
+        "sonora"
+      ]
+    },
+    {
+      "id": "sonora",
+      "name": "Sonora",
+      "x": 21,
+      "y": 12,
+      "w": 17,
+      "h": 17,
+      "controllerId": "guadalajara",
+      "value": 12,
+      "adj": [
+        "baja_california",
+        "chihuahua",
+        "sinaloa"
+      ]
+    },
+    {
+      "id": "chihuahua",
+      "name": "Chihuahua",
+      "x": 40,
+      "y": 10,
+      "w": 20,
+      "h": 19,
+      "controllerId": "guadalajara",
+      "value": 13,
+      "adj": [
+        "sonora",
+        "durango",
+        "nuevo_leon"
+      ]
+    },
+    {
+      "id": "sinaloa",
+      "name": "Sinaloa",
+      "x": 8,
+      "y": 33,
+      "w": 16,
+      "h": 16,
+      "controllerId": "guadalajara",
+      "value": 18,
+      "adj": [
+        "sonora",
+        "durango",
+        "jalisco"
+      ]
+    },
+    {
+      "id": "durango",
+      "name": "Durango",
+      "x": 26,
+      "y": 33,
+      "w": 16,
+      "h": 16,
+      "controllerId": "guadalajara",
+      "value": 10,
+      "adj": [
+        "chihuahua",
+        "sinaloa",
+        "nuevo_leon",
+        "jalisco"
+      ]
+    },
+    {
+      "id": "nuevo_leon",
+      "name": "Nuevo León",
+      "x": 46,
+      "y": 32,
+      "w": 15,
+      "h": 16,
+      "controllerId": "guadalajara",
+      "value": 11,
+      "adj": [
+        "chihuahua",
+        "durango",
+        "tamaulipas"
+      ]
+    },
+    {
+      "id": "tamaulipas",
+      "name": "Tamaulipas",
+      "x": 62,
+      "y": 20,
+      "w": 18,
+      "h": 22,
+      "controllerId": "golfo",
+      "value": 13,
+      "adj": [
+        "nuevo_leon"
+      ]
+    },
+    {
+      "id": "jalisco",
+      "name": "Jalisco",
+      "x": 14,
+      "y": 52,
+      "w": 20,
+      "h": 17,
+      "controllerId": "guadalajara",
+      "value": 20,
+      "adj": [
+        "sinaloa",
+        "durango",
+        "michoacan"
+      ]
+    },
+    {
+      "id": "michoacan",
+      "name": "Michoacán",
+      "x": 36,
+      "y": 52,
+      "w": 17,
+      "h": 16,
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "jalisco",
+        "guerrero"
+      ]
+    },
+    {
+      "id": "guerrero",
+      "name": "Guerrero",
+      "x": 18,
+      "y": 71,
+      "w": 18,
+      "h": 16,
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "michoacan"
+      ]
+    }
   ],
   "cartels": [
     {
@@ -25,7 +159,14 @@
       "color": "#b3812e",
       "aiControlled": false,
       "historicalNote": "Fundado por Félix Gallardo con el respaldo de la antigua Federación. Se le atribuyen los cargos secundarios del organigrama de forma ficticia, ya que no hay información pública fiable sobre quién ocupaba cada función específica en la vida real.",
-      "resources": { "money": 900, "armySize": 600, "corruptGov": 45, "corruptPolice": 55, "publicImage": 55, "heat": 15 },
+      "resources": {
+        "money": 900,
+        "armySize": 600,
+        "corruptGov": 45,
+        "corruptPolice": 55,
+        "publicImage": 55,
+        "heat": 15
+      },
       "roles": {
         "leader": "felix_gallardo",
         "underboss": "caro_quintero",
@@ -47,7 +188,14 @@
       "color": "#2e5a8a",
       "aiControlled": true,
       "historicalNote": "Organización de contrabando de Tamaulipas heredada de Juan Nepomuceno Guerra, tomada por Juan García Ábrego a mediados de los 80. En esta era es una potencia regional menor frente a Guadalajara.",
-      "resources": { "money": 300, "armySize": 220, "corruptGov": 25, "corruptPolice": 30, "publicImage": 50, "heat": 8 },
+      "resources": {
+        "money": 300,
+        "armySize": 220,
+        "corruptGov": 25,
+        "corruptPolice": 30,
+        "publicImage": 50,
+        "heat": 8
+      },
       "roles": {
         "leader": "garcia_abrego",
         "underboss": "golfo_underboss",
@@ -57,26 +205,515 @@
     }
   ],
   "characters": [
-    { "id": "felix_gallardo", "name": "Miguel Ángel Félix Gallardo \"El Padrino\"", "sex": "M", "birthYear": 1946, "alive": true, "cartelId": "guadalajara", "role": "leader", "historical": true, "stats": { "violence": 55, "business": 88, "charisma": 80, "intrigue": 90, "loyaltyInspiring": 78, "stealth": 60 }, "traits": ["fundador", "estratega"], "notes": "Ex policía judicial, fundó y centralizó el narcotráfico mexicano moderno. En la vida real fue detenido en 1989 por el asesinato de Kiki Camarena; en el juego su destino depende de tus decisiones.", "parents": [], "spouseId": "gdl_esposa_gallardo", "childrenIds": ["gdl_hijo_gallardo_1", "gdl_hija_gallardo_1"] },
-    { "id": "gdl_esposa_gallardo", "name": "Isabel Torres de Félix", "sex": "F", "birthYear": 1950, "alive": true, "cartelId": "guadalajara", "role": null, "historical": false, "stats": { "violence": 15, "business": 60, "charisma": 70, "intrigue": 55, "loyaltyInspiring": 60, "stealth": 40 }, "traits": [], "notes": "Personaje ficticio generado para la mecánica familiar del juego.", "parents": [], "spouseId": "felix_gallardo", "childrenIds": ["gdl_hijo_gallardo_1", "gdl_hija_gallardo_1"] },
-    { "id": "gdl_hijo_gallardo_1", "name": "Héctor Félix Torres", "sex": "M", "birthYear": 1971, "alive": true, "cartelId": "guadalajara", "role": null, "historical": false, "stats": { "violence": 50, "business": 60, "charisma": 55, "intrigue": 58, "loyaltyInspiring": 50, "stealth": 45 }, "traits": ["heredero"], "notes": "Heredero ficticio de Félix Gallardo, creado para la sucesión.", "parents": ["felix_gallardo", "gdl_esposa_gallardo"], "spouseId": null, "childrenIds": [] },
-    { "id": "gdl_hija_gallardo_1", "name": "Lucía Félix Torres", "sex": "F", "birthYear": 1974, "alive": true, "cartelId": "guadalajara", "role": null, "historical": false, "stats": { "violence": 30, "business": 65, "charisma": 62, "intrigue": 60, "loyaltyInspiring": 48, "stealth": 50 }, "traits": [], "notes": "Personaje ficticio.", "parents": ["felix_gallardo", "gdl_esposa_gallardo"], "spouseId": null, "childrenIds": [] },
-    { "id": "caro_quintero", "name": "Rafael Caro Quintero", "sex": "M", "birthYear": 1952, "alive": true, "cartelId": "guadalajara", "role": "underboss", "historical": true, "stats": { "violence": 82, "business": 65, "charisma": 60, "intrigue": 55, "loyaltyInspiring": 60, "stealth": 50 }, "traits": ["violento", "impulsivo"], "notes": "Cofundador del cártel, implicado históricamente en el asesinato de Kiki Camarena. Su destino real (arrestos y liberación) no está guionizado aquí; emerge del juego.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "don_neto", "name": "Ernesto Fonseca Carrillo \"Don Neto\"", "sex": "M", "birthYear": 1942, "alive": true, "cartelId": "guadalajara", "role": "corruptionGovChief", "historical": true, "stats": { "violence": 60, "business": 75, "charisma": 65, "intrigue": 70, "loyaltyInspiring": 68, "stealth": 55 }, "traits": ["cofundador", "conectado"], "notes": "Cofundador del cártel junto a Félix Gallardo y Caro Quintero.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "el_azul", "name": "Juan José Esparragoza Moreno \"El Azul\"", "sex": "M", "birthYear": 1949, "alive": true, "cartelId": "guadalajara", "role": "traffickingChief", "historical": true, "stats": { "violence": 40, "business": 78, "charisma": 66, "intrigue": 85, "loyaltyInspiring": 60, "stealth": 88 }, "traits": ["discreto", "negociador"], "notes": "Figura clave en la logística de rutas; sobrevivirá a la fragmentación y será pieza central del futuro Cártel de Sinaloa.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "amado_carrillo_joven", "name": "Amado Carrillo Fuentes", "sex": "M", "birthYear": 1956, "alive": true, "cartelId": "guadalajara", "role": "diplomatChief", "historical": true, "stats": { "violence": 45, "business": 85, "charisma": 82, "intrigue": 80, "loyaltyInspiring": 65, "stealth": 70 }, "traits": ["ambicioso", "visionario"], "notes": "Joven sobrino y protegido de Don Neto en esta época. Con el tiempo fundará el Cártel de Juárez y será conocido como 'El Señor de los Cielos'.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "gdl_sicarios_chief", "name": "Ramón \"El Cazador\" Beltrán", "sex": "M", "birthYear": 1950, "alive": true, "cartelId": "guadalajara", "role": "sicariosChief", "historical": false, "stats": { "violence": 90, "business": 30, "charisma": 40, "intrigue": 55, "loyaltyInspiring": 65, "stealth": 60 }, "traits": ["sanguinario"], "notes": "Personaje ficticio.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "gdl_military_chief", "name": "Efraín \"El Coronel\" Duarte", "sex": "M", "birthYear": 1945, "alive": true, "cartelId": "guadalajara", "role": "militaryChief", "historical": false, "stats": { "violence": 80, "business": 40, "charisma": 45, "intrigue": 50, "loyaltyInspiring": 70, "stealth": 45 }, "traits": ["exmilitar"], "notes": "Personaje ficticio.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "gdl_police_chief", "name": "Comandante Arnoldo Vega", "sex": "M", "birthYear": 1948, "alive": true, "cartelId": "guadalajara", "role": "corruptionPoliceChief", "historical": false, "stats": { "violence": 35, "business": 55, "charisma": 60, "intrigue": 75, "loyaltyInspiring": 40, "stealth": 65 }, "traits": [], "notes": "Personaje ficticio.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "gdl_production_chief", "name": "Silvano \"El Ingeniero\" Rosas", "sex": "M", "birthYear": 1953, "alive": true, "cartelId": "guadalajara", "role": "productionChief", "historical": false, "stats": { "violence": 30, "business": 70, "charisma": 40, "intrigue": 50, "loyaltyInspiring": 45, "stealth": 55 }, "traits": [], "notes": "Personaje ficticio.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "gdl_finance_chief", "name": "Marcelino Ochoa", "sex": "M", "birthYear": 1951, "alive": true, "cartelId": "guadalajara", "role": "financeChief", "historical": false, "stats": { "violence": 20, "business": 88, "charisma": 55, "intrigue": 60, "loyaltyInspiring": 40, "stealth": 50 }, "traits": [], "notes": "Personaje ficticio.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "gdl_pr_chief", "name": "Padre Adalberto Nuñez", "sex": "M", "birthYear": 1940, "alive": true, "cartelId": "guadalajara", "role": "prChief", "historical": false, "stats": { "violence": 10, "business": 40, "charisma": 85, "intrigue": 55, "loyaltyInspiring": 60, "stealth": 30 }, "traits": ["benefactor"], "notes": "Personaje ficticio, gestiona la imagen pública mediante obras de caridad.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "gdl_intel_chief", "name": "Norma \"La Zorra\" Villalpando", "sex": "F", "birthYear": 1955, "alive": true, "cartelId": "guadalajara", "role": "intelChief", "historical": false, "stats": { "violence": 40, "business": 50, "charisma": 60, "intrigue": 88, "loyaltyInspiring": 45, "stealth": 80 }, "traits": ["infiltrada"], "notes": "Personaje ficticio.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "garcia_abrego", "name": "Juan García Ábrego", "sex": "M", "birthYear": 1944, "alive": true, "cartelId": "golfo", "role": "leader", "historical": true, "stats": { "violence": 60, "business": 82, "charisma": 55, "intrigue": 75, "loyaltyInspiring": 60, "stealth": 55 }, "traits": ["heredero", "metódico"], "notes": "Sobrino de Juan Nepomuceno Guerra, toma el control de las redes de contrabando de Tamaulipas. En la vida real sería detenido en 1996 y extraditado a EE.UU.", "parents": [], "spouseId": null, "childrenIds": ["golfo_heredero_1"] },
-    { "id": "golfo_heredero_1", "name": "Osvaldo García Reyes", "sex": "M", "birthYear": 1968, "alive": true, "cartelId": "golfo", "role": null, "historical": false, "stats": { "violence": 65, "business": 60, "charisma": 50, "intrigue": 55, "loyaltyInspiring": 50, "stealth": 50 }, "traits": ["heredero"], "notes": "Personaje ficticio generado para la sucesión.", "parents": ["garcia_abrego"], "spouseId": null, "childrenIds": [] },
-    { "id": "golfo_underboss", "name": "Casimiro \"El Padrino Chico\" Leal", "sex": "M", "birthYear": 1946, "alive": true, "cartelId": "golfo", "role": "underboss", "historical": false, "stats": { "violence": 55, "business": 60, "charisma": 55, "intrigue": 60, "loyaltyInspiring": 55, "stealth": 55 }, "traits": [], "notes": "Personaje ficticio.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "golfo_sicarios_chief", "name": "Baltazar \"El Halcón\" Rivas", "sex": "M", "birthYear": 1952, "alive": true, "cartelId": "golfo", "role": "sicariosChief", "historical": false, "stats": { "violence": 78, "business": 30, "charisma": 40, "intrigue": 50, "loyaltyInspiring": 55, "stealth": 60 }, "traits": [], "notes": "Personaje ficticio.", "parents": [], "spouseId": null, "childrenIds": [] },
-    { "id": "golfo_finance_chief", "name": "Reynaldo Cavazos", "sex": "M", "birthYear": 1949, "alive": true, "cartelId": "golfo", "role": "financeChief", "historical": false, "stats": { "violence": 20, "business": 75, "charisma": 50, "intrigue": 55, "loyaltyInspiring": 45, "stealth": 50 }, "traits": [], "notes": "Personaje ficticio.", "parents": [], "spouseId": null, "childrenIds": [] }
+    {
+      "id": "felix_gallardo",
+      "name": "Miguel Ángel Félix Gallardo \"El Padrino\"",
+      "sex": "M",
+      "birthYear": 1946,
+      "alive": true,
+      "cartelId": "guadalajara",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 55,
+        "business": 88,
+        "charisma": 80,
+        "intrigue": 90,
+        "loyaltyInspiring": 78,
+        "stealth": 60
+      },
+      "traits": [
+        "fundador",
+        "estratega"
+      ],
+      "notes": "Ex policía judicial, fundó y centralizó el narcotráfico mexicano moderno. En la vida real fue detenido en 1989 por el asesinato de Kiki Camarena; en el juego su destino depende de tus decisiones.",
+      "parents": [],
+      "spouseId": "gdl_esposa_gallardo",
+      "childrenIds": [
+        "gdl_hijo_gallardo_1",
+        "gdl_hija_gallardo_1"
+      ]
+    },
+    {
+      "id": "gdl_esposa_gallardo",
+      "name": "Isabel Torres de Félix",
+      "sex": "F",
+      "birthYear": 1950,
+      "alive": true,
+      "cartelId": "guadalajara",
+      "role": null,
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 60,
+        "charisma": 70,
+        "intrigue": 55,
+        "loyaltyInspiring": 60,
+        "stealth": 40
+      },
+      "traits": [],
+      "notes": "Personaje ficticio generado para la mecánica familiar del juego.",
+      "parents": [],
+      "spouseId": "felix_gallardo",
+      "childrenIds": [
+        "gdl_hijo_gallardo_1",
+        "gdl_hija_gallardo_1"
+      ]
+    },
+    {
+      "id": "gdl_hijo_gallardo_1",
+      "name": "Héctor Félix Torres",
+      "sex": "M",
+      "birthYear": 1971,
+      "alive": true,
+      "cartelId": "guadalajara",
+      "role": null,
+      "historical": false,
+      "stats": {
+        "violence": 50,
+        "business": 60,
+        "charisma": 55,
+        "intrigue": 58,
+        "loyaltyInspiring": 50,
+        "stealth": 45
+      },
+      "traits": [
+        "heredero"
+      ],
+      "notes": "Heredero ficticio de Félix Gallardo, creado para la sucesión.",
+      "parents": [
+        "felix_gallardo",
+        "gdl_esposa_gallardo"
+      ],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "gdl_hija_gallardo_1",
+      "name": "Lucía Félix Torres",
+      "sex": "F",
+      "birthYear": 1974,
+      "alive": true,
+      "cartelId": "guadalajara",
+      "role": null,
+      "historical": false,
+      "stats": {
+        "violence": 30,
+        "business": 65,
+        "charisma": 62,
+        "intrigue": 60,
+        "loyaltyInspiring": 48,
+        "stealth": 50
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [
+        "felix_gallardo",
+        "gdl_esposa_gallardo"
+      ],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "caro_quintero",
+      "name": "Rafael Caro Quintero",
+      "sex": "M",
+      "birthYear": 1952,
+      "alive": true,
+      "cartelId": "guadalajara",
+      "role": "underboss",
+      "historical": true,
+      "stats": {
+        "violence": 82,
+        "business": 65,
+        "charisma": 60,
+        "intrigue": 55,
+        "loyaltyInspiring": 60,
+        "stealth": 50
+      },
+      "traits": [
+        "violento",
+        "impulsivo"
+      ],
+      "notes": "Cofundador del cártel, implicado históricamente en el asesinato de Kiki Camarena. Su destino real (arrestos y liberación) no está guionizado aquí; emerge del juego.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "don_neto",
+      "name": "Ernesto Fonseca Carrillo \"Don Neto\"",
+      "sex": "M",
+      "birthYear": 1942,
+      "alive": true,
+      "cartelId": "guadalajara",
+      "role": "corruptionGovChief",
+      "historical": true,
+      "stats": {
+        "violence": 60,
+        "business": 75,
+        "charisma": 65,
+        "intrigue": 70,
+        "loyaltyInspiring": 68,
+        "stealth": 55
+      },
+      "traits": [
+        "cofundador",
+        "conectado"
+      ],
+      "notes": "Cofundador del cártel junto a Félix Gallardo y Caro Quintero.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "el_azul",
+      "name": "Juan José Esparragoza Moreno \"El Azul\"",
+      "sex": "M",
+      "birthYear": 1949,
+      "alive": true,
+      "cartelId": "guadalajara",
+      "role": "traffickingChief",
+      "historical": true,
+      "stats": {
+        "violence": 40,
+        "business": 78,
+        "charisma": 66,
+        "intrigue": 85,
+        "loyaltyInspiring": 60,
+        "stealth": 88
+      },
+      "traits": [
+        "discreto",
+        "negociador"
+      ],
+      "notes": "Figura clave en la logística de rutas; sobrevivirá a la fragmentación y será pieza central del futuro Cártel de Sinaloa.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "amado_carrillo_joven",
+      "name": "Amado Carrillo Fuentes",
+      "sex": "M",
+      "birthYear": 1956,
+      "alive": true,
+      "cartelId": "guadalajara",
+      "role": "diplomatChief",
+      "historical": true,
+      "stats": {
+        "violence": 45,
+        "business": 85,
+        "charisma": 82,
+        "intrigue": 80,
+        "loyaltyInspiring": 65,
+        "stealth": 70
+      },
+      "traits": [
+        "ambicioso",
+        "visionario"
+      ],
+      "notes": "Joven sobrino y protegido de Don Neto en esta época. Con el tiempo fundará el Cártel de Juárez y será conocido como 'El Señor de los Cielos'.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "gdl_sicarios_chief",
+      "name": "Ramón \"El Cazador\" Beltrán",
+      "sex": "M",
+      "birthYear": 1950,
+      "alive": true,
+      "cartelId": "guadalajara",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 90,
+        "business": 30,
+        "charisma": 40,
+        "intrigue": 55,
+        "loyaltyInspiring": 65,
+        "stealth": 60
+      },
+      "traits": [
+        "sanguinario"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "gdl_military_chief",
+      "name": "Efraín \"El Coronel\" Duarte",
+      "sex": "M",
+      "birthYear": 1945,
+      "alive": true,
+      "cartelId": "guadalajara",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 80,
+        "business": 40,
+        "charisma": 45,
+        "intrigue": 50,
+        "loyaltyInspiring": 70,
+        "stealth": 45
+      },
+      "traits": [
+        "exmilitar"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "gdl_police_chief",
+      "name": "Comandante Arnoldo Vega",
+      "sex": "M",
+      "birthYear": 1948,
+      "alive": true,
+      "cartelId": "guadalajara",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 35,
+        "business": 55,
+        "charisma": 60,
+        "intrigue": 75,
+        "loyaltyInspiring": 40,
+        "stealth": 65
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "gdl_production_chief",
+      "name": "Silvano \"El Ingeniero\" Rosas",
+      "sex": "M",
+      "birthYear": 1953,
+      "alive": true,
+      "cartelId": "guadalajara",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 30,
+        "business": 70,
+        "charisma": 40,
+        "intrigue": 50,
+        "loyaltyInspiring": 45,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "gdl_finance_chief",
+      "name": "Marcelino Ochoa",
+      "sex": "M",
+      "birthYear": 1951,
+      "alive": true,
+      "cartelId": "guadalajara",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 88,
+        "charisma": 55,
+        "intrigue": 60,
+        "loyaltyInspiring": 40,
+        "stealth": 50
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "gdl_pr_chief",
+      "name": "Padre Adalberto Nuñez",
+      "sex": "M",
+      "birthYear": 1940,
+      "alive": true,
+      "cartelId": "guadalajara",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 10,
+        "business": 40,
+        "charisma": 85,
+        "intrigue": 55,
+        "loyaltyInspiring": 60,
+        "stealth": 30
+      },
+      "traits": [
+        "benefactor"
+      ],
+      "notes": "Personaje ficticio, gestiona la imagen pública mediante obras de caridad.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "gdl_intel_chief",
+      "name": "Norma \"La Zorra\" Villalpando",
+      "sex": "F",
+      "birthYear": 1955,
+      "alive": true,
+      "cartelId": "guadalajara",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 40,
+        "business": 50,
+        "charisma": 60,
+        "intrigue": 88,
+        "loyaltyInspiring": 45,
+        "stealth": 80
+      },
+      "traits": [
+        "infiltrada"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "garcia_abrego",
+      "name": "Juan García Ábrego",
+      "sex": "M",
+      "birthYear": 1944,
+      "alive": true,
+      "cartelId": "golfo",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 60,
+        "business": 82,
+        "charisma": 55,
+        "intrigue": 75,
+        "loyaltyInspiring": 60,
+        "stealth": 55
+      },
+      "traits": [
+        "heredero",
+        "metódico"
+      ],
+      "notes": "Sobrino de Juan Nepomuceno Guerra, toma el control de las redes de contrabando de Tamaulipas. En la vida real sería detenido en 1996 y extraditado a EE.UU.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": [
+        "golfo_heredero_1"
+      ]
+    },
+    {
+      "id": "golfo_heredero_1",
+      "name": "Osvaldo García Reyes",
+      "sex": "M",
+      "birthYear": 1968,
+      "alive": true,
+      "cartelId": "golfo",
+      "role": null,
+      "historical": false,
+      "stats": {
+        "violence": 65,
+        "business": 60,
+        "charisma": 50,
+        "intrigue": 55,
+        "loyaltyInspiring": 50,
+        "stealth": 50
+      },
+      "traits": [
+        "heredero"
+      ],
+      "notes": "Personaje ficticio generado para la sucesión.",
+      "parents": [
+        "garcia_abrego"
+      ],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "golfo_underboss",
+      "name": "Casimiro \"El Padrino Chico\" Leal",
+      "sex": "M",
+      "birthYear": 1946,
+      "alive": true,
+      "cartelId": "golfo",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 55,
+        "business": 60,
+        "charisma": 55,
+        "intrigue": 60,
+        "loyaltyInspiring": 55,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "golfo_sicarios_chief",
+      "name": "Baltazar \"El Halcón\" Rivas",
+      "sex": "M",
+      "birthYear": 1952,
+      "alive": true,
+      "cartelId": "golfo",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 78,
+        "business": 30,
+        "charisma": 40,
+        "intrigue": 50,
+        "loyaltyInspiring": 55,
+        "stealth": 60
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "golfo_finance_chief",
+      "name": "Reynaldo Cavazos",
+      "sex": "M",
+      "birthYear": 1949,
+      "alive": true,
+      "cartelId": "golfo",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 75,
+        "charisma": 50,
+        "intrigue": 55,
+        "loyaltyInspiring": 45,
+        "stealth": 50
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    }
   ],
-  "newCartelTerritories": ["michoacan", "guerrero"]
+  "newCartelTerritories": [
+    "michoacan",
+    "guerrero"
+  ]
 }

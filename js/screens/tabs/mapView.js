@@ -1,7 +1,7 @@
 import { getPlayerCartel } from "../../state.js";
 import { escapeHtml } from "../../ui/components.js";
 import { showModal, closeModal } from "../../ui/modal.js";
-import { applyAction } from "../../turnEngine.js";
+import { applyAction, isAttackable } from "../../turnEngine.js";
 
 export function render(container, app) {
   const game = app.game;
@@ -40,12 +40,16 @@ function showTerritoryModal(app, territoryId) {
   const controller = t.controllerId ? game.cartels[t.controllerId] : null;
   const playerCartel = getPlayerCartel(game);
   const isMine = t.controllerId === playerCartel.id;
+  const attackable = !isMine && controller && isAttackable(game, playerCartel.id, t.id);
+  const neighborNames = (t.adj || []).map((id) => game.territories[id]?.name).filter(Boolean).join(", ");
 
   showModal(`
     <h2>${escapeHtml(t.name)}</h2>
     <p class="small text-dim">Controlado por: ${controller ? escapeHtml(controller.name) : "Nadie (territorio libre)"}</p>
     <p class="small">Valor económico: ${t.value}</p>
-    ${!isMine && controller ? `<button class="danger block" id="attack-btn">Atacar y disputar este territorio</button>` : ""}
+    ${neighborNames ? `<p class="small text-dim">Linda con: ${escapeHtml(neighborNames)}</p>` : ""}
+    ${attackable ? `<button class="danger block" id="attack-btn">Atacar y disputar este territorio</button>` : ""}
+    ${!isMine && controller && !attackable ? `<p class="small text-dim">No tienes ningún territorio colindante: no puedes atacarlo directamente todavía.</p>` : ""}
     ${!controller ? `<p class="small text-dim">Territorio sin dueño; no se puede ocupar directamente en esta versión.</p>` : ""}
     <button class="ghost block" id="close-btn">Cerrar</button>
   `);

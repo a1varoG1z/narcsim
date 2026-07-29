@@ -1,6 +1,7 @@
 import { chance, randInt, clamp, pick } from "./utils/random.js";
 import { addLog, currentYear, getPlayerCartel } from "./state.js";
 import { rollMortality, rollFamilyEvents, rollLoyaltyEvents, rollPoliceOperations } from "./events.js";
+import { rollScriptedEvents } from "./scriptedEvents.js";
 import { fillVacantRoles } from "./npcGenerator.js";
 import { ROLE_ORDER } from "./model.js";
 
@@ -16,6 +17,14 @@ const ACTION_COSTS = {
 
 export function canAfford(cartel, type) {
   return cartel.resources.money >= (ACTION_COSTS[type] || 0);
+}
+
+export function isAttackable(game, cartelId, territoryId) {
+  const cartel = game.cartels[cartelId];
+  const territory = game.territories[territoryId];
+  if (!territory || territory.controllerId === cartelId) return false;
+  if (!territory.adj || !territory.adj.length) return true;
+  return territory.adj.some((id) => cartel.territories.includes(id));
 }
 
 export function applyAction(game, cartelId, type, payload = {}) {
@@ -133,6 +142,9 @@ export function applyAction(game, cartelId, type, payload = {}) {
       const defenderId = territory.controllerId;
       const defender = game.cartels[defenderId];
       if (!defender) return { ok: false, message: "Territorio sin dueño." };
+      if (!isAttackable(game, cartelId, territory.id)) {
+        return { ok: false, message: "Ese territorio no linda con ninguno de tus dominios: no puedes atacarlo directamente." };
+      }
       cartel.relations[defenderId] = { status: "war", tension: 95 };
       defender.relations[cartelId] = { status: "war", tension: 95 };
       const result = resolveBattle(game, cartel, defender, territory);
@@ -143,10 +155,32 @@ export function applyAction(game, cartelId, type, payload = {}) {
   }
 }
 
+/** Militia numbers alone don't decide a fight: the quality of the commanders and the loyalty the
+ * leader inspires shift the odds, within a +/-30% band around a neutral 1.0 multiplier. */
+function commanderMultiplier(game, cartel) {
+  let total = 0;
+  let weight = 0;
+  for (const roleKey of ["militaryChief", "sicariosChief"]) {
+    const holder = game.characters[cartel.roles[roleKey]];
+    if (holder && holder.alive && !holder.imprisoned) {
+      total += holder.stats.violence * 0.6 + holder.stats.intrigue * 0.4;
+      weight += 1;
+    }
+  }
+  const leader = game.characters[cartel.roles.leader];
+  if (leader && leader.alive && !leader.imprisoned) {
+    total += leader.stats.loyaltyInspiring;
+    weight += 1;
+  }
+  if (!weight) return 1;
+  const avgStat = total / weight; // roughly 0-100, 50 = average
+  return clamp(0.7 + (avgStat / 100) * 0.6, 0.7, 1.3);
+}
+
 function resolveBattle(game, attacker, defender, territory) {
   const log = (t, ty) => addLog(game, t, ty);
-  const atkPower = attacker.resources.armySize * (0.85 + Math.random() * 0.3);
-  const defPower = defender.resources.armySize * (1.0 + Math.random() * 0.3);
+  const atkPower = attacker.resources.armySize * commanderMultiplier(game, attacker) * (0.85 + Math.random() * 0.3);
+  const defPower = defender.resources.armySize * commanderMultiplier(game, defender) * (1.0 + Math.random() * 0.3);
   const attackerWins = atkPower > defPower;
   const casualtiesAtk = Math.round(attacker.resources.armySize * randInt(3, 15) / 100);
   const casualtiesDef = Math.round(defender.resources.armySize * randInt(3, 15) / 100);
@@ -193,9 +227,9 @@ function autoResolveWars(game) {
       if (!chance(0.6)) continue; // not every war flares up every turn
       const attackerFirst = chance(0.5);
       const [atk, def] = attackerFirst ? [cartel, other] : [other, cartel];
-      if (!def.territories.length) continue;
-      const territoryId = pick(def.territories);
-      resolveBattle(game, atk, def, game.territories[territoryId]);
+      const reachable = def.territories.filter((tId) => isAttackable(game, atk.id, tId));
+      if (!reachable.length) continue; // no shared border yet: the war stays cold this turn
+      resolveBattle(game, atk, def, game.territories[pick(reachable)]);
     }
   }
 }
@@ -218,14 +252,19 @@ function runAiCartels(game) {
       options.push({ item: "attack_territory", weight: 2 });
     }
 
-    const choice = weightedChoice(options);
+    let choice = weightedChoice(options);
     if (choice === "attack_territory") {
-      const enemyId = Object.entries(cartel.relations).find(([, rel]) => rel.status === "war")?.[0];
-      const enemy = enemyId && game.cartels[enemyId];
-      if (enemy && enemy.territories.length) {
-        applyAction(game, cartel.id, "attack_territory", { territoryId: pick(enemy.territories) });
+      const warEnemyIds = Object.entries(cartel.relations).filter(([, rel]) => rel.status === "war").map(([id]) => id);
+      const reachable = warEnemyIds.flatMap((enemyId) => {
+        const enemy = game.cartels[enemyId];
+        return enemy ? enemy.territories.filter((tId) => isAttackable(game, cartel.id, tId)) : [];
+      });
+      if (reachable.length) {
+        applyAction(game, cartel.id, "attack_territory", { territoryId: pick(reachable) });
         continue;
       }
+      choice = "recruit_army"; // no reachable enemy territory this turn: build up forces instead
+      if (!canAfford(cartel, choice)) continue;
     }
     if (choice) applyAction(game, cartel.id, choice, {});
   }
@@ -245,9 +284,22 @@ function weightedChoice(entries) {
 function incomeTick(game) {
   for (const cartel of Object.values(game.cartels)) {
     if (cartel.destroyed) continue;
-    const territoryIncome = cartel.territories.reduce((s, tId) => s + (game.territories[tId]?.value || 0) * 8, 0);
-    const upkeep = Math.round(cartel.resources.armySize * 0.6);
-    cartel.resources.money = Math.max(0, cartel.resources.money + territoryIncome - upkeep);
+    const territoryIncome = cartel.territories.reduce((s, tId) => s + (game.territories[tId]?.value || 0) * 10, 0);
+    const upkeep = Math.round(cartel.resources.armySize * 0.45);
+    const net = territoryIncome - upkeep;
+    if (cartel.resources.money + net < 0) {
+      // Can't make payroll: unpaid sicarios desert instead of the cartel going into debt.
+      const shortfall = -(cartel.resources.money + net);
+      const desertionFraction = clamp(shortfall / (upkeep || 1), 0, 0.15);
+      const deserted = Math.round(cartel.resources.armySize * desertionFraction);
+      if (deserted > 0) {
+        cartel.resources.armySize = Math.max(10, cartel.resources.armySize - deserted);
+        addLog(game, `${cartel.name} no puede pagar a su gente: ${deserted} hombres desertan.`, "event");
+      }
+      cartel.resources.money = 0;
+    } else {
+      cartel.resources.money += net;
+    }
     cartel.resources.heat = Math.max(0, cartel.resources.heat - 1);
   }
 }
@@ -346,6 +398,7 @@ export function endTurn(game) {
       addLog(game, `Se frustra un intento de traición contra el liderazgo de ${game.cartels[coup.cartelId].name}.`, "event");
     }
   }
+  deaths.push(...rollScriptedEvents(game, (t, ty) => addLog(game, t, ty), year));
   const arrests = rollPoliceOperations(game, (t, ty) => addLog(game, t, ty), year);
   incomeTick(game);
 

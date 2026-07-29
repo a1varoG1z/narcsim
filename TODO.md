@@ -22,21 +22,28 @@ Estado del proyecto tras la primera versión jugable (MVP). Marcado ✅ lo imple
 - ✅ Editor interno: edición libre de cualquier cártel (recursos) y personaje (nombre, año de nacimiento, vivo/muerto, cargo, atributos), export de partida, reinicio de partida.
 - ✅ Diseño mobile-first probado en viewport de móvil (390px) sin errores de consola.
 
+## Balance y realismo (segunda pasada)
+
+- ✅ **Adyacencia real entre territorios**: cada territorio tiene una lista `adj` de vecinos (aproximada a la geografía real); solo se puede atacar un territorio que linde con uno de los tuyos. La IA respeta la misma regla, así que las guerras solo avanzan si hay frontera compartida.
+- ✅ **Combate ponderado por calidad de mando**: el resultado de una batalla ya no depende solo del tamaño del ejército — la Violencia/Astucia de tu jefe de sicarios y de ejército, y el Liderazgo de tu líder, mueven la balanza hasta un ±30%.
+- ✅ **Deserción por impago**: si un cártel no puede cubrir la nómina de su ejército con sus ingresos, una parte de sus hombres deserta en vez de quedarse gratis para siempre. Esto hace que los cárteles sobredimensionados para su territorio (ej. Tijuana a finales de los 90, Santa Rosa de Lima) decaigan de forma orgánica hacia un tamaño sostenible, reflejando su trayectoria histórica real.
+- ✅ **Eventos históricos guionizados** (`js/scriptedEvents.js`): fechas reales que impactan la partida una sola vez — el asesinato de Kiki Camarena (1985) dispara una ofensiva binacional contra Guadalajara; la guerra de Escobar contra la extradición (1989) y el "Proceso 8.000" contra Cali (1995); las muertes de Amado Carrillo Fuentes (1997), Arturo Beltrán Leyva (2009), Nazario Moreno (2010) y Heriberto Lazcano (2012); y la guerra interna Chapitos vs. La Mayiza en Sinaloa (2024). Si estás jugando exactamente como el personaje afectado, el desenlace es un riesgo del 55% (puedes desafiar tu destino histórico) en vez de una certeza — para los NPC, ocurre tal cual pasó en la realidad.
+- ✅ **Simulador de balance sin interfaz** (`scripts/simulate-balance.mjs`): ejecuta decenas de partidas automáticas por época/cártel para comprobar que el dinero, el ejército, el heat y la tasa de arresto/muerte se mantienen en rangos razonables. Útil para futuros ajustes — ejecútalo con `node scripts/simulate-balance.mjs`.
+
 ## Pendiente / mejoras futuras
 
 ### Mapa
-- ⬜ Mapa geográficamente preciso (actualmente es una disposición esquemática de territorios, no coordenadas reales).
-- ⬜ Adyacencia real entre territorios (hoy se puede atacar cualquier territorio rival, no solo los colindantes).
+- ⬜ Mapa geográficamente preciso (actualmente es una disposición esquemática de territorios con adyacencia aproximada, no coordenadas reales).
 - ⬜ Ocupar territorios neutrales/sin dueño (hoy solo se pueden fundar cárteles nuevos ahí al iniciar partida).
 
 ### Guerras y combate
-- 🟡 Resolución de batallas simplificada (comparación de ejército + azar). Pendiente: tácticas, terreno, refuerzos, moral, guerras prolongadas con objetivos.
+- 🟡 Resolución de batallas por turno con ponderación de mando y adyacencia. Pendiente: tácticas, terreno, refuerzos, moral, guerras prolongadas con objetivos concretos (no solo conquista de una plaza).
 - ⬜ Historial/relato detallado de cada guerra (bajas totales, duración, tratados).
 
 ### Familia, romances e intriga
 - 🟡 Romance y genealogía básicos. Pendiente: cortejo con decisiones narrativas, infidelidades, divorcios, rivalidades entre hermanos, tramas de honor/venganza.
 - ⬜ Sistema de amistades/confianza explícito entre miembros del cártel (hoy solo hay "lealtad" derivada de atributos).
-- ⬜ Eventos narrativos únicos (no solo aleatorios genéricos) para figuras históricas reales (ej. la fuga de El Chapo, la guerra Chapitos vs. Mayiza en 2024).
+- 🟡 Eventos narrativos únicos para figuras históricas reales: ya cubiertos varios hitos clave (ver "Balance y realismo" arriba). Pendiente: más eventos (la fuga de El Chapo de Puente Grande en 2001, el Proceso 8.000 con más detalle, capturas de los Arellano Félix, etc.) y que algunos ofrezcan una decisión interactiva en vez de solo un riesgo automático.
 
 ### Policía / persecución
 - 🟡 El heat sube/baja y los operativos policiales ya escalan con la notoriedad. Pendiente: mecánica de persecución más visible (barra de "expediente", informantes, redadas planeadas vs. sorpresa), fugas de prisión jugables.

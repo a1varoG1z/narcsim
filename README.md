@@ -15,6 +15,12 @@ python3 -m http.server 8000
 
 (Tiene que servirse por HTTP, no abrirse como `file://`, porque carga los datos de cada época vía `fetch`.)
 
+Para comprobar el balance del juego sin abrir el navegador (dinero, ejército, heat y tasa de arresto/muerte a lo largo de decenas de partidas simuladas):
+
+```bash
+node scripts/simulate-balance.mjs
+```
+
 ## Cómo funciona
 
 - **Sin backend ni cuentas de usuario.** Todo el estado de la partida se guarda en `localStorage` del navegador, con opción de exportar/importar la partida como archivo `.json` desde la pestaña **Editor**.
