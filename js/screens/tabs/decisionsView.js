@@ -7,6 +7,7 @@ import { fmtMoney } from "../../utils/text.js";
 const ACTIONS = [
   { type: "invest_production", label: "Invertir en producción", desc: "Financia laboratorios y cultivos. Riesgo de decomiso." },
   { type: "traffic_shipment", label: "Enviar cargamento", desc: "Mueve mercancía por tus rutas. Mayor riesgo y recompensa." },
+  { type: "extort_territory", label: "Extorsionar un territorio", desc: "Cobro forzoso a comerciantes locales: dinero inmediato sin coste, a cambio de imagen pública y algo de heat." },
   { type: "corrupt_gov", label: "Sobornar al gobierno", desc: "Aumenta tu corrupción política y reduce el heat." },
   { type: "corrupt_police", label: "Sobornar a la policía", desc: "Aumenta tu corrupción policial y reduce el heat." },
   { type: "recruit_army", label: "Reclutar sicarios", desc: "Aumenta tu ejército." },
@@ -27,13 +28,19 @@ export function render(container, app) {
       <p class="text-dim small">Tienes <strong>${remaining}/${ACTIONS_PER_TURN}</strong> acciones disponibles antes de avanzar el turno. Las decisiones diplomáticas y militares no gastan acciones.</p>
       ${ACTIONS.map((a) => {
         const cost = ACTION_COSTS[a.type] || 0;
+        const noTerritories = a.type === "extort_territory" && !cartel.territories.length;
         return `
-        <button class="block" data-action="${a.type}" ${cartel.resources.money < cost || exhausted ? "disabled" : ""}>
+        <button class="block" data-action="${a.type}" ${cartel.resources.money < cost || exhausted || noTerritories ? "disabled" : ""}>
           <strong>${a.label}</strong> ${cost ? `— ${fmtMoney(cost)}` : ""}
           <div class="small text-dim">${a.desc}</div>
         </button>
       `;
       }).join("")}
+    </div>
+    <div class="card">
+      <h3>Desarrollo de territorio</h3>
+      <p class="text-dim small">Invierte en infraestructura y rutas para un territorio tuyo, subiendo su valor económico de forma permanente (hasta un máximo). Es una inversión de crecimiento, no gasta acciones del turno.</p>
+      <button class="block" id="develop-btn" ${!cartel.territories.length ? "disabled" : ""}>Desarrollar un territorio</button>
     </div>
     <div class="card">
       <h3>Lavado de dinero</h3>
@@ -57,6 +64,10 @@ export function render(container, app) {
         showProductionModal(app, game, cartel);
         return;
       }
+      if (btn.dataset.action === "extort_territory") {
+        showExtortModal(app, game, cartel);
+        return;
+      }
       applyAction(game, cartel.id, btn.dataset.action);
       app.setGame(game);
       app.render();
@@ -67,6 +78,62 @@ export function render(container, app) {
     btn.addEventListener("click", () => {
       applyAction(game, cartel.id, "launder_money", { amount: Number(btn.dataset.launder) });
       app.setGame(game);
+      app.render();
+    });
+  });
+
+  container.querySelector("#develop-btn")?.addEventListener("click", () => {
+    showDevelopModal(app, game, cartel);
+  });
+}
+
+function showExtortModal(app, game, cartel) {
+  const territories = cartel.territories.map((id) => game.territories[id]).filter(Boolean);
+  showModal(`
+    <h2>Extorsionar un territorio</h2>
+    <p class="small text-dim">Elige qué territorio presionar. El pago es inmediato pero daña tu imagen pública y sube el heat.</p>
+    ${territories.map((t) => `
+      <button class="block" data-territory="${t.id}">
+        ${escapeHtml(t.name)}
+        <div class="small text-dim">Valor económico: ${t.value}</div>
+      </button>
+    `).join("")}
+    <button class="ghost block" id="close-btn">Cancelar</button>
+  `);
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.querySelectorAll("[data-territory]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const result = applyAction(game, cartel.id, "extort_territory", { territoryId: btn.dataset.territory });
+      app.setGame(game);
+      closeModal();
+      if (!result.ok) alert(result.message);
+      app.render();
+    });
+  });
+}
+
+function showDevelopModal(app, game, cartel) {
+  const territories = cartel.territories.map((id) => game.territories[id]).filter(Boolean);
+  showModal(`
+    <h2>Desarrollar un territorio</h2>
+    <p class="small text-dim">El coste crece con el valor actual del territorio; el máximo desarrollable es 40.</p>
+    ${territories.map((t) => {
+      const cost = t.value * 20 * MONEY_SCALE;
+      const maxed = t.value >= 40;
+      return `<button class="block" data-territory="${t.id}" ${maxed || cartel.resources.money < cost ? "disabled" : ""}>
+        ${escapeHtml(t.name)}
+        <div class="small text-dim">Valor económico: ${t.value}${maxed ? " (máximo)" : ` · Coste: ${fmtMoney(cost)}`}</div>
+      </button>`;
+    }).join("")}
+    <button class="ghost block" id="close-btn">Cancelar</button>
+  `);
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.querySelectorAll("[data-territory]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const result = applyAction(game, cartel.id, "develop_territory", { territoryId: btn.dataset.territory });
+      app.setGame(game);
+      closeModal();
+      if (!result.ok) alert(result.message);
       app.render();
     });
   });

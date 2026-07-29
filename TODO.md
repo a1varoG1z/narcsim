@@ -91,11 +91,11 @@ Estado del proyecto tras la primera versión jugable (MVP). Marcado ✅ lo imple
 
 ### Guerras y combate
 - 🟡 Resolución de batallas por turno con ponderación de mando, adyacencia, historial y tratados con condiciones (ver arriba). Pendiente: tácticas, terreno, refuerzos, moral, guerras prolongadas con objetivos concretos más allá de la conquista de una plaza.
-- ⬜ **Bajas reales de sicarios/ejército en combate** (hoy una guerra mueve territorio pero no reduce tropas de forma visible y trazable) y **decisiones concretas de guerra** (ordenar un atentado contra alguien en concreto, sabotaje, redadas específicas) en vez de un único botón genérico de "atacar".
+- 🟡 **Bajas reales de sicarios/ejército en combate** (hoy una guerra mueve territorio pero no reduce tropas de forma visible y trazable) y **decisiones concretas de guerra** en vez de un único botón genérico de "atacar". Ya existe "Ordenar un atentado" contra una persona concreta de un cártel rival (ver más abajo); falta sabotaje, redadas específicas y que las bajas de combate queden registradas con el mismo detalle que las guerras.
 - ⬜ **Conquistar territorios vacíos y derrotar a otro cártel es demasiado fácil hoy**: falta dificultad y profundidad real (resistencia, coste, riesgo de fallo) en vez de ser casi automático con un solo clic.
 
 ### Motor de turnos y acciones
-- ⬜ **3 acciones por turno se sienten muy pocas** para un turno de 6 meses — un personaje real (p. ej. Escobar) hacía muchísimas cosas en poco tiempo. Subir bastante el cupo de acciones por turno y añadir muchas más alternativas de acción: formas de ganar dinero, de expansión y de crecimiento, no solo las pocas que hay ahora.
+- ✅ **Cupo de acciones subido de 3 a 5 por turno**, y **tres acciones nuevas**: "Extorsionar un territorio" (dinero inmediato sin coste, a cambio de imagen y algo de heat — pensada para partidas rápidas de necesidad de caja), "Desarrollar un territorio" (inversión de crecimiento que sube el valor económico de un territorio de forma permanente, sin gastar del cupo de acciones, como ocupar/atacar) y "Ordenar un atentado" (elegir a una persona concreta de un cártel rival para asesinar, con éxito basado en tu jefe de sicarios frente al sigilo del objetivo; si tiene éxito o fracasa, entráis en guerra). La IA rival también usa las tres. Sigue habiendo hueco para más alternativas económicas (ver "Dimensión económica" más abajo).
 - ⬜ **La simulación de un turno no debería resolverse siempre de un tirón**: si durante esos meses ocurre algo importante — incluida una acción rival que te afecta directamente — el turno debería pararse para que puedas reaccionar/decidir, en vez de solo aparecer ya resuelto en el registro.
 
 ### Familia, romances e intriga

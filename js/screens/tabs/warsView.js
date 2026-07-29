@@ -1,8 +1,10 @@
 import { getPlayerCartel } from "../../state.js";
-import { escapeHtml } from "../../ui/components.js";
-import { applyAction, getWarsForCartel } from "../../turnEngine.js";
+import { escapeHtml, portraitImg, roleLabel } from "../../ui/components.js";
+import { applyAction, getWarsForCartel, ACTION_COSTS, getActionsRemaining } from "../../turnEngine.js";
 import { showModal, closeModal } from "../../ui/modal.js";
 import { showCartelProfile } from "./cartelProfile.js";
+import { fmtMoney } from "../../utils/text.js";
+import { ROLE_ORDER } from "../../model.js";
 
 const STATUS_LABEL = { war: "En guerra", alliance: "Aliados", neutral: "Neutral" };
 const STATUS_CLASS = { war: "war", alliance: "alliance", neutral: "" };
@@ -11,10 +13,12 @@ export function render(container, app) {
   const game = app.game;
   const cartel = getPlayerCartel(game);
   const others = Object.values(game.cartels).filter((c) => c.id !== cartel.id && !c.destroyed);
+  const noActionsLeft = getActionsRemaining(game) <= 0;
 
   container.innerHTML = `
     <div class="card">
       <h2>Relaciones exteriores</h2>
+      <p class="text-dim small">Declarar guerra, atacar, ocupar y proponer paz/alianza no gastan acciones. Ordenar un atentado sí (te quedan ${getActionsRemaining(game)}).</p>
       ${others.map((o) => {
         const rel = cartel.relations[o.id] || { status: "neutral", tension: 0 };
         return `
@@ -27,6 +31,7 @@ export function render(container, app) {
           <div class="btn-row">
             ${rel.status !== "war" ? `<button class="danger" data-war="${o.id}">Declarar guerra</button>` : `<button data-peace="${o.id}">Proponer paz</button>`}
             ${rel.status === "neutral" ? `<button data-alliance="${o.id}">Proponer alianza</button>` : ""}
+            <button class="danger" data-assassinate="${o.id}" ${cartel.resources.money < ACTION_COSTS.assassinate_rival || noActionsLeft ? "disabled" : ""}>Ordenar un atentado</button>
           </div>
         </div>`;
       }).join("")}
@@ -54,6 +59,45 @@ export function render(container, app) {
   container.querySelectorAll("[data-view-cartel]").forEach((el) => el.addEventListener("click", () => {
     showCartelProfile(app, el.dataset.viewCartel);
   }));
+  container.querySelectorAll("[data-assassinate]").forEach((btn) => btn.addEventListener("click", () => {
+    showAssassinateModal(app, game, cartel, btn.dataset.assassinate);
+  }));
+}
+
+function showAssassinateModal(app, game, cartel, targetCartelId) {
+  const target = game.cartels[targetCartelId];
+  const candidates = [target.roles.leader, ...ROLE_ORDER.map((r) => target.roles[r])]
+    .filter((id, i, arr) => id && arr.indexOf(id) === i)
+    .map((id) => game.characters[id])
+    .filter((c) => c && c.alive);
+
+  showModal(`
+    <h2>Ordenar un atentado contra ${escapeHtml(target.name)}</h2>
+    <p class="small text-dim">Coste: ${fmtMoney(ACTION_COSTS.assassinate_rival)}. El éxito depende de tu jefe de sicarios frente al sigilo del objetivo. Si falla, o si tiene éxito, quedará claro quién lo ordenó: entráis en guerra.</p>
+    ${candidates.length ? candidates.map((c) => `
+      <button class="block" data-target="${c.id}">
+        <div class="person-row" style="border:none;padding:0">
+          ${portraitImg(c)}
+          <div class="info"><div class="name">${escapeHtml(c.name)}</div><div class="role">${c.role ? roleLabel(c.role) : "Sin cargo"}</div></div>
+        </div>
+      </button>
+    `).join("") : `<p class="small text-dim">No hay objetivos disponibles en este cártel.</p>`}
+    <button class="ghost block" id="close-btn">Cancelar</button>
+  `);
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.querySelectorAll("[data-target]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const result = applyAction(game, cartel.id, "assassinate_rival", { targetCharacterId: btn.dataset.target });
+      app.setGame(game);
+      closeModal();
+      if (!result.ok) {
+        alert(result.message);
+      } else {
+        alert(result.success ? "El atentado tiene éxito." : "El atentado fracasa y expone tu implicación.");
+      }
+      app.render();
+    });
+  });
 }
 
 function showPeaceModal(app, game, cartel, targetCartelId) {
@@ -90,7 +134,7 @@ function showPeaceModal(app, game, cartel, targetCartelId) {
     } else {
       let msg = "Han aceptado la paz.";
       if (res.cededTerritory) msg += ` Cedes ${res.cededTerritory}.`;
-      if (res.indemnity) msg += ` Recibes $${res.indemnity} de indemnización.`;
+      if (res.indemnity) msg += ` Recibes ${fmtMoney(res.indemnity)} de indemnización.`;
       alert(msg);
     }
     app.render();

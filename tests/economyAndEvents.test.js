@@ -44,6 +44,86 @@ test("launder_money refuses to launder more money than the cartel has", () => {
   assert.equal(game.cartels.sinaloa.resources.launderedMoney, 100);
 });
 
+test("extort_territory pays out immediately with no upfront cost but refuses a territory the cartel doesn't own", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  const before = cartel.resources.money;
+  const ownedTerritoryId = cartel.territories[0];
+
+  const result = applyAction(game, "sinaloa", "extort_territory", { territoryId: ownedTerritoryId });
+  assert.equal(result.ok, true);
+  assert.ok(cartel.resources.money > before, "extortion should pay out immediately");
+
+  const foreignResult = applyAction(game, "sinaloa", "extort_territory", { territoryId: "tamaulipas" }); // owned by Golfo in this era
+  assert.equal(foreignResult.ok, false);
+});
+
+test("develop_territory permanently raises a territory's value when affordable, and refuses once maxed out", () => {
+  const game = newGame("mexico-rutas-1990-2006.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  cartel.resources.money = 100_000_000;
+  const territoryId = cartel.territories[0];
+  const before = game.territories[territoryId].value;
+
+  const result = applyAction(game, "sinaloa", "develop_territory", { territoryId });
+  assert.equal(result.ok, true);
+  if (result.success) {
+    assert.ok(game.territories[territoryId].value > before, "a successful development should raise the territory's value");
+  }
+
+  game.territories[territoryId].value = 40;
+  const maxedResult = applyAction(game, "sinaloa", "develop_territory", { territoryId });
+  assert.equal(maxedResult.ok, false);
+});
+
+test("develop_territory refuses a territory the cartel doesn't own", () => {
+  const game = newGame("mexico-rutas-1990-2006.json", "sinaloa");
+  game.cartels.sinaloa.resources.money = 100_000_000;
+  const result = applyAction(game, "sinaloa", "develop_territory", { territoryId: "tamaulipas" }); // owned by Golfo
+  assert.equal(result.ok, false);
+});
+
+test("assassinate_rival kills the target on success, triggers succession if they were the leader, and opens a war", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  cartel.resources.money = 100_000_000;
+  const targetCartel = game.cartels.cjng;
+  const targetLeaderId = targetCartel.roles.leader;
+
+  const originalRandom = Math.random;
+  Math.random = () => 0; // guarantees the assassination attempt succeeds
+  let result;
+  try {
+    result = applyAction(game, "sinaloa", "assassinate_rival", { targetCharacterId: targetLeaderId });
+  } finally {
+    Math.random = originalRandom;
+  }
+
+  assert.equal(result.ok, true);
+  assert.equal(result.success, true);
+  assert.equal(game.characters[targetLeaderId].alive, false);
+  assert.notEqual(targetCartel.roles.leader, targetLeaderId, "the rival cartel should have a new leader after losing theirs");
+  assert.equal(cartel.relations.cjng.status, "war");
+  const wars = getWarsForCartel(game, "sinaloa").filter((w) => w.cartelA === "cjng" || w.cartelB === "cjng");
+  assert.equal(wars.length, 1);
+});
+
+test("assassinate_rival refuses insufficient funds and an invalid or same-cartel target", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+
+  cartel.resources.money = 0;
+  const poorResult = applyAction(game, "sinaloa", "assassinate_rival", { targetCharacterId: game.cartels.cjng.roles.leader });
+  assert.equal(poorResult.ok, false);
+
+  cartel.resources.money = 100_000_000;
+  const sameCartelResult = applyAction(game, "sinaloa", "assassinate_rival", { targetCharacterId: cartel.roles.leader });
+  assert.equal(sameCartelResult.ok, false);
+
+  const missingResult = applyAction(game, "sinaloa", "assassinate_rival", { targetCharacterId: "does-not-exist" });
+  assert.equal(missingResult.ok, false);
+});
+
 test("declaring war opens a war record and proposing (accepted) peace closes it", () => {
   const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
   applyAction(game, "sinaloa", "declare_war", { targetCartelId: "cdn" });

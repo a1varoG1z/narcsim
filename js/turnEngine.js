@@ -65,13 +65,16 @@ export const ACTION_COSTS = {
   international_interview: 200 * MONEY_SCALE,
   damage_control: 250 * MONEY_SCALE,
   launder_money: 0,
+  extort_territory: 0,
+  assassinate_rival: 200 * MONEY_SCALE,
 };
 
 /** Actions that count against the per-turn action budget — the day-to-day running of the
- * cartel. War/diplomacy moves (attack, occupy, declare war, propose peace/alliance) are
- * deliberately left unbudgeted: they already carry their own strategic weight and consequences. */
+ * cartel. War/diplomacy moves (attack, occupy, declare war, propose peace/alliance) and
+ * territorial development are deliberately left unbudgeted: they already carry their own
+ * strategic weight and consequences. */
 export const BUDGETED_ACTIONS = new Set(Object.keys(ACTION_COSTS));
-export const ACTIONS_PER_TURN = 3;
+export const ACTIONS_PER_TURN = 5;
 
 export function getActionsRemaining(game) {
   return Math.max(0, ACTIONS_PER_TURN - (game.actionsUsedThisTurn || 0));
@@ -280,6 +283,24 @@ export function applyAction(game, cartelId, type, payload = {}) {
       log(`La expedición de ${cartel.name} para ocupar ${territory.name} fracasa.`, "event");
       return { ok: true, success: false };
     }
+    case "develop_territory": {
+      const territory = game.territories[payload.territoryId];
+      if (!territory || territory.controllerId !== cartelId) return { ok: false, message: "Ese territorio no es tuyo." };
+      if (territory.value >= 40) return { ok: false, message: "Este territorio ya está en su máximo desarrollo." };
+      const cost = territory.value * 20 * MONEY_SCALE;
+      if (r.money < cost) return { ok: false, message: `Hace falta ${fmtMoney(cost)} para desarrollar ${territory.name}.` };
+      r.money -= cost;
+      const failChance = clamp(r.heat / 350, 0.03, 0.25);
+      if (chance(failChance)) {
+        r.heat = Math.min(100, r.heat + randInt(2, 5));
+        log(`La inversión de infraestructura de ${cartel.name} en ${territory.name} se pierde entre trabas y decomisos.`, "event");
+        return { ok: true, success: false };
+      }
+      const gain = randInt(1, 3);
+      territory.value = Math.min(40, territory.value + gain);
+      log(`${cartel.name} desarrolla rutas e infraestructura en ${territory.name}, elevando su valor económico permanentemente.`, "good");
+      return { ok: true, success: true, newValue: territory.value };
+    }
     case "press_release": {
       const cost = ACTION_COSTS.press_release;
       if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
@@ -345,6 +366,60 @@ export function applyAction(game, cartelId, type, payload = {}) {
       r.heat = Math.max(0, r.heat - clamp(Math.round(amount / (50 * MONEY_SCALE)), 2, 20));
       log(`${cartel.name} lava ${fmtMoney(amount)} a través de negocios legales (comisión: ${fmtMoney(fee)}).`, "good");
       return { ok: true, fee };
+    }
+    case "extort_territory": {
+      const territory = game.territories[payload.territoryId];
+      if (!territory || territory.controllerId !== cartelId) return { ok: false, message: "Ese territorio no es tuyo." };
+      const payout = Math.round(territory.value * 4 * MONEY_SCALE * (0.8 + Math.random() * 0.6));
+      r.money += payout;
+      r.heat = Math.min(100, r.heat + randInt(3, 7));
+      r.publicImage = Math.max(0, r.publicImage - randInt(3, 8));
+      const backlashChance = clamp(r.heat / 300, 0.05, 0.3);
+      if (chance(backlashChance)) {
+        territory.value = Math.max(1, territory.value - 1);
+        log(`${cartel.name} extorsiona a comerciantes de ${territory.name} por ${fmtMoney(payout)}, pero el negocio local se resiente.`, "event");
+        return { ok: true, success: true, payout, backlash: true };
+      }
+      log(`${cartel.name} extorsiona a comerciantes de ${territory.name} por ${fmtMoney(payout)}.`, "event");
+      return { ok: true, success: true, payout };
+    }
+    case "assassinate_rival": {
+      const cost = ACTION_COSTS.assassinate_rival;
+      if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
+      const target = game.characters[payload.targetCharacterId];
+      const targetCartel = target ? game.cartels[target.cartelId] : null;
+      if (!target || !target.alive || !targetCartel || targetCartel.id === cartelId) {
+        return { ok: false, message: "Objetivo no válido." };
+      }
+      r.money -= cost;
+      const hitman = game.characters[cartel.roles.sicariosChief];
+      const attackSkill = hitman ? (hitman.stats.stealth + hitman.stats.violence) / 2 : 40;
+      const defenseSkill = target.stats.stealth + targetCartel.resources.corruptPolice / 4;
+      const successChance = clamp(0.35 + (attackSkill - defenseSkill) / 150, 0.1, 0.75);
+      if (chance(successChance)) {
+        target.alive = false;
+        target.deathYear = currentYear(game);
+        const wasLeader = targetCartel.roles.leader === target.id;
+        if (wasLeader) {
+          autoSuccession(game, targetCartel.id, target.id, "atentado");
+        } else if (target.role) {
+          vacateRole(game, targetCartel.id, target.id);
+          fillVacantRoles(targetCartel, game.characters, currentYear(game));
+        }
+        targetCartel.resources.heat = Math.min(100, targetCartel.resources.heat + randInt(10, 20));
+        r.heat = Math.min(100, r.heat + randInt(20, 35));
+        cartel.relations[targetCartel.id] = { status: "war", tension: 95 };
+        targetCartel.relations[cartelId] = { status: "war", tension: 95 };
+        openWar(game, cartelId, targetCartel.id);
+        log(`${target.name} muere en un atentado ordenado por ${cartel.name}.`, "death");
+        return { ok: true, success: true };
+      }
+      r.heat = Math.min(100, r.heat + randInt(25, 40));
+      targetCartel.relations[cartelId] = { status: "war", tension: 90 };
+      cartel.relations[targetCartel.id] = { status: "war", tension: 90 };
+      openWar(game, cartelId, targetCartel.id);
+      log(`El atentado de ${cartel.name} contra ${target.name} fracasa y expone su autoría.`, "event");
+      return { ok: true, success: false };
     }
     default:
       return { ok: false, message: "Acción desconocida." };
@@ -469,6 +544,13 @@ function runAiCartels(game) {
     if (neutralReachable.length && r.money >= 200 * MONEY_SCALE) {
       options.push({ item: "occupy_territory", weight: 2.5 });
     }
+    if (cartel.territories.length) options.push({ item: "extort_territory", weight: 1.5 });
+    const developable = cartel.territories.map((id) => game.territories[id]).filter((t) => t && t.value < 40 && r.money >= t.value * 20 * MONEY_SCALE);
+    if (developable.length) options.push({ item: "develop_territory", weight: 2 });
+    const rivalCartels = Object.values(game.cartels).filter((c) => c.id !== cartel.id && !c.destroyed);
+    if (rivalCartels.length && r.money >= ACTION_COSTS.assassinate_rival) {
+      options.push({ item: "assassinate_rival", weight: atWar ? 1.5 : 0.4 });
+    }
 
     let choice = weightedChoice(options);
     if (choice === "attack_territory") {
@@ -490,6 +572,31 @@ function runAiCartels(game) {
         continue;
       }
       choice = "invest_production";
+      if (!canAfford(cartel, choice)) continue;
+    }
+    if (choice === "extort_territory") {
+      if (cartel.territories.length) {
+        applyAction(game, cartel.id, "extort_territory", { territoryId: pick(cartel.territories) });
+        continue;
+      }
+      choice = "lay_low";
+    }
+    if (choice === "develop_territory") {
+      if (developable.length) {
+        applyAction(game, cartel.id, "develop_territory", { territoryId: pick(developable).id });
+        continue;
+      }
+      choice = "invest_production";
+      if (!canAfford(cartel, choice)) continue;
+    }
+    if (choice === "assassinate_rival") {
+      const target = rivalCartels.length ? pick(rivalCartels) : null;
+      const targetChar = target ? game.characters[target.roles.leader] : null;
+      if (targetChar && targetChar.alive) {
+        applyAction(game, cartel.id, "assassinate_rival", { targetCharacterId: targetChar.id });
+        continue;
+      }
+      choice = "corrupt_police";
       if (!canAfford(cartel, choice)) continue;
     }
     if (choice) applyAction(game, cartel.id, choice, {});
