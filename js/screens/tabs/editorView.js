@@ -141,6 +141,11 @@ export function render(container, app) {
           <p class="text-dim small">Sube una foto para este personaje.</p>
         </div>
       </div>
+      <label>O usar una foto por URL</label>
+      <div style="display:flex;gap:.4rem">
+        <input type="text" id="cf-portrait-url" placeholder="https://..." style="flex:1">
+        <button class="tight" id="cf-portrait-url-btn">Usar URL</button>
+      </div>
       <label>Nombre</label><input id="cf-name" value="${escapeHtml(c.name)}">
       <label>Año de nacimiento</label><input id="cf-birth" type="number" value="${c.birthYear}">
       <label>Vivo</label><select id="cf-alive"><option value="1" ${c.alive ? "selected" : ""}>Sí</option><option value="0" ${!c.alive ? "selected" : ""}>No</option></select>
@@ -170,6 +175,14 @@ export function render(container, app) {
       const file = e.target.files[0];
       if (!file) return;
       c.portrait = await readImageAsDataURL(file);
+      app.setGame(game);
+      app.render();
+    });
+
+    container.querySelector("#cf-portrait-url-btn").addEventListener("click", () => {
+      const url = container.querySelector("#cf-portrait-url").value.trim();
+      if (!url) return;
+      c.portrait = url;
       app.setGame(game);
       app.render();
     });
