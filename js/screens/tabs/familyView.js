@@ -2,8 +2,9 @@ import { getPlayerCartel, getPlayerCharacter, currentYear } from "../../state.js
 import { portraitImg, escapeHtml, roleLabel, statBar } from "../../ui/components.js";
 import { showCharacterProfile } from "./characterProfile.js";
 import { generateNpc, randomName } from "../../npcGenerator.js";
-import { chance } from "../../utils/random.js";
+import { chance, clamp } from "../../utils/random.js";
 import { strengthenBond } from "../../turnEngine.js";
+import { showModal, closeModal } from "../../ui/modal.js";
 
 export function render(container, app) {
   const game = app.game;
@@ -33,8 +34,10 @@ export function render(container, app) {
       <div class="grid auto">
         ${[...familyMembers].map((id) => renderFamilyCard(game.characters[id], player.id)).join("")}
       </div>
+      ${player.spouseId ? statBar("Relación con tu pareja", player.marriageBond ?? 70) : ""}
       ${!player.spouseId ? `<button class="block mt-1" id="seek-romance">Buscar pareja</button>` : ""}
       ${player.spouseId && cartel.characters.length ? `<button class="block mt-1" id="try-child">Intentar tener un hijo/a</button>` : ""}
+      ${player.spouseId ? `<button class="block mt-1 danger" id="divorce-btn">Pedir el divorcio</button>` : ""}
     </div>
     <div class="card">
       <h3>Vínculos y lealtades del cártel</h3>
@@ -76,14 +79,15 @@ export function render(container, app) {
   });
 
   container.querySelector("#seek-romance")?.addEventListener("click", () => {
-    const spouseSex = player.sex === "M" ? "F" : "M";
-    const spouse = generateNpc({ cartelId: cartel.id, role: null, currentYear: year, minAge: 18, maxAge: 45 });
-    spouse.sex = spouseSex;
-    spouse.name = randomName(spouseSex);
-    spouse.spouseId = player.id;
-    game.characters[spouse.id] = spouse;
-    cartel.characters.push(spouse.id);
-    player.spouseId = spouse.id;
+    showCourtshipModal(app, game, cartel, player, year);
+  });
+
+  container.querySelector("#divorce-btn")?.addEventListener("click", () => {
+    if (!confirm("¿Seguro que quieres pedir el divorcio?")) return;
+    const spouse = game.characters[player.spouseId];
+    if (spouse) spouse.spouseId = null;
+    player.spouseId = null;
+    player.marriageBond = undefined;
     app.setGame(game);
     app.render();
   });
@@ -106,6 +110,58 @@ export function render(container, app) {
     father.childrenIds.push(child.id);
     app.setGame(game);
     app.render();
+  });
+}
+
+function showCourtshipModal(app, game, cartel, player, year) {
+  const spouseSex = player.sex === "M" ? "F" : "M";
+  const candidates = Array.from({ length: 3 }, () => {
+    const npc = generateNpc({ cartelId: cartel.id, role: null, currentYear: year, minAge: 18, maxAge: 45 });
+    npc.sex = spouseSex;
+    npc.name = randomName(spouseSex);
+    return npc;
+  });
+
+  showModal(`
+    <h2>Cortejar</h2>
+    <p class="small text-dim">Tu carisma influye en tus probabilidades. Elige a quién cortejar.</p>
+    ${candidates.map((c) => `
+      <button class="block" data-court="${c.id}">
+        <div class="person-row" style="border:none;padding:0">
+          ${portraitImg(c)}
+          <div class="info"><div class="name">${escapeHtml(c.name)}</div><div class="role">${c.stats.charisma > 65 ? "Encantador/a" : c.stats.business > 65 ? "Ambicioso/a" : "Discreto/a"}</div></div>
+        </div>
+      </button>
+    `).join("")}
+    <button class="ghost block" id="close-btn">Cancelar</button>
+  `);
+
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.querySelectorAll("[data-court]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const candidate = candidates.find((c) => c.id === btn.dataset.court);
+      const successChance = clamp(0.4 + player.stats.charisma / 200, 0.3, 0.85);
+      closeModal();
+      if (chance(successChance)) {
+        candidate.spouseId = player.id;
+        game.characters[candidate.id] = candidate;
+        cartel.characters.push(candidate.id);
+        player.spouseId = candidate.id;
+        player.marriageBond = 70;
+        app.setGame(game);
+      }
+      showModal(`
+        <h2>${game.characters[player.spouseId]?.id === candidate.id ? "¡Boda!" : "Rechazado"}</h2>
+        <p>${game.characters[player.spouseId]?.id === candidate.id
+          ? `${escapeHtml(candidate.name)} acepta cortejar contigo y os casáis poco después.`
+          : `${escapeHtml(candidate.name)} rechaza tus intenciones. Puedes intentarlo de nuevo más adelante.`}</p>
+        <button class="primary block" id="ok-btn">Aceptar</button>
+      `);
+      document.getElementById("ok-btn").addEventListener("click", () => {
+        closeModal();
+        app.render();
+      });
+    });
   });
 }
 

@@ -8,7 +8,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { buildGameFromEra, getPlayerCartel } from "../js/state.js";
-import { endTurn, resolveSuccession, resolveRegentChoice, getSuccessionCandidates, applyAction, canAfford, isAttackable } from "../js/turnEngine.js";
+import { endTurn, resolveSuccession, resolveRegentChoice, getSuccessionCandidates, applyAction, canAfford, isAttackable, resolveScriptedChoice } from "../js/turnEngine.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ERA_DIR = path.join(__dirname, "..", "data", "eras") + path.sep;
@@ -72,6 +72,9 @@ function runOneGame(eraData, cartelId, turns) {
     if (result.pendingRegentChoice) {
       if (firstArrestOrDeathTurn === null) firstArrestOrDeathTurn = game.turn;
       resolveRegentChoice(game, true);
+    }
+    if (result.pendingScriptedChoice) {
+      resolveScriptedChoice(game, result.pendingScriptedChoice.eventId, result.pendingScriptedChoice.options[0].id);
     }
   }
 

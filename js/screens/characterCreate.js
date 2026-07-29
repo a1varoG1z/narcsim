@@ -14,34 +14,34 @@ export function render(container, app, { eraData }) {
     <div class="container">
       <h1>Crea tu narco</h1>
       <div class="card">
-        <label>Nombre del personaje</label>
+        <label for="c-name">Nombre del personaje</label>
         <input id="c-name" placeholder="Ej. Emiliano Vargas 'El Chacal'">
 
-        <label>Sexo</label>
+        <label for="c-sex">Sexo</label>
         <select id="c-sex"><option value="M">Hombre</option><option value="F">Mujer</option></select>
 
-        <label>Edad inicial</label>
+        <label for="c-age">Edad inicial</label>
         <input id="c-age" type="number" min="18" max="70" value="35">
 
-        <label>Foto de perfil (opcional)</label>
+        <label for="c-photo">Foto de perfil (opcional)</label>
         <input id="c-photo" type="file" accept="image/*">
         <div id="photo-preview" class="mt-1"></div>
 
-        <label>Nombre del cártel</label>
+        <label for="c-cartel-name">Nombre del cártel</label>
         <input id="c-cartel-name" placeholder="Ej. Cártel del Pacífico Sur">
 
-        <label>Color del cártel</label>
+        <label for="c-color">Color del cártel</label>
         <input id="c-color" type="color" value="#7a4a1f">
 
-        <label>Territorio inicial</label>
+        <label for="c-territory">Territorio inicial</label>
         <select id="c-territory">
           ${territories.map((t) => `<option value="${t.id}">${escapeHtml(t.name)}</option>`).join("")}
         </select>
 
         <h3 class="mt-2">Atributos</h3>
         ${STAT_ORDER.map((key) => `
-          <label>${STATS[key]}: <span id="val-${key}">50</span></label>
-          <input type="range" min="10" max="95" value="50" id="stat-${key}">
+          <label for="stat-${key}">${STATS[key]}: <span id="val-${key}">50</span></label>
+          <input type="range" min="10" max="95" value="50" id="stat-${key}" aria-describedby="val-${key}">
         `).join("")}
 
         <div class="btn-row mt-2">

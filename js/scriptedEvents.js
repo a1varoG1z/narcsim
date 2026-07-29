@@ -1,4 +1,4 @@
-import { chance } from "./utils/random.js";
+import { chance, randInt } from "./utils/random.js";
 
 /**
  * One-off scripted beats tied to real historical dates, layered on top of the emergent
@@ -29,16 +29,54 @@ export const SCRIPTED_EVENTS = {
     {
       id: "camarena-1985",
       year: 1985,
-      run(game, addLog) {
+      interactive: true,
+      cartelId: "guadalajara",
+      title: "El secuestro de Camarena",
+      description:
+        'Tu gente ha secuestrado y asesinado al agente de la DEA Enrique "Kiki" Camarena. Washington exige respuestas y una ofensiva binacional sin precedentes se cierne sobre el cártel. ¿Cómo respondes?',
+      options: [
+        { id: "cooperate", label: "Entregar un chivo expiatorio a las autoridades" },
+        { id: "deny", label: "Negarlo todo y presionar con la corrupción" },
+        { id: "defy", label: "Desafiar abiertamente a la DEA" },
+      ],
+      applyDefault(game, addLog) {
         const c = game.cartels.guadalajara;
-        if (!c || c.destroyed) return [];
+        if (!c || c.destroyed) return;
         c.resources.heat = Math.min(100, c.resources.heat + 40);
         c.resources.corruptPolice = Math.max(0, c.resources.corruptPolice - 20);
         addLog(
           'El secuestro y asesinato del agente de la DEA Enrique "Kiki" Camarena desata una ofensiva binacional sin precedentes contra el Cártel de Guadalajara.',
           "event"
         );
-        return [];
+      },
+      applyChoice(game, addLog, optionId) {
+        const c = game.cartels.guadalajara;
+        if (!c || c.destroyed) return;
+        if (optionId === "cooperate") {
+          c.resources.heat = Math.min(100, c.resources.heat + 15);
+          c.resources.corruptPolice = Math.max(0, c.resources.corruptPolice - 10);
+          const scapegoatRole = ["sicariosChief", "militaryChief", "corruptionPoliceChief"].find((role) => {
+            const holder = game.characters[c.roles[role]];
+            return holder && holder.alive && !holder.imprisoned;
+          });
+          const scapegoat = scapegoatRole ? game.characters[c.roles[scapegoatRole]] : null;
+          if (scapegoat) {
+            scapegoat.imprisoned = { sinceTurn: game.turn, releaseTurn: null, lifeSentence: true };
+            addLog(`${scapegoat.name} carga con la culpa y es entregado a las autoridades. La presión internacional se calma un poco.`, "event");
+          } else {
+            addLog("El cártel entrega pruebas menores a las autoridades. La presión internacional se calma un poco.", "event");
+          }
+        } else if (optionId === "deny") {
+          c.resources.heat = Math.min(100, c.resources.heat + 25);
+          c.resources.corruptGov = Math.max(0, c.resources.corruptGov - 15);
+          c.resources.corruptPolice = Math.max(0, c.resources.corruptPolice - 10);
+          addLog("El cártel lo niega todo y quema buena parte de su red de corrupción tratando de contener el escándalo.", "event");
+        } else {
+          c.resources.heat = Math.min(100, c.resources.heat + 45);
+          c.resources.armySize += randInt(15, 30);
+          c.resources.publicImage = Math.max(0, c.resources.publicImage - 10);
+          addLog("El cártel desafía abiertamente a la DEA y refuerza su aparato armado. La ofensiva en su contra será implacable.", "death");
+        }
       },
     },
   ],
@@ -146,17 +184,38 @@ export const SCRIPTED_EVENTS = {
   ],
 };
 
+/** Returns { deaths, pendingChoice }. Interactive events pause for a player decision instead of
+ * auto-resolving when the player controls the affected cartel; they stay unfired until resolved
+ * via resolveScriptedChoice, so they're offered again next turn if a modal collision defers them.
+ * When an NPC/AI cartel is affected instead, the event just plays out as it did historically. */
 export function rollScriptedEvents(game, addLog, year) {
   if (!game.firedScriptedEvents) game.firedScriptedEvents = [];
   const events = SCRIPTED_EVENTS[game.eraId] || [];
   const deaths = [];
+  let pendingChoice = null;
   for (const ev of events) {
     if (game.firedScriptedEvents.includes(ev.id)) continue;
-    if (year >= ev.year) {
-      const evDeaths = ev.run(game, addLog) || [];
-      deaths.push(...evDeaths);
-      game.firedScriptedEvents.push(ev.id);
+    if (year < ev.year) continue;
+    if (ev.interactive) {
+      if (game.playerCartelId === ev.cartelId) {
+        pendingChoice = { eventId: ev.id, title: ev.title, description: ev.description, options: ev.options };
+      } else {
+        ev.applyDefault(game, addLog);
+        game.firedScriptedEvents.push(ev.id);
+      }
+      continue;
     }
+    const evDeaths = ev.run(game, addLog) || [];
+    deaths.push(...evDeaths);
+    game.firedScriptedEvents.push(ev.id);
   }
-  return deaths;
+  return { deaths, pendingChoice };
+}
+
+export function resolveScriptedChoice(game, addLog, eventId, optionId) {
+  const events = SCRIPTED_EVENTS[game.eraId] || [];
+  const ev = events.find((e) => e.id === eventId);
+  if (!ev) return;
+  ev.applyChoice(game, addLog, optionId);
+  game.firedScriptedEvents.push(ev.id);
 }

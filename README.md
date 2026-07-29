@@ -21,6 +21,14 @@ Para comprobar el balance del juego sin abrir el navegador (dinero, ejército, h
 node scripts/simulate-balance.mjs
 ```
 
+Para correr la suite de tests automatizados (motor de turnos, adyacencia/combate, sucesión, fugas, guerras, economía, eventos guionizados):
+
+```bash
+npm test
+```
+
+El juego también es instalable como PWA (Añadir a pantalla de inicio) gracias a `manifest.json` y `service-worker.js`, y sigue funcionando offline tras la primera carga.
+
 ## Cómo funciona
 
 - **Sin backend ni cuentas de usuario.** Todo el estado de la partida se guarda en `localStorage` del navegador, con opción de exportar/importar la partida como archivo `.json` desde la pestaña **Editor**.
@@ -33,17 +41,23 @@ node scripts/simulate-balance.mjs
 ## Estructura del proyecto
 
 ```
-index.html          punto de entrada
-css/styles.css       estilos (tema oscuro, mobile-first)
-js/                  lógica del juego (ES modules, sin build)
-  model.js            modelos de datos (personajes, cárteles, territorios, roles, stats)
-  state.js             construcción y persistencia de la partida
-  turnEngine.js        motor de turnos: acciones, IA rival, guerras, sucesión
-  events.js            eventos aleatorios (mortalidad, familia, lealtad, policía)
+index.html            punto de entrada
+manifest.json         manifiesto PWA (instalable en el móvil)
+service-worker.js     caché offline de la app y los datos de las épocas
+css/styles.css        estilos (tema oscuro, mobile-first)
+js/                   lógica del juego (ES modules, sin build)
+  model.js              modelos de datos (personajes, cárteles, territorios, roles, stats)
+  state.js              construcción y persistencia de la partida (múltiples slots)
+  turnEngine.js         motor de turnos: acciones, IA rival, guerras, sucesión, fugas
+  events.js             eventos aleatorios (mortalidad, familia, lealtad, policía)
+  scriptedEvents.js     eventos históricos guionizados (algunos interactivos)
   npcGenerator.js       generación procedural de personajes secundarios
-  screens/             pantallas (menú, elegir época, elegir/crear personaje, dashboard)
-  screens/tabs/         pestañas del dashboard (resumen, decisiones, organigrama, mapa, diplomacia, familia, estadísticas, editor)
-data/eras/*.json     datos de cada época histórica
+  ui/                   componentes compartidos (modal, tarjetas de personaje)
+  screens/              pantallas (menú, elegir época, elegir/crear personaje, dashboard)
+  screens/tabs/         pestañas del dashboard (resumen, decisiones, organigrama, mapa, diplomacia, medios, familia, estadísticas, editor)
+data/eras/*.json      datos de cada época histórica
+scripts/simulate-balance.mjs   simulador de balance sin interfaz
+tests/*.test.js       suite de tests automatizados (node --test)
 ```
 
 ## Aviso

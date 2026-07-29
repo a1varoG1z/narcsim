@@ -1,0 +1,92 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { buildGameFromEra } from "../js/state.js";
+import { applyAction, getWarsForCartel, resolveScriptedChoice } from "../js/turnEngine.js";
+import { rollScriptedEvents } from "../js/scriptedEvents.js";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const ERA_DIR = path.join(__dirname, "..", "data", "eras");
+
+function loadEra(file) {
+  return JSON.parse(fs.readFileSync(path.join(ERA_DIR, file), "utf8"));
+}
+
+function newGame(file, cartelId, characterId) {
+  const era = loadEra(file);
+  const cartel = era.cartels.find((c) => c.id === cartelId);
+  return buildGameFromEra(era, { mode: "existing", cartelId, characterId: characterId || cartel.roles.leader });
+}
+
+test("launder_money reduces heat, tracks a running total, and charges a fee based on the finance chief", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  cartel.resources.money = 5000;
+  cartel.resources.heat = 80;
+  const before = cartel.resources.money;
+
+  const result = applyAction(game, "sinaloa", "launder_money", { amount: 1000 });
+  assert.equal(result.ok, true);
+  assert.ok(result.fee > 0 && result.fee < 1000, "fee should be a fraction of the laundered amount");
+  assert.equal(cartel.resources.money, before - result.fee);
+  assert.equal(cartel.resources.launderedMoney, 1000);
+  assert.ok(cartel.resources.heat < 80, "laundering should reduce heat");
+});
+
+test("launder_money refuses to launder more money than the cartel has", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  game.cartels.sinaloa.resources.money = 100;
+  const result = applyAction(game, "sinaloa", "launder_money", { amount: 100000 });
+  // Amount is clamped to available money server-side, so this should succeed but only for what's available.
+  assert.equal(result.ok, true);
+  assert.equal(game.cartels.sinaloa.resources.launderedMoney, 100);
+});
+
+test("declaring war opens a war record and proposing (accepted) peace closes it", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  applyAction(game, "sinaloa", "declare_war", { targetCartelId: "cdn" });
+  assert.equal(game.cartels.sinaloa.relations.cdn.status, "war");
+  let wars = getWarsForCartel(game, "sinaloa").filter((w) => w.cartelA === "cdn" || w.cartelB === "cdn");
+  assert.equal(wars.length, 1);
+  assert.equal(wars[0].endYear, null);
+
+  // Make Sinaloa overwhelmingly weaker so the peace offer is (near-)certain to be accepted.
+  game.cartels.sinaloa.resources.armySize = 1;
+  game.cartels.cdn.resources.armySize = 100000;
+  const peace = applyAction(game, "sinaloa", "propose_peace", { targetCartelId: "cdn" });
+  if (peace.accepted) {
+    wars = getWarsForCartel(game, "sinaloa").filter((w) => w.cartelA === "cdn" || w.cartelB === "cdn");
+    assert.equal(wars[0].endYear, game.year);
+    assert.equal(game.cartels.sinaloa.relations.cdn.status, "neutral");
+  }
+});
+
+test("traffic_shipment refuses to sell to a cartel you're at war with", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  game.cartels.sinaloa.resources.money = 1000;
+  game.cartels.sinaloa.relations.cjng.status = "war";
+  const result = applyAction(game, "sinaloa", "traffic_shipment", { partnerCartelId: "cjng" });
+  assert.equal(result.ok, false);
+});
+
+test("the Camarena 1985 event pauses for a player choice when the player controls Guadalajara, and applies immediately for NPC-controlled Guadalajara", () => {
+  const era = loadEra("guadalajara-1975-1989.json");
+
+  const playerGame = buildGameFromEra(era, { mode: "existing", cartelId: "guadalajara", characterId: "felix_gallardo" });
+  const playerResult = rollScriptedEvents(playerGame, () => {}, 1985);
+  assert.ok(playerResult.pendingChoice, "expected a pending choice when the player controls Guadalajara");
+  assert.equal(playerResult.pendingChoice.eventId, "camarena-1985");
+  assert.equal(playerGame.firedScriptedEvents.includes("camarena-1985"), false, "should stay unfired until resolved");
+
+  resolveScriptedChoice(playerGame, "camarena-1985", "cooperate");
+  assert.equal(playerGame.firedScriptedEvents.includes("camarena-1985"), true);
+
+  const npcGame = buildGameFromEra(era, { mode: "existing", cartelId: "golfo", characterId: "garcia_abrego" });
+  const npcHeatBefore = npcGame.cartels.guadalajara.resources.heat;
+  const npcResult = rollScriptedEvents(npcGame, () => {}, 1985);
+  assert.equal(npcResult.pendingChoice, null, "should auto-resolve when the player isn't Guadalajara");
+  assert.ok(npcGame.cartels.guadalajara.resources.heat > npcHeatBefore, "the historical default should still raise heat");
+  assert.equal(npcGame.firedScriptedEvents.includes("camarena-1985"), true);
+});

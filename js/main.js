@@ -1,5 +1,5 @@
 import { buildGameFromEra, restoreSlot, persist, getPlayerCartel } from "./state.js";
-import { endTurn, resolveSuccession, resolveRegentChoice, getSuccessionCandidates, checkRelease, attemptEscape } from "./turnEngine.js";
+import { endTurn, resolveSuccession, resolveRegentChoice, getSuccessionCandidates, checkRelease, attemptEscape, resolveMarriageEvent, resolveScriptedChoice } from "./turnEngine.js";
 import { showModal, closeModal } from "./ui/modal.js";
 import { portraitImg, escapeHtml } from "./ui/components.js";
 import { deleteSaveSlot } from "./utils/storage.js";
@@ -95,6 +95,14 @@ const app = {
       this.showSuccessionModal(result.pendingSuccession);
       return;
     }
+    if (result.pendingMarriageEvent) {
+      this.showMarriageModal(result.pendingMarriageEvent);
+      return;
+    }
+    if (result.pendingScriptedChoice) {
+      this.showScriptedChoiceModal(result.pendingScriptedChoice);
+      return;
+    }
     if (result.gameOver) {
       this.showGameOverModal();
       return;
@@ -165,6 +173,44 @@ const app = {
       persist(this.game);
       closeModal();
       this.render();
+    });
+  },
+
+  showMarriageModal(info) {
+    const spouse = this.game.characters[info.spouseId];
+    showModal(`
+      <h2>Crisis matrimonial</h2>
+      <p>Descubres que ${escapeHtml(spouse.name)} te ha sido infiel. ¿Qué haces?</p>
+      <div class="btn-row">
+        <button class="primary block" id="marriage-forgive">Perdonar y seguir adelante</button>
+        <button class="block" id="marriage-ignore">Ignorarlo por ahora</button>
+        <button class="danger block" id="marriage-divorce">Pedir el divorcio</button>
+      </div>
+    `, { dismissible: false });
+    const resolve = (action) => {
+      resolveMarriageEvent(this.game, action);
+      persist(this.game);
+      closeModal();
+      this.render();
+    };
+    document.getElementById("marriage-forgive").addEventListener("click", () => resolve("forgive"));
+    document.getElementById("marriage-ignore").addEventListener("click", () => resolve("ignore"));
+    document.getElementById("marriage-divorce").addEventListener("click", () => resolve("divorce"));
+  },
+
+  showScriptedChoiceModal(info) {
+    showModal(`
+      <h2>${escapeHtml(info.title)}</h2>
+      <p>${escapeHtml(info.description)}</p>
+      ${info.options.map((o) => `<button class="block" data-option="${o.id}">${escapeHtml(o.label)}</button>`).join("")}
+    `, { dismissible: false });
+    document.querySelectorAll("[data-option]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        resolveScriptedChoice(this.game, info.eventId, btn.dataset.option);
+        persist(this.game);
+        closeModal();
+        this.render();
+      });
     });
   },
 

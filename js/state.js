@@ -28,7 +28,7 @@ export function buildGameFromEra(eraData, options) {
       territories: eraData.territories.filter((t) => t.controllerId === c.id).map((t) => t.id),
       characters: memberIds,
       roles: { ...c.roles },
-      resources: { ...c.resources },
+      resources: { internationalReputation: 15, launderedMoney: 0, ...c.resources },
     });
   }
 
@@ -60,7 +60,7 @@ export function buildGameFromEra(eraData, options) {
       color: options.color || "#7a4a1f",
       eraId: eraData.id,
       territories: [territoryId],
-      resources: { money: 150, armySize: 120, corruptGov: 5, corruptPolice: 5, publicImage: 45, heat: 5 },
+      resources: { money: 150, armySize: 120, corruptGov: 5, corruptPolice: 5, publicImage: 45, heat: 5, internationalReputation: 5, launderedMoney: 0 },
       roles: { leader: player.id },
       characters: [player.id],
       aiControlled: false,
@@ -85,16 +85,28 @@ export function buildGameFromEra(eraData, options) {
     }
   }
   const overrides = WAR_OVERRIDES[eraData.id] || [];
+  const warHistory = [];
   for (const [a, b] of overrides) {
     if (cartels[a] && cartels[b]) {
       cartels[a].relations[b] = { status: "war", tension: 80 };
       cartels[b].relations[a] = { status: "war", tension: 80 };
+      warHistory.push({
+        key: [a, b].sort().join("|"),
+        cartelA: a,
+        cartelB: b,
+        startYear: eraData.startYear,
+        endYear: null,
+        casualtiesA: 0,
+        casualtiesB: 0,
+        territoryChanges: [],
+      });
     }
   }
 
   return {
     version: 1,
     saveSlotId: null,
+    warHistory,
     saveName: `${characters[playerCharacterId].name} — ${cartels[playerCartelId].name}`,
     eraId: eraData.id,
     eraName: eraData.name,

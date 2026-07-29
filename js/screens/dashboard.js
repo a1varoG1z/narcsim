@@ -8,6 +8,7 @@ import * as statsView from "./tabs/statsView.js";
 import * as familyView from "./tabs/familyView.js";
 import * as warsView from "./tabs/warsView.js";
 import * as decisionsView from "./tabs/decisionsView.js";
+import * as mediaView from "./tabs/mediaView.js";
 import * as editorView from "./tabs/editorView.js";
 
 const TABS = [
@@ -16,6 +17,7 @@ const TABS = [
   { id: "org", label: "Organigrama", mod: orgChart },
   { id: "map", label: "Mapa", mod: mapView },
   { id: "wars", label: "Diplomacia", mod: warsView },
+  { id: "media", label: "Medios", mod: mediaView },
   { id: "family", label: "Familia", mod: familyView },
   { id: "stats", label: "Estadísticas", mod: statsView },
   { id: "editor", label: "Editor", mod: editorView },
@@ -42,9 +44,9 @@ export function render(container, app) {
         ${escapeHtml(character.name)}${character.imprisoned ? " (preso)" : ""}
       </div>
     </div>
-    <div class="tabs" id="tabbar">
-      ${TABS.map((t) => `<button data-tab="${t.id}" class="${t.id === activeTab ? "active" : ""}">${t.label}</button>`).join("")}
-    </div>
+    <nav class="tabs" id="tabbar" aria-label="Secciones del cártel">
+      ${TABS.map((t) => `<button data-tab="${t.id}" class="${t.id === activeTab ? "active" : ""}" ${t.id === activeTab ? 'aria-current="page"' : ""}>${t.label}</button>`).join("")}
+    </nav>
     <div class="container" id="tab-content"></div>
   `;
 

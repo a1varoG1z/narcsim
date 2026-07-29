@@ -13,11 +13,11 @@ export function render(container, app) {
         <h2>Tus partidas</h2>
         ${slots.map((s) => `
           <div class="card tight" style="display:flex;align-items:center;gap:.5rem">
-            <div style="flex:1;min-width:0;text-align:left" data-continue="${s.id}" role="button">
+            <div style="flex:1;min-width:0;text-align:left" data-continue="${s.id}" role="button" tabindex="0" aria-label="Continuar partida: ${escapeHtml(s.name)}">
               <div class="name">${escapeHtml(s.name)}</div>
               <div class="small text-dim">${escapeHtml(s.eraName)} · ${s.year} · turno ${s.turn}</div>
             </div>
-            <button class="danger tight" data-delete="${s.id}" title="Eliminar partida">✕</button>
+            <button class="danger tight" data-delete="${s.id}" aria-label="Eliminar partida: ${escapeHtml(s.name)}" title="Eliminar partida">✕</button>
           </div>
         `).join("")}
       ` : ""}
@@ -35,6 +35,12 @@ export function render(container, app) {
 
   container.querySelectorAll("[data-continue]").forEach((el) => {
     el.addEventListener("click", () => app.loadSlot(el.dataset.continue));
+    el.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        app.loadSlot(el.dataset.continue);
+      }
+    });
   });
   container.querySelectorAll("[data-delete]").forEach((btn) => {
     btn.addEventListener("click", (e) => {

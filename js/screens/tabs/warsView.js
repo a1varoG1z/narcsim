@@ -1,6 +1,6 @@
 import { getPlayerCartel } from "../../state.js";
 import { escapeHtml } from "../../ui/components.js";
-import { applyAction } from "../../turnEngine.js";
+import { applyAction, getWarsForCartel } from "../../turnEngine.js";
 
 const STATUS_LABEL = { war: "En guerra", alliance: "Aliados", neutral: "Neutral" };
 const STATUS_CLASS = { war: "war", alliance: "alliance", neutral: "" };
@@ -29,6 +29,10 @@ export function render(container, app) {
         </div>`;
       }).join("")}
     </div>
+    <div class="card">
+      <h2>Historial de guerras</h2>
+      ${renderWarHistory(game, cartel)}
+    </div>
   `;
 
   container.querySelectorAll("[data-war]").forEach((btn) => btn.addEventListener("click", () => {
@@ -48,4 +52,24 @@ export function render(container, app) {
     alert(res.accepted ? "Han aceptado la alianza." : "Han rechazado tu propuesta de alianza.");
     app.render();
   }));
+}
+
+function renderWarHistory(game, cartel) {
+  const wars = getWarsForCartel(game, cartel.id).sort((a, b) => b.startYear - a.startYear);
+  if (!wars.length) return `<p class="text-dim small">Tu cártel no ha entrado en guerra todavía.</p>`;
+  return wars.map((w) => {
+    const otherId = w.cartelA === cartel.id ? w.cartelB : w.cartelA;
+    const other = game.cartels[otherId];
+    const myCasualties = w.cartelA === cartel.id ? w.casualtiesA : w.casualtiesB;
+    const theirCasualties = w.cartelA === cartel.id ? w.casualtiesB : w.casualtiesA;
+    const duration = (w.endYear ?? game.year) - w.startYear;
+    return `<div class="card tight mt-1">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3>${escapeHtml(other?.name || "Cártel desaparecido")}</h3>
+        <span class="badge ${w.endYear ? "" : "war"}">${w.endYear ? `Terminada (${duration} años)` : "En curso"}</span>
+      </div>
+      <p class="small text-dim">${w.startYear}${w.endYear ? ` – ${w.endYear}` : " – presente"} · Tus bajas: ${myCasualties} · Sus bajas: ${theirCasualties}</p>
+      ${w.territoryChanges.length ? `<p class="small">Territorios en disputa: ${w.territoryChanges.map((tc) => `${escapeHtml(tc.territoryName)} (${tc.year}, para ${escapeHtml(game.cartels[tc.to]?.name || "?")})`).join(", ")}</p>` : ""}
+    </div>`;
+  }).join("");
 }

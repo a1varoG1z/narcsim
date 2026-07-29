@@ -1,0 +1,15 @@
+{
+  "name": "Narcosim — Simulador de Cárteles",
+  "short_name": "Narcosim",
+  "description": "Simulador de estrategia por turnos sobre la historia del narcotráfico, estilo Crusader Kings.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#14100e",
+  "theme_color": "#14100e",
+  "lang": "es",
+  "icons": [
+    { "src": "assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

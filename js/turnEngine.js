@@ -1,9 +1,44 @@
 import { chance, randInt, clamp, pick } from "./utils/random.js";
 import { addLog, currentYear, getPlayerCartel } from "./state.js";
 import { rollMortality, rollFamilyEvents, rollLoyaltyEvents, rollPoliceOperations } from "./events.js";
-import { rollScriptedEvents } from "./scriptedEvents.js";
+import { rollScriptedEvents, resolveScriptedChoice as applyScriptedChoice } from "./scriptedEvents.js";
 import { fillVacantRoles } from "./npcGenerator.js";
 import { ROLE_ORDER } from "./model.js";
+
+function warKey(a, b) {
+  return [a, b].sort().join("|");
+}
+
+function openWar(game, aId, bId) {
+  if (!game.warHistory) game.warHistory = [];
+  const key = warKey(aId, bId);
+  let war = game.warHistory.find((w) => w.key === key && w.endYear === null);
+  if (!war) {
+    war = {
+      key,
+      cartelA: aId,
+      cartelB: bId,
+      startYear: currentYear(game),
+      endYear: null,
+      casualtiesA: 0,
+      casualtiesB: 0,
+      territoryChanges: [],
+    };
+    game.warHistory.push(war);
+  }
+  return war;
+}
+
+function closeWar(game, aId, bId) {
+  if (!game.warHistory) return;
+  const key = warKey(aId, bId);
+  const war = game.warHistory.find((w) => w.key === key && w.endYear === null);
+  if (war) war.endYear = currentYear(game);
+}
+
+export function getWarsForCartel(game, cartelId) {
+  return (game.warHistory || []).filter((w) => w.cartelA === cartelId || w.cartelB === cartelId);
+}
 
 const ACTION_COSTS = {
   invest_production: 150,
@@ -11,8 +46,12 @@ const ACTION_COSTS = {
   corrupt_gov: 120,
   corrupt_police: 120,
   recruit_army: 100,
-  pr_campaign: 150,
   lay_low: 0,
+  press_release: 80,
+  corridos_campaign: 150,
+  social_work: 300,
+  international_interview: 200,
+  damage_control: 250,
 };
 
 export function canAfford(cartel, type) {
@@ -50,6 +89,11 @@ export function applyAction(game, cartelId, type, payload = {}) {
     }
     case "traffic_shipment": {
       if (r.money < 250) return { ok: false, message: "No hay dinero suficiente." };
+      const partner = payload.partnerCartelId ? game.cartels[payload.partnerCartelId] : null;
+      const partnerStatus = partner ? cartel.relations[partner.id]?.status : null;
+      if (partner && partnerStatus === "war") {
+        return { ok: false, message: `No puedes venderle a ${partner.name}: estáis en guerra.` };
+      }
       r.money -= 250;
       const interdictChance = clamp(r.heat / 220, 0.05, 0.5);
       if (chance(interdictChance)) {
@@ -57,10 +101,19 @@ export function applyAction(game, cartelId, type, payload = {}) {
         log(`Un envío de ${cartel.name} es interceptado en la ruta.`, "event");
         return { ok: true, message: "Interceptado." };
       }
-      const payout = Math.round(250 * (1.6 + Math.random() * 1.2));
+      const partnerMultiplier = partnerStatus === "alliance" ? 1.25 : partnerStatus === "neutral" ? 1 : 0.85;
+      const payout = Math.round(250 * (1.6 + Math.random() * 1.2) * partnerMultiplier);
       r.money += payout;
       r.heat = Math.min(100, r.heat + 5);
-      log(`${cartel.name} completa un envío exitoso por valor de ${payout}.`, "good");
+      if (partner) {
+        partner.resources.money = Math.round(partner.resources.money + payout * 0.15);
+        const tensionDelta = partnerStatus === "alliance" ? -5 : -2;
+        cartel.relations[partner.id].tension = clamp(cartel.relations[partner.id].tension + tensionDelta, 0, 100);
+        partner.relations[cartel.id].tension = cartel.relations[partner.id].tension;
+        log(`${cartel.name} completa un envío por valor de ${payout} en sociedad con ${partner.name}.`, "good");
+      } else {
+        log(`${cartel.name} completa un envío exitoso por valor de ${payout} en el mercado abierto.`, "good");
+      }
       return { ok: true, message: `+${payout}` };
     }
     case "corrupt_gov": {
@@ -88,14 +141,6 @@ export function applyAction(game, cartelId, type, payload = {}) {
       log(`${cartel.name} recluta ${gained} sicarios más.`, "good");
       return { ok: true };
     }
-    case "pr_campaign": {
-      if (r.money < 150) return { ok: false, message: "No hay dinero suficiente." };
-      r.money -= 150;
-      r.publicImage = Math.min(100, r.publicImage + randInt(5, 12));
-      r.heat = Math.max(0, r.heat - randInt(4, 9));
-      log(`${cartel.name} invierte en imagen pública y obras sociales.`, "good");
-      return { ok: true };
-    }
     case "lay_low": {
       r.heat = Math.max(0, r.heat - randInt(10, 20));
       log(`${cartel.name} reduce su actividad para bajar el perfil.`, "info");
@@ -106,6 +151,7 @@ export function applyAction(game, cartelId, type, payload = {}) {
       if (!target) return { ok: false };
       cartel.relations[target.id] = { status: "war", tension: 90 };
       target.relations[cartel.id] = { status: "war", tension: 90 };
+      openWar(game, cartelId, target.id);
       log(`${cartel.name} declara la guerra a ${target.name}.`, "event");
       return { ok: true };
     }
@@ -118,6 +164,7 @@ export function applyAction(game, cartelId, type, payload = {}) {
       if (chance(acceptChance)) {
         cartel.relations[target.id] = { status: "neutral", tension: 30 };
         target.relations[cartel.id] = { status: "neutral", tension: 30 };
+        closeWar(game, cartelId, target.id);
         log(`${target.name} acepta la paz con ${cartel.name}.`, "good");
         return { ok: true, accepted: true };
       }
@@ -131,6 +178,7 @@ export function applyAction(game, cartelId, type, payload = {}) {
       if (chance(acceptChance)) {
         cartel.relations[target.id] = { status: "alliance", tension: 5 };
         target.relations[cartel.id] = { status: "alliance", tension: 5 };
+        closeWar(game, cartelId, target.id);
         log(`${target.name} acepta una alianza con ${cartel.name}.`, "good");
         return { ok: true, accepted: true };
       }
@@ -147,6 +195,7 @@ export function applyAction(game, cartelId, type, payload = {}) {
       }
       cartel.relations[defenderId] = { status: "war", tension: 95 };
       defender.relations[cartelId] = { status: "war", tension: 95 };
+      openWar(game, cartelId, defenderId);
       const result = resolveBattle(game, cartel, defender, territory);
       return { ok: true, ...result };
     }
@@ -169,6 +218,67 @@ export function applyAction(game, cartelId, type, payload = {}) {
       r.heat = Math.min(100, r.heat + 3);
       log(`La expedición de ${cartel.name} para ocupar ${territory.name} fracasa.`, "event");
       return { ok: true, success: false };
+    }
+    case "press_release": {
+      if (r.money < 80) return { ok: false, message: "No hay dinero suficiente." };
+      r.money -= 80;
+      r.publicImage = Math.min(100, r.publicImage + randInt(5, 10));
+      r.heat = Math.max(0, r.heat - randInt(2, 4));
+      log(`${cartel.name} emite un comunicado de prensa para suavizar su imagen.`, "good");
+      return { ok: true };
+    }
+    case "corridos_campaign": {
+      if (r.money < 150) return { ok: false, message: "No hay dinero suficiente." };
+      r.money -= 150;
+      r.publicImage = Math.min(100, r.publicImage + randInt(8, 14));
+      r.internationalReputation = Math.min(100, (r.internationalReputation ?? 15) + randInt(3, 6));
+      r.heat = Math.min(100, r.heat + randInt(3, 6));
+      log(`${cartel.name} patrocina corridos y narcocultura: crece su leyenda, pero también su exposición.`, "event");
+      return { ok: true };
+    }
+    case "social_work": {
+      if (r.money < 300) return { ok: false, message: "No hay dinero suficiente." };
+      r.money -= 300;
+      r.publicImage = Math.min(100, r.publicImage + randInt(15, 25));
+      r.heat = Math.max(0, r.heat - randInt(8, 12));
+      log(`${cartel.name} financia obra social (escuelas, iglesias, caminos) y gana el favor de la comunidad.`, "good");
+      return { ok: true };
+    }
+    case "international_interview": {
+      if (r.money < 200) return { ok: false, message: "No hay dinero suficiente." };
+      r.money -= 200;
+      const spokesperson = game.characters[cartel.roles.leader] || game.characters[cartel.roles.prChief];
+      const charisma = spokesperson ? spokesperson.stats.charisma : 50;
+      const successChance = clamp(charisma / 130, 0.2, 0.75);
+      if (chance(successChance)) {
+        r.internationalReputation = Math.min(100, (r.internationalReputation ?? 15) + randInt(15, 25));
+        r.publicImage = Math.min(100, r.publicImage + randInt(8, 12));
+        log(`Una entrevista internacional retrata a ${cartel.name} bajo una luz favorable. Su fama se vuelve global.`, "good");
+        return { ok: true, success: true };
+      }
+      r.heat = Math.min(100, r.heat + randInt(15, 20));
+      r.publicImage = Math.max(0, r.publicImage - randInt(3, 8));
+      log(`La entrevista internacional se vuelve en contra de ${cartel.name}, exponiendo sus operaciones.`, "event");
+      return { ok: true, success: false };
+    }
+    case "damage_control": {
+      if (r.money < 250) return { ok: false, message: "No hay dinero suficiente." };
+      r.money -= 250;
+      r.heat = Math.max(0, r.heat - randInt(15, 20));
+      log(`${cartel.name} invierte en control de daños para acallar un episodio reciente.`, "good");
+      return { ok: true };
+    }
+    case "launder_money": {
+      const amount = Math.min(payload.amount || 0, r.money);
+      if (amount <= 0) return { ok: false, message: "No hay nada que lavar." };
+      const financeChief = game.characters[cartel.roles.financeChief];
+      const feeRate = clamp(0.25 - (financeChief ? financeChief.stats.business / 500 : 0), 0.08, 0.25);
+      const fee = Math.round(amount * feeRate);
+      r.money -= fee;
+      r.launderedMoney = (r.launderedMoney || 0) + amount;
+      r.heat = Math.max(0, r.heat - clamp(Math.round(amount / 50), 2, 20));
+      log(`${cartel.name} lava $${amount} a través de negocios legales (comisión: $${fee}).`, "good");
+      return { ok: true, fee };
     }
     default:
       return { ok: false, message: "Acción desconocida." };
@@ -199,6 +309,7 @@ function commanderMultiplier(game, cartel) {
 
 function resolveBattle(game, attacker, defender, territory) {
   const log = (t, ty) => addLog(game, t, ty);
+  const war = openWar(game, attacker.id, defender.id);
   const atkPower = attacker.resources.armySize * commanderMultiplier(game, attacker) * (0.85 + Math.random() * 0.3);
   const defPower = defender.resources.armySize * commanderMultiplier(game, defender) * (1.0 + Math.random() * 0.3);
   const attackerWins = atkPower > defPower;
@@ -209,10 +320,19 @@ function resolveBattle(game, attacker, defender, territory) {
   attacker.resources.heat = Math.min(100, attacker.resources.heat + randInt(5, 12));
   defender.resources.heat = Math.min(100, defender.resources.heat + randInt(3, 8));
 
+  if (war.cartelA === attacker.id) {
+    war.casualtiesA += casualtiesAtk;
+    war.casualtiesB += casualtiesDef;
+  } else {
+    war.casualtiesB += casualtiesAtk;
+    war.casualtiesA += casualtiesDef;
+  }
+
   if (attackerWins) {
     territory.controllerId = attacker.id;
     attacker.territories.push(territory.id);
     defender.territories = defender.territories.filter((t) => t !== territory.id);
+    war.territoryChanges.push({ year: currentYear(game), territoryName: territory.name, to: attacker.id });
     log(`${attacker.name} conquista ${territory.name} tras derrotar a ${defender.name}.`, "event");
   } else {
     log(`${attacker.name} fracasa en su intento de tomar ${territory.name}.`, "event");
@@ -264,7 +384,9 @@ function runAiCartels(game) {
     if (r.money >= 120) options.push({ item: "corrupt_police", weight: r.heat > 40 ? 4 : 1.5 });
     if (r.money >= 120) options.push({ item: "corrupt_gov", weight: 1.5 });
     if (r.money >= 100) options.push({ item: "recruit_army", weight: 2 });
-    if (r.money >= 150) options.push({ item: "pr_campaign", weight: r.publicImage < 40 ? 3 : 1 });
+    if (r.money >= 80) options.push({ item: "press_release", weight: r.publicImage < 40 ? 3 : 1 });
+    if (r.money >= 300) options.push({ item: "social_work", weight: r.publicImage < 30 ? 2 : 0.5 });
+    if (r.money >= 250 && r.heat > 60) options.push({ item: "damage_control", weight: 3 });
     options.push({ item: "lay_low", weight: r.heat > 70 ? 5 : 0.5 });
 
     const atWar = Object.values(cartel.relations).some((rel) => rel.status === "war");
@@ -482,7 +604,8 @@ export function endTurn(game) {
       addLog(game, `Se frustra un intento de traición contra el liderazgo de ${game.cartels[coup.cartelId].name}.`, "event");
     }
   }
-  deaths.push(...rollScriptedEvents(game, (t, ty) => addLog(game, t, ty), year));
+  const scriptedResult = rollScriptedEvents(game, (t, ty) => addLog(game, t, ty), year);
+  deaths.push(...scriptedResult.deaths);
   const arrests = rollPoliceOperations(game, (t, ty) => addLog(game, t, ty), year);
   incomeTick(game);
   driftBonds(game);
@@ -530,6 +653,9 @@ export function endTurn(game) {
   releaseExpiredPrisoners(game);
   restorePlayerLeadership(game);
 
+  const pendingMarriageEvent = !pendingSuccession && !pendingRegentChoice ? rollMarriageCrisis(game) : null;
+  const pendingScriptedChoice = !pendingSuccession && !pendingRegentChoice ? scriptedResult.pendingChoice : null;
+
   game.turn += 1;
   game.year = currentYear(game);
   if (game.year >= game.endYear && !pendingSuccession) {
@@ -542,8 +668,48 @@ export function endTurn(game) {
     newLogs: game.log.slice(startIndex),
     pendingSuccession,
     pendingRegentChoice,
+    pendingMarriageEvent,
+    pendingScriptedChoice,
     gameOver: game.gameOver,
   };
+}
+
+/** Chance of an infidelity/relationship crisis for the player's own marriage, scaled inversely
+ * with marriageBond. Queued as a modal choice rather than auto-resolved, unlike NPC drift. */
+function rollMarriageCrisis(game) {
+  const player = game.characters[game.playerCharacterId];
+  if (!player || !player.alive || player.imprisoned || !player.spouseId) return null;
+  const spouse = game.characters[player.spouseId];
+  if (!spouse || !spouse.alive) return null;
+  if (player.marriageBond === undefined) player.marriageBond = 70;
+  const crisisChance = clamp(0.03 + (60 - player.marriageBond) / 500, 0.01, 0.12);
+  if (!chance(crisisChance)) {
+    player.marriageBond = clamp(player.marriageBond + randInt(-1, 2), 0, 100);
+    return null;
+  }
+  return { spouseId: spouse.id };
+}
+
+export function resolveScriptedChoice(game, eventId, optionId) {
+  applyScriptedChoice(game, (t, ty) => addLog(game, t, ty), eventId, optionId);
+}
+
+export function resolveMarriageEvent(game, action) {
+  const player = game.characters[game.playerCharacterId];
+  const spouse = player ? game.characters[player.spouseId] : null;
+  if (!player || !spouse) return;
+  if (action === "forgive") {
+    player.marriageBond = clamp((player.marriageBond ?? 70) + 5, 0, 100);
+    addLog(game, `Decides perdonar y seguir adelante con ${spouse.name}.`, "event");
+  } else if (action === "ignore") {
+    player.marriageBond = clamp((player.marriageBond ?? 70) - 15, 0, 100);
+    addLog(game, `Decides ignorar el problema con ${spouse.name}, pero la herida sigue ahí.`, "event");
+  } else if (action === "divorce") {
+    spouse.spouseId = null;
+    player.spouseId = null;
+    player.marriageBond = undefined;
+    addLog(game, `Te divorcias de ${spouse.name}.`, "event");
+  }
 }
 
 function recordHistory(game) {
