@@ -4,7 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildGameFromEra } from "../js/state.js";
-import { applyAction, getWarsForCartel, resolveScriptedChoice } from "../js/turnEngine.js";
+import { applyAction, getWarsForCartel, resolveScriptedChoice, endTurn } from "../js/turnEngine.js";
 import { rollScriptedEvents } from "../js/scriptedEvents.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -69,6 +69,64 @@ test("traffic_shipment refuses to sell to a cartel you're at war with", () => {
   game.cartels.sinaloa.relations.cjng.status = "war";
   const result = applyAction(game, "sinaloa", "traffic_shipment", { partnerCartelId: "cjng" });
   assert.equal(result.ok, false);
+});
+
+test("the Proceso 8000 (1995) event pauses for a player choice when the player controls Cali, and applies immediately for NPC-controlled Cali", () => {
+  const era = loadEra("medellin-cali-1980-1995.json");
+
+  const playerGame = buildGameFromEra(era, { mode: "existing", cartelId: "cali", characterId: "gilberto_rodriguez" });
+  const playerResult = rollScriptedEvents(playerGame, () => {}, 1995);
+  assert.ok(playerResult.pendingChoice, "expected a pending choice when the player controls Cali");
+  assert.equal(playerResult.pendingChoice.eventId, "proceso-8000-1995");
+  assert.equal(playerGame.firedScriptedEvents.includes("proceso-8000-1995"), false);
+
+  resolveScriptedChoice(playerGame, "proceso-8000-1995", "resist");
+  assert.equal(playerGame.firedScriptedEvents.includes("proceso-8000-1995"), true);
+
+  const npcGame = buildGameFromEra(era, { mode: "existing", cartelId: "medellin", characterId: "pablo_escobar" });
+  const npcHeatBefore = npcGame.cartels.cali.resources.heat;
+  const npcResult = rollScriptedEvents(npcGame, () => {}, 1995);
+  assert.equal(npcResult.pendingChoice, null, "should auto-resolve when the player isn't Cali");
+  assert.ok(npcGame.cartels.cali.resources.heat > npcHeatBefore);
+  assert.equal(npcGame.firedScriptedEvents.includes("proceso-8000-1995"), true);
+});
+
+test("invest_production lets you target a specific owned territory and scales payout with its value", () => {
+  const game = newGame("mexico-rutas-1990-2006.json", "sinaloa");
+  game.cartels.sinaloa.resources.money = 1000;
+  const result = applyAction(game, "sinaloa", "invest_production", { territoryId: "sinaloa" });
+  assert.equal(result.ok, true);
+  assert.equal(result.territoryId, "sinaloa");
+});
+
+test("invest_production ignores a territoryId the cartel doesn't own and falls back to its best territory", () => {
+  const game = newGame("mexico-rutas-1990-2006.json", "sinaloa");
+  game.cartels.sinaloa.resources.money = 1000;
+  const result = applyAction(game, "sinaloa", "invest_production", { territoryId: "tamaulipas" }); // owned by Golfo
+  assert.equal(result.ok, true);
+  assert.notEqual(result.territoryId, "tamaulipas");
+  assert.ok(game.cartels.sinaloa.territories.includes(result.territoryId));
+});
+
+test("higher international reputation increases territory income via the export bonus", () => {
+  const lowRepGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  lowRepGame.cartels.sinaloa.resources.internationalReputation = 0;
+  lowRepGame.cartels.sinaloa.resources.money = 1000;
+  lowRepGame.cartels.sinaloa.resources.armySize = 0; // isolate income from upkeep/desertion noise
+
+  const highRepGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  highRepGame.cartels.sinaloa.resources.internationalReputation = 100;
+  highRepGame.cartels.sinaloa.resources.money = 1000;
+  highRepGame.cartels.sinaloa.resources.armySize = 0;
+
+  // Advance one turn on otherwise-identical states; AI/random events add noise, but the export
+  // bonus is a deterministic multiplier on top of the same base income, so it should still win
+  // on average. Run a few turns to make the comparison robust against a single unlucky turn.
+  for (let i = 0; i < 5; i++) {
+    endTurn(lowRepGame);
+    endTurn(highRepGame);
+  }
+  assert.ok(highRepGame.cartels.sinaloa.resources.money > lowRepGame.cartels.sinaloa.resources.money);
 });
 
 test("the Camarena 1985 event pauses for a player choice when the player controls Guadalajara, and applies immediately for NPC-controlled Guadalajara", () => {

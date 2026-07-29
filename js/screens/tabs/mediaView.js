@@ -21,7 +21,7 @@ export function render(container, app) {
       ${statBar("Imagen pública", r.publicImage, "image")}
       ${statBar("Reputación internacional", r.internationalReputation ?? 15)}
       ${statBar("Nivel de búsqueda (heat)", r.heat, "heat")}
-      <p class="text-dim small mt-1">La imagen pública mueve a la opinión local; la reputación internacional refleja tu fama fuera del país. Ambas influyen indirectamente en cómo te trata el mundo, pero la exposición tiene un precio.</p>
+      <p class="text-dim small mt-1">La imagen pública mueve a la opinión local. La reputación internacional abre mercados de exportación más rentables (hasta un +25% de ingresos por territorio con fama máxima), pero la exposición tiene un precio en heat.</p>
     </div>
     <div class="card">
       <h3>Acciones de imagen</h3>

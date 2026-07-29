@@ -50,7 +50,13 @@ Estado del proyecto tras la primera versión jugable (MVP). Marcado ✅ lo imple
 - ✅ **Evento interactivo de Camarena (1985)**: si juegas como el Cártel de Guadalajara, el asesinato de Kiki Camarena ahora te deja elegir cómo responder (entregar un chivo expiatorio, negarlo todo, o desafiar a la DEA), cada opción con un desenlace distinto — en vez de un efecto automático fijo. El marco es reutilizable para futuros eventos interactivos.
 - ✅ **PWA instalable**: `manifest.json` + service worker con caché de la app y los datos de las épocas, para poder añadir Narcosim a la pantalla de inicio del móvil y jugar offline tras la primera carga.
 - ✅ **Pasada de accesibilidad**: enlace para saltar al contenido, foco visible en todos los elementos interactivos, `aria-label`/`role`/`tabindex` en los controles que lo necesitaban, gestión de foco y cierre con Escape en los modales, asociación explícita `label`/`for` en el formulario de creación de personaje.
-- ✅ **Suite de tests automatizados** (`tests/*.test.js`, `node --test` / `npm test`): 17 pruebas cubriendo construcción de partida, adyacencia y ataques, sucesión y herencia, fugas, guerras, lavado de dinero y el evento interactivo de Camarena — para detectar regresiones sin depender solo de pruebas manuales con Playwright.
+- ✅ **Suite de tests automatizados** (`tests/*.test.js`, `node --test` / `npm test`): pruebas cubriendo construcción de partida, adyacencia y ataques, sucesión y herencia, fugas, guerras, lavado de dinero y los eventos interactivos — para detectar regresiones sin depender solo de pruebas manuales con Playwright.
+
+## Quinta pasada: producción por territorio, segundo evento interactivo, reputación con efecto real
+
+- ✅ **Producción por territorio**: "Invertir en producción" ya no es una acción genérica del cártel — eliges en cuál de tus territorios invertir, y el rendimiento escala con el valor económico de ese territorio concreto.
+- ✅ **Segundo evento histórico interactivo**: el "Proceso 8.000" (1995) contra el Cártel de Cali ahora también es una decisión con tres opciones (entrega pactada, resistir sobornando jueces, o escalar la violencia) cuando juegas como Cali, siguiendo el mismo patrón que el evento de Camarena.
+- ✅ **La reputación internacional ya tiene efecto mecánico**: abre un bonus de exportación de hasta +25% sobre el ingreso por territorio con fama máxima, en vez de ser puramente cosmética.
 
 ## Pendiente / mejoras futuras
 
@@ -62,16 +68,16 @@ Estado del proyecto tras la primera versión jugable (MVP). Marcado ✅ lo imple
 
 ### Familia, romances e intriga
 - 🟡 Cortejo, crisis matrimonial, genealogía y vínculos ya implementados. Pendiente: rivalidades entre hermanos, tramas de honor/venganza, amistades explícitas (hoy el vínculo cubre solo la relación jugador↔miembro, no las relaciones entre miembros del cártel entre sí).
-- 🟡 Eventos narrativos únicos: ya cubiertos varios hitos clave y el primer evento interactivo (Camarena). Pendiente: convertir más eventos en decisiones interactivas (Proceso 8.000, capturas de los Arellano Félix, el ascenso del CJNG, etc.).
+- 🟡 Eventos narrativos únicos: ya van dos hitos convertidos en decisiones interactivas (Camarena, Proceso 8.000). Pendiente: más eventos (capturas de los Arellano Félix, el ascenso del CJNG, etc.) con el mismo patrón interactivo.
 
 ### Policía / persecución
 - 🟡 El heat sube/baja, los operativos policiales escalan con la notoriedad y ya se puede intentar una fuga. Pendiente: mecánica de persecución más visible (barra de "expediente", informantes, redadas planeadas vs. sorpresa), fuga posible incluso desde cadena perpetua (como la extradición/traslados en la vida real).
 
 ### Imagen pública y medios
-- 🟡 Sección de medios ya implementada con 5 acciones propias y reputación internacional. Pendiente: que la reputación internacional tenga efectos mecánicos propios más allá de lo cosmético (p. ej. atraer atención de agencias internacionales, abrir mercados).
+- ✅ Sección de medios con 5 acciones propias y reputación internacional con efecto mecánico real (ver arriba). Pendiente: efectos adicionales más específicos (atraer atención de agencias internacionales concretas, desbloquear aliados extranjeros).
 
 ### Logística y economía
-- 🟡 Socios de tráfico y lavado de dinero ya implementados. Pendiente: elegir dónde producir específicamente (no solo una acción genérica de "invertir"), rutas concretas en el mapa, mercados internacionales diferenciados.
+- 🟡 Socios de tráfico, lavado de dinero y producción por territorio ya implementados. Pendiente: rutas concretas dibujadas en el mapa, mercados internacionales diferenciados por región (no solo un bonus agregado de reputación).
 
 ### Personajes y datos
 - ⬜ Ampliar el roster de personajes secundarios reales cuando el usuario aporte información adicional (ver nota abajo).

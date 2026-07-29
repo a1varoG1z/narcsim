@@ -99,12 +99,50 @@ export const SCRIPTED_EVENTS = {
     {
       id: "proceso-8000-1995",
       year: 1995,
-      run(game, addLog) {
+      interactive: true,
+      cartelId: "cali",
+      title: 'El "Proceso 8.000"',
+      description:
+        "La Fiscalía colombiana lanza el Proceso 8.000, una investigación sin precedentes que acorrala a los líderes del Cártel de Cali por la financiación ilegal de campañas políticas. ¿Cómo responde el cártel?",
+      options: [
+        { id: "surrender", label: "Negociar una entrega con condena pactada" },
+        { id: "resist", label: "Resistir sobornando a jueces y fiscales" },
+        { id: "escalate", label: "Escalar la violencia contra el Estado" },
+      ],
+      applyDefault(game, addLog) {
         const c = game.cartels.cali;
-        if (!c || c.destroyed) return [];
+        if (!c || c.destroyed) return;
         c.resources.heat = Math.min(100, c.resources.heat + 35);
         addLog('La Fiscalía colombiana lanza el "Proceso 8.000" y acorrala a los líderes del Cártel de Cali.', "event");
-        return [];
+      },
+      applyChoice(game, addLog, optionId) {
+        const c = game.cartels.cali;
+        if (!c || c.destroyed) return;
+        if (optionId === "surrender") {
+          c.resources.heat = Math.min(100, c.resources.heat + 10);
+          c.resources.corruptGov = Math.max(0, c.resources.corruptGov - 5);
+          const role = ["underboss", "financeChief", "corruptionGovChief"].find((r) => {
+            const holder = game.characters[c.roles[r]];
+            return holder && holder.alive && !holder.imprisoned;
+          });
+          const negotiator = role ? game.characters[c.roles[role]] : null;
+          if (negotiator) {
+            negotiator.imprisoned = { sinceTurn: game.turn, releaseTurn: game.turn + randInt(8, 16), lifeSentence: false };
+            addLog(`${negotiator.name} se entrega y negocia una condena pactada a cambio de reducir la presión sobre el cártel.`, "event");
+          } else {
+            addLog("El cártel negocia una entrega parcial que calma momentáneamente la presión estatal.", "event");
+          }
+        } else if (optionId === "resist") {
+          c.resources.heat = Math.min(100, c.resources.heat + 30);
+          c.resources.corruptGov = Math.max(0, c.resources.corruptGov - 20);
+          c.resources.corruptPolice = Math.max(0, c.resources.corruptPolice - 10);
+          addLog("El cártel resiste sobornando jueces y fiscales, quemando buena parte de su red de corrupción.", "event");
+        } else {
+          c.resources.heat = Math.min(100, c.resources.heat + 50);
+          c.resources.armySize += randInt(10, 20);
+          c.resources.publicImage = Math.max(0, c.resources.publicImage - 15);
+          addLog("El cártel escala la violencia contra el Estado, repitiendo la estrategia que hundió a Medellín años atrás.", "death");
+        }
       },
     },
   ],

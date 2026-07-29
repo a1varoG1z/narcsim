@@ -47,6 +47,10 @@ export function render(container, app) {
         showTrafficModal(app, game, cartel);
         return;
       }
+      if (btn.dataset.action === "invest_production") {
+        showProductionModal(app, game, cartel);
+        return;
+      }
       applyAction(game, cartel.id, btn.dataset.action);
       app.setGame(game);
       app.render();
@@ -57,6 +61,31 @@ export function render(container, app) {
     btn.addEventListener("click", () => {
       applyAction(game, cartel.id, "launder_money", { amount: Number(btn.dataset.launder) });
       app.setGame(game);
+      app.render();
+    });
+  });
+}
+
+function showProductionModal(app, game, cartel) {
+  const territories = cartel.territories.map((id) => game.territories[id]).filter(Boolean);
+  showModal(`
+    <h2>Invertir en producción</h2>
+    <p class="small text-dim">Los territorios de mayor valor económico rinden más por la misma inversión de $150.</p>
+    ${territories.map((t) => `
+      <button class="block" data-territory="${t.id}">
+        ${escapeHtml(t.name)}
+        <div class="small text-dim">Valor económico: ${t.value}</div>
+      </button>
+    `).join("")}
+    <button class="ghost block" id="close-btn">Cancelar</button>
+  `);
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.querySelectorAll("[data-territory]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const result = applyAction(game, cartel.id, "invest_production", { territoryId: btn.dataset.territory });
+      app.setGame(game);
+      closeModal();
+      if (!result.ok) alert(result.message);
       app.render();
     });
   });

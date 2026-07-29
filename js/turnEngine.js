@@ -74,18 +74,24 @@ export function applyAction(game, cartelId, type, payload = {}) {
   switch (type) {
     case "invest_production": {
       if (r.money < 150) return { ok: false, message: "No hay dinero suficiente." };
+      const owned = cartel.territories.map((id) => game.territories[id]).filter(Boolean);
+      if (!owned.length) return { ok: false, message: "No tienes territorios donde producir." };
+      let territory = payload.territoryId ? game.territories[payload.territoryId] : null;
+      if (!territory || territory.controllerId !== cartelId) {
+        territory = owned.reduce((best, t) => (t.value > best.value ? t : best), owned[0]);
+      }
       r.money -= 150;
       const seizeChance = clamp(r.heat / 300, 0.03, 0.35);
       if (chance(seizeChance)) {
         r.heat = Math.min(100, r.heat + randInt(3, 8));
-        log(`Un cargamento de ${cartel.name} es decomisado durante la producción.`, "event");
-        return { ok: true, message: "Decomiso." };
+        log(`Un cargamento de ${cartel.name} es decomisado durante la producción en ${territory.name}.`, "event");
+        return { ok: true, message: "Decomiso.", territoryId: territory.id };
       }
-      const payout = Math.round(150 * (1.3 + Math.random()));
+      const payout = Math.round((90 + territory.value * 12) * (1.1 + Math.random() * 0.5));
       r.money += payout;
       r.heat = Math.min(100, r.heat + 2);
-      log(`${cartel.name} invierte en producción y obtiene ${payout} en ganancias.`, "good");
-      return { ok: true, message: `+${payout}` };
+      log(`${cartel.name} invierte en producción en ${territory.name} y obtiene ${payout} en ganancias.`, "good");
+      return { ok: true, message: `+${payout}`, territoryId: territory.id };
     }
     case "traffic_shipment": {
       if (r.money < 250) return { ok: false, message: "No hay dinero suficiente." };
@@ -468,7 +474,10 @@ export function strengthenBond(game, characterId) {
 function incomeTick(game) {
   for (const cartel of Object.values(game.cartels)) {
     if (cartel.destroyed) continue;
-    const territoryIncome = cartel.territories.reduce((s, tId) => s + (game.territories[tId]?.value || 0) * 10, 0);
+    const baseIncome = cartel.territories.reduce((s, tId) => s + (game.territories[tId]?.value || 0) * 10, 0);
+    // International fame opens pricier overseas markets: a modest, capped bonus on top of local sales.
+    const exportBonus = baseIncome * clamp((cartel.resources.internationalReputation ?? 15) / 400, 0, 0.25);
+    const territoryIncome = Math.round(baseIncome + exportBonus);
     const upkeep = Math.round(cartel.resources.armySize * 0.45);
     const net = territoryIncome - upkeep;
     if (cartel.resources.money + net < 0) {
