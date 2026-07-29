@@ -147,7 +147,7 @@
       "y": 51,
       "w": 17,
       "h": 16,
-      "controllerId": null,
+      "controllerId": "milenio",
       "value": 10,
       "adj": [
         "jalisco"
@@ -255,6 +255,26 @@
         "financeChief": "golfo90_finance_chief",
         "corruptionGovChief": "golfo90_gov_chief",
         "corruptionPoliceChief": "golfo90_police_chief"
+      }
+    },
+    {
+      "id": "milenio",
+      "name": "Cártel del Milenio (Los Valencia)",
+      "color": "#8a5a1f",
+      "aiControlled": true,
+      "historicalNote": "Organización real fundada por la familia Valencia a comienzos de los 90 en Michoacán, pionera en la importación directa de cocaína colombiana y precursora de la metanfetamina a gran escala en México; con los años parte de su estructura dará origen al CJNG. Los cargos secundarios de su organigrama son ficticios.",
+      "resources": {
+        "money": 6000000,
+        "armySize": 380,
+        "corruptGov": 30,
+        "corruptPolice": 35,
+        "publicImage": 38,
+        "heat": 22
+      },
+      "roles": {
+        "leader": "armando_valencia",
+        "underboss": "milenio_underboss",
+        "financeChief": "milenio_finance_chief"
       }
     }
   ],
@@ -1182,11 +1202,82 @@
       "parents": [],
       "spouseId": null,
       "childrenIds": []
+    },
+    {
+      "id": "armando_valencia",
+      "name": "Armando Valencia Cornelio \"El Maradona\"",
+      "sex": "M",
+      "birthYear": 1963,
+      "alive": true,
+      "cartelId": "milenio",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 55,
+        "business": 78,
+        "charisma": 62,
+        "intrigue": 68,
+        "loyaltyInspiring": 58,
+        "stealth": 60
+      },
+      "traits": [
+        "pionero",
+        "conectado"
+      ],
+      "notes": "Fundador del Cártel del Milenio, pionero en la importación directa de cocaína colombiana hacia México y en la producción industrial de metanfetamina. Su destino en el juego depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "milenio_underboss",
+      "name": "Rogelio \"El Tigre\" Valencia",
+      "sex": "M",
+      "birthYear": 1966,
+      "alive": true,
+      "cartelId": "milenio",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 65,
+        "business": 55,
+        "charisma": 48,
+        "intrigue": 55,
+        "loyaltyInspiring": 55,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "milenio_finance_chief",
+      "name": "Lorena Campos",
+      "sex": "F",
+      "birthYear": 1968,
+      "alive": true,
+      "cartelId": "milenio",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 70,
+        "charisma": 50,
+        "intrigue": 58,
+        "loyaltyInspiring": 42,
+        "stealth": 50
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
     }
   ],
   "newCartelTerritories": [
     "jalisco",
-    "michoacan",
     "coahuila"
   ]
 }

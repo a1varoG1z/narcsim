@@ -5,10 +5,11 @@ import { saveGameToSlot, loadGameSlot } from "./utils/storage.js";
 import { defaultConceptionDialogue } from "./dialogues.js";
 
 const WAR_OVERRIDES = {
-  "fragmentacion-2006-2015": [["zetas", "golfo"], ["sinaloa", "beltran_leyva"], ["familia_michoacana", "zetas"]],
+  "fragmentacion-2006-2015": [["zetas", "golfo"], ["sinaloa", "beltran_leyva"], ["familia_michoacana", "zetas"], ["sinaloa", "juarez"]],
   "cjng-sinaloa-2015-actualidad": [["cjng", "santa_rosa"]],
   "mexico-rutas-1990-2006": [["sinaloa", "tijuana"]],
   "chapitos-mayiza-2024-actualidad": [["chapitos", "mayiza"]],
+  "medellin-cali-1980-1995": [["medellin", "los_pepes"]],
 };
 
 export function buildGameFromEra(eraData, options) {

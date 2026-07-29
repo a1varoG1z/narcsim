@@ -171,7 +171,7 @@
       "y": 64,
       "w": 18,
       "h": 15,
-      "controllerId": null,
+      "controllerId": "guerreros_unidos",
       "value": 12,
       "adj": [
         "michoacan"
@@ -287,6 +287,26 @@
         "leader": "el_marro",
         "underboss": "sr_underboss",
         "sicariosChief": "sr_sicarios_chief"
+      }
+    },
+    {
+      "id": "guerreros_unidos",
+      "name": "Guerreros Unidos",
+      "color": "#6b2e6b",
+      "aiControlled": true,
+      "historicalNote": "Organización real escindida de los Beltrán Leyva hacia 2011, activa en Guerrero e Iguala; ligada al caso de los 43 normalistas desaparecidos de Ayotzinapa en 2014. Su fundador, Sidronio Casarrubias Salgado, fue detenido en 2014; el liderazgo posterior no está bien documentado públicamente, así que el nombre del líder actual es ficticio.",
+      "resources": {
+        "money": 4000000,
+        "armySize": 320,
+        "corruptGov": 25,
+        "corruptPolice": 35,
+        "publicImage": 15,
+        "heat": 58
+      },
+      "roles": {
+        "leader": "gu_leader",
+        "underboss": "gu_underboss",
+        "sicariosChief": "gu_sicarios_chief"
       }
     }
   ],
@@ -1060,10 +1080,78 @@
       "parents": [],
       "spouseId": null,
       "childrenIds": []
+    },
+    {
+      "id": "gu_leader",
+      "name": "Braulio \"El Patrón\" Nava",
+      "sex": "M",
+      "birthYear": 1975,
+      "alive": true,
+      "cartelId": "guerreros_unidos",
+      "role": "leader",
+      "historical": false,
+      "stats": {
+        "violence": 68,
+        "business": 50,
+        "charisma": 45,
+        "intrigue": 55,
+        "loyaltyInspiring": 50,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio; el liderazgo real de Guerreros Unidos tras la detención de su fundador en 2014 no está bien documentado públicamente.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "gu_underboss",
+      "name": "Ezequiel \"El Cheque\" Bravo",
+      "sex": "M",
+      "birthYear": 1978,
+      "alive": true,
+      "cartelId": "guerreros_unidos",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 60,
+        "business": 45,
+        "charisma": 42,
+        "intrigue": 50,
+        "loyaltyInspiring": 48,
+        "stealth": 52
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "gu_sicarios_chief",
+      "name": "Wenceslao \"El Wero\" Salgado",
+      "sex": "M",
+      "birthYear": 1982,
+      "alive": true,
+      "cartelId": "guerreros_unidos",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 80,
+        "business": 25,
+        "charisma": 35,
+        "intrigue": 45,
+        "loyaltyInspiring": 48,
+        "stealth": 50
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
     }
   ],
   "newCartelTerritories": [
-    "veracruz",
-    "guerrero"
+    "veracruz"
   ]
 }

@@ -131,7 +131,7 @@
       "y": 72,
       "w": 17,
       "h": 14,
-      "controllerId": null,
+      "controllerId": "guerreros_unidos",
       "value": 12,
       "adj": [
         "michoacan"
@@ -199,6 +199,27 @@
       "roles": {
         "leader": "mencho_24",
         "financeChief": "rosalinda_24"
+      }
+    },
+    {
+      "id": "guerreros_unidos",
+      "name": "Guerreros Unidos",
+      "color": "#6b2e6b",
+      "aiControlled": true,
+      "historicalNote": "Organización real activa en Guerrero desde 2011, ligada al caso de los 43 normalistas desaparecidos de Ayotzinapa (2014); sigue operando de forma debilitada en la región. El liderazgo actual no está bien documentado públicamente, así que el nombre del líder es ficticio.",
+      "resources": {
+        "money": 3500000,
+        "armySize": 280,
+        "corruptGov": 20,
+        "corruptPolice": 30,
+        "publicImage": 12,
+        "heat": 55,
+        "internationalReputation": 8,
+        "launderedMoney": 0
+      },
+      "roles": {
+        "leader": "gu_leader_24",
+        "underboss": "gu_underboss_24"
       }
     }
   ],
@@ -466,11 +487,56 @@
       "parents": [],
       "spouseId": "mencho_24",
       "childrenIds": []
+    },
+    {
+      "id": "gu_leader_24",
+      "name": "Rutilo \"El Rulo\" Campos",
+      "sex": "M",
+      "birthYear": 1980,
+      "alive": true,
+      "cartelId": "guerreros_unidos",
+      "role": "leader",
+      "historical": false,
+      "stats": {
+        "violence": 65,
+        "business": 45,
+        "charisma": 42,
+        "intrigue": 52,
+        "loyaltyInspiring": 48,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio; el liderazgo real de Guerreros Unidos en esta etapa no está bien documentado públicamente.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "gu_underboss_24",
+      "name": "Herminio \"El Tigre\" Solano",
+      "sex": "M",
+      "birthYear": 1984,
+      "alive": true,
+      "cartelId": "guerreros_unidos",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 60,
+        "business": 42,
+        "charisma": 40,
+        "intrigue": 48,
+        "loyaltyInspiring": 45,
+        "stealth": 50
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
     }
   ],
   "newCartelTerritories": [
     "chihuahua",
-    "durango",
-    "guerrero"
+    "durango"
   ]
 }

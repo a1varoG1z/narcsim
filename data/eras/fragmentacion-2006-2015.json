@@ -42,7 +42,7 @@
       "y": 6,
       "w": 19,
       "h": 18,
-      "controllerId": "sinaloa",
+      "controllerId": "juarez",
       "value": 16,
       "adj": [
         "sonora",
@@ -291,6 +291,27 @@
         "underboss": "hector_beltran_leyva",
         "sicariosChief": "bl_sicarios_chief",
         "financeChief": "bl_finance_chief"
+      }
+    },
+    {
+      "id": "juarez",
+      "name": "Cártel de Juárez",
+      "color": "#2e6b4f",
+      "aiControlled": true,
+      "historicalNote": "Bajo Vicente Carrillo Fuentes, hermano y sucesor de Amado Carrillo Fuentes, mantiene el control de Chihuahua hasta que Sinaloa se lo disputa desde 2008 en la sangrienta guerra por Ciudad Juárez, una de las más violentas del país en esta era.",
+      "resources": {
+        "money": 14000000,
+        "armySize": 1100,
+        "corruptGov": 40,
+        "corruptPolice": 45,
+        "publicImage": 30,
+        "heat": 50
+      },
+      "roles": {
+        "leader": "vicente_carrillo_06",
+        "underboss": "juarez06_underboss",
+        "sicariosChief": "juarez06_sicarios_chief",
+        "financeChief": "juarez06_finance_chief"
       }
     }
   ],
@@ -943,6 +964,103 @@
         "intrigue": 58,
         "loyaltyInspiring": 45,
         "stealth": 50
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "vicente_carrillo_06",
+      "name": "Vicente Carrillo Fuentes \"El Viceroy\"",
+      "sex": "M",
+      "birthYear": 1962,
+      "alive": true,
+      "cartelId": "juarez",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 62,
+        "business": 68,
+        "charisma": 50,
+        "intrigue": 65,
+        "loyaltyInspiring": 55,
+        "stealth": 60
+      },
+      "traits": [
+        "heredero",
+        "asediado"
+      ],
+      "notes": "Hermano y sucesor de Amado Carrillo Fuentes al frente del Cártel de Juárez; libra una guerra abierta contra Sinaloa por el control de Ciudad Juárez desde 2008. Su destino en el juego depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "juarez06_underboss",
+      "name": "Juan Pablo \"El Ingeniero\" Ledezma",
+      "sex": "M",
+      "birthYear": 1965,
+      "alive": true,
+      "cartelId": "juarez",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 65,
+        "business": 55,
+        "charisma": 45,
+        "intrigue": 58,
+        "loyaltyInspiring": 55,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "juarez06_sicarios_chief",
+      "name": "Gonzalo \"El Kilo\" Reyes",
+      "sex": "M",
+      "birthYear": 1970,
+      "alive": true,
+      "cartelId": "juarez",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 85,
+        "business": 30,
+        "charisma": 35,
+        "intrigue": 50,
+        "loyaltyInspiring": 55,
+        "stealth": 58
+      },
+      "traits": [
+        "sanguinario"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "juarez06_finance_chief",
+      "name": "Adriana Bustillos",
+      "sex": "F",
+      "birthYear": 1968,
+      "alive": true,
+      "cartelId": "juarez",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 72,
+        "charisma": 50,
+        "intrigue": 60,
+        "loyaltyInspiring": 40,
+        "stealth": 52
       },
       "traits": [],
       "notes": "Personaje ficticio.",

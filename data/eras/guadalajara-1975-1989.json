@@ -92,6 +92,22 @@
         "chihuahua",
         "sinaloa",
         "nuevo_leon",
+        "jalisco",
+        "zacatecas"
+      ]
+    },
+    {
+      "id": "zacatecas",
+      "name": "Zacatecas",
+      "x": 36,
+      "y": 50,
+      "w": 16,
+      "h": 18,
+      "controllerId": "herrera",
+      "value": 9,
+      "adj": [
+        "durango",
+        "nuevo_leon",
         "jalisco"
       ]
     },
@@ -107,7 +123,8 @@
       "adj": [
         "chihuahua",
         "durango",
-        "tamaulipas"
+        "tamaulipas",
+        "zacatecas"
       ]
     },
     {
@@ -135,7 +152,8 @@
       "adj": [
         "sinaloa",
         "durango",
-        "michoacan"
+        "michoacan",
+        "zacatecas"
       ]
     },
     {
@@ -215,6 +233,26 @@
         "underboss": "golfo_underboss",
         "sicariosChief": "golfo_sicarios_chief",
         "financeChief": "golfo_finance_chief"
+      }
+    },
+    {
+      "id": "herrera",
+      "name": "Organización Herrera",
+      "color": "#5a4a2e",
+      "aiControlled": true,
+      "historicalNote": "Familia real de traficantes de heroína originaria de Durango, activa desde los años 50 y descrita por autoridades estadounidenses como una de las mayores redes de heroína del país durante los 70 y 80, con decenas de miembros de la familia extendida operando como distribuidores en EE.UU. Los cargos secundarios de su organigrama son ficticios.",
+      "resources": {
+        "money": 4000000,
+        "armySize": 260,
+        "corruptGov": 30,
+        "corruptPolice": 40,
+        "publicImage": 35,
+        "heat": 18
+      },
+      "roles": {
+        "leader": "jaime_herrera",
+        "underboss": "herrera_underboss",
+        "financeChief": "herrera_finance_chief"
       }
     },
     {
@@ -810,6 +848,78 @@
         "intrigue": 60,
         "loyaltyInspiring": 40,
         "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "jaime_herrera",
+      "name": "Jaime Herrera Nevárez \"Don Jaime\"",
+      "sex": "M",
+      "birthYear": 1932,
+      "alive": true,
+      "cartelId": "herrera",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 50,
+        "business": 70,
+        "charisma": 60,
+        "intrigue": 65,
+        "loyaltyInspiring": 72,
+        "stealth": 68
+      },
+      "traits": [
+        "patriarca",
+        "discreto"
+      ],
+      "notes": "Patriarca de la organización Herrera de Durango, una de las mayores redes familiares de tráfico de heroína hacia EE.UU. durante los años 70 y 80, con decenas de parientes operando como distribuidores. Su destino en el juego depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "herrera_underboss",
+      "name": "Reynaldo Herrera Nevárez",
+      "sex": "M",
+      "birthYear": 1938,
+      "alive": true,
+      "cartelId": "herrera",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 55,
+        "business": 55,
+        "charisma": 45,
+        "intrigue": 55,
+        "loyaltyInspiring": 60,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, representa a la amplia red de parientes que sostenía la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "herrera_finance_chief",
+      "name": "Consuelo Nevárez",
+      "sex": "F",
+      "birthYear": 1940,
+      "alive": true,
+      "cartelId": "herrera",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 68,
+        "charisma": 50,
+        "intrigue": 58,
+        "loyaltyInspiring": 45,
+        "stealth": 50
       },
       "traits": [],
       "notes": "Personaje ficticio.",

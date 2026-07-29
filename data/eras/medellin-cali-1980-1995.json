@@ -58,7 +58,7 @@
       "y": 4,
       "w": 22,
       "h": 14,
-      "controllerId": null,
+      "controllerId": "los_pepes",
       "value": 13,
       "adj": [
         "la_guajira",
@@ -198,6 +198,26 @@
         "productionChief": "cali_production_chief",
         "prChief": "cali_pr_chief",
         "intelChief": "cali_intel_chief"
+      }
+    },
+    {
+      "id": "los_pepes",
+      "name": "Los Pepes (Perseguidos por Pablo Escobar)",
+      "color": "#8a6d1f",
+      "aiControlled": true,
+      "historicalNote": "Coalición real formada a fines de 1992 por enemigos de Escobar (narcotraficantes rivales, paramilitares y policía corrupta) para cazarlo con métodos tan brutales como los suyos. En la vida real la encabezaron los hermanos Fidel y Carlos Castaño junto al Cártel de Cali; por simplicidad de juego, Fidel Castaño permanece en el organigrama de Medellín y aquí Carlos Castaño lidera la facción en solitario. Los cargos secundarios son ficticios.",
+      "resources": {
+        "money": 5000000,
+        "armySize": 350,
+        "corruptGov": 35,
+        "corruptPolice": 50,
+        "publicImage": 40,
+        "heat": 30
+      },
+      "roles": {
+        "leader": "carlos_castano",
+        "underboss": "pepes_underboss",
+        "financeChief": "pepes_finance_chief"
       }
     },
     {
@@ -988,11 +1008,83 @@
       "parents": [],
       "spouseId": null,
       "childrenIds": []
+    },
+    {
+      "id": "carlos_castano",
+      "name": "Carlos Castaño Gil",
+      "sex": "M",
+      "birthYear": 1965,
+      "alive": true,
+      "cartelId": "los_pepes",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 85,
+        "business": 55,
+        "charisma": 65,
+        "intrigue": 78,
+        "loyaltyInspiring": 62,
+        "stealth": 60
+      },
+      "traits": [
+        "vengativo",
+        "paramilitar"
+      ],
+      "notes": "Junto a su hermano Fidel, rompió con Escobar tras el asesinato de allegados y ayudó a fundar Los Pepes en 1993 para cazarlo; con el tiempo fundaría las Autodefensas Unidas de Colombia (AUC). Su destino en el juego depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pepes_underboss",
+      "name": "Guillermo \"Memo Fantasma\" Ortiz",
+      "sex": "M",
+      "birthYear": 1958,
+      "alive": true,
+      "cartelId": "los_pepes",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 70,
+        "business": 55,
+        "charisma": 50,
+        "intrigue": 60,
+        "loyaltyInspiring": 55,
+        "stealth": 62
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pepes_finance_chief",
+      "name": "Beatriz Salazar",
+      "sex": "F",
+      "birthYear": 1960,
+      "alive": true,
+      "cartelId": "los_pepes",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 65,
+        "charisma": 50,
+        "intrigue": 58,
+        "loyaltyInspiring": 40,
+        "stealth": 48
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
     }
   ],
   "newCartelTerritories": [
     "narino_putumayo",
     "eje_cafetero",
-    "caribe_atlantico"
+    "bogota"
   ]
 }
