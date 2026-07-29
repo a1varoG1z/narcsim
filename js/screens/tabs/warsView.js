@@ -1,6 +1,6 @@
 import { getPlayerCartel } from "../../state.js";
 import { escapeHtml, portraitImg, roleLabel } from "../../ui/components.js";
-import { applyAction, getWarsForCartel, ACTION_COSTS, getActionsRemaining, isAttackable } from "../../turnEngine.js";
+import { applyAction, getWarsForCartel, ACTION_COSTS, getActionsRemaining, isAttackable, MONEY_SCALE } from "../../turnEngine.js";
 import { showModal, closeModal } from "../../ui/modal.js";
 import { showCartelProfile } from "./cartelProfile.js";
 import { fmtMoney } from "../../utils/text.js";
@@ -53,10 +53,7 @@ export function render(container, app) {
     showPeaceModal(app, game, cartel, btn.dataset.peace);
   }));
   container.querySelectorAll("[data-alliance]").forEach((btn) => btn.addEventListener("click", () => {
-    const res = applyAction(game, cartel.id, "propose_alliance", { targetCartelId: btn.dataset.alliance });
-    app.setGame(game);
-    alert(res.accepted ? "Han aceptado la alianza." : "Han rechazado tu propuesta de alianza.");
-    app.render();
+    showAllianceModal(app, game, cartel, btn.dataset.alliance);
   }));
   container.querySelectorAll("[data-view-cartel]").forEach((el) => el.addEventListener("click", () => {
     showCartelProfile(app, el.dataset.viewCartel);
@@ -138,6 +135,57 @@ function showAssassinateModal(app, game, cartel, targetCartelId) {
       }
       app.render();
     });
+  });
+}
+
+const GIFT_AMOUNTS = [200 * MONEY_SCALE, 800 * MONEY_SCALE, 2000 * MONEY_SCALE];
+
+function showAllianceModal(app, game, cartel, targetCartelId) {
+  const target = game.cartels[targetCartelId];
+  const hasCommonEnemy = Object.entries(cartel.relations).some(
+    ([id, rel]) => rel.status === "war" && target.relations[id]?.status === "war"
+  );
+
+  const send = (approach, giftAmount) => {
+    const res = applyAction(game, cartel.id, "propose_alliance", { targetCartelId, approach, giftAmount });
+    app.setGame(game);
+    closeModal();
+    if (!res.ok) {
+      alert(res.message);
+    } else {
+      alert(res.accepted ? `${target.name} acepta la alianza.` : `${target.name} rechaza tu propuesta de alianza.`);
+    }
+    app.render();
+  };
+
+  showModal(`
+    <h2>Proponer alianza a ${escapeHtml(target.name)}</h2>
+    <p class="small text-dim">¿Cómo planteas la propuesta a su liderazgo? El enfoque influye en si la aceptan.</p>
+    <button class="block" data-approach="business">
+      Apelar al interés mutuo
+      <div class="small text-dim">Más persuasivo cuanto mejor sea tu imagen pública (actual: ${cartel.resources.publicImage}).</div>
+    </button>
+    <button class="block" data-approach="commonEnemy">
+      Apelar a un enemigo común
+      <div class="small text-dim">${hasCommonEnemy ? "Tenéis un enemigo común de verdad: argumento muy convincente." : "No compartís ningún enemigo ahora mismo: sonará forzado."}</div>
+    </button>
+    <button class="block" id="gift-toggle">
+      Ofrecer un gesto de buena fe (dinero por adelantado)
+      <div class="small text-dim">Cuanto mayor el gesto, más confianza genera.</div>
+    </button>
+    <div id="gift-amounts" class="btn-row hidden mt-1">
+      ${GIFT_AMOUNTS.map((amount) => `<button data-gift="${amount}" ${cartel.resources.money < amount ? "disabled" : ""}>${fmtMoney(amount)}</button>`).join("")}
+    </div>
+    <button class="ghost block mt-1" id="close-btn">Cancelar</button>
+  `);
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.querySelector("[data-approach='business']").addEventListener("click", () => send("business"));
+  document.querySelector("[data-approach='commonEnemy']").addEventListener("click", () => send("commonEnemy"));
+  document.getElementById("gift-toggle").addEventListener("click", () => {
+    document.getElementById("gift-amounts").classList.remove("hidden");
+  });
+  document.querySelectorAll("[data-gift]").forEach((btn) => {
+    btn.addEventListener("click", () => send("gift", Number(btn.dataset.gift)));
   });
 }
 

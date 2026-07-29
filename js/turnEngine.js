@@ -245,7 +245,24 @@ export function applyAction(game, cartelId, type, payload = {}) {
     case "propose_alliance": {
       const target = game.cartels[payload.targetCartelId];
       if (!target) return { ok: false };
-      const acceptChance = clamp(0.35 - cartel.relations[target.id].tension / 200, 0.05, 0.7);
+      let bonus = 0;
+      const approach = payload.approach;
+      if (approach === "business") {
+        bonus = clamp(r.publicImage / 400, 0, 0.15);
+      } else if (approach === "commonEnemy") {
+        const hasCommonEnemy = Object.entries(cartel.relations).some(
+          ([id, rel]) => rel.status === "war" && target.relations[id]?.status === "war"
+        );
+        bonus = hasCommonEnemy ? 0.25 : -0.05;
+      } else if (approach === "gift") {
+        const giftAmount = payload.giftAmount || 0;
+        if (giftAmount > 0) {
+          if (r.money < giftAmount) return { ok: false, message: "No tienes suficiente dinero para ese gesto." };
+          r.money -= giftAmount;
+          bonus = clamp(giftAmount / (5000 * MONEY_SCALE), 0, 0.25);
+        }
+      }
+      const acceptChance = clamp(0.35 - cartel.relations[target.id].tension / 200 + bonus, 0.05, 0.9);
       if (chance(acceptChance)) {
         cartel.relations[target.id] = { status: "alliance", tension: 5 };
         target.relations[cartel.id] = { status: "alliance", tension: 5 };

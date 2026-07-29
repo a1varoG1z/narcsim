@@ -4,7 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildGameFromEra } from "../js/state.js";
-import { applyAction, getWarsForCartel, resolveScriptedChoice, endTurn, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, getIncomeBreakdown } from "../js/turnEngine.js";
+import { applyAction, getWarsForCartel, resolveScriptedChoice, endTurn, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, getIncomeBreakdown, MONEY_SCALE } from "../js/turnEngine.js";
 import { rollScriptedEvents } from "../js/scriptedEvents.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -245,6 +245,51 @@ test("declaring war opens a war record and proposing (accepted) peace closes it"
     wars = getWarsForCartel(game, "sinaloa").filter((w) => w.cartelA === "cdn" || w.cartelB === "cdn");
     assert.equal(wars[0].endYear, game.year);
     assert.equal(game.cartels.sinaloa.relations.cdn.status, "neutral");
+  }
+});
+
+test("propose_alliance's 'gift' approach spends the money on the attempt regardless of outcome, and refuses if unaffordable", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  const giftAmount = 200 * MONEY_SCALE;
+  cartel.resources.money = giftAmount;
+
+  const tooLittle = applyAction(game, "sinaloa", "propose_alliance", { targetCartelId: "cdn", approach: "gift", giftAmount: giftAmount * 2 });
+  assert.equal(tooLittle.ok, false, "should refuse when the cartel can't afford the gift");
+  assert.equal(cartel.resources.money, giftAmount, "money should be untouched when the gift is refused for being unaffordable");
+
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.99; // guarantees chance() fails regardless of the bonus, so we land in the rejection branch
+    const rejected = applyAction(game, "sinaloa", "propose_alliance", { targetCartelId: "cdn", approach: "gift", giftAmount });
+    assert.equal(rejected.accepted, false);
+    assert.equal(cartel.resources.money, 0, "the gift is spent on the attempt even when the alliance is rejected");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("propose_alliance's 'commonEnemy' approach gives a real chance bonus when true, and a penalty when it's a bluff", () => {
+  // Same tension in both cases (0.35 - 40/200 = 0.15 base); a shared war enemy should push the
+  // roll from "would fail" to "would succeed" for the exact same underlying random draw.
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.25; // between 0.10 (bluff) and 0.40 (true) acceptance chances computed below
+
+    const withEnemy = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    withEnemy.cartels.sinaloa.relations.golfo.tension = 40;
+    withEnemy.cartels.sinaloa.relations.cdn.status = "war";
+    withEnemy.cartels.golfo.relations.cdn = { status: "war", tension: 90 };
+    withEnemy.cartels.sinaloa.relations.golfo.status = "neutral";
+    const accepted = applyAction(withEnemy, "sinaloa", "propose_alliance", { targetCartelId: "golfo", approach: "commonEnemy" });
+    assert.equal(accepted.accepted, true, "a genuine shared enemy should be enough to flip this roll to acceptance");
+
+    const withoutEnemy = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    withoutEnemy.cartels.sinaloa.relations.golfo.tension = 40;
+    const rejected = applyAction(withoutEnemy, "sinaloa", "propose_alliance", { targetCartelId: "golfo", approach: "commonEnemy" });
+    assert.equal(rejected.accepted, false, "claiming a common enemy that doesn't exist should be a penalty, not a bonus");
+  } finally {
+    Math.random = originalRandom;
   }
 });
 
