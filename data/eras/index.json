@@ -1,0 +1,37 @@
+[
+  {
+    "id": "guadalajara-1975-1989",
+    "file": "guadalajara-1975-1989.json",
+    "name": "El Cártel de Guadalajara",
+    "period": "1975 – 1989",
+    "blurb": "El Cártel de Guadalajara controla gran parte del tráfico en México y sirve de puente para la cocaína colombiana hacia Estados Unidos."
+  },
+  {
+    "id": "medellin-cali-1980-1995",
+    "file": "medellin-cali-1980-1995.json",
+    "name": "Medellín vs Cali",
+    "period": "1980 – 1995",
+    "blurb": "El Cártel de Medellín, liderado por Pablo Escobar, y el Cártel de Cali dominan el mercado mundial de cocaína."
+  },
+  {
+    "id": "mexico-rutas-1990-2006",
+    "file": "mexico-rutas-1990-2006.json",
+    "name": "Los herederos de las rutas",
+    "period": "1990 – 2006",
+    "blurb": "Tras la caída de los grandes cárteles colombianos, los grupos mexicanos toman el control de las rutas hacia Estados Unidos: Sinaloa, Juárez, Tijuana y el Golfo."
+  },
+  {
+    "id": "fragmentacion-2006-2015",
+    "file": "fragmentacion-2006-2015.json",
+    "name": "La guerra y la fragmentación",
+    "period": "2006 – 2015",
+    "blurb": "La ofensiva del Estado mexicano provoca una fuerte fragmentación. Surgen organizaciones extremadamente violentas como Los Zetas, mientras Sinaloa mantiene gran influencia."
+  },
+  {
+    "id": "cjng-sinaloa-2015-actualidad",
+    "file": "cjng-sinaloa-2015-actualidad.json",
+    "name": "CJNG contra Sinaloa",
+    "period": "2015 – actualidad",
+    "blurb": "El CJNG emerge como el principal rival del Cártel de Sinaloa. Ambos tienen presencia internacional junto a múltiples grupos escindidos y alianzas regionales."
+  }
+]

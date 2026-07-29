@@ -1,0 +1,42 @@
+import { showModal } from "../../ui/modal.js";
+import { portraitImg, statBar, escapeHtml, roleLabel } from "../../ui/components.js";
+import { STATS, STAT_ORDER, age } from "../../model.js";
+import { currentYear } from "../../state.js";
+
+export function showCharacterProfile(app, characterId) {
+  const game = app.game;
+  const c = game.characters[characterId];
+  if (!c) return;
+  const year = currentYear(game);
+  const cartel = game.cartels[c.cartelId];
+  const parents = (c.parents || []).map((id) => game.characters[id]).filter(Boolean);
+  const spouse = c.spouseId ? game.characters[c.spouseId] : null;
+  const children = (c.childrenIds || []).map((id) => game.characters[id]).filter(Boolean);
+  const status = !c.alive
+    ? `Falleció en ${c.deathYear}.`
+    : c.imprisoned
+    ? (c.imprisoned.lifeSentence ? "Cumple cadena perpetua." : `Preso, posible salida en el turno ${c.imprisoned.releaseTurn}.`)
+    : "Activo.";
+
+  showModal(`
+    <div style="display:flex;gap:1rem;align-items:center">
+      ${portraitImg(c, "lg")}
+      <div>
+        <h2>${escapeHtml(c.name)}</h2>
+        <div class="text-dim small">${c.alive ? age(c, year) : age(c, c.deathYear)} años · ${c.role ? roleLabel(c.role) : "Sin cargo"} · ${escapeHtml(cartel?.name || "")}</div>
+        <div class="small">${status}</div>
+      </div>
+    </div>
+    <h3 class="mt-2">Atributos</h3>
+    ${STAT_ORDER.map((k) => statBar(STATS[k], c.stats[k])).join("")}
+    <h3 class="mt-2">Familia</h3>
+    <p class="small">
+      ${parents.length ? "Padres: " + parents.map((p) => escapeHtml(p.name)).join(", ") + "<br>" : ""}
+      ${spouse ? "Cónyuge: " + escapeHtml(spouse.name) + "<br>" : ""}
+      ${children.length ? "Hijos: " + children.map((ch) => escapeHtml(ch.name)).join(", ") : "Sin descendencia registrada."}
+    </p>
+    ${c.notes ? `<h3 class="mt-2">Notas</h3><p class="small text-dim">${escapeHtml(c.notes)}</p>` : ""}
+    <button class="ghost block" id="close-profile">Cerrar</button>
+  `);
+  document.getElementById("close-profile").addEventListener("click", () => document.getElementById("modal-root").replaceChildren());
+}
