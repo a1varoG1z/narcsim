@@ -124,6 +124,52 @@ test("assassinate_rival refuses insufficient funds and an invalid or same-cartel
   assert.equal(missingResult.ok, false);
 });
 
+test("sabotage_rival always costs money and damages the target's money on success, but refuses invalid or same-cartel targets", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  const cjng = game.cartels.cjng;
+  cartel.resources.money = 100_000_000;
+  const moneyBefore = cartel.resources.money;
+  const targetMoneyBefore = cjng.resources.money;
+
+  const result = applyAction(game, "sinaloa", "sabotage_rival", { targetCartelId: "cjng" });
+  assert.equal(result.ok, true);
+  assert.ok(cartel.resources.money < moneyBefore, "sabotage should always cost money regardless of outcome");
+  if (result.success) {
+    assert.ok(cjng.resources.money < targetMoneyBefore, "a successful sabotage should damage the target's money");
+  }
+
+  const sameCartelResult = applyAction(game, "sinaloa", "sabotage_rival", { targetCartelId: "sinaloa" });
+  assert.equal(sameCartelResult.ok, false);
+
+  cartel.resources.money = 0;
+  const poorResult = applyAction(game, "sinaloa", "sabotage_rival", { targetCartelId: "cjng" });
+  assert.equal(poorResult.ok, false);
+});
+
+test("raid_territory only works on an adjacent enemy-owned territory, causing casualties and permanently lowering its value", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  cartel.resources.money = 100_000_000;
+
+  const notAdjacent = applyAction(game, "sinaloa", "raid_territory", { territoryId: "tamaulipas" }); // owned by golfo, not adjacent to sinaloa
+  assert.equal(notAdjacent.ok, false);
+
+  const ownTerritory = applyAction(game, "sinaloa", "raid_territory", { territoryId: cartel.territories[0] });
+  assert.equal(ownTerritory.ok, false);
+
+  const adjacentEnemyTerritory = "jalisco"; // owned by cjng, adjacent to sinaloa's chihuahua in this era
+  const defender = game.cartels[game.territories[adjacentEnemyTerritory].controllerId];
+  const armyBefore = defender.resources.armySize;
+  const valueBefore = game.territories[adjacentEnemyTerritory].value;
+
+  const result = applyAction(game, "sinaloa", "raid_territory", { territoryId: adjacentEnemyTerritory });
+  assert.equal(result.ok, true);
+  assert.ok(defender.resources.armySize <= armyBefore);
+  assert.ok(game.territories[adjacentEnemyTerritory].value < valueBefore);
+  assert.equal(game.territories[adjacentEnemyTerritory].controllerId, defender.id, "a raid should never transfer ownership");
+});
+
 test("declaring war opens a war record and proposing (accepted) peace closes it", () => {
   const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
   applyAction(game, "sinaloa", "declare_war", { targetCartelId: "cdn" });

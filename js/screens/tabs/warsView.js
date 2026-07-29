@@ -1,6 +1,6 @@
 import { getPlayerCartel } from "../../state.js";
 import { escapeHtml, portraitImg, roleLabel } from "../../ui/components.js";
-import { applyAction, getWarsForCartel, ACTION_COSTS, getActionsRemaining } from "../../turnEngine.js";
+import { applyAction, getWarsForCartel, ACTION_COSTS, getActionsRemaining, isAttackable } from "../../turnEngine.js";
 import { showModal, closeModal } from "../../ui/modal.js";
 import { showCartelProfile } from "./cartelProfile.js";
 import { fmtMoney } from "../../utils/text.js";
@@ -18,7 +18,7 @@ export function render(container, app) {
   container.innerHTML = `
     <div class="card">
       <h2>Relaciones exteriores</h2>
-      <p class="text-dim small">Declarar guerra, atacar, ocupar y proponer paz/alianza no gastan acciones. Ordenar un atentado sí (te quedan ${getActionsRemaining(game)}).</p>
+      <p class="text-dim small">Declarar guerra, atacar, ocupar y proponer paz/alianza no gastan acciones. Ordenar un atentado, sabotear y hacer una redada sí (te quedan ${getActionsRemaining(game)}).</p>
       ${others.map((o) => {
         const rel = cartel.relations[o.id] || { status: "neutral", tension: 0 };
         return `
@@ -32,6 +32,8 @@ export function render(container, app) {
             ${rel.status !== "war" ? `<button class="danger" data-war="${o.id}">Declarar guerra</button>` : `<button data-peace="${o.id}">Proponer paz</button>`}
             ${rel.status === "neutral" ? `<button data-alliance="${o.id}">Proponer alianza</button>` : ""}
             <button class="danger" data-assassinate="${o.id}" ${cartel.resources.money < ACTION_COSTS.assassinate_rival || noActionsLeft ? "disabled" : ""}>Ordenar un atentado</button>
+            <button class="danger" data-sabotage="${o.id}" ${cartel.resources.money < ACTION_COSTS.sabotage_rival || noActionsLeft ? "disabled" : ""}>Sabotear</button>
+            <button class="danger" data-raid="${o.id}" ${cartel.resources.money < ACTION_COSTS.raid_territory || noActionsLeft ? "disabled" : ""}>Redada</button>
           </div>
         </div>`;
       }).join("")}
@@ -62,6 +64,45 @@ export function render(container, app) {
   container.querySelectorAll("[data-assassinate]").forEach((btn) => btn.addEventListener("click", () => {
     showAssassinateModal(app, game, cartel, btn.dataset.assassinate);
   }));
+  container.querySelectorAll("[data-sabotage]").forEach((btn) => btn.addEventListener("click", () => {
+    if (!confirm(`¿Sabotear a ${game.cartels[btn.dataset.sabotage].name} por ${fmtMoney(ACTION_COSTS.sabotage_rival)}?`)) return;
+    const result = applyAction(game, cartel.id, "sabotage_rival", { targetCartelId: btn.dataset.sabotage });
+    app.setGame(game);
+    if (!result.ok) alert(result.message);
+    else alert(result.success ? `Sabotaje con éxito: le causas ${fmtMoney(result.damage)} en pérdidas.` : "El sabotaje fracasa y expone tu implicación.");
+    app.render();
+  }));
+  container.querySelectorAll("[data-raid]").forEach((btn) => btn.addEventListener("click", () => {
+    showRaidModal(app, game, cartel, btn.dataset.raid);
+  }));
+}
+
+function showRaidModal(app, game, cartel, targetCartelId) {
+  const target = game.cartels[targetCartelId];
+  const reachable = target.territories.filter((tId) => isAttackable(game, cartel.id, tId)).map((tId) => game.territories[tId]);
+
+  showModal(`
+    <h2>Redada contra ${escapeHtml(target.name)}</h2>
+    <p class="small text-dim">Coste: ${fmtMoney(ACTION_COSTS.raid_territory)}. Golpea instalaciones en un territorio suyo colindante con el tuyo: causa bajas y reduce su valor económico, sin intentar conquistarlo.</p>
+    ${reachable.length ? reachable.map((t) => `
+      <button class="block" data-territory="${t.id}">
+        ${escapeHtml(t.name)}
+        <div class="small text-dim">Valor económico: ${t.value}</div>
+      </button>
+    `).join("") : `<p class="small text-dim">No tienes ningún territorio colindante con los suyos.</p>`}
+    <button class="ghost block" id="close-btn">Cancelar</button>
+  `);
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.querySelectorAll("[data-territory]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const result = applyAction(game, cartel.id, "raid_territory", { territoryId: btn.dataset.territory });
+      app.setGame(game);
+      closeModal();
+      if (!result.ok) alert(result.message);
+      else alert(`La redada deja ${result.casualties} bajas y daña la zona.`);
+      app.render();
+    });
+  });
 }
 
 function showAssassinateModal(app, game, cartel, targetCartelId) {

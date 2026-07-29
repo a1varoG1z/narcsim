@@ -67,6 +67,8 @@ export const ACTION_COSTS = {
   launder_money: 0,
   extort_territory: 0,
   assassinate_rival: 200 * MONEY_SCALE,
+  sabotage_rival: 100 * MONEY_SCALE,
+  raid_territory: 150 * MONEY_SCALE,
 };
 
 /** Actions that count against the per-turn action budget — the day-to-day running of the
@@ -421,6 +423,59 @@ export function applyAction(game, cartelId, type, payload = {}) {
       log(`El atentado de ${cartel.name} contra ${target.name} fracasa y expone su autoría.`, "event");
       return { ok: true, success: false };
     }
+    case "sabotage_rival": {
+      const cost = ACTION_COSTS.sabotage_rival;
+      if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
+      const target = game.cartels[payload.targetCartelId];
+      if (!target || target.id === cartelId || target.destroyed) return { ok: false, message: "Objetivo no válido." };
+      r.money -= cost;
+      const saboteur = game.characters[cartel.roles.intelChief] || game.characters[cartel.roles.sicariosChief];
+      const skill = saboteur ? (saboteur.stats.stealth + saboteur.stats.intrigue) / 2 : 40;
+      const defense = target.resources.corruptPolice / 2 + 20;
+      const successChance = clamp(0.4 + (skill - defense) / 150, 0.15, 0.75);
+      const bumpTension = (delta) => {
+        const status = cartel.relations[target.id]?.status || "neutral";
+        const tension = clamp((cartel.relations[target.id]?.tension || 30) + delta, 0, 100);
+        cartel.relations[target.id] = { status, tension };
+        target.relations[cartelId] = { status, tension };
+      };
+      if (chance(successChance)) {
+        const damage = Math.round(target.resources.money * (0.05 + Math.random() * 0.1));
+        target.resources.money = Math.max(0, target.resources.money - damage);
+        target.resources.heat = Math.min(100, target.resources.heat + randInt(5, 10));
+        bumpTension(randInt(10, 20));
+        log(`${cartel.name} sabotea operaciones de ${target.name}, causándole pérdidas por ${fmtMoney(damage)}.`, "event");
+        return { ok: true, success: true, damage };
+      }
+      r.heat = Math.min(100, r.heat + randInt(10, 18));
+      bumpTension(randInt(15, 25));
+      log(`El sabotaje de ${cartel.name} contra ${target.name} fracasa y expone su autoría.`, "event");
+      return { ok: true, success: false };
+    }
+    case "raid_territory": {
+      const cost = ACTION_COSTS.raid_territory;
+      const territory = game.territories[payload.territoryId];
+      if (!territory || !territory.controllerId || territory.controllerId === cartelId) {
+        return { ok: false, message: "Objetivo no válido." };
+      }
+      if (!isAttackable(game, cartelId, territory.id)) {
+        return { ok: false, message: "Ese territorio no linda con ninguno de tus dominios." };
+      }
+      if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
+      const defender = game.cartels[territory.controllerId];
+      r.money -= cost;
+      const casualties = Math.round(defender.resources.armySize * randInt(2, 8) / 100);
+      defender.resources.armySize = Math.max(0, defender.resources.armySize - casualties);
+      territory.value = Math.max(1, territory.value - randInt(1, 3));
+      defender.resources.heat = Math.min(100, defender.resources.heat + randInt(4, 9));
+      r.heat = Math.min(100, r.heat + randInt(3, 7));
+      const status = cartel.relations[defender.id]?.status || "neutral";
+      const tension = clamp((cartel.relations[defender.id]?.tension || 30) + randInt(8, 18), 0, 100);
+      cartel.relations[defender.id] = { status, tension };
+      defender.relations[cartelId] = { status, tension };
+      log(`${cartel.name} realiza una redada contra instalaciones de ${defender.name} en ${territory.name}, dejando ${casualties} bajas y dañando la zona.`, "event");
+      return { ok: true, casualties, newValue: territory.value };
+    }
     default:
       return { ok: false, message: "Acción desconocida." };
   }
@@ -605,6 +660,13 @@ function runAiCartels(game) {
     if (rivalCartels.length && r.money >= ACTION_COSTS.assassinate_rival) {
       options.push({ item: "assassinate_rival", weight: atWar ? 1.5 : 0.4 });
     }
+    if (rivalCartels.length && r.money >= ACTION_COSTS.sabotage_rival) {
+      options.push({ item: "sabotage_rival", weight: 1 });
+    }
+    const raidable = rivalCartels.flatMap((c) => c.territories.filter((tId) => isAttackable(game, cartel.id, tId)));
+    if (raidable.length && r.money >= ACTION_COSTS.raid_territory) {
+      options.push({ item: "raid_territory", weight: atWar ? 2 : 0.8 });
+    }
 
     let choice = weightedChoice(options);
     if (choice === "attack_territory") {
@@ -651,6 +713,23 @@ function runAiCartels(game) {
         continue;
       }
       choice = "corrupt_police";
+      if (!canAfford(cartel, choice)) continue;
+    }
+    if (choice === "sabotage_rival") {
+      const target = rivalCartels.length ? pick(rivalCartels) : null;
+      if (target) {
+        applyAction(game, cartel.id, "sabotage_rival", { targetCartelId: target.id });
+        continue;
+      }
+      choice = "corrupt_gov";
+      if (!canAfford(cartel, choice)) continue;
+    }
+    if (choice === "raid_territory") {
+      if (raidable.length) {
+        applyAction(game, cartel.id, "raid_territory", { territoryId: pick(raidable) });
+        continue;
+      }
+      choice = "recruit_army";
       if (!canAfford(cartel, choice)) continue;
     }
     if (choice) applyAction(game, cartel.id, choice, {});

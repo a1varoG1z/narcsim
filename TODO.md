@@ -92,7 +92,7 @@ Estado del proyecto tras la primera versión jugable (MVP). Marcado ✅ lo imple
 
 ### Guerras y combate
 - 🟡 Resolución de batallas por turno con ponderación de mando, adyacencia, historial y tratados con condiciones (ver arriba). Pendiente: tácticas, terreno, refuerzos, moral, guerras prolongadas con objetivos concretos más allá de la conquista de una plaza.
-- 🟡 **Bajas reales de sicarios/ejército en combate** (hoy una guerra mueve territorio pero no reduce tropas de forma visible y trazable) y **decisiones concretas de guerra** en vez de un único botón genérico de "atacar". Ya existe "Ordenar un atentado" contra una persona concreta de un cártel rival (ver más abajo); falta sabotaje, redadas específicas y que las bajas de combate queden registradas con el mismo detalle que las guerras.
+- ✅ **Bajas y decisiones concretas de guerra**: las bajas de cada batalla ya se calculaban, se restaban del ejército y quedaban registradas por guerra (visibles al momento en el resultado del ataque y en el historial de guerras) — lo que faltaba eran más decisiones concretas además de "atacar". Añadidas: "Sabotear" (daño económico encubierto a un rival, con éxito o exposición, sin forzar la guerra) y "Redada" (golpe militar puntual contra un territorio suyo colindante — bajas y valor económico reducido, sin intentar conquistarlo), sumadas a "Ordenar un atentado" del pase anterior. Pendiente: tácticas/terreno/moral y guerras con objetivos más allá de la conquista de una plaza.
 - ⬜ **Conquistar territorios vacíos y derrotar a otro cártel es demasiado fácil hoy**: falta dificultad y profundidad real (resistencia, coste, riesgo de fallo) en vez de ser casi automático con un solo clic.
 
 ### Motor de turnos y acciones
