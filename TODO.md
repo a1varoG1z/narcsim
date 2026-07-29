@@ -86,7 +86,8 @@ Estado del proyecto tras la primera versión jugable (MVP). Marcado ✅ lo imple
 
 ### Mapa
 - ⬜ Mapa geográficamente preciso (actualmente es una disposición esquemática de territorios con adyacencia aproximada, no coordenadas reales).
-- ⬜ **Cubrir todo el mapa latinoamericano relevante por época con muchos más cárteles** (hoy hay 2-4 bandos por partida, que se siente poco competitivo), incluyendo narcotráfico ocurriendo en varios países a la vez (p. ej. en la época de Escobar debería existir tráfico en más sitios además de Medellín/Cali); alternativa/complemento: que aparezcan cárteles nuevos generados aleatoriamente en territorios libres a medida que avanza la partida, no solo al fundar el del jugador.
+- ✅ **Cárteles nuevos generados aleatoriamente en territorios libres**: cada turno, cualquier territorio que lleve tiempo sin dueño tiene una probabilidad (4%) de que surja un cártel nuevo, controlado por la IA, con su propio líder, organigrama, recursos iniciales y relaciones completas con todos los cárteles existentes — así el mapa se sigue llenando de rivalidad con el paso de las décadas, en vez de quedar con los mismos 2-4 bandos toda la partida.
+- ⬜ **Cubrir todo el mapa latinoamericano relevante por época con muchos más cárteles ya al empezar la partida** (hoy hay 2-4 bandos históricos por partida), incluyendo narcotráfico ocurriendo en varios países a la vez (p. ej. en la época de Escobar debería existir tráfico en más sitios además de Medellín/Cali) y que la expansión pueda cruzar fronteras hacia el resto de Latinoamérica.
 - ⬜ **La expansión no debería acabarse al conquistar los territorios de tu región de origen**: el mapa jugable tiene que extenderse por toda Latinoamérica (adaptado a los cárteles de cada época) para que un cártel dominante (p. ej. Medellín) pueda seguir expandiéndose a otros países (p. ej. hacia México), no solo dentro del suyo.
 
 ### Guerras y combate

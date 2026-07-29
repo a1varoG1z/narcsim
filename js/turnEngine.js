@@ -1,9 +1,9 @@
-import { chance, randInt, clamp, pick } from "./utils/random.js";
+import { chance, randInt, clamp, pick, uid } from "./utils/random.js";
 import { addLog, currentYear, getPlayerCartel, getPlayerCharacter } from "./state.js";
 import { rollMortality, rollFamilyEvents, rollLoyaltyEvents, rollPoliceOperations } from "./events.js";
 import { rollScriptedEvents, resolveScriptedChoice as applyScriptedChoice } from "./scriptedEvents.js";
 import { fillVacantRoles, generateNpc, randomName } from "./npcGenerator.js";
-import { ROLE_ORDER, STAT_ORDER, STATS, clampStat } from "./model.js";
+import { ROLE_ORDER, STAT_ORDER, STATS, clampStat, makeCartel, makeCharacter } from "./model.js";
 import { fmtMoney } from "./utils/text.js";
 
 function warKey(a, b) {
@@ -521,6 +521,60 @@ function autoResolveWars(game) {
   }
 }
 
+const CARTEL_COLORS = ["#8a5a2b", "#3a7a5a", "#7a3a5a", "#4a5a8a", "#8a7a2b", "#5a3a8a", "#2b8a7a", "#8a2b4a"];
+
+/** Long-neutral territories can spawn a brand-new, small AI-controlled cartel — someone always
+ * moves into a power vacuum. Modest odds per unclaimed territory per turn, so it thins out over
+ * a long game rather than flooding the map immediately. */
+export function rollNewCartelSpawns(game, year) {
+  const cartelIds = Object.keys(game.cartels);
+  for (const territory of Object.values(game.territories)) {
+    if (territory.controllerId) continue;
+    if (!chance(0.04)) continue;
+
+    const newId = uid("cartel");
+    const leader = generateNpc({ cartelId: newId, role: "leader", currentYear: year, minAge: 28, maxAge: 55 });
+    game.characters[leader.id] = leader;
+    territory.controllerId = newId;
+
+    const cartel = makeCartel({
+      id: newId,
+      name: `Cártel de ${territory.name}`,
+      color: pick(CARTEL_COLORS),
+      eraId: game.eraId,
+      territories: [territory.id],
+      resources: {
+        money: territory.value * 30 * MONEY_SCALE,
+        armySize: randInt(40, 90),
+        corruptGov: randInt(5, 15),
+        corruptPolice: randInt(5, 15),
+        publicImage: randInt(20, 40),
+        heat: randInt(5, 15),
+        internationalReputation: 5,
+        launderedMoney: 0,
+      },
+      roles: { leader: leader.id },
+      characters: [leader.id],
+      aiControlled: true,
+      historicalNote: "Organización ficticia surgida durante la partida para ocupar un vacío de poder territorial.",
+    });
+    game.cartels[newId] = cartel;
+    fillVacantRoles(cartel, game.characters, year);
+
+    cartel.relations = {};
+    for (const otherId of cartelIds) {
+      const other = game.cartels[otherId];
+      if (other.destroyed) continue;
+      const tension = randInt(15, 45);
+      cartel.relations[otherId] = { status: "neutral", tension };
+      other.relations[newId] = { status: "neutral", tension };
+    }
+    cartelIds.push(newId);
+
+    addLog(game, `${cartel.name} surge en ${territory.name}, aprovechando el vacío de poder tras la caída de sus antiguos dueños.`, "event");
+  }
+}
+
 function runAiCartels(game) {
   for (const cartel of Object.values(game.cartels)) {
     if (!cartel.aiControlled || cartel.destroyed) continue;
@@ -783,6 +837,7 @@ export function endTurn(game) {
 
   runAiCartels(game);
   autoResolveWars(game);
+  rollNewCartelSpawns(game, year);
   const deaths = rollMortality(game, (t, ty) => addLog(game, t, ty), year);
   rollFamilyEvents(game, (t, ty) => addLog(game, t, ty), year);
   processPregnancies(game);

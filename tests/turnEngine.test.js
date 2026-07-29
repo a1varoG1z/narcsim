@@ -20,6 +20,7 @@ import {
   arrangeMarriage,
   beginPregnancy,
   resolveConceptionAttempt,
+  rollNewCartelSpawns,
 } from "../js/turnEngine.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -230,6 +231,43 @@ test("a pregnancy only turns into a birth once its due turn arrives, correctly r
   assert.ok(child, "the new child should exist in game.characters");
   assert.ok(child.parents.includes(spouse.id) && child.parents.includes("felix_gallardo"));
   assert.ok(game.cartels.guadalajara.characters.includes(newChildId));
+});
+
+test("rollNewCartelSpawns creates a new AI cartel on a neutral territory with full relations to every existing cartel", () => {
+  const game = newGame("guadalajara-1975-1989.json", "guadalajara", "felix_gallardo");
+  const neutrals = Object.values(game.territories).filter((t) => !t.controllerId);
+  assert.ok(neutrals.length, "expected at least one neutral territory in this era");
+  const [neutralTerritory, ...otherNeutrals] = neutrals;
+  // Claim every other neutral territory so a stubbed Math.random (which also feeds uid()'s
+  // suffix) can't cause two same-tick spawns to collide on the same generated cartel id.
+  for (const t of otherNeutrals) t.controllerId = "guadalajara";
+  const cartelCountBefore = Object.keys(game.cartels).length;
+
+  const originalRandom = Math.random;
+  Math.random = () => 0; // guarantees the spawn roll succeeds for every neutral territory
+  try {
+    rollNewCartelSpawns(game, game.year);
+  } finally {
+    Math.random = originalRandom;
+  }
+
+  assert.equal(neutralTerritory.controllerId !== null, true, "the neutral territory should now be claimed");
+  const newCartelId = neutralTerritory.controllerId;
+  const newCartel = game.cartels[newCartelId];
+  assert.ok(newCartel, "the new cartel should exist in game.cartels");
+  assert.equal(newCartel.aiControlled, true);
+  assert.equal(newCartel.territories.includes(neutralTerritory.id), true);
+  assert.ok(Object.keys(game.cartels).length > cartelCountBefore);
+
+  const leader = game.characters[newCartel.roles.leader];
+  assert.ok(leader && leader.alive, "the new cartel should have a living leader");
+
+  for (const [id, cartel] of Object.entries(game.cartels)) {
+    if (id === newCartelId) continue;
+    if (cartel.destroyed) continue;
+    assert.ok(cartel.relations[newCartelId], `${id} should have a relations entry for the new cartel`);
+    assert.ok(newCartel.relations[id], `the new cartel should have a relations entry for ${id}`);
+  }
 });
 
 test("endTurn advances the turn/year counter and never lets money or army go negative", () => {
