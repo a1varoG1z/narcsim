@@ -38,6 +38,32 @@ function newGame(file, cartelId, characterId) {
   return buildGameFromEra(era, { mode: "existing", cartelId, characterId: characterId || cartel.roles.leader });
 }
 
+/** Builds two cartels with normalized commander/leader stats (so commanderMultiplier is
+ * identical on both sides) and controllable army sizes, so any difference in a fight's outcome
+ * is attributable only to whatever the test is isolating (a bonus, a territory's fortification,
+ * an army-size edge, etc) rather than incidental roster differences between real era cartels. */
+function setupEqualFight(file, attackerId, defenderId, territoryId, territoryValue, armySizes = {}) {
+  const game = newGame(file, attackerId);
+  const attacker = game.cartels[attackerId];
+  const defender = game.cartels[defenderId];
+  attacker.resources.armySize = armySizes.attacker ?? 1000;
+  defender.resources.armySize = armySizes.defender ?? 1000;
+  attacker.resources.weaponsBonus = 0;
+  defender.resources.weaponsBonus = 0;
+  if (territoryValue !== undefined) game.territories[territoryId].value = territoryValue;
+  for (const c of [attacker, defender]) {
+    for (const roleKey of ["leader", "militaryChief", "sicariosChief"]) {
+      const holder = game.characters[c.roles[roleKey]];
+      if (!holder) continue;
+      holder.alive = true;
+      holder.imprisoned = null;
+      if (roleKey === "leader") holder.stats.loyaltyInspiring = 70;
+      else { holder.stats.violence = 70; holder.stats.intrigue = 70; }
+    }
+  }
+  return { game, attacker, defender };
+}
+
 test("isAttackable rejects non-adjacent and self-owned territories, accepts adjacent enemy ones", () => {
   const game = newGame("mexico-rutas-1990-2006.json", "sinaloa");
   // Sinaloa owns sonora/chihuahua/sinaloa/durango; tamaulipas (Golfo) is far away, chihuahua is adjacent-owned already.
@@ -70,41 +96,19 @@ test("attack_territory on an adjacent enemy territory resolves and opens/updates
 });
 
 test("declaring war with a surprise pretext grants a one-time attack bonus against that target this turn", () => {
-  function setupEqualFight(file, attackerId, defenderId) {
-    const game = newGame(file, attackerId);
-    const attacker = game.cartels[attackerId];
-    const defender = game.cartels[defenderId];
-    attacker.resources.armySize = 1000;
-    defender.resources.armySize = 1000;
-    attacker.resources.weaponsBonus = 0;
-    defender.resources.weaponsBonus = 0;
-    // Normalize every present commander/leader stat so both sides compute the exact same
-    // commanderMultiplier, isolating the surprise bonus as the only source of asymmetry.
-    for (const c of [attacker, defender]) {
-      for (const roleKey of ["leader", "militaryChief", "sicariosChief"]) {
-        const holder = game.characters[c.roles[roleKey]];
-        if (!holder) continue;
-        holder.alive = true;
-        holder.imprisoned = null;
-        if (roleKey === "leader") holder.stats.loyaltyInspiring = 70;
-        else { holder.stats.violence = 70; holder.stats.intrigue = 70; }
-      }
-    }
-    return { game, attacker, defender };
-  }
-
   const originalRandom = Math.random;
   try {
     // Math.random = 0 pins the attacker's roll at its floor (0.85x) and the defender's at its
     // floor (1.0x), so an evenly-matched fight with no bonus is a guaranteed defender win —
-    // giving the surprise bonus (1.25x) room to provably flip the exact same fight.
+    // giving the surprise bonus (1.25x) room to provably flip the exact same fight. Territory
+    // value is pinned low (4) so its own fortification bonus doesn't swallow the surprise bonus.
     Math.random = () => 0;
 
-    const plain = setupEqualFight("cjng-sinaloa-2015-actualidad.json", "sinaloa", "cdn");
+    const plain = setupEqualFight("cjng-sinaloa-2015-actualidad.json", "sinaloa", "cdn", "coahuila", 4);
     const plainResult = applyAction(plain.game, "sinaloa", "attack_territory", { territoryId: "coahuila" });
     assert.equal(plainResult.attackerWins, false, "an evenly-matched fight with no bonus should go to the defender given the stubbed rolls");
 
-    const surprised = setupEqualFight("cjng-sinaloa-2015-actualidad.json", "sinaloa", "cdn");
+    const surprised = setupEqualFight("cjng-sinaloa-2015-actualidad.json", "sinaloa", "cdn", "coahuila", 4);
     applyAction(surprised.game, "sinaloa", "declare_war", { targetCartelId: "cdn", pretext: "surprise" });
     assert.deepEqual(surprised.attacker.surpriseStrikeBonus, { targetId: "cdn", turn: surprised.game.turn });
     const surpriseResult = applyAction(surprised.game, "sinaloa", "attack_territory", { territoryId: "coahuila" });
@@ -115,10 +119,59 @@ test("declaring war with a surprise pretext grants a one-time attack bonus again
   }
 });
 
+test("a well-developed (high-value) territory is genuinely harder to conquer than a rundown one, same armies both times", () => {
+  const originalRandom = Math.random;
+  try {
+    // Math.random = 0 pins the attacker's roll at 0.85x and the defender's at 1.0x times its
+    // fortification bonus (1 + value/150). Giving the attacker a real army-size edge (1300 vs
+    // 1000) is just enough to overcome a low-value territory's negligible fortification, but not
+    // enough once that same territory is highly developed — isolating the value/fortification
+    // effect rather than restating the pure army-size comparison another test already covers.
+    Math.random = () => 0;
+    const armySizes = { attacker: 1300, defender: 1000 };
+
+    const rundown = setupEqualFight("cjng-sinaloa-2015-actualidad.json", "sinaloa", "cdn", "coahuila", 5, armySizes);
+    const rundownResult = applyAction(rundown.game, "sinaloa", "attack_territory", { territoryId: "coahuila" });
+    assert.equal(rundownResult.attackerWins, true, "a real army-size edge should be enough to take a low-value, poorly-fortified territory");
+
+    const developed = setupEqualFight("cjng-sinaloa-2015-actualidad.json", "sinaloa", "cdn", "coahuila", 40, armySizes);
+    const developedResult = applyAction(developed.game, "sinaloa", "attack_territory", { territoryId: "coahuila" });
+    assert.equal(developedResult.attackerWins, false, "the exact same army-size edge should no longer be enough once the territory is highly developed/fortified");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
 test("occupy_territory rejects territories that already have an owner", () => {
   const game = newGame("mexico-rutas-1990-2006.json", "sinaloa");
   const result = applyAction(game, "sinaloa", "occupy_territory", { territoryId: "chihuahua" });
   assert.equal(result.ok, false);
+});
+
+test("occupy_territory's success chance scales with army strength relative to the target's value, and failure costs some troops", () => {
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.5; // between the weak army's ~0.375 chance and the strong army's ~0.86 chance
+
+    const weakGame = newGame("mexico-rutas-1990-2006.json", "sinaloa");
+    const weakCartel = weakGame.cartels.sinaloa;
+    weakCartel.resources.money = 100_000_000;
+    weakCartel.resources.armySize = 100;
+    const weakResult = applyAction(weakGame, "sinaloa", "occupy_territory", { territoryId: "coahuila" });
+    assert.equal(weakResult.ok, true);
+    assert.equal(weakResult.success, false, "a weak army relative to the target's value should fail at this roll");
+    assert.ok(weakResult.casualties > 0, "a failed occupation should cost some troops to local resistance");
+    assert.equal(weakCartel.resources.armySize, 100 - weakResult.casualties);
+
+    const strongGame = newGame("mexico-rutas-1990-2006.json", "sinaloa");
+    const strongCartel = strongGame.cartels.sinaloa;
+    strongCartel.resources.money = 100_000_000;
+    strongCartel.resources.armySize = 5000;
+    const strongResult = applyAction(strongGame, "sinaloa", "occupy_territory", { territoryId: "coahuila" });
+    assert.equal(strongResult.success, true, "the exact same roll should succeed once the army is strong relative to the target's value");
+  } finally {
+    Math.random = originalRandom;
+  }
 });
 
 test("attemptEscape refuses to break a life sentence and succeeds/fails deterministically otherwise", () => {

@@ -88,7 +88,8 @@ function showTerritoryModal(app, territoryId) {
     }
     showModal(`
       <h2>${result.success ? "¡Territorio ocupado!" : "Expedición fallida"}</h2>
-      <p>${result.success ? `Tu cártel ha extendido su influencia sobre ${escapeHtml(t.name)}.` : `El intento de ocupar ${escapeHtml(t.name)} no ha salido bien esta vez.`}</p>
+      <p>${result.success ? `Tu cártel ha extendido su influencia sobre ${escapeHtml(t.name)}.` : `El intento de ocupar ${escapeHtml(t.name)} no ha salido bien ante la resistencia local.`}</p>
+      ${!result.success && result.casualties ? `<p class="small text-dim">Bajas propias: ${result.casualties}</p>` : ""}
       <button class="primary block" id="ok-btn">Aceptar</button>
     `);
     document.getElementById("ok-btn").addEventListener("click", () => {

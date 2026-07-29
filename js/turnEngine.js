@@ -316,16 +316,24 @@ export function applyAction(game, cartelId, type, payload = {}) {
       const cost = territory.value * 15 * MONEY_SCALE;
       if (r.money < cost) return { ok: false, message: `Hace falta ${fmtMoney(cost)} para esta expedición.` };
       r.money -= cost;
-      if (chance(0.75)) {
+      // Expanding gets harder the more territory you already hold (overreach), and a bigger army
+      // relative to the target's value makes putting down local resistance more reliable —
+      // occupying a neutral territory isn't just a flat coin flip regardless of your strength.
+      const overreachPenalty = clamp((cartel.territories.length - 3) * 0.03, 0, 0.3);
+      const armyFactor = clamp(r.armySize / (territory.value * 60), 0.5, 1.15);
+      const successChance = clamp(0.75 * armyFactor - overreachPenalty, 0.2, 0.9);
+      if (chance(successChance)) {
         territory.controllerId = cartelId;
         cartel.territories.push(territory.id);
         r.heat = Math.min(100, r.heat + 5);
         log(`${cartel.name} ocupa el territorio libre de ${territory.name}.`, "good");
         return { ok: true, success: true };
       }
+      const casualties = Math.round(r.armySize * randInt(2, 8) / 100);
+      r.armySize = Math.max(0, r.armySize - casualties);
       r.heat = Math.min(100, r.heat + 3);
-      log(`La expedición de ${cartel.name} para ocupar ${territory.name} fracasa.`, "event");
-      return { ok: true, success: false };
+      log(`La expedición de ${cartel.name} para ocupar ${territory.name} fracasa ante la resistencia local, dejando ${casualties} bajas.`, "event");
+      return { ok: true, success: false, casualties };
     }
     case "develop_territory": {
       const territory = game.territories[payload.territoryId];
@@ -614,10 +622,13 @@ function resolveBattle(game, attacker, defender, territory) {
   const bonus = attacker.surpriseStrikeBonus;
   const hasSurpriseBonus = bonus && bonus.targetId === defender.id && bonus.turn === game.turn;
   if (hasSurpriseBonus) attacker.surpriseStrikeBonus = null; // one-time use, consumed on the first attack against that target this turn
+  // A well-developed territory (high value) is harder to take than a rundown one, regardless of
+  // the overall balance of forces — local infrastructure/entrenchment adds real defense.
+  const fortBonus = 1 + territory.value / 150;
   const atkPower = attacker.resources.armySize * commanderMultiplier(game, attacker) * (0.85 + Math.random() * 0.3) * (hasSurpriseBonus ? 1.25 : 1);
-  const defPower = defender.resources.armySize * commanderMultiplier(game, defender) * (1.0 + Math.random() * 0.3);
+  const defPower = defender.resources.armySize * commanderMultiplier(game, defender) * (1.0 + Math.random() * 0.3) * fortBonus;
   const attackerWins = atkPower > defPower;
-  const casualtiesAtk = Math.round(attacker.resources.armySize * randInt(3, 15) / 100);
+  const casualtiesAtk = Math.round(attacker.resources.armySize * randInt(3, 15) / 100 * (1 + territory.value / 300));
   const casualtiesDef = Math.round(defender.resources.armySize * randInt(3, 15) / 100);
   attacker.resources.armySize = Math.max(0, attacker.resources.armySize - casualtiesAtk);
   defender.resources.armySize = Math.max(0, defender.resources.armySize - casualtiesDef);
