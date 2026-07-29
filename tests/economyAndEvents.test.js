@@ -4,7 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildGameFromEra } from "../js/state.js";
-import { applyAction, getWarsForCartel, resolveScriptedChoice, endTurn, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS } from "../js/turnEngine.js";
+import { applyAction, getWarsForCartel, resolveScriptedChoice, endTurn, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, getIncomeBreakdown } from "../js/turnEngine.js";
 import { rollScriptedEvents } from "../js/scriptedEvents.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -170,6 +170,65 @@ test("raid_territory only works on an adjacent enemy-owned territory, causing ca
   assert.equal(game.territories[adjacentEnemyTerritory].controllerId, defender.id, "a raid should never transfer ownership");
 });
 
+test("invest_property and invest_business grant permanent passive income that shows up in getIncomeBreakdown", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  cartel.resources.money = 100_000_000;
+
+  const before = getIncomeBreakdown(game, cartel);
+  assert.equal(before.passiveIncome, 0);
+
+  const propResult = applyAction(game, "sinaloa", "invest_property");
+  assert.equal(propResult.ok, true);
+  assert.ok(cartel.resources.propertyIncome > 0);
+
+  const bizResult = applyAction(game, "sinaloa", "invest_business");
+  assert.equal(bizResult.ok, true);
+  assert.ok(cartel.resources.businessIncome > 0);
+
+  const after = getIncomeBreakdown(game, cartel);
+  assert.equal(after.passiveIncome, cartel.resources.propertyIncome + cartel.resources.businessIncome);
+  assert.ok(after.net > before.net, "passive income should raise the net turn balance");
+});
+
+test("invest_art creates a holding that appreciates over time via endTurn, and sell_art liquidates it", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  cartel.resources.money = 100_000_000;
+
+  const noArt = applyAction(game, "sinaloa", "sell_art");
+  assert.equal(noArt.ok, false, "cannot sell art you don't have");
+
+  const investResult = applyAction(game, "sinaloa", "invest_art");
+  assert.equal(investResult.ok, true);
+  const initialValue = cartel.resources.artValue;
+  assert.ok(initialValue > 0);
+
+  endTurn(game);
+  assert.ok(cartel.resources.artValue >= initialValue, "art should appreciate (or at worst hold) over a turn");
+
+  const moneyBeforeSale = cartel.resources.money;
+  const heldValue = cartel.resources.artValue;
+  const sellResult = applyAction(game, "sinaloa", "sell_art");
+  assert.equal(sellResult.ok, true);
+  assert.equal(cartel.resources.artValue, 0);
+  assert.ok(cartel.resources.money > moneyBeforeSale, "selling art should always add some cash back");
+  assert.ok(sellResult.received <= heldValue, "a seizure would mean less than full value received");
+});
+
+test("invest_weapons grants a capped, cumulative combat bonus", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  // Apply to a non-player cartel (cjng) to bypass the per-turn action budget entirely, isolating
+  // just the cap-enforcement logic rather than needing to cycle turns to refill the budget.
+  const cartel = game.cartels.cjng;
+  cartel.resources.money = 100_000_000;
+
+  for (let i = 0; i < 20; i++) {
+    applyAction(game, "cjng", "invest_weapons");
+  }
+  assert.equal(cartel.resources.weaponsBonus, 0.3, "20 purchases of +2% each should hit the 30% cap");
+});
+
 test("declaring war opens a war record and proposing (accepted) peace closes it", () => {
   const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
   applyAction(game, "sinaloa", "declare_war", { targetCartelId: "cdn" });
@@ -259,24 +318,23 @@ test("invest_production ignores a territoryId the cartel doesn't own and falls b
 });
 
 test("higher international reputation increases territory income via the export bonus", () => {
-  const lowRepGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
-  lowRepGame.cartels.sinaloa.resources.internationalReputation = 0;
-  lowRepGame.cartels.sinaloa.resources.money = 1000;
-  lowRepGame.cartels.sinaloa.resources.armySize = 0; // isolate income from upkeep/desertion noise
+  // Test the income mechanism directly via the pure, deterministic getIncomeBreakdown rather
+  // than through a full endTurn — a real endTurn also runs every other AI cartel (including
+  // sabotage/raids that can target this cartel directly), which is unrelated noise for what's
+  // actually being verified here: that reputation scales the export bonus.
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
 
-  const highRepGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
-  highRepGame.cartels.sinaloa.resources.internationalReputation = 100;
-  highRepGame.cartels.sinaloa.resources.money = 1000;
-  highRepGame.cartels.sinaloa.resources.armySize = 0;
+  cartel.resources.internationalReputation = 0;
+  const low = getIncomeBreakdown(game, cartel);
 
-  // Advance one turn on otherwise-identical states; AI/random events add noise, but the export
-  // bonus is a deterministic multiplier on top of the same base income, so it should still win
-  // on average. Run a few turns to make the comparison robust against a single unlucky turn.
-  for (let i = 0; i < 5; i++) {
-    endTurn(lowRepGame);
-    endTurn(highRepGame);
-  }
-  assert.ok(highRepGame.cartels.sinaloa.resources.money > lowRepGame.cartels.sinaloa.resources.money);
+  cartel.resources.internationalReputation = 100;
+  const high = getIncomeBreakdown(game, cartel);
+
+  assert.equal(low.exportBonus, 0);
+  assert.ok(high.exportBonus > low.exportBonus);
+  assert.ok(high.territoryIncome > low.territoryIncome);
+  assert.ok(high.net > low.net);
 });
 
 test("the Camarena 1985 event pauses for a player choice when the player controls Guadalajara, and applies immediately for NPC-controlled Guadalajara", () => {

@@ -16,6 +16,13 @@ const ACTIONS = [
 
 const LAUNDER_AMOUNTS = [500 * MONEY_SCALE, 2000 * MONEY_SCALE, 10000 * MONEY_SCALE];
 
+const INVESTMENTS = [
+  { type: "invest_property", label: "Comprar propiedades", desc: "Ingreso pasivo permanente cada turno, a cambio del capital inicial." },
+  { type: "invest_art", label: "Invertir en arte y coleccionables", desc: "Una vía clásica de lavado: el valor se revaloriza solo mientras lo conserves. Véndelo cuando quieras." },
+  { type: "invest_business", label: "Montar un negocio de fachada", desc: "Ingreso pasivo permanente y reduce el heat de inmediato: una tapadera legítima." },
+  { type: "invest_weapons", label: "Armar y equipar a tu gente", desc: "Bonificación de combate permanente y acumulable (hasta un máximo), a cambio de heat." },
+];
+
 export function render(container, app) {
   const game = app.game;
   const cartel = getPlayerCartel(game);
@@ -41,6 +48,25 @@ export function render(container, app) {
       <h3>Desarrollo de territorio</h3>
       <p class="text-dim small">Invierte en infraestructura y rutas para un territorio tuyo, subiendo su valor económico de forma permanente (hasta un máximo). Es una inversión de crecimiento, no gasta acciones del turno.</p>
       <button class="block" id="develop-btn" ${!cartel.territories.length ? "disabled" : ""}>Desarrollar un territorio</button>
+    </div>
+    <div class="card">
+      <h3>Inversiones</h3>
+      <p class="text-dim small">Formas de diversificar el capital del cártel más allá del narcotráfico directo.</p>
+      ${cartel.resources.propertyIncome ? `<p class="small text-success">Ingreso pasivo por propiedades: +${fmtMoney(cartel.resources.propertyIncome)}/turno</p>` : ""}
+      ${cartel.resources.businessIncome ? `<p class="small text-success">Ingreso pasivo por negocios: +${fmtMoney(cartel.resources.businessIncome)}/turno</p>` : ""}
+      ${cartel.resources.weaponsBonus ? `<p class="small text-success">Bonificación de combate: +${Math.round(cartel.resources.weaponsBonus * 100)}%</p>` : ""}
+      ${INVESTMENTS.map((a) => {
+        const cost = ACTION_COSTS[a.type] || 0;
+        return `
+        <button class="block" data-action="${a.type}" ${cartel.resources.money < cost || exhausted ? "disabled" : ""}>
+          <strong>${a.label}</strong> — ${fmtMoney(cost)}
+          <div class="small text-dim">${a.desc}</div>
+        </button>
+      `;
+      }).join("")}
+      ${cartel.resources.artValue ? `
+        <button class="block" id="sell-art-btn" ${exhausted ? "disabled" : ""}>Vender la colección de arte (${fmtMoney(cartel.resources.artValue)})</button>
+      ` : ""}
     </div>
     <div class="card">
       <h3>Lavado de dinero</h3>
@@ -84,6 +110,15 @@ export function render(container, app) {
 
   container.querySelector("#develop-btn")?.addEventListener("click", () => {
     showDevelopModal(app, game, cartel);
+  });
+
+  container.querySelector("#sell-art-btn")?.addEventListener("click", () => {
+    const result = applyAction(game, cartel.id, "sell_art");
+    app.setGame(game);
+    if (!result.ok) alert(result.message);
+    else if (result.seized) alert(`Decomiso parcial: recibes ${fmtMoney(result.received)} tras perder ${fmtMoney(result.seized)}.`);
+    else alert(`Vendes tu colección por ${fmtMoney(result.received)}.`);
+    app.render();
   });
 }
 

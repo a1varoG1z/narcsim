@@ -20,6 +20,7 @@ import {
   arrangeMarriage,
   beginPregnancy,
   resolveConceptionAttempt,
+  processPregnancies,
   rollNewCartelSpawns,
 } from "../js/turnEngine.js";
 
@@ -219,10 +220,17 @@ test("a pregnancy only turns into a birth once its due turn arrives, correctly r
   const game = newGame("guadalajara-1975-1989.json", "guadalajara", "felix_gallardo");
   const spouse = game.characters.gdl_esposa_gallardo;
   beginPregnancy(game, spouse.id, "felix_gallardo");
-  spouse.pregnancy.dueTurn = game.turn; // processPregnancies runs before the turn counter increments, so "due now" means due turn === current turn
   const childrenBefore = spouse.childrenIds.length;
 
-  endTurn(game);
+  // Not due yet: processPregnancies (called directly, not through the much noisier endTurn —
+  // which also runs mortality/AI/family-event rolls unrelated to what's being tested here)
+  // should leave the pregnancy untouched.
+  processPregnancies(game);
+  assert.ok(spouse.pregnancy, "should still be pregnant before the due turn");
+  assert.equal(spouse.childrenIds.length, childrenBefore);
+
+  spouse.pregnancy.dueTurn = game.turn;
+  processPregnancies(game);
 
   assert.equal(spouse.pregnancy, null, "pregnancy should be cleared once resolved");
   assert.equal(spouse.childrenIds.length, childrenBefore + 1);

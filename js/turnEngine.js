@@ -69,6 +69,11 @@ export const ACTION_COSTS = {
   assassinate_rival: 200 * MONEY_SCALE,
   sabotage_rival: 100 * MONEY_SCALE,
   raid_territory: 150 * MONEY_SCALE,
+  invest_property: 400 * MONEY_SCALE,
+  invest_art: 300 * MONEY_SCALE,
+  invest_business: 500 * MONEY_SCALE,
+  invest_weapons: 350 * MONEY_SCALE,
+  sell_art: 0,
 };
 
 /** Actions that count against the per-turn action budget — the day-to-day running of the
@@ -476,6 +481,63 @@ export function applyAction(game, cartelId, type, payload = {}) {
       log(`${cartel.name} realiza una redada contra instalaciones de ${defender.name} en ${territory.name}, dejando ${casualties} bajas y dañando la zona.`, "event");
       return { ok: true, casualties, newValue: territory.value };
     }
+    case "invest_property": {
+      const cost = ACTION_COSTS.invest_property;
+      if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
+      r.money -= cost;
+      const gained = Math.round((30 + randInt(0, 20)) * MONEY_SCALE);
+      r.propertyIncome = (r.propertyIncome || 0) + gained;
+      r.heat = Math.min(100, r.heat + randInt(1, 3));
+      log(`${cartel.name} adquiere propiedades que generan ${fmtMoney(gained)} adicionales cada turno.`, "good");
+      return { ok: true, propertyIncome: r.propertyIncome };
+    }
+    case "invest_art": {
+      const cost = ACTION_COSTS.invest_art;
+      if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
+      r.money -= cost;
+      const gained = Math.round(cost * (0.9 + Math.random() * 0.3));
+      r.artValue = (r.artValue || 0) + gained;
+      r.heat = Math.min(100, r.heat + 1);
+      log(`${cartel.name} invierte en arte y coleccionables por valor de ${fmtMoney(gained)}, una vía clásica de lavado.`, "good");
+      return { ok: true, artValue: r.artValue };
+    }
+    case "sell_art": {
+      const held = r.artValue || 0;
+      if (held <= 0) return { ok: false, message: "No tienes arte que vender." };
+      const seizeChance = clamp(r.heat / 300, 0.03, 0.3);
+      if (chance(seizeChance)) {
+        const seized = Math.round(held * (0.2 + Math.random() * 0.3));
+        r.artValue = 0;
+        r.money += held - seized;
+        r.heat = Math.min(100, r.heat + randInt(5, 10));
+        log(`Al vender su colección, ${cartel.name} sufre un decomiso parcial de ${fmtMoney(seized)}.`, "event");
+        return { ok: true, seized, received: held - seized };
+      }
+      r.artValue = 0;
+      r.money += held;
+      r.heat = Math.max(0, r.heat - randInt(2, 5));
+      log(`${cartel.name} vende su colección de arte por ${fmtMoney(held)} sin llamar la atención.`, "good");
+      return { ok: true, received: held };
+    }
+    case "invest_business": {
+      const cost = ACTION_COSTS.invest_business;
+      if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
+      r.money -= cost;
+      const gained = Math.round((35 + randInt(0, 15)) * MONEY_SCALE);
+      r.businessIncome = (r.businessIncome || 0) + gained;
+      r.heat = Math.max(0, r.heat - randInt(3, 6));
+      log(`${cartel.name} monta un negocio legal de fachada: ${fmtMoney(gained)} más por turno y menos sospechas.`, "good");
+      return { ok: true, businessIncome: r.businessIncome };
+    }
+    case "invest_weapons": {
+      const cost = ACTION_COSTS.invest_weapons;
+      if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
+      r.money -= cost;
+      r.weaponsBonus = clamp((r.weaponsBonus || 0) + 0.02, 0, 0.3);
+      r.heat = Math.min(100, r.heat + randInt(2, 5));
+      log(`${cartel.name} arma y equipa mejor a su gente (bonificación de combate: +${Math.round(r.weaponsBonus * 100)}%).`, "good");
+      return { ok: true, weaponsBonus: r.weaponsBonus };
+    }
     default:
       return { ok: false, message: "Acción desconocida." };
   }
@@ -504,9 +566,9 @@ function commanderMultiplier(game, cartel) {
     total += leader.stats.loyaltyInspiring;
     weight += 1;
   }
-  if (!weight) return 1;
-  const avgStat = total / weight; // roughly 0-100, 50 = average
-  return clamp(0.7 + (avgStat / 100) * 0.6, 0.7, 1.3);
+  const base = weight ? clamp(0.7 + (total / weight / 100) * 0.6, 0.7, 1.3) : 1;
+  // Better-armed troops (invest_weapons) fight more effectively, on top of command quality.
+  return base * (1 + (cartel.resources.weaponsBonus || 0));
 }
 
 function resolveBattle(game, attacker, defender, territory) {
@@ -667,6 +729,11 @@ function runAiCartels(game) {
     if (raidable.length && r.money >= ACTION_COSTS.raid_territory) {
       options.push({ item: "raid_territory", weight: atWar ? 2 : 0.8 });
     }
+    if (r.money >= ACTION_COSTS.invest_property) options.push({ item: "invest_property", weight: 1.5 });
+    if (r.money >= ACTION_COSTS.invest_art) options.push({ item: "invest_art", weight: 1 });
+    if (r.artValue > 0) options.push({ item: "sell_art", weight: r.money < ACTION_COSTS.recruit_army ? 3 : 0.5 });
+    if (r.money >= ACTION_COSTS.invest_business) options.push({ item: "invest_business", weight: 1.5 });
+    if (r.money >= ACTION_COSTS.invest_weapons && (r.weaponsBonus || 0) < 0.3) options.push({ item: "invest_weapons", weight: atWar ? 2 : 0.8 });
 
     let choice = weightedChoice(options);
     if (choice === "attack_territory") {
@@ -789,8 +856,15 @@ export function getIncomeBreakdown(game, cartel) {
   const exportBonusRate = clamp((cartel.resources.internationalReputation ?? 15) / 400, 0, 0.25);
   const exportBonus = Math.round(baseIncome * exportBonusRate);
   const territoryIncome = baseIncome + exportBonus;
+  const propertyIncome = cartel.resources.propertyIncome || 0;
+  const businessIncome = cartel.resources.businessIncome || 0;
+  const passiveIncome = propertyIncome + businessIncome;
   const upkeep = Math.round(cartel.resources.armySize * 0.45 * MONEY_SCALE);
-  return { perTerritory, baseIncome, exportBonusRate, exportBonus, territoryIncome, upkeep, net: territoryIncome - upkeep };
+  return {
+    perTerritory, baseIncome, exportBonusRate, exportBonus, territoryIncome,
+    propertyIncome, businessIncome, passiveIncome, upkeep,
+    net: territoryIncome + passiveIncome - upkeep,
+  };
 }
 
 function incomeTick(game) {
@@ -811,6 +885,10 @@ function incomeTick(game) {
       cartel.resources.money += net;
     }
     cartel.resources.heat = Math.max(0, cartel.resources.heat - 1);
+    // Art and collectibles quietly appreciate while held, a classic laundering vehicle.
+    if (cartel.resources.artValue) {
+      cartel.resources.artValue = Math.round(cartel.resources.artValue * (1 + randInt(1, 3) / 100));
+    }
   }
 }
 
@@ -1149,7 +1227,7 @@ export function resolveConceptionAttempt(game, partnerId, warmth = 0) {
 
 /** Turns a pregnancy started via beginPregnancy into an actual birth once its due turn arrives —
  * the ~9-month wait is the whole point, so this never resolves in the same turn it started. */
-function processPregnancies(game) {
+export function processPregnancies(game) {
   const year = currentYear(game);
   for (const mother of Object.values(game.characters)) {
     if (!mother.pregnancy || !mother.alive) continue;

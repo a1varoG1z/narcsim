@@ -17,6 +17,8 @@ export function render(container, app) {
         <tr><td>Ingreso por territorios</td><td class="center">${fmtMoney(b.baseIncome)}</td></tr>
         <tr><td>Bonus de exportación (reputación internacional, +${Math.round(b.exportBonusRate * 100)}%)</td><td class="center text-success">+${fmtMoney(b.exportBonus)}</td></tr>
         <tr style="border-top:1px solid var(--border)"><td><strong>Ingreso total</strong></td><td class="center"><strong>${fmtMoney(b.territoryIncome)}</strong></td></tr>
+        ${b.propertyIncome ? `<tr><td>Propiedades</td><td class="center text-success">+${fmtMoney(b.propertyIncome)}</td></tr>` : ""}
+        ${b.businessIncome ? `<tr><td>Negocios de fachada</td><td class="center text-success">+${fmtMoney(b.businessIncome)}</td></tr>` : ""}
         <tr><td>Mantenimiento del ejército (${fmtNum(r.armySize)} hombres)</td><td class="center text-danger">-${fmtMoney(b.upkeep)}</td></tr>
         <tr style="border-top:1px solid var(--border)"><td><strong>Balance neto por turno</strong></td><td class="center ${b.net >= 0 ? "text-success" : "text-danger"}"><strong>${b.net >= 0 ? "+" : ""}${fmtMoney(b.net)}</strong></td></tr>
       </table>
@@ -38,5 +40,13 @@ export function render(container, app) {
       <p class="small">Total histórico lavado a través de negocios legales: <strong>${fmtMoney(r.launderedMoney || 0)}</strong></p>
       <p class="text-dim small">Gestiona el lavado de dinero y otras decisiones económicas desde la pestaña Decisiones.</p>
     </div>
+
+    ${(r.artValue || r.weaponsBonus) ? `
+    <div class="card">
+      <h3>Otros activos</h3>
+      ${r.artValue ? `<p class="small">Colección de arte y coleccionables (valor actual): <strong>${fmtMoney(r.artValue)}</strong></p>` : ""}
+      ${r.weaponsBonus ? `<p class="small">Bonificación de combate por armamento: <strong>+${Math.round(r.weaponsBonus * 100)}%</strong></p>` : ""}
+    </div>
+    ` : ""}
   `;
 }
