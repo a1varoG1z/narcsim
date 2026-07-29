@@ -86,11 +86,17 @@ Estado del proyecto tras la primera versión jugable (MVP). Marcado ✅ lo imple
 
 ### Mapa
 - ⬜ Mapa geográficamente preciso (actualmente es una disposición esquemática de territorios con adyacencia aproximada, no coordenadas reales).
-- ⬜ **Cubrir todo el mapa latinoamericano relevante por época con muchos más cárteles** (hoy hay 2-4 bandos por partida, que se siente poco competitivo); alternativa/complemento: que aparezcan cárteles nuevos generados aleatoriamente en territorios libres a medida que avanza la partida, no solo al fundar el del jugador.
+- ⬜ **Cubrir todo el mapa latinoamericano relevante por época con muchos más cárteles** (hoy hay 2-4 bandos por partida, que se siente poco competitivo), incluyendo narcotráfico ocurriendo en varios países a la vez (p. ej. en la época de Escobar debería existir tráfico en más sitios además de Medellín/Cali); alternativa/complemento: que aparezcan cárteles nuevos generados aleatoriamente en territorios libres a medida que avanza la partida, no solo al fundar el del jugador.
+- ⬜ **La expansión no debería acabarse al conquistar los territorios de tu región de origen**: el mapa jugable tiene que extenderse por toda Latinoamérica (adaptado a los cárteles de cada época) para que un cártel dominante (p. ej. Medellín) pueda seguir expandiéndose a otros países (p. ej. hacia México), no solo dentro del suyo.
 
 ### Guerras y combate
 - 🟡 Resolución de batallas por turno con ponderación de mando, adyacencia, historial y tratados con condiciones (ver arriba). Pendiente: tácticas, terreno, refuerzos, moral, guerras prolongadas con objetivos concretos más allá de la conquista de una plaza.
 - ⬜ **Bajas reales de sicarios/ejército en combate** (hoy una guerra mueve territorio pero no reduce tropas de forma visible y trazable) y **decisiones concretas de guerra** (ordenar un atentado contra alguien en concreto, sabotaje, redadas específicas) en vez de un único botón genérico de "atacar".
+- ⬜ **Conquistar territorios vacíos y derrotar a otro cártel es demasiado fácil hoy**: falta dificultad y profundidad real (resistencia, coste, riesgo de fallo) en vez de ser casi automático con un solo clic.
+
+### Motor de turnos y acciones
+- ⬜ **3 acciones por turno se sienten muy pocas** para un turno de 6 meses — un personaje real (p. ej. Escobar) hacía muchísimas cosas en poco tiempo. Subir bastante el cupo de acciones por turno y añadir muchas más alternativas de acción: formas de ganar dinero, de expansión y de crecimiento, no solo las pocas que hay ahora.
+- ⬜ **La simulación de un turno no debería resolverse siempre de un tirón**: si durante esos meses ocurre algo importante — incluida una acción rival que te afecta directamente — el turno debería pararse para que puedas reaccionar/decidir, en vez de solo aparecer ya resuelto en el registro.
 
 ### Familia, romances e intriga
 - 🟡 Cortejo, crisis matrimonial, genealogía, vínculos y ahora un diálogo interactivo para formar una familia con embarazo real (ver arriba). Pendiente: rivalidades entre hermanos, tramas de honor/venganza, amistades explícitas (hoy el vínculo cubre solo la relación jugador↔miembro, no las relaciones entre miembros del cártel entre sí).
@@ -106,18 +112,25 @@ Estado del proyecto tras la primera versión jugable (MVP). Marcado ✅ lo imple
 ### Logística y economía
 - 🟡 Socios de tráfico, lavado de dinero y producción por territorio ya implementados. Pendiente: rutas concretas dibujadas en el mapa, mercados internacionales diferenciados por región (no solo un bonus agregado de reputación).
 - ⬜ **Dimensión económica mucho más grande**: más categorías de inversión (propiedades, arte, negocios legales, armas, líneas de droga concretas), cada una con su propio riesgo/rentabilidad, en vez de las pocas acciones genéricas actuales.
-- ✅ **Revisado el dinero/ejército inicial del Cártel de Medellín**: subido de 2200 a 3400 (dinero) y de 1400 a 1600 (ejército) para reflejar que, al inicio de esa época, Escobar ya era muy superior en poder de fuego y riqueza al todavía discreto Cártel de Cali — antes estaban casi empatados. El resto de valores iniciales por época ya se revisaron y se consideran razonables.
+- ✅ **Revisado el dinero/ejército inicial del Cártel de Medellín**: subido de 2200 a 3400 (dinero) y de 1400 a 1600 (ejército) para reflejar que, al inicio de esa época, Escobar ya era muy superior en poder de fuego y riqueza al todavía discreto Cártel de Cali — antes estaban casi empatados.
+- ⬜ **La escala monetaria en general no es realista**: los números actuales (cientos/miles) se muestran con "$" como si fueran dólares literales, lo cual no cuadra con la riqueza real de figuras como Escobar (ya millonario en 1980, camino a multimillonario). Hace falta una revisión completa de la escala económica (dinero inicial, fórmulas de ingreso, costes de acciones, sobornos, nóminas) para que sea realista de verdad, no solo ajustes puntuales — esto afecta a `state.js`/`turnEngine.js` y a los datos de las 6 épocas a la vez.
 
 ### Personajes y datos
 - ⬜ Ampliar el roster de personajes secundarios reales cuando el usuario aporte información adicional (ver nota abajo).
+- ⬜ **Adjuntar retrato por URL en el editor**, como alternativa a subir un archivo.
 - ✅ Más eras/variantes: añadida la guerra interna de Sinaloa (Chapitos vs. Mayiza, 2024-actualidad) como época jugable propia (ver arriba).
 - ⬜ Editor visual de nuevas épocas/escenarios desde la propia interfaz (hoy los `.json` de época se editan a mano).
 - ⬜ **Sección de fallecidos**: una vista propia con los personajes muertos de la partida, ordenable por importancia/cargo/cártel/causa — hoy solo se ven de pasada en el registro de sucesos y en la ficha de cada uno.
 - ⬜ **Retratos generados automáticamente** para personajes creados por el juego (no históricos, sin foto subida), en vez del icono genérico actual.
+- ⬜ **Revisión completa de realismo de todos los `.json` de época**: una vez encajen la nueva escala económica, la expansión por todo el mapa y la mayor variedad de acciones (ver arriba), pasar por los 6 archivos de época a la vez para que todo (territorios, adyacencia, cárteles, recursos iniciales, personajes) sea coherente entre sí, en vez de ir tocando números sueltos.
 
 ### Técnico / calidad de vida
 - ✅ Tests automatizados y PWA ya implementados (ver arriba).
 - 🟡 Accesibilidad: pasada inicial hecha (foco, aria-labels, contraste, cierre con Escape). Pendiente: pruebas reales con lector de pantalla, revisión completa de contraste AA en todos los estados de color.
+- ✅ **Editor de diálogos simplificado**: ya no hace falta escribir JSON — se elige un nodo de la conversación de una lista, se edita su texto y cada opción (texto, a qué nodo lleva o si termina la escena, "calor") con campos normales, se pueden añadir/eliminar nodos y marcar cuál es el inicial. El modo JSON se mantiene como alternativa avanzada, plegada, para pegar un árbol completo de una vez.
+- ⬜ **Adjuntar retrato por URL** en el editor, además de subir archivo.
+- ⬜ **Modo rápido/simulado** para cualquier interacción tipo diálogo (empezando por "Formar una familia"): poder resolverla al instante con un resultado razonable, para partidas más rápidas.
+- ⬜ **Guardado en GitHub** de la partida (con todo lo editado/jugado) — necesita decidir cómo manejar credenciales de forma segura en un sitio estático sin backend. Además, **exportar/importar diálogos por separado** del resto de la partida, para reutilizar conversaciones ya escritas en otras partidas sin rehacerlas.
 
 ## Nota sobre los datos históricos
 

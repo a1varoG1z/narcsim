@@ -34,9 +34,16 @@ export function render(container, app) {
     </div>
     <div class="card">
       <h3>Diálogos</h3>
-      <p class="text-dim small">Edita el árbol de conversación de "Formar una familia" (u otros que se añadan) en formato JSON: cada nodo tiene un texto y una lista de opciones; cada opción apunta al siguiente nodo (<code>next</code>) o resuelve la escena (<code>resolve: "attempt"</code> o <code>"rejected"</code>). Usa <code>{partner}</code> para el nombre de la otra persona.</p>
-      <textarea id="ed-dialogue-json" rows="14" style="width:100%;font-family:monospace;font-size:.8rem">${escapeHtml(JSON.stringify(game.dialogueTrees || { conception: defaultConceptionDialogue() }, null, 2))}</textarea>
-      <button class="primary block mt-1" id="save-dialogue">Guardar diálogos</button>
+      <p class="text-dim small">Edita paso a paso la conversación de "Formar una familia": elige un nodo, escribe su texto y a qué lleva cada opción. Usa <code>{partner}</code> donde quieras que aparezca el nombre de la otra persona.</p>
+      <label>Nodo</label>
+      <select id="ed-dialogue-node"></select>
+      <div id="dialogue-node-editor" class="mt-1"></div>
+      <button class="block mt-1" id="add-dialogue-node">+ Añadir nuevo nodo</button>
+      <details class="mt-2">
+        <summary class="small text-dim">Modo avanzado (JSON, para pegar un árbol completo)</summary>
+        <textarea id="ed-dialogue-json" rows="14" style="width:100%;font-family:monospace;font-size:.8rem">${escapeHtml(JSON.stringify(game.dialogueTrees || { conception: defaultConceptionDialogue() }, null, 2))}</textarea>
+        <button class="primary block mt-1" id="save-dialogue">Guardar JSON</button>
+      </details>
       <button class="block ghost mt-1" id="reset-dialogue">Restaurar diálogo por defecto</button>
     </div>
     <div class="card">
@@ -247,11 +254,129 @@ export function render(container, app) {
     });
   }
 
+  const dialogueNodeSelect = container.querySelector("#ed-dialogue-node");
+  const OPTION_SLOTS = 6;
+
+  function getConceptionTree() {
+    if (!game.dialogueTrees) game.dialogueTrees = { conception: defaultConceptionDialogue() };
+    if (!game.dialogueTrees.conception) game.dialogueTrees.conception = defaultConceptionDialogue();
+    return game.dialogueTrees.conception;
+  }
+
+  function nodePreview(id, node, isStart) {
+    const text = (node.text || "").replace(/\s+/g, " ").trim();
+    const snippet = text.length > 44 ? text.slice(0, 44) + "…" : text || "(sin texto)";
+    return `${isStart ? "▶ " : ""}${snippet}`;
+  }
+
+  function renderDialogueEditor() {
+    const tree = getConceptionTree();
+    const nodeIds = Object.keys(tree.nodes);
+    dialogueNodeSelect.innerHTML = nodeIds.map((id) => `<option value="${id}">${escapeHtml(nodePreview(id, tree.nodes[id], id === tree.start))}</option>`).join("");
+    const preferredId = game._editorLastDialogueNode;
+    game._editorLastDialogueNode = null;
+    if (preferredId && nodeIds.includes(preferredId)) dialogueNodeSelect.value = preferredId;
+    else if (!nodeIds.includes(dialogueNodeSelect.value) && nodeIds.length) dialogueNodeSelect.value = tree.start;
+    renderDialogueNodeEditor();
+  }
+
+  function renderDialogueNodeEditor() {
+    const tree = getConceptionTree();
+    const nodeId = dialogueNodeSelect.value;
+    const node = tree.nodes[nodeId];
+    const target = container.querySelector("#dialogue-node-editor");
+    if (!node) {
+      target.innerHTML = `<p class="small text-dim">No hay ningún nodo. Añade uno nuevo.</p>`;
+      return;
+    }
+    const otherNodeIds = Object.keys(tree.nodes);
+    const destOptions = (selected) => `
+      <option value="" ${!selected ? "selected" : ""}>— (vacío) —</option>
+      <option value="__attempt__" ${selected === "__attempt__" ? "selected" : ""}>Fin de la escena: intentarlo</option>
+      <option value="__rejected__" ${selected === "__rejected__" ? "selected" : ""}>Fin de la escena: rechazo, sin intentarlo</option>
+      ${otherNodeIds.map((id) => `<option value="${id}" ${selected === id ? "selected" : ""}>Ir a: ${escapeHtml(nodePreview(id, tree.nodes[id], id === tree.start))}</option>`).join("")}
+    `;
+    const slots = Math.max(OPTION_SLOTS, node.options.length + 2);
+
+    target.innerHTML = `
+      ${nodeId === tree.start ? `<p class="small text-success">Este es el nodo inicial de la conversación.</p>` : ""}
+      <label>Texto de este momento de la conversación</label>
+      <textarea id="dn-text" rows="3">${escapeHtml(node.text || "")}</textarea>
+      <h4 class="mt-1">Opciones que puede elegir el jugador</h4>
+      ${Array.from({ length: slots }, (_, i) => {
+        const opt = node.options[i];
+        return `<div class="person-row" style="border:none;padding:.3rem 0;gap:.4rem">
+          <input type="text" placeholder="Texto de la opción ${i + 1}" data-opt-label="${i}" value="${escapeHtml(opt?.label || "")}" style="flex:2">
+          <input type="number" title="Calor (afecta a las probabilidades)" data-opt-warmth="${i}" value="${opt?.warmth ?? 0}" style="width:4rem" placeholder="Calor">
+          <select data-opt-dest="${i}" style="flex:2">${destOptions(opt?.resolve || opt?.next || "")}</select>
+        </div>`;
+      }).join("")}
+      <button class="primary block mt-1" id="save-dialogue-node">Guardar este nodo</button>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap" class="mt-1">
+        ${nodeId !== tree.start ? `<button class="ghost" id="set-start-node">Marcar como nodo inicial</button>` : ""}
+        <button class="danger ghost" id="delete-dialogue-node">Eliminar este nodo</button>
+      </div>
+    `;
+
+    target.querySelector("#save-dialogue-node").addEventListener("click", () => {
+      node.text = target.querySelector("#dn-text").value;
+      const options = [];
+      for (let i = 0; i < slots; i++) {
+        const label = target.querySelector(`[data-opt-label="${i}"]`).value.trim();
+        if (!label) continue;
+        const dest = target.querySelector(`[data-opt-dest="${i}"]`).value;
+        if (!dest) continue;
+        const warmth = Number(target.querySelector(`[data-opt-warmth="${i}"]`).value) || 0;
+        const option = { label, warmth };
+        if (dest === "__attempt__" || dest === "__rejected__") option.resolve = dest;
+        else option.next = dest;
+        options.push(option);
+      }
+      node.options = options;
+      app.setGame(game);
+      app.render();
+    });
+
+    target.querySelector("#set-start-node")?.addEventListener("click", () => {
+      tree.start = nodeId;
+      app.setGame(game);
+      app.render();
+    });
+
+    target.querySelector("#delete-dialogue-node").addEventListener("click", () => {
+      if (Object.keys(tree.nodes).length <= 1) {
+        alert("No puedes eliminar el único nodo que queda.");
+        return;
+      }
+      if (nodeId === tree.start) {
+        alert("No puedes eliminar el nodo inicial. Marca otro como inicial primero.");
+        return;
+      }
+      if (!confirm("¿Eliminar este nodo? Las opciones de otros nodos que apunten aquí dejarán de funcionar.")) return;
+      delete tree.nodes[nodeId];
+      app.setGame(game);
+      app.render();
+    });
+  }
+
+  dialogueNodeSelect.addEventListener("change", renderDialogueNodeEditor);
+  container.querySelector("#add-dialogue-node").addEventListener("click", () => {
+    const tree = getConceptionTree();
+    let n = Object.keys(tree.nodes).length + 1;
+    while (tree.nodes[`nodo_${n}`]) n++;
+    const newId = `nodo_${n}`;
+    tree.nodes[newId] = { text: "", options: [] };
+    game._editorLastDialogueNode = newId;
+    app.setGame(game);
+    app.render();
+  });
+
   cartelSelect.addEventListener("change", renderCartelEditor);
   charSelect.addEventListener("change", renderCharacterEditor);
   territorySelect.addEventListener("change", renderTerritoryEditor);
   renderCartelEditor();
   renderTerritoryEditor();
+  renderDialogueEditor();
 
   container.querySelector("#save-dialogue").addEventListener("click", () => {
     let parsed;
