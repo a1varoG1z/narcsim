@@ -3,7 +3,7 @@ import { portraitImg, escapeHtml, roleLabel, statBar } from "../../ui/components
 import { showCharacterProfile } from "./characterProfile.js";
 import { generateNpc, randomName } from "../../npcGenerator.js";
 import { chance, clamp } from "../../utils/random.js";
-import { strengthenBond, getDesignatableHeirs, designateHeir, clearDesignatedHeir, mentorHeir, arrangeMarriage } from "../../turnEngine.js";
+import { strengthenBond, getDesignatableHeirs, designateHeir, clearDesignatedHeir, mentorHeir, arrangeMarriage, resolveConceptionAttempt } from "../../turnEngine.js";
 import { showModal, closeModal } from "../../ui/modal.js";
 
 export function render(container, app) {
@@ -36,9 +36,10 @@ export function render(container, app) {
       </div>
       ${player.spouseId ? statBar("Relación con tu pareja", player.marriageBond ?? 70) : ""}
       ${!player.spouseId ? `<button class="block mt-1" id="seek-romance">Buscar pareja</button>` : ""}
-      ${player.spouseId && cartel.characters.length ? `<button class="block mt-1" id="try-child">Intentar tener un hijo/a</button>` : ""}
+      ${player.alive && !player.imprisoned ? `<button class="block mt-1" id="start-family-btn">Formar una familia</button>` : ""}
       ${player.spouseId ? `<button class="block mt-1 danger" id="divorce-btn">Pedir el divorcio</button>` : ""}
     </div>
+    ${renderPregnancyCard(game, player)}
     ${renderSuccessionCard(game)}
     ${renderMarriageAllianceCard(game, familyMembers, player, year)}
     <div class="card">
@@ -117,22 +118,151 @@ export function render(container, app) {
     app.render();
   });
 
-  container.querySelector("#try-child")?.addEventListener("click", () => {
-    const spouse = game.characters[player.spouseId];
-    const mother = player.sex === "F" ? player : spouse;
-    const father = player.sex === "F" ? spouse : player;
-    if (!mother || !father || !chance(0.6)) {
-      alert("No ha sido posible esta vez. Inténtalo de nuevo más adelante.");
-      return;
+  container.querySelector("#start-family-btn")?.addEventListener("click", () => {
+    showPartnerSelectModal(app, game, cartel, player, year);
+  });
+}
+
+function renderPregnancyCard(game, player) {
+  const pregnancies = Object.values(game.characters).filter(
+    (c) => c.pregnancy && (c.id === player.id || c.pregnancy.fatherId === player.id)
+  );
+  if (!pregnancies.length) return "";
+  return `
+    <div class="card">
+      <h3>Embarazos en curso</h3>
+      ${pregnancies.map((mother) => {
+        const father = game.characters[mother.pregnancy.fatherId];
+        const turnsLeft = Math.max(0, mother.pregnancy.dueTurn - game.turn);
+        return `<div class="person-row" style="border:none;padding:0">
+          ${portraitImg(mother)}
+          <div class="info">
+            <div class="name">${escapeHtml(mother.name)}</div>
+            <div class="role">Espera un hijo/a de ${escapeHtml(father?.name || "desconocido")} · ${turnsLeft === 0 ? "nacerá este turno" : `nacerá en ${turnsLeft} turno(s)`}</div>
+          </div>
+        </div>`;
+      }).join("")}
+    </div>
+  `;
+}
+
+function showPartnerSelectModal(app, game, cartel, player, year) {
+  const spouse = player.spouseId ? game.characters[player.spouseId] : null;
+  const spouseSex = player.sex === "M" ? "F" : "M";
+
+  showModal(`
+    <h2>Formar una familia</h2>
+    <p class="small text-dim">Elige con quién intentarlo esta noche.</p>
+    ${spouse ? `<button class="block" data-partner="${spouse.id}">Con tu pareja: ${escapeHtml(spouse.name)}</button>` : ""}
+    <button class="block" id="new-partner-btn">Buscar a alguien nuevo</button>
+    <button class="ghost block" id="close-btn">Cancelar</button>
+  `);
+
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.querySelector(`[data-partner="${spouse?.id}"]`)?.addEventListener("click", () => {
+    closeModal();
+    startConceptionDialogue(app, game, spouse.id);
+  });
+  document.getElementById("new-partner-btn").addEventListener("click", () => {
+    closeModal();
+    showNewPartnerCandidatesModal(app, game, cartel, spouseSex, year);
+  });
+}
+
+function showNewPartnerCandidatesModal(app, game, cartel, spouseSex, year) {
+  const candidates = Array.from({ length: 3 }, () => {
+    const npc = generateNpc({ cartelId: cartel.id, role: null, currentYear: year, minAge: 18, maxAge: 45 });
+    npc.sex = spouseSex;
+    npc.name = randomName(spouseSex);
+    return npc;
+  });
+
+  showModal(`
+    <h2>Alguien nuevo</h2>
+    <p class="small text-dim">Elige con quién intentarlo. Pasará a formar parte de tu historia a partir de ahora.</p>
+    ${candidates.map((c) => `
+      <button class="block" data-candidate="${c.id}">
+        <div class="person-row" style="border:none;padding:0">
+          ${portraitImg(c)}
+          <div class="info"><div class="name">${escapeHtml(c.name)}</div><div class="role">${c.stats.charisma > 65 ? "Encantador/a" : c.stats.business > 65 ? "Ambicioso/a" : "Discreto/a"}</div></div>
+        </div>
+      </button>
+    `).join("")}
+    <button class="ghost block" id="close-btn">Cancelar</button>
+  `);
+
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.querySelectorAll("[data-candidate]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const candidate = candidates.find((c) => c.id === btn.dataset.candidate);
+      game.characters[candidate.id] = candidate;
+      cartel.characters.push(candidate.id);
+      closeModal();
+      startConceptionDialogue(app, game, candidate.id);
+    });
+  });
+}
+
+function startConceptionDialogue(app, game, partnerId) {
+  const tree = game.dialogueTrees?.conception;
+  if (!tree || !tree.nodes[tree.start]) {
+    alert("No hay un diálogo configurado para este momento. Revísalo en el Editor.");
+    return;
+  }
+  runDialogueNode(app, game, tree, partnerId, tree.start, 0);
+}
+
+function runDialogueNode(app, game, tree, partnerId, nodeId, warmth) {
+  const partner = game.characters[partnerId];
+  const node = tree.nodes[nodeId];
+  if (!node) return;
+  const text = node.text.replace(/\{partner\}/g, escapeHtml(partner?.name || ""));
+
+  showModal(`
+    <h2>${escapeHtml(partner?.name || "")}</h2>
+    <p>${text}</p>
+    ${node.options.map((opt, i) => `<button class="block" data-option="${i}">${escapeHtml(opt.label)}</button>`).join("")}
+  `);
+
+  document.querySelectorAll("[data-option]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const option = node.options[Number(btn.dataset.option)];
+      const nextWarmth = warmth + (option.warmth || 0);
+      if (option.resolve) {
+        closeModal();
+        finishConceptionDialogue(app, game, partnerId, option.resolve, nextWarmth);
+      } else if (option.next) {
+        runDialogueNode(app, game, tree, partnerId, option.next, nextWarmth);
+      } else {
+        closeModal();
+      }
+    });
+  });
+}
+
+function finishConceptionDialogue(app, game, partnerId, resolution, warmth) {
+  if (resolution === "rejected") {
+    showModal(`
+      <h2>No ha sido esta noche</h2>
+      <p>No ha pasado nada esta vez. Puedes intentarlo de nuevo más adelante.</p>
+      <button class="primary block" id="ok-btn">Aceptar</button>
+    `);
+  } else {
+    const result = resolveConceptionAttempt(game, partnerId, warmth);
+    if (!result.ok) {
+      showModal(`<h2>No ha sido posible</h2><p>${escapeHtml(result.message || "")}</p><button class="primary block" id="ok-btn">Aceptar</button>`);
+    } else {
+      showModal(`
+        <h2>${result.pregnant ? "Podría haber novedades" : "Nada por ahora"}</h2>
+        <p>${result.pregnant
+          ? "Podríais estar esperando un hijo/a. Lo sabréis con certeza en los próximos meses."
+          : "Esta vez no ha habido suerte. Podéis intentarlo de nuevo más adelante."}</p>
+        <button class="primary block" id="ok-btn">Aceptar</button>
+      `);
     }
-    const child = generateNpc({ cartelId: cartel.id, role: null, currentYear: year, minAge: 0, maxAge: 0 });
-    child.birthYear = year;
-    child.name = randomName(child.sex).split(" ").slice(0, 2).join(" ");
-    child.parents = [mother.id, father.id];
-    game.characters[child.id] = child;
-    cartel.characters.push(child.id);
-    mother.childrenIds.push(child.id);
-    father.childrenIds.push(child.id);
+  }
+  document.getElementById("ok-btn").addEventListener("click", () => {
+    closeModal();
     app.setGame(game);
     app.render();
   });

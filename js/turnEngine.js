@@ -660,6 +660,7 @@ export function endTurn(game) {
   autoResolveWars(game);
   const deaths = rollMortality(game, (t, ty) => addLog(game, t, ty), year);
   rollFamilyEvents(game, (t, ty) => addLog(game, t, ty), year);
+  processPregnancies(game);
   const coups = rollLoyaltyEvents(game, (t, ty) => addLog(game, t, ty));
   for (const coup of coups) {
     if (chance(0.4)) {
@@ -848,6 +849,66 @@ export function arrangeMarriage(game, familyMemberId, targetCartelId) {
   }
   addLog(game, `${member.name} contrae un matrimonio arreglado con un miembro de ${targetCartel.name}, estrechando lazos entre ambas familias.`, "good");
   return { ok: true, spouseId: spouse.id };
+}
+
+function turnsForMonths(game, months) {
+  return Math.max(1, Math.round(months / (game.turnMonths || 6)));
+}
+
+/** Registers a pregnancy that will only resolve into a birth ~9 in-game months later, via
+ * processPregnancies at endTurn — deliberately not an instant outcome. */
+export function beginPregnancy(game, motherId, fatherId) {
+  const mother = game.characters[motherId];
+  if (!mother) return { ok: false, message: "Personaje no encontrado." };
+  mother.pregnancy = { fatherId, startTurn: game.turn, dueTurn: game.turn + turnsForMonths(game, 9) };
+  return { ok: true };
+}
+
+/** Resolves the outcome of a full conception conversation (see js/dialogues.js): the odds are
+ * driven by the accumulated "warmth" of the choices the player actually made during the scene,
+ * plus their charisma, not a flat coin flip. The conceiving partner doesn't have to be the
+ * player's spouse — any willing character works, mirroring how the dialogue can be started
+ * with a new acquaintance as well as a marriage. */
+export function resolveConceptionAttempt(game, partnerId, warmth = 0) {
+  const player = getPlayerCharacter(game);
+  const partner = game.characters[partnerId];
+  if (!player || !partner) return { ok: false, message: "Personaje no encontrado." };
+  const mother = player.sex === "F" ? player : partner;
+  const father = player.sex === "F" ? partner : player;
+  if (mother.sex !== "F" || father.sex !== "M") return { ok: false, message: "Hace falta una pareja de sexos distintos para este intento." };
+  if (mother.pregnancy) return { ok: false, message: `${mother.name} ya está esperando un hijo/a.` };
+  if (!mother.alive || !father.alive) return { ok: false, message: "Alguno de los dos ya no vive." };
+  const successChance = clamp(0.2 + warmth * 0.04 + player.stats.charisma / 300, 0.05, 0.75);
+  if (!chance(successChance)) {
+    addLog(game, `${player.name} pasa la noche con ${partner.name}, pero esta vez no hay suerte.`, "info");
+    return { ok: true, pregnant: false };
+  }
+  beginPregnancy(game, mother.id, father.id);
+  addLog(game, `${mother.name} podría estar esperando un hijo/a de ${father.name}. Lo sabréis con certeza en los próximos meses.`, "good");
+  return { ok: true, pregnant: true, motherId: mother.id };
+}
+
+/** Turns a pregnancy started via beginPregnancy into an actual birth once its due turn arrives —
+ * the ~9-month wait is the whole point, so this never resolves in the same turn it started. */
+function processPregnancies(game) {
+  const year = currentYear(game);
+  for (const mother of Object.values(game.characters)) {
+    if (!mother.pregnancy || !mother.alive) continue;
+    if (game.turn < mother.pregnancy.dueTurn) continue;
+    const father = game.characters[mother.pregnancy.fatherId];
+    const cartelId = mother.cartelId || father?.cartelId;
+    const cartel = game.cartels[cartelId];
+    const child = generateNpc({ cartelId, role: null, currentYear: year, minAge: 0, maxAge: 0 });
+    child.birthYear = year;
+    child.name = randomName(child.sex).split(" ").slice(0, 2).join(" ");
+    child.parents = [mother.id, father?.id].filter(Boolean);
+    game.characters[child.id] = child;
+    if (cartel && !cartel.characters.includes(child.id)) cartel.characters.push(child.id);
+    mother.childrenIds = [...(mother.childrenIds || []), child.id];
+    if (father) father.childrenIds = [...(father.childrenIds || []), child.id];
+    mother.pregnancy = null;
+    addLog(game, `${mother.name} da a luz a ${child.name}${father ? ` (con ${father.name})` : ""}.`, "good");
+  }
 }
 
 export function resolveScriptedChoice(game, eventId, optionId) {

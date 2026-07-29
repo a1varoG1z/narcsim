@@ -1,6 +1,7 @@
 import { escapeHtml, portraitImg } from "../../ui/components.js";
 import { STATS, STAT_ORDER, ROLE_ORDER, ROLES } from "../../model.js";
 import { exportGameToFile, deleteSaveSlot, readImageAsDataURL } from "../../utils/storage.js";
+import { defaultConceptionDialogue, isValidDialogueTree } from "../../dialogues.js";
 
 const STATUS_LABEL = { war: "En guerra", alliance: "Aliados", neutral: "Neutral" };
 
@@ -30,6 +31,13 @@ export function render(container, app) {
         ${Object.values(game.territories).map((t) => `<option value="${t.id}">${escapeHtml(t.name)}</option>`).join("")}
       </select>
       <div id="territory-editor" class="mt-1"></div>
+    </div>
+    <div class="card">
+      <h3>Diálogos</h3>
+      <p class="text-dim small">Edita el árbol de conversación de "Formar una familia" (u otros que se añadan) en formato JSON: cada nodo tiene un texto y una lista de opciones; cada opción apunta al siguiente nodo (<code>next</code>) o resuelve la escena (<code>resolve: "attempt"</code> o <code>"rejected"</code>). Usa <code>{partner}</code> para el nombre de la otra persona.</p>
+      <textarea id="ed-dialogue-json" rows="14" style="width:100%;font-family:monospace;font-size:.8rem">${escapeHtml(JSON.stringify(game.dialogueTrees || { conception: defaultConceptionDialogue() }, null, 2))}</textarea>
+      <button class="primary block mt-1" id="save-dialogue">Guardar diálogos</button>
+      <button class="block ghost mt-1" id="reset-dialogue">Restaurar diálogo por defecto</button>
     </div>
     <div class="card">
       <h3>Partida</h3>
@@ -244,6 +252,30 @@ export function render(container, app) {
   territorySelect.addEventListener("change", renderTerritoryEditor);
   renderCartelEditor();
   renderTerritoryEditor();
+
+  container.querySelector("#save-dialogue").addEventListener("click", () => {
+    let parsed;
+    try {
+      parsed = JSON.parse(container.querySelector("#ed-dialogue-json").value);
+    } catch (e) {
+      alert("El JSON no es válido: " + e.message);
+      return;
+    }
+    if (!parsed.conception || !isValidDialogueTree(parsed.conception)) {
+      alert("El árbol 'conception' necesita un nodo 'start' válido dentro de 'nodes'.");
+      return;
+    }
+    game.dialogueTrees = parsed;
+    app.setGame(game);
+    app.render();
+  });
+
+  container.querySelector("#reset-dialogue").addEventListener("click", () => {
+    if (!confirm("¿Restaurar el diálogo de 'Formar una familia' a su versión por defecto?")) return;
+    game.dialogueTrees = { conception: defaultConceptionDialogue() };
+    app.setGame(game);
+    app.render();
+  });
 
   container.querySelector("#export-btn").addEventListener("click", () => exportGameToFile(game));
   container.querySelector("#reset-btn").addEventListener("click", () => {

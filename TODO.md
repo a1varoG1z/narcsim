@@ -75,17 +75,27 @@ Estado del proyecto tras la primera versión jugable (MVP). Marcado ✅ lo imple
 - ✅ **Ver cualquier cártel rival**: nueva vista de perfil de cártel (recursos, organigrama completo, territorios) accesible haciendo clic en cualquier cártel desde el Mapa, Estadísticas o Diplomacia — antes solo podías ver el detalle de tu propio cártel.
 - ✅ **Editor interno mucho más completo**: además de cártel y personaje, ahora puedes editar el valor económico y el controlador de cualquier territorio, el estado y la tensión de las relaciones entre cárteles, y los vínculos familiares de un personaje (pareja, padres, añadir/quitar hijos) con subida de foto también disponible fuera de la creación de personaje.
 
+## Octava pasada: familia como diálogo interactivo (en marcha)
+
+- ✅ **"Formar una familia" ya no es un solo clic**: al intentarlo se abre una conversación real por pasos — cada respuesta que eliges lleva a la siguiente réplica, encadenando opciones concretas (no saltos al azar) y subiendo de tono progresivamente hasta un "fundido a negro" final, sin contenido explícito. El "calor" acumulado según tus elecciones (y tu Carisma) decide las probabilidades de éxito, en vez de una moneda al aire fija.
+- ✅ **El embarazo tarda de verdad**: si el intento sale bien, la mujer queda embarazada y el nacimiento no ocurre hasta que pasan ~9 meses de tiempo de partida (ajustado a la duración de turno de cada época), visible en una tarjeta de "Embarazos en curso" en la pestaña Familia — antes el hijo aparecía en el acto.
+- ✅ **No solo con tu cónyuge**: puedes intentarlo con tu pareja o buscar a alguien nuevo (como en el cortejo), que pasa a formar parte de la partida sea cual sea el resultado de esa noche.
+- ✅ **Diálogo editable desde el Editor**: el árbol de la conversación se guarda en la propia partida como JSON editable (textos, opciones, a qué nodo lleva cada una), con validación básica y un botón para restaurar la versión por defecto — así puedes escribir tus propias variantes sin tocar código.
+
 ## Pendiente / mejoras futuras
 
 ### Mapa
 - ⬜ Mapa geográficamente preciso (actualmente es una disposición esquemática de territorios con adyacencia aproximada, no coordenadas reales).
+- ⬜ **Cubrir todo el mapa latinoamericano relevante por época con muchos más cárteles** (hoy hay 2-4 bandos por partida, que se siente poco competitivo); alternativa/complemento: que aparezcan cárteles nuevos generados aleatoriamente en territorios libres a medida que avanza la partida, no solo al fundar el del jugador.
 
 ### Guerras y combate
 - 🟡 Resolución de batallas por turno con ponderación de mando, adyacencia, historial y tratados con condiciones (ver arriba). Pendiente: tácticas, terreno, refuerzos, moral, guerras prolongadas con objetivos concretos más allá de la conquista de una plaza.
+- ⬜ **Bajas reales de sicarios/ejército en combate** (hoy una guerra mueve territorio pero no reduce tropas de forma visible y trazable) y **decisiones concretas de guerra** (ordenar un atentado contra alguien en concreto, sabotaje, redadas específicas) en vez de un único botón genérico de "atacar".
 
 ### Familia, romances e intriga
-- 🟡 Cortejo, crisis matrimonial, genealogía y vínculos ya implementados. Pendiente: rivalidades entre hermanos, tramas de honor/venganza, amistades explícitas (hoy el vínculo cubre solo la relación jugador↔miembro, no las relaciones entre miembros del cártel entre sí).
+- 🟡 Cortejo, crisis matrimonial, genealogía, vínculos y ahora un diálogo interactivo para formar una familia con embarazo real (ver arriba). Pendiente: rivalidades entre hermanos, tramas de honor/venganza, amistades explícitas (hoy el vínculo cubre solo la relación jugador↔miembro, no las relaciones entre miembros del cártel entre sí).
 - 🟡 Eventos narrativos únicos: ya van dos hitos convertidos en decisiones interactivas (Camarena, Proceso 8.000). Pendiente: más eventos (capturas de los Arellano Félix, el ascenso del CJNG, etc.) con el mismo patrón interactivo.
+- ⬜ **Extender el patrón de diálogo interactivo** (como el de formar una familia) a otras acciones del juego que hoy son un solo clic, y **conversaciones con personajes de otros cárteles** (negociación, intimidación, reclutamiento), no solo los botones de guerra/paz/alianza.
 
 ### Policía / persecución
 - 🟡 El heat ya tiene etiquetas descriptivas y un indicador de riesgo real, y se puede intentar una fuga. Pendiente: informantes, redadas planeadas vs. sorpresa, fuga posible incluso desde cadena perpetua (como la extradición/traslados en la vida real).
@@ -95,11 +105,15 @@ Estado del proyecto tras la primera versión jugable (MVP). Marcado ✅ lo imple
 
 ### Logística y economía
 - 🟡 Socios de tráfico, lavado de dinero y producción por territorio ya implementados. Pendiente: rutas concretas dibujadas en el mapa, mercados internacionales diferenciados por región (no solo un bonus agregado de reputación).
+- ⬜ **Dimensión económica mucho más grande**: más categorías de inversión (propiedades, arte, negocios legales, armas, líneas de droga concretas), cada una con su propio riesgo/rentabilidad, en vez de las pocas acciones genéricas actuales.
+- ⬜ **Revisar el realismo de los valores iniciales** (dinero/ejército de partida por cártel/época) frente a la escala histórica real — algunos, como el dinero inicial de Pablo Escobar, pueden estar puestos demasiado bajos.
 
 ### Personajes y datos
 - ⬜ Ampliar el roster de personajes secundarios reales cuando el usuario aporte información adicional (ver nota abajo).
 - ✅ Más eras/variantes: añadida la guerra interna de Sinaloa (Chapitos vs. Mayiza, 2024-actualidad) como época jugable propia (ver arriba).
 - ⬜ Editor visual de nuevas épocas/escenarios desde la propia interfaz (hoy los `.json` de época se editan a mano).
+- ⬜ **Sección de fallecidos**: una vista propia con los personajes muertos de la partida, ordenable por importancia/cargo/cártel/causa — hoy solo se ven de pasada en el registro de sucesos y en la ficha de cada uno.
+- ⬜ **Retratos generados automáticamente** para personajes creados por el juego (no históricos, sin foto subida), en vez del icono genérico actual.
 
 ### Técnico / calidad de vida
 - ✅ Tests automatizados y PWA ya implementados (ver arriba).

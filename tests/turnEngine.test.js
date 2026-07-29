@@ -18,6 +18,8 @@ import {
   clearDesignatedHeir,
   mentorHeir,
   arrangeMarriage,
+  beginPregnancy,
+  resolveConceptionAttempt,
 } from "../js/turnEngine.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -184,6 +186,50 @@ test("arrangeMarriage weds an eligible family member to a new NPC in another car
 
   const alreadyMarried = arrangeMarriage(game, child.id, "golfo");
   assert.equal(alreadyMarried.ok, false, "the family member is already married after the first arrangement");
+});
+
+test("resolveConceptionAttempt uses accumulated warmth/charisma for the odds, refuses same-sex pairs and repeat attempts on an existing pregnancy", () => {
+  const game = newGame("guadalajara-1975-1989.json", "guadalajara", "felix_gallardo");
+  const spouse = game.characters.gdl_esposa_gallardo; // felix_gallardo's wife, female
+  assert.equal(spouse.sex, "F");
+
+  const sameSexResult = resolveConceptionAttempt(game, "caro_quintero", 0); // both male
+  assert.equal(sameSexResult.ok, false);
+
+  const originalRandom = Math.random;
+  Math.random = () => 0; // guarantees chance() succeeds for this single deterministic call
+  let result;
+  try {
+    result = resolveConceptionAttempt(game, spouse.id, 10);
+  } finally {
+    Math.random = originalRandom;
+  }
+  assert.equal(result.ok, true);
+  assert.equal(result.pregnant, true);
+  assert.ok(spouse.pregnancy, "the mother should now be marked pregnant");
+  assert.equal(spouse.pregnancy.fatherId, "felix_gallardo");
+  assert.equal(spouse.pregnancy.dueTurn > game.turn, true);
+
+  const repeatResult = resolveConceptionAttempt(game, spouse.id, 10);
+  assert.equal(repeatResult.ok, false, "cannot start a second pregnancy while already pregnant");
+});
+
+test("a pregnancy only turns into a birth once its due turn arrives, correctly registering the child's parents and cartel", () => {
+  const game = newGame("guadalajara-1975-1989.json", "guadalajara", "felix_gallardo");
+  const spouse = game.characters.gdl_esposa_gallardo;
+  beginPregnancy(game, spouse.id, "felix_gallardo");
+  spouse.pregnancy.dueTurn = game.turn; // processPregnancies runs before the turn counter increments, so "due now" means due turn === current turn
+  const childrenBefore = spouse.childrenIds.length;
+
+  endTurn(game);
+
+  assert.equal(spouse.pregnancy, null, "pregnancy should be cleared once resolved");
+  assert.equal(spouse.childrenIds.length, childrenBefore + 1);
+  const newChildId = spouse.childrenIds[spouse.childrenIds.length - 1];
+  const child = game.characters[newChildId];
+  assert.ok(child, "the new child should exist in game.characters");
+  assert.ok(child.parents.includes(spouse.id) && child.parents.includes("felix_gallardo"));
+  assert.ok(game.cartels.guadalajara.characters.includes(newChildId));
 });
 
 test("endTurn advances the turn/year counter and never lets money or army go negative", () => {

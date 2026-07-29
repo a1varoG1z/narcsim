@@ -2,6 +2,7 @@ import { makeCharacter, makeCartel } from "./model.js";
 import { fillVacantRoles } from "./npcGenerator.js";
 import { uid, randInt } from "./utils/random.js";
 import { saveGameToSlot, loadGameSlot } from "./utils/storage.js";
+import { defaultConceptionDialogue } from "./dialogues.js";
 
 const WAR_OVERRIDES = {
   "fragmentacion-2006-2015": [["zetas", "golfo"], ["sinaloa", "beltran_leyva"], ["familia_michoacana", "zetas"]],
@@ -121,6 +122,7 @@ export function buildGameFromEra(eraData, options) {
     year: eraData.startYear,
     actionsUsedThisTurn: 0,
     designatedHeirId: null,
+    dialogueTrees: { conception: defaultConceptionDialogue() },
     playerCartelId,
     playerCharacterId,
     playerControlMode: "direct",
