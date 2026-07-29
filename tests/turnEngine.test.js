@@ -409,6 +409,39 @@ test("collectSignificantPlayerEvents only surfaces log entries that name the pla
   assert.ok(events.some((e) => e.text.includes(playerMember.name)));
 });
 
+test("resolveBattle records a territoryLost reactive event when the player's cartel is the defender", () => {
+  const originalRandom = Math.random;
+  try {
+    const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    game.cartels.cdn.resources.armySize = 5000;
+    game.cartels.sinaloa.resources.armySize = 50;
+    // endTurn normally initializes this array; set it manually here to exercise resolveBattle's
+    // hook in isolation, the same way collectSignificantPlayerEvents is tested directly above.
+    game._reactiveEvents = [];
+    Math.random = () => 0;
+
+    const result = applyAction(game, "cdn", "attack_territory", { territoryId: "chihuahua" });
+    assert.equal(result.attackerWins, true, "an overwhelming attacker should win this fight");
+    assert.equal(game._reactiveEvents.length, 1);
+    assert.deepEqual(game._reactiveEvents[0], {
+      type: "territoryLost",
+      territoryId: "chihuahua",
+      territoryName: game.territories.chihuahua.name,
+      toCartelId: "cdn",
+      toCartelName: game.cartels.cdn.name,
+    });
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("endTurn returns reactiveEvents (empty by default) and never leaks the transient _reactiveEvents field into game state", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const result = endTurn(game);
+  assert.ok(Array.isArray(result.reactiveEvents));
+  assert.equal("_reactiveEvents" in game, false, "the transient scratch array should be deleted before endTurn returns, so it never gets persisted in a save");
+});
+
 test("endTurn's significantEvents, whenever present, always mention the player cartel or one of its people (never unrelated AI noise)", () => {
   // A soft, non-flaky integration check: it never requires a significant event to happen on any
   // given run (that depends on AI randomness), only that whichever ones do surface are genuinely

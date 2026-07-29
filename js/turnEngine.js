@@ -650,6 +650,9 @@ function resolveBattle(game, attacker, defender, territory) {
     defender.territories = defender.territories.filter((t) => t !== territory.id);
     war.territoryChanges.push({ year: currentYear(game), territoryName: territory.name, to: attacker.id });
     log(`${attacker.name} conquista ${territory.name} tras derrotar a ${defender.name}.${surpriseNote}`, "event");
+    if (game._reactiveEvents && defender.id === game.playerCartelId) {
+      game._reactiveEvents.push({ type: "territoryLost", territoryId: territory.id, territoryName: territory.name, toCartelId: attacker.id, toCartelName: attacker.name });
+    }
   } else {
     log(`${attacker.name} fracasa en su intento de tomar ${territory.name}.${surpriseNote}`, "event");
   }
@@ -1043,6 +1046,7 @@ export function endTurn(game) {
   if (game.gameOver) return { pendingSuccession: null, pendingRegentChoice: null, gameOver: true };
   const year = currentYear(game);
   const startIndex = game.log.length;
+  game._reactiveEvents = [];
 
   runAiCartels(game);
   autoResolveWars(game);
@@ -1124,6 +1128,8 @@ export function endTurn(game) {
   const pendingMarriageEvent = !pendingSuccession && !pendingRegentChoice ? rollMarriageCrisis(game) : null;
   const pendingScriptedChoice = !pendingSuccession && !pendingRegentChoice ? scriptedResult.pendingChoice : null;
   const significantEvents = collectSignificantPlayerEvents(game, startIndex);
+  const reactiveEvents = game._reactiveEvents || [];
+  delete game._reactiveEvents; // transient, turn-scoped only — not part of persisted save state
 
   game.turn += 1;
   game.year = currentYear(game);
@@ -1141,6 +1147,7 @@ export function endTurn(game) {
     pendingMarriageEvent,
     pendingScriptedChoice,
     significantEvents,
+    reactiveEvents,
     gameOver: game.gameOver,
   };
 }

@@ -1,5 +1,5 @@
 import { buildGameFromEra, restoreSlot, persist, getPlayerCartel } from "./state.js";
-import { endTurn, resolveSuccession, resolveRegentChoice, getSuccessionCandidates, checkRelease, attemptEscape, resolveMarriageEvent, resolveScriptedChoice } from "./turnEngine.js";
+import { endTurn, resolveSuccession, resolveRegentChoice, getSuccessionCandidates, checkRelease, attemptEscape, resolveMarriageEvent, resolveScriptedChoice, applyAction } from "./turnEngine.js";
 import { showModal, closeModal } from "./ui/modal.js";
 import { portraitImg, escapeHtml } from "./ui/components.js";
 import { deleteSaveSlot } from "./utils/storage.js";
@@ -104,7 +104,7 @@ const app = {
       return;
     }
     if (result.significantEvents && result.significantEvents.length) {
-      this.showTurnSummaryModal(result.significantEvents, result.gameOver);
+      this.showTurnSummaryModal(result.significantEvents, result.reactiveEvents, result.gameOver);
       return;
     }
     if (result.gameOver) {
@@ -114,16 +114,43 @@ const app = {
     this.render();
   },
 
-  showTurnSummaryModal(events, gameOver) {
+  showTurnSummaryModal(events, reactiveEvents, gameOver) {
     const icon = (type) => (type === "death" ? "💀" : type === "good" ? "✅" : "⚠️");
+    const territoryLosses = (reactiveEvents || []).filter((e) => e.type === "territoryLost");
     showModal(`
       <h2>Resumen del turno</h2>
       <p>Esto ha pasado mientras avanzabas el tiempo:</p>
       <div class="log" style="margin-bottom:1rem">
         ${events.map((e) => `<div class="entry ${e.type}">${icon(e.type)} ${escapeHtml(e.text)}</div>`).join("")}
       </div>
-      <button class="primary block" id="turn-summary-ok">Continuar</button>
+      ${territoryLosses.length ? `
+        <h3>¿Reaccionas ahora?</h3>
+        ${territoryLosses.map((e, i) => `
+          <div class="card tight mt-1" data-reactive-row="${i}">
+            <p class="small">${escapeHtml(e.toCartelName)} te ha arrebatado <strong>${escapeHtml(e.territoryName)}</strong>.</p>
+            <button class="danger block" data-retake="${i}" data-territory="${e.territoryId}">Intentar reconquistarlo ahora</button>
+          </div>
+        `).join("")}
+      ` : ""}
+      <button class="primary block mt-1" id="turn-summary-ok">Continuar</button>
     `, { dismissible: false });
+    document.querySelectorAll("[data-retake]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const cartel = getPlayerCartel(this.game);
+        const result = applyAction(this.game, cartel.id, "attack_territory", { territoryId: btn.dataset.territory });
+        persist(this.game);
+        const row = btn.closest("[data-reactive-row]");
+        const msg = document.createElement("p");
+        msg.className = "small";
+        msg.textContent = !result.ok
+          ? result.message
+          : result.attackerWins
+            ? "¡Reconquistado!"
+            : "El intento fracasa.";
+        row.appendChild(msg);
+        btn.disabled = true;
+      });
+    });
     document.getElementById("turn-summary-ok").addEventListener("click", () => {
       closeModal();
       if (gameOver) {
