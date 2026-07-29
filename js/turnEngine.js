@@ -495,11 +495,17 @@ export function applyAction(game, cartelId, type, payload = {}) {
         target.resources.heat = Math.min(100, target.resources.heat + randInt(5, 10));
         bumpTension(randInt(10, 20));
         log(`${cartel.name} sabotea operaciones de ${target.name}, causándole pérdidas por ${fmtMoney(damage)}.`, "event");
+        if (game._reactiveEvents && target.id === game.playerCartelId) {
+          game._reactiveEvents.push({ type: "sabotaged", byCartelId: cartel.id, byCartelName: cartel.name, damage, success: true });
+        }
         return { ok: true, success: true, damage };
       }
       r.heat = Math.min(100, r.heat + randInt(10, 18));
       bumpTension(randInt(15, 25));
       log(`El sabotaje de ${cartel.name} contra ${target.name} fracasa y expone su autoría.`, "event");
+      if (game._reactiveEvents && target.id === game.playerCartelId) {
+        game._reactiveEvents.push({ type: "sabotaged", byCartelId: cartel.id, byCartelName: cartel.name, damage: 0, success: false });
+      }
       return { ok: true, success: false };
     }
     case "raid_territory": {

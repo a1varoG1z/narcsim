@@ -23,6 +23,7 @@ import {
   processPregnancies,
   rollNewCartelSpawns,
   collectSignificantPlayerEvents,
+  ACTION_COSTS,
 } from "../js/turnEngine.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -429,6 +430,43 @@ test("resolveBattle records a territoryLost reactive event when the player's car
       territoryName: game.territories.chihuahua.name,
       toCartelId: "cdn",
       toCartelName: game.cartels.cdn.name,
+    });
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("sabotage_rival records a 'sabotaged' reactive event when the player is the target, on both success and failure", () => {
+  const originalRandom = Math.random;
+  try {
+    const gameSuccess = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    gameSuccess.cartels.cdn.resources.money = ACTION_COSTS.sabotage_rival * 10;
+    gameSuccess._reactiveEvents = [];
+    Math.random = () => 0; // guarantees chance() succeeds
+    const successResult = applyAction(gameSuccess, "cdn", "sabotage_rival", { targetCartelId: "sinaloa" });
+    assert.equal(successResult.success, true);
+    assert.equal(gameSuccess._reactiveEvents.length, 1);
+    assert.deepEqual(gameSuccess._reactiveEvents[0], {
+      type: "sabotaged",
+      byCartelId: "cdn",
+      byCartelName: gameSuccess.cartels.cdn.name,
+      damage: successResult.damage,
+      success: true,
+    });
+
+    const gameFail = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    gameFail.cartels.cdn.resources.money = ACTION_COSTS.sabotage_rival * 10;
+    gameFail._reactiveEvents = [];
+    Math.random = () => 0.99; // guarantees chance() fails
+    const failResult = applyAction(gameFail, "cdn", "sabotage_rival", { targetCartelId: "sinaloa" });
+    assert.equal(failResult.success, false);
+    assert.equal(gameFail._reactiveEvents.length, 1);
+    assert.deepEqual(gameFail._reactiveEvents[0], {
+      type: "sabotaged",
+      byCartelId: "cdn",
+      byCartelName: gameFail.cartels.cdn.name,
+      damage: 0,
+      success: false,
     });
   } finally {
     Math.random = originalRandom;

@@ -1,8 +1,9 @@
 import { buildGameFromEra, restoreSlot, persist, getPlayerCartel } from "./state.js";
-import { endTurn, resolveSuccession, resolveRegentChoice, getSuccessionCandidates, checkRelease, attemptEscape, resolveMarriageEvent, resolveScriptedChoice, applyAction } from "./turnEngine.js";
+import { endTurn, resolveSuccession, resolveRegentChoice, getSuccessionCandidates, checkRelease, attemptEscape, resolveMarriageEvent, resolveScriptedChoice, applyAction, ACTION_COSTS } from "./turnEngine.js";
 import { showModal, closeModal } from "./ui/modal.js";
 import { portraitImg, escapeHtml } from "./ui/components.js";
 import { deleteSaveSlot } from "./utils/storage.js";
+import { fmtMoney } from "./utils/text.js";
 
 import * as mainMenu from "./screens/mainMenu.js";
 import * as eraSelect from "./screens/eraSelect.js";
@@ -117,21 +118,26 @@ const app = {
   showTurnSummaryModal(events, reactiveEvents, gameOver) {
     const icon = (type) => (type === "death" ? "💀" : type === "good" ? "✅" : "⚠️");
     const territoryLosses = (reactiveEvents || []).filter((e) => e.type === "territoryLost");
+    const sabotages = (reactiveEvents || []).filter((e) => e.type === "sabotaged");
     showModal(`
       <h2>Resumen del turno</h2>
       <p>Esto ha pasado mientras avanzabas el tiempo:</p>
       <div class="log" style="margin-bottom:1rem">
         ${events.map((e) => `<div class="entry ${e.type}">${icon(e.type)} ${escapeHtml(e.text)}</div>`).join("")}
       </div>
-      ${territoryLosses.length ? `
-        <h3>¿Reaccionas ahora?</h3>
-        ${territoryLosses.map((e, i) => `
-          <div class="card tight mt-1" data-reactive-row="${i}">
-            <p class="small">${escapeHtml(e.toCartelName)} te ha arrebatado <strong>${escapeHtml(e.territoryName)}</strong>.</p>
-            <button class="danger block" data-retake="${i}" data-territory="${e.territoryId}">Intentar reconquistarlo ahora</button>
-          </div>
-        `).join("")}
-      ` : ""}
+      ${territoryLosses.length || sabotages.length ? `<h3>¿Reaccionas ahora?</h3>` : ""}
+      ${territoryLosses.map((e, i) => `
+        <div class="card tight mt-1" data-reactive-row="territory-${i}">
+          <p class="small">${escapeHtml(e.toCartelName)} te ha arrebatado <strong>${escapeHtml(e.territoryName)}</strong>.</p>
+          <button class="danger block" data-retake="territory-${i}" data-territory="${e.territoryId}">Intentar reconquistarlo ahora</button>
+        </div>
+      `).join("")}
+      ${sabotages.map((e, i) => `
+        <div class="card tight mt-1" data-reactive-row="sabotage-${i}">
+          <p class="small">${escapeHtml(e.byCartelName)} ${e.success ? `te ha saboteado, con pérdidas por ${fmtMoney(e.damage)}` : "ha intentado sabotearte (el intento fracasó)"}.</p>
+          <button class="danger block" data-retaliate-sabotage="sabotage-${i}" data-target="${e.byCartelId}">Represalia: sabotear de vuelta (${fmtMoney(ACTION_COSTS.sabotage_rival)})</button>
+        </div>
+      `).join("")}
       <button class="primary block mt-1" id="turn-summary-ok">Continuar</button>
     `, { dismissible: false });
     document.querySelectorAll("[data-retake]").forEach((btn) => {
@@ -147,6 +153,23 @@ const app = {
           : result.attackerWins
             ? "¡Reconquistado!"
             : "El intento fracasa.";
+        row.appendChild(msg);
+        btn.disabled = true;
+      });
+    });
+    document.querySelectorAll("[data-retaliate-sabotage]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const cartel = getPlayerCartel(this.game);
+        const result = applyAction(this.game, cartel.id, "sabotage_rival", { targetCartelId: btn.dataset.target });
+        persist(this.game);
+        const row = btn.closest("[data-reactive-row]");
+        const msg = document.createElement("p");
+        msg.className = "small";
+        msg.textContent = !result.ok
+          ? result.message
+          : result.success
+            ? `Sabotaje con éxito: ${fmtMoney(result.damage)} en pérdidas para ellos.`
+            : "Tu represalia fracasa y expone tu implicación.";
         row.appendChild(msg);
         btn.disabled = true;
       });
