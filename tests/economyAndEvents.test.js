@@ -4,7 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildGameFromEra } from "../js/state.js";
-import { applyAction, getWarsForCartel, resolveScriptedChoice, endTurn, getActionsRemaining, ACTIONS_PER_TURN } from "../js/turnEngine.js";
+import { applyAction, getWarsForCartel, resolveScriptedChoice, endTurn, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS } from "../js/turnEngine.js";
 import { rollScriptedEvents } from "../js/scriptedEvents.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -65,15 +65,16 @@ test("declaring war opens a war record and proposing (accepted) peace closes it"
 
 test("traffic_shipment refuses to sell to a cartel you're at war with", () => {
   const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
-  game.cartels.sinaloa.resources.money = 1000;
+  game.cartels.sinaloa.resources.money = ACTION_COSTS.traffic_shipment * 10; // comfortably enough that the war check, not the cost check, is what's exercised
   game.cartels.sinaloa.relations.cjng.status = "war";
   const result = applyAction(game, "sinaloa", "traffic_shipment", { partnerCartelId: "cjng" });
   assert.equal(result.ok, false);
+  assert.match(result.message, /guerra/i);
 });
 
 test("the player is capped at ACTIONS_PER_TURN budgeted actions, is refused past the cap, and the budget refills after endTurn", () => {
   const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
-  game.cartels.sinaloa.resources.money = 100000;
+  game.cartels.sinaloa.resources.money = ACTION_COSTS.recruit_army * (ACTIONS_PER_TURN + 5);
   assert.equal(getActionsRemaining(game), ACTIONS_PER_TURN);
 
   for (let i = 0; i < ACTIONS_PER_TURN; i++) {
@@ -116,7 +117,7 @@ test("the Proceso 8000 (1995) event pauses for a player choice when the player c
 
 test("invest_production lets you target a specific owned territory and scales payout with its value", () => {
   const game = newGame("mexico-rutas-1990-2006.json", "sinaloa");
-  game.cartels.sinaloa.resources.money = 1000;
+  game.cartels.sinaloa.resources.money = ACTION_COSTS.invest_production * 10;
   const result = applyAction(game, "sinaloa", "invest_production", { territoryId: "sinaloa" });
   assert.equal(result.ok, true);
   assert.equal(result.territoryId, "sinaloa");
@@ -124,7 +125,7 @@ test("invest_production lets you target a specific owned territory and scales pa
 
 test("invest_production ignores a territoryId the cartel doesn't own and falls back to its best territory", () => {
   const game = newGame("mexico-rutas-1990-2006.json", "sinaloa");
-  game.cartels.sinaloa.resources.money = 1000;
+  game.cartels.sinaloa.resources.money = ACTION_COSTS.invest_production * 10;
   const result = applyAction(game, "sinaloa", "invest_production", { territoryId: "tamaulipas" }); // owned by Golfo
   assert.equal(result.ok, true);
   assert.notEqual(result.territoryId, "tamaulipas");

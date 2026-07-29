@@ -174,7 +174,7 @@
       "aiControlled": false,
       "historicalNote": "Fundado por Félix Gallardo con el respaldo de la antigua Federación. Se le atribuyen los cargos secundarios del organigrama de forma ficticia, ya que no hay información pública fiable sobre quién ocupaba cada función específica en la vida real.",
       "resources": {
-        "money": 900,
+        "money": 9000000,
         "armySize": 600,
         "corruptGov": 45,
         "corruptPolice": 55,
@@ -203,7 +203,7 @@
       "aiControlled": true,
       "historicalNote": "Organización de contrabando de Tamaulipas heredada de Juan Nepomuceno Guerra, tomada por Juan García Ábrego a mediados de los 80. En esta era es una potencia regional menor frente a Guadalajara.",
       "resources": {
-        "money": 300,
+        "money": 3000000,
         "armySize": 220,
         "corruptGov": 25,
         "corruptPolice": 30,
@@ -224,7 +224,7 @@
       "aiControlled": true,
       "historicalNote": "Organización fronteriza real liderada por Pablo Acosta Villarreal, 'El Zorro de Ojinaga', que controló el corredor de contrabando entre Ojinaga (Chihuahua) y Presidio (Texas) a mediados de los 80. En la vida real fue abatido por la Policía Judicial Federal en abril de 1987 tras un tiroteo en Santa Elena; en el juego su destino depende de tus decisiones y las del jugador. Los cargos secundarios de su organigrama son ficticios, ya que no hay registro público fiable de quién los ocupaba.",
       "resources": {
-        "money": 220,
+        "money": 2200000,
         "armySize": 150,
         "corruptGov": 20,
         "corruptPolice": 35,

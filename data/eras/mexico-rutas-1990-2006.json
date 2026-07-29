@@ -162,7 +162,7 @@
       "aiControlled": false,
       "historicalNote": "Federación surgida de los restos del Cártel de Guadalajara. Los cargos secundarios no documentados públicamente son ficticios.",
       "resources": {
-        "money": 1800,
+        "money": 18000000,
         "armySize": 1100,
         "corruptGov": 50,
         "corruptPolice": 55,
@@ -191,7 +191,7 @@
       "aiControlled": true,
       "historicalNote": "Bajo Amado Carrillo Fuentes fue, según reportes de la época, la organización más rica del narcotráfico mexicano gracias al uso masivo de aviones ('El Señor de los Cielos').",
       "resources": {
-        "money": 2000,
+        "money": 20000000,
         "armySize": 950,
         "corruptGov": 55,
         "corruptPolice": 50,
@@ -216,7 +216,7 @@
       "aiControlled": true,
       "historicalNote": "Organización familiar de los hermanos Arellano Félix, célebre por su violencia extrema y su alianza con pandillas de California.",
       "resources": {
-        "money": 1400,
+        "money": 14000000,
         "armySize": 800,
         "corruptGov": 40,
         "corruptPolice": 45,
@@ -240,7 +240,7 @@
       "aiControlled": true,
       "historicalNote": "Tras la caída de García Ábrego, Osiel Cárdenas Guillén toma el control y comienza a reclutar élites del ejército mexicano como brazo armado personal: el origen de Los Zetas.",
       "resources": {
-        "money": 900,
+        "money": 9000000,
         "armySize": 700,
         "corruptGov": 35,
         "corruptPolice": 40,

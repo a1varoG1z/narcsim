@@ -7,15 +7,136 @@
   "turnMonths": 6,
   "description": "El 25 de julio de 2024, Joaquín Guzmán López entrega a Ismael 'El Mayo' Zambada a las autoridades de Estados Unidos. La traición fractura al Cártel de Sinaloa en una guerra civil abierta: 'Los Chapitos' (los hijos de El Chapo) contra 'La Mayiza' (los leales al Mayo, liderados por su hijo Ismael Zambada Sicairos). Culiacán se convierte en un campo de batalla urbano. Mientras tanto, el CJNG de 'El Mencho' observa y explota cada oportunidad para expandirse a costa de ambos bandos.",
   "territories": [
-    { "id": "baja_california", "name": "Baja California", "x": 2, "y": 6, "w": 15, "h": 14, "controllerId": "chapitos", "value": 16, "adj": ["sonora"] },
-    { "id": "sonora", "name": "Sonora", "x": 19, "y": 5, "w": 15, "h": 14, "controllerId": "chapitos", "value": 13, "adj": ["baja_california", "chihuahua", "culiacan"] },
-    { "id": "chihuahua", "name": "Chihuahua", "x": 36, "y": 4, "w": 18, "h": 16, "controllerId": null, "value": 15, "adj": ["sonora", "durango"] },
-    { "id": "culiacan", "name": "Culiacán (capital)", "x": 6, "y": 22, "w": 15, "h": 14, "controllerId": "chapitos", "value": 24, "adj": ["sonora", "durango", "costa_sinaloa"] },
-    { "id": "durango", "name": "Durango", "x": 23, "y": 22, "w": 15, "h": 14, "controllerId": null, "value": 11, "adj": ["chihuahua", "culiacan", "costa_sinaloa", "jalisco"] },
-    { "id": "costa_sinaloa", "name": "Costa de Sinaloa", "x": 4, "y": 38, "w": 15, "h": 14, "controllerId": "mayiza", "value": 18, "adj": ["culiacan", "durango", "jalisco"] },
-    { "id": "jalisco", "name": "Jalisco", "x": 10, "y": 54, "w": 17, "h": 15, "controllerId": "cjng", "value": 22, "adj": ["durango", "costa_sinaloa", "michoacan"] },
-    { "id": "michoacan", "name": "Michoacán", "x": 29, "y": 56, "w": 15, "h": 14, "controllerId": "cjng", "value": 15, "adj": ["jalisco", "guerrero"] },
-    { "id": "guerrero", "name": "Guerrero", "x": 13, "y": 72, "w": 17, "h": 14, "controllerId": null, "value": 12, "adj": ["michoacan"] }
+    {
+      "id": "baja_california",
+      "name": "Baja California",
+      "x": 2,
+      "y": 6,
+      "w": 15,
+      "h": 14,
+      "controllerId": "chapitos",
+      "value": 16,
+      "adj": [
+        "sonora"
+      ]
+    },
+    {
+      "id": "sonora",
+      "name": "Sonora",
+      "x": 19,
+      "y": 5,
+      "w": 15,
+      "h": 14,
+      "controllerId": "chapitos",
+      "value": 13,
+      "adj": [
+        "baja_california",
+        "chihuahua",
+        "culiacan"
+      ]
+    },
+    {
+      "id": "chihuahua",
+      "name": "Chihuahua",
+      "x": 36,
+      "y": 4,
+      "w": 18,
+      "h": 16,
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "sonora",
+        "durango"
+      ]
+    },
+    {
+      "id": "culiacan",
+      "name": "Culiacán (capital)",
+      "x": 6,
+      "y": 22,
+      "w": 15,
+      "h": 14,
+      "controllerId": "chapitos",
+      "value": 24,
+      "adj": [
+        "sonora",
+        "durango",
+        "costa_sinaloa"
+      ]
+    },
+    {
+      "id": "durango",
+      "name": "Durango",
+      "x": 23,
+      "y": 22,
+      "w": 15,
+      "h": 14,
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "chihuahua",
+        "culiacan",
+        "costa_sinaloa",
+        "jalisco"
+      ]
+    },
+    {
+      "id": "costa_sinaloa",
+      "name": "Costa de Sinaloa",
+      "x": 4,
+      "y": 38,
+      "w": 15,
+      "h": 14,
+      "controllerId": "mayiza",
+      "value": 18,
+      "adj": [
+        "culiacan",
+        "durango",
+        "jalisco"
+      ]
+    },
+    {
+      "id": "jalisco",
+      "name": "Jalisco",
+      "x": 10,
+      "y": 54,
+      "w": 17,
+      "h": 15,
+      "controllerId": "cjng",
+      "value": 22,
+      "adj": [
+        "durango",
+        "costa_sinaloa",
+        "michoacan"
+      ]
+    },
+    {
+      "id": "michoacan",
+      "name": "Michoacán",
+      "x": 29,
+      "y": 56,
+      "w": 15,
+      "h": 14,
+      "controllerId": "cjng",
+      "value": 15,
+      "adj": [
+        "jalisco",
+        "guerrero"
+      ]
+    },
+    {
+      "id": "guerrero",
+      "name": "Guerrero",
+      "x": 13,
+      "y": 72,
+      "w": 17,
+      "h": 14,
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "michoacan"
+      ]
+    }
   ],
   "cartels": [
     {
@@ -24,7 +145,16 @@
       "color": "#8a1f1f",
       "aiControlled": false,
       "historicalNote": "Facción del Cártel de Sinaloa encabezada por los hijos de El Chapo, que controlaba buena parte del aparato del cártel al estallar la guerra civil interna en 2024. Los cargos secundarios no documentados públicamente son ficticios.",
-      "resources": { "money": 3500, "armySize": 2200, "corruptGov": 50, "corruptPolice": 50, "publicImage": 25, "heat": 65, "internationalReputation": 40, "launderedMoney": 0 },
+      "resources": {
+        "money": 35000000,
+        "armySize": 2200,
+        "corruptGov": 50,
+        "corruptPolice": 50,
+        "publicImage": 25,
+        "heat": 65,
+        "internationalReputation": 40,
+        "launderedMoney": 0
+      },
       "roles": {
         "leader": "ivan_archivaldo_24",
         "underboss": "alfredo_24"
@@ -36,7 +166,16 @@
       "color": "#25406b",
       "aiControlled": true,
       "historicalNote": "Facción leal a Ismael 'El Mayo' Zambada, liderada por su hijo Ismael Zambada Sicairos tras la entrega de su padre a EE.UU. Los cargos secundarios no documentados públicamente son ficticios.",
-      "resources": { "money": 2200, "armySize": 1800, "corruptGov": 40, "corruptPolice": 45, "publicImage": 35, "heat": 55, "internationalReputation": 25, "launderedMoney": 0 },
+      "resources": {
+        "money": 22000000,
+        "armySize": 1800,
+        "corruptGov": 40,
+        "corruptPolice": 45,
+        "publicImage": 35,
+        "heat": 55,
+        "internationalReputation": 25,
+        "launderedMoney": 0
+      },
       "roles": {
         "leader": "mayito_flaco_24"
       }
@@ -47,7 +186,16 @@
       "color": "#0f6b3a",
       "aiControlled": true,
       "historicalNote": "Con Sinaloa fracturado por la guerra interna, el CJNG de Nemesio 'El Mencho' Oseguera aprovecha cada oportunidad para expandirse a costa de ambas facciones.",
-      "resources": { "money": 4500, "armySize": 3200, "corruptGov": 45, "corruptPolice": 45, "publicImage": 22, "heat": 60, "internationalReputation": 45, "launderedMoney": 0 },
+      "resources": {
+        "money": 45000000,
+        "armySize": 3200,
+        "corruptGov": 45,
+        "corruptPolice": 45,
+        "publicImage": 22,
+        "heat": 60,
+        "internationalReputation": 45,
+        "launderedMoney": 0
+      },
       "roles": {
         "leader": "mencho_24",
         "financeChief": "rosalinda_24"
@@ -55,15 +203,274 @@
     }
   ],
   "characters": [
-    { "id": "chapo_patriarca_24", "name": "Joaquín Guzmán Loera \"El Chapo\"", "sex": "M", "birthYear": 1957, "alive": true, "cartelId": "chapitos", "role": null, "historical": true, "stats": { "violence": 60, "business": 85, "charisma": 60, "intrigue": 90, "loyaltyInspiring": 65, "stealth": 55 }, "traits": ["preso"], "notes": "Extraditado a EE.UU. en 2017, cumple cadena perpetua. Patriarca de la familia Guzmán; su rol es puramente genealógico en esta época.", "imprisoned": { "sinceTurn": 0, "releaseTurn": null, "lifeSentence": true }, "parents": [], "spouseId": null, "childrenIds": ["ivan_archivaldo_24", "alfredo_24", "ovidio_lopez_24", "joaquin_lopez_24"] },
-    { "id": "ivan_archivaldo_24", "name": "Iván Archivaldo Guzmán Salazar", "sex": "M", "birthYear": 1983, "alive": true, "cartelId": "chapitos", "role": "leader", "historical": true, "stats": { "violence": 72, "business": 72, "charisma": 65, "intrigue": 78, "loyaltyInspiring": 62, "stealth": 55 }, "traits": ["Los Chapitos", "líder"], "notes": "Hijo mayor de El Chapo; principal referente de 'Los Chapitos' en la guerra civil interna de Sinaloa desde 2024.", "parents": ["chapo_patriarca_24"], "spouseId": null, "childrenIds": [] },
-    { "id": "alfredo_24", "name": "Jesús Alfredo Guzmán Salazar", "sex": "M", "birthYear": 1989, "alive": true, "cartelId": "chapitos", "role": "underboss", "historical": true, "stats": { "violence": 68, "business": 62, "charisma": 55, "intrigue": 68, "loyaltyInspiring": 52, "stealth": 55 }, "traits": ["Los Chapitos"], "notes": "Hijo de El Chapo, figura clave de 'Los Chapitos'.", "parents": ["chapo_patriarca_24"], "spouseId": null, "childrenIds": [] },
-    { "id": "ovidio_lopez_24", "name": "Ovidio Guzmán López", "sex": "M", "birthYear": 1990, "alive": true, "cartelId": "chapitos", "role": null, "historical": true, "stats": { "violence": 70, "business": 58, "charisma": 50, "intrigue": 62, "loyaltyInspiring": 55, "stealth": 50 }, "traits": ["preso"], "notes": "Hijo de El Chapo, detenido en 2023 y extraditado a EE.UU., donde se declaró culpable en 2025. Personaje inactivo por su situación legal.", "imprisoned": { "sinceTurn": 0, "releaseTurn": null, "lifeSentence": true }, "parents": ["chapo_patriarca_24"], "spouseId": null, "childrenIds": [] },
-    { "id": "joaquin_lopez_24", "name": "Joaquín Guzmán López", "sex": "M", "birthYear": 1992, "alive": true, "cartelId": "chapitos", "role": null, "historical": true, "stats": { "violence": 55, "business": 60, "charisma": 55, "intrigue": 72, "loyaltyInspiring": 40, "stealth": 65 }, "traits": ["preso"], "notes": "Hijo de El Chapo; en la vida real entregó a El Mayo Zambada a las autoridades de EE.UU. el 25 de julio de 2024 y fue detenido de inmediato al aterrizar. Su proceso legal seguía en curso al momento de escribir esto; se representa aquí como inactivo por su situación legal.", "imprisoned": { "sinceTurn": 0, "releaseTurn": null, "lifeSentence": true }, "parents": ["chapo_patriarca_24"], "spouseId": null, "childrenIds": [] },
-    { "id": "mayo_patriarca_24", "name": "Ismael Zambada García \"El Mayo\"", "sex": "M", "birthYear": 1948, "alive": true, "cartelId": "mayiza", "role": null, "historical": true, "stats": { "violence": 55, "business": 92, "charisma": 65, "intrigue": 95, "loyaltyInspiring": 82, "stealth": 90 }, "traits": ["preso", "fundador"], "notes": "Cofundador histórico del Cártel de Sinaloa. Entregado a las autoridades de EE.UU. el 25 de julio de 2024 por Joaquín Guzmán López; se declaró culpable en 2025. Patriarca de 'La Mayiza', inactivo por su situación legal.", "imprisoned": { "sinceTurn": 0, "releaseTurn": null, "lifeSentence": true }, "parents": [], "spouseId": null, "childrenIds": ["mayito_flaco_24"] },
-    { "id": "mayito_flaco_24", "name": "Ismael Zambada Sicairos \"Mayito Flaco\"", "sex": "M", "birthYear": 1982, "alive": true, "cartelId": "mayiza", "role": "leader", "historical": true, "stats": { "violence": 70, "business": 78, "charisma": 58, "intrigue": 80, "loyaltyInspiring": 68, "stealth": 68 }, "traits": ["La Mayiza", "líder"], "notes": "Hijo de El Mayo Zambada; en la vida real es el principal referente público de 'La Mayiza' en la guerra interna de Sinaloa desde 2024.", "parents": ["mayo_patriarca_24"], "spouseId": null, "childrenIds": [] },
-    { "id": "mencho_24", "name": "Nemesio Oseguera Cervantes \"El Mencho\"", "sex": "M", "birthYear": 1966, "alive": true, "cartelId": "cjng", "role": "leader", "historical": true, "stats": { "violence": 85, "business": 85, "charisma": 58, "intrigue": 80, "loyaltyInspiring": 72, "stealth": 75 }, "traits": ["fundador", "expansionista"], "notes": "Fundador y líder del CJNG, aprovecha la guerra civil de Sinaloa para expandirse. Su destino en el juego depende de tus decisiones.", "parents": [], "spouseId": "rosalinda_24", "childrenIds": [] },
-    { "id": "rosalinda_24", "name": "Rosalinda González Valencia", "sex": "F", "birthYear": 1970, "alive": true, "cartelId": "cjng", "role": "financeChief", "historical": true, "stats": { "violence": 20, "business": 88, "charisma": 55, "intrigue": 70, "loyaltyInspiring": 55, "stealth": 60 }, "traits": [], "notes": "Esposa de El Mencho, señalada públicamente por su presunto papel en el manejo financiero del cártel.", "parents": [], "spouseId": "mencho_24", "childrenIds": [] }
+    {
+      "id": "chapo_patriarca_24",
+      "name": "Joaquín Guzmán Loera \"El Chapo\"",
+      "sex": "M",
+      "birthYear": 1957,
+      "alive": true,
+      "cartelId": "chapitos",
+      "role": null,
+      "historical": true,
+      "stats": {
+        "violence": 60,
+        "business": 85,
+        "charisma": 60,
+        "intrigue": 90,
+        "loyaltyInspiring": 65,
+        "stealth": 55
+      },
+      "traits": [
+        "preso"
+      ],
+      "notes": "Extraditado a EE.UU. en 2017, cumple cadena perpetua. Patriarca de la familia Guzmán; su rol es puramente genealógico en esta época.",
+      "imprisoned": {
+        "sinceTurn": 0,
+        "releaseTurn": null,
+        "lifeSentence": true
+      },
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": [
+        "ivan_archivaldo_24",
+        "alfredo_24",
+        "ovidio_lopez_24",
+        "joaquin_lopez_24"
+      ]
+    },
+    {
+      "id": "ivan_archivaldo_24",
+      "name": "Iván Archivaldo Guzmán Salazar",
+      "sex": "M",
+      "birthYear": 1983,
+      "alive": true,
+      "cartelId": "chapitos",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 72,
+        "business": 72,
+        "charisma": 65,
+        "intrigue": 78,
+        "loyaltyInspiring": 62,
+        "stealth": 55
+      },
+      "traits": [
+        "Los Chapitos",
+        "líder"
+      ],
+      "notes": "Hijo mayor de El Chapo; principal referente de 'Los Chapitos' en la guerra civil interna de Sinaloa desde 2024.",
+      "parents": [
+        "chapo_patriarca_24"
+      ],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "alfredo_24",
+      "name": "Jesús Alfredo Guzmán Salazar",
+      "sex": "M",
+      "birthYear": 1989,
+      "alive": true,
+      "cartelId": "chapitos",
+      "role": "underboss",
+      "historical": true,
+      "stats": {
+        "violence": 68,
+        "business": 62,
+        "charisma": 55,
+        "intrigue": 68,
+        "loyaltyInspiring": 52,
+        "stealth": 55
+      },
+      "traits": [
+        "Los Chapitos"
+      ],
+      "notes": "Hijo de El Chapo, figura clave de 'Los Chapitos'.",
+      "parents": [
+        "chapo_patriarca_24"
+      ],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "ovidio_lopez_24",
+      "name": "Ovidio Guzmán López",
+      "sex": "M",
+      "birthYear": 1990,
+      "alive": true,
+      "cartelId": "chapitos",
+      "role": null,
+      "historical": true,
+      "stats": {
+        "violence": 70,
+        "business": 58,
+        "charisma": 50,
+        "intrigue": 62,
+        "loyaltyInspiring": 55,
+        "stealth": 50
+      },
+      "traits": [
+        "preso"
+      ],
+      "notes": "Hijo de El Chapo, detenido en 2023 y extraditado a EE.UU., donde se declaró culpable en 2025. Personaje inactivo por su situación legal.",
+      "imprisoned": {
+        "sinceTurn": 0,
+        "releaseTurn": null,
+        "lifeSentence": true
+      },
+      "parents": [
+        "chapo_patriarca_24"
+      ],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "joaquin_lopez_24",
+      "name": "Joaquín Guzmán López",
+      "sex": "M",
+      "birthYear": 1992,
+      "alive": true,
+      "cartelId": "chapitos",
+      "role": null,
+      "historical": true,
+      "stats": {
+        "violence": 55,
+        "business": 60,
+        "charisma": 55,
+        "intrigue": 72,
+        "loyaltyInspiring": 40,
+        "stealth": 65
+      },
+      "traits": [
+        "preso"
+      ],
+      "notes": "Hijo de El Chapo; en la vida real entregó a El Mayo Zambada a las autoridades de EE.UU. el 25 de julio de 2024 y fue detenido de inmediato al aterrizar. Su proceso legal seguía en curso al momento de escribir esto; se representa aquí como inactivo por su situación legal.",
+      "imprisoned": {
+        "sinceTurn": 0,
+        "releaseTurn": null,
+        "lifeSentence": true
+      },
+      "parents": [
+        "chapo_patriarca_24"
+      ],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "mayo_patriarca_24",
+      "name": "Ismael Zambada García \"El Mayo\"",
+      "sex": "M",
+      "birthYear": 1948,
+      "alive": true,
+      "cartelId": "mayiza",
+      "role": null,
+      "historical": true,
+      "stats": {
+        "violence": 55,
+        "business": 92,
+        "charisma": 65,
+        "intrigue": 95,
+        "loyaltyInspiring": 82,
+        "stealth": 90
+      },
+      "traits": [
+        "preso",
+        "fundador"
+      ],
+      "notes": "Cofundador histórico del Cártel de Sinaloa. Entregado a las autoridades de EE.UU. el 25 de julio de 2024 por Joaquín Guzmán López; se declaró culpable en 2025. Patriarca de 'La Mayiza', inactivo por su situación legal.",
+      "imprisoned": {
+        "sinceTurn": 0,
+        "releaseTurn": null,
+        "lifeSentence": true
+      },
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": [
+        "mayito_flaco_24"
+      ]
+    },
+    {
+      "id": "mayito_flaco_24",
+      "name": "Ismael Zambada Sicairos \"Mayito Flaco\"",
+      "sex": "M",
+      "birthYear": 1982,
+      "alive": true,
+      "cartelId": "mayiza",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 70,
+        "business": 78,
+        "charisma": 58,
+        "intrigue": 80,
+        "loyaltyInspiring": 68,
+        "stealth": 68
+      },
+      "traits": [
+        "La Mayiza",
+        "líder"
+      ],
+      "notes": "Hijo de El Mayo Zambada; en la vida real es el principal referente público de 'La Mayiza' en la guerra interna de Sinaloa desde 2024.",
+      "parents": [
+        "mayo_patriarca_24"
+      ],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "mencho_24",
+      "name": "Nemesio Oseguera Cervantes \"El Mencho\"",
+      "sex": "M",
+      "birthYear": 1966,
+      "alive": true,
+      "cartelId": "cjng",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 85,
+        "business": 85,
+        "charisma": 58,
+        "intrigue": 80,
+        "loyaltyInspiring": 72,
+        "stealth": 75
+      },
+      "traits": [
+        "fundador",
+        "expansionista"
+      ],
+      "notes": "Fundador y líder del CJNG, aprovecha la guerra civil de Sinaloa para expandirse. Su destino en el juego depende de tus decisiones.",
+      "parents": [],
+      "spouseId": "rosalinda_24",
+      "childrenIds": []
+    },
+    {
+      "id": "rosalinda_24",
+      "name": "Rosalinda González Valencia",
+      "sex": "F",
+      "birthYear": 1970,
+      "alive": true,
+      "cartelId": "cjng",
+      "role": "financeChief",
+      "historical": true,
+      "stats": {
+        "violence": 20,
+        "business": 88,
+        "charisma": 55,
+        "intrigue": 70,
+        "loyaltyInspiring": 55,
+        "stealth": 60
+      },
+      "traits": [],
+      "notes": "Esposa de El Mencho, señalada públicamente por su presunto papel en el manejo financiero del cártel.",
+      "parents": [],
+      "spouseId": "mencho_24",
+      "childrenIds": []
+    }
   ],
-  "newCartelTerritories": ["chihuahua", "durango", "guerrero"]
+  "newCartelTerritories": [
+    "chihuahua",
+    "durango",
+    "guerrero"
+  ]
 }

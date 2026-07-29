@@ -1,18 +1,19 @@
 import { getPlayerCartel } from "../../state.js";
-import { applyAction, getActionsRemaining, ACTIONS_PER_TURN } from "../../turnEngine.js";
+import { applyAction, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, MONEY_SCALE } from "../../turnEngine.js";
 import { showModal, closeModal } from "../../ui/modal.js";
 import { escapeHtml } from "../../ui/components.js";
+import { fmtMoney } from "../../utils/text.js";
 
 const ACTIONS = [
-  { type: "invest_production", label: "Invertir en producción", cost: 150, desc: "Financia laboratorios y cultivos. Riesgo de decomiso." },
-  { type: "traffic_shipment", label: "Enviar cargamento", cost: 250, desc: "Mueve mercancía por tus rutas. Mayor riesgo y recompensa." },
-  { type: "corrupt_gov", label: "Sobornar al gobierno", cost: 120, desc: "Aumenta tu corrupción política y reduce el heat." },
-  { type: "corrupt_police", label: "Sobornar a la policía", cost: 120, desc: "Aumenta tu corrupción policial y reduce el heat." },
-  { type: "recruit_army", label: "Reclutar sicarios", cost: 100, desc: "Aumenta tu ejército." },
-  { type: "lay_low", label: "Bajar el perfil", cost: 0, desc: "Reduce fuertemente el heat de inmediato." },
+  { type: "invest_production", label: "Invertir en producción", desc: "Financia laboratorios y cultivos. Riesgo de decomiso." },
+  { type: "traffic_shipment", label: "Enviar cargamento", desc: "Mueve mercancía por tus rutas. Mayor riesgo y recompensa." },
+  { type: "corrupt_gov", label: "Sobornar al gobierno", desc: "Aumenta tu corrupción política y reduce el heat." },
+  { type: "corrupt_police", label: "Sobornar a la policía", desc: "Aumenta tu corrupción policial y reduce el heat." },
+  { type: "recruit_army", label: "Reclutar sicarios", desc: "Aumenta tu ejército." },
+  { type: "lay_low", label: "Bajar el perfil", desc: "Reduce fuertemente el heat de inmediato." },
 ];
 
-const LAUNDER_AMOUNTS = [500, 2000, 10000];
+const LAUNDER_AMOUNTS = [500 * MONEY_SCALE, 2000 * MONEY_SCALE, 10000 * MONEY_SCALE];
 
 export function render(container, app) {
   const game = app.game;
@@ -24,22 +25,25 @@ export function render(container, app) {
     <div class="card">
       <h2>Decisiones de este turno</h2>
       <p class="text-dim small">Tienes <strong>${remaining}/${ACTIONS_PER_TURN}</strong> acciones disponibles antes de avanzar el turno. Las decisiones diplomáticas y militares no gastan acciones.</p>
-      ${ACTIONS.map((a) => `
-        <button class="block" data-action="${a.type}" ${cartel.resources.money < a.cost || exhausted ? "disabled" : ""}>
-          <strong>${a.label}</strong> ${a.cost ? `— $${a.cost}` : ""}
+      ${ACTIONS.map((a) => {
+        const cost = ACTION_COSTS[a.type] || 0;
+        return `
+        <button class="block" data-action="${a.type}" ${cartel.resources.money < cost || exhausted ? "disabled" : ""}>
+          <strong>${a.label}</strong> ${cost ? `— ${fmtMoney(cost)}` : ""}
           <div class="small text-dim">${a.desc}</div>
         </button>
-      `).join("")}
+      `;
+      }).join("")}
     </div>
     <div class="card">
       <h3>Lavado de dinero</h3>
       <p class="text-dim small">Convierte dinero caliente en dinero limpio a través de negocios legales. Se cobra una comisión (menor cuanto mejor sea tu jefe económico) y reduce el heat.</p>
       <div class="btn-row">
         ${LAUNDER_AMOUNTS.map((amount) => `
-          <button data-launder="${amount}" ${cartel.resources.money < amount || exhausted ? "disabled" : ""}>Lavar $${amount}</button>
+          <button data-launder="${amount}" ${cartel.resources.money < amount || exhausted ? "disabled" : ""}>Lavar ${fmtMoney(amount)}</button>
         `).join("")}
       </div>
-      <p class="small text-dim mt-1">Total lavado hasta ahora: $${Math.round(cartel.resources.launderedMoney || 0)}</p>
+      <p class="small text-dim mt-1">Total lavado hasta ahora: ${fmtMoney(cartel.resources.launderedMoney || 0)}</p>
     </div>
   `;
 
@@ -72,7 +76,7 @@ function showProductionModal(app, game, cartel) {
   const territories = cartel.territories.map((id) => game.territories[id]).filter(Boolean);
   showModal(`
     <h2>Invertir en producción</h2>
-    <p class="small text-dim">Los territorios de mayor valor económico rinden más por la misma inversión de $150.</p>
+    <p class="small text-dim">Los territorios de mayor valor económico rinden más por la misma inversión de ${fmtMoney(ACTION_COSTS.invest_production)}.</p>
     ${territories.map((t) => `
       <button class="block" data-territory="${t.id}">
         ${escapeHtml(t.name)}

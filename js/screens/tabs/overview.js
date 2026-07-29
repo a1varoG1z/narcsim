@@ -3,7 +3,7 @@ import { portraitImg, statBar, escapeHtml } from "../../ui/components.js";
 import { STATS, STAT_ORDER, age } from "../../model.js";
 import { fmtMoney, fmtNum, heatLabel } from "../../utils/text.js";
 import { policeOperationChance } from "../../events.js";
-import { getActionsRemaining, ACTIONS_PER_TURN } from "../../turnEngine.js";
+import { getActionsRemaining, ACTIONS_PER_TURN, MONEY_SCALE } from "../../turnEngine.js";
 
 export function render(container, app) {
   const game = app.game;
@@ -34,7 +34,7 @@ export function render(container, app) {
 
     <div class="card">
       <h3>Estado del cártel</h3>
-      ${statBar("Dinero", Math.min(100, r.money / 50), "")}<div class="small text-dim" style="margin-top:-8px">${fmtMoney(r.money)}</div>
+      ${statBar("Dinero", Math.min(100, r.money / (50 * MONEY_SCALE)), "")}<div class="small text-dim" style="margin-top:-8px">${fmtMoney(r.money)}</div>
       ${statBar("Ejército", Math.min(100, r.armySize / 40), "")}<div class="small text-dim" style="margin-top:-8px">${fmtNum(r.armySize)} hombres</div>
       ${statBar("Corrupción gob.", r.corruptGov)}
       ${statBar("Corrupción policial", r.corruptPolice)}

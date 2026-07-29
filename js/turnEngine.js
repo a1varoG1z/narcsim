@@ -4,6 +4,7 @@ import { rollMortality, rollFamilyEvents, rollLoyaltyEvents, rollPoliceOperation
 import { rollScriptedEvents, resolveScriptedChoice as applyScriptedChoice } from "./scriptedEvents.js";
 import { fillVacantRoles, generateNpc, randomName } from "./npcGenerator.js";
 import { ROLE_ORDER, STAT_ORDER, STATS, clampStat } from "./model.js";
+import { fmtMoney } from "./utils/text.js";
 
 function warKey(a, b) {
   return [a, b].sort().join("|");
@@ -44,18 +45,25 @@ export function getWarsForCartel(game, cartelId) {
   return (game.warHistory || []).filter((w) => w.cartelA === cartelId || w.cartelB === cartelId);
 }
 
-const ACTION_COSTS = {
-  invest_production: 150,
-  traffic_shipment: 250,
-  corrupt_gov: 120,
-  corrupt_police: 120,
-  recruit_army: 100,
+/** All money in the game is denominated in real dollars. Costs/income below are defined in
+ * "base units" and multiplied by MONEY_SCALE so every figure — starting capital, action costs,
+ * territory income, payroll — lands in a historically plausible range (a founding-era plaza
+ * boss with a few hundred thousand dollars, a cartel at its peak with tens of millions) instead
+ * of reading as a few hundred literal dollars. */
+export const MONEY_SCALE = 10000;
+
+export const ACTION_COSTS = {
+  invest_production: 150 * MONEY_SCALE,
+  traffic_shipment: 250 * MONEY_SCALE,
+  corrupt_gov: 120 * MONEY_SCALE,
+  corrupt_police: 120 * MONEY_SCALE,
+  recruit_army: 100 * MONEY_SCALE,
   lay_low: 0,
-  press_release: 80,
-  corridos_campaign: 150,
-  social_work: 300,
-  international_interview: 200,
-  damage_control: 250,
+  press_release: 80 * MONEY_SCALE,
+  corridos_campaign: 150 * MONEY_SCALE,
+  social_work: 300 * MONEY_SCALE,
+  international_interview: 200 * MONEY_SCALE,
+  damage_control: 250 * MONEY_SCALE,
   launder_money: 0,
 };
 
@@ -94,34 +102,36 @@ export function applyAction(game, cartelId, type, payload = {}) {
   const result = (function runAction() {
   switch (type) {
     case "invest_production": {
-      if (r.money < 150) return { ok: false, message: "No hay dinero suficiente." };
+      const cost = ACTION_COSTS.invest_production;
+      if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
       const owned = cartel.territories.map((id) => game.territories[id]).filter(Boolean);
       if (!owned.length) return { ok: false, message: "No tienes territorios donde producir." };
       let territory = payload.territoryId ? game.territories[payload.territoryId] : null;
       if (!territory || territory.controllerId !== cartelId) {
         territory = owned.reduce((best, t) => (t.value > best.value ? t : best), owned[0]);
       }
-      r.money -= 150;
+      r.money -= cost;
       const seizeChance = clamp(r.heat / 300, 0.03, 0.35);
       if (chance(seizeChance)) {
         r.heat = Math.min(100, r.heat + randInt(3, 8));
         log(`Un cargamento de ${cartel.name} es decomisado durante la producción en ${territory.name}.`, "event");
         return { ok: true, message: "Decomiso.", territoryId: territory.id };
       }
-      const payout = Math.round((90 + territory.value * 12) * (1.1 + Math.random() * 0.5));
+      const payout = Math.round((90 + territory.value * 12) * MONEY_SCALE * (1.1 + Math.random() * 0.5));
       r.money += payout;
       r.heat = Math.min(100, r.heat + 2);
-      log(`${cartel.name} invierte en producción en ${territory.name} y obtiene ${payout} en ganancias.`, "good");
+      log(`${cartel.name} invierte en producción en ${territory.name} y obtiene ${fmtMoney(payout)} en ganancias.`, "good");
       return { ok: true, message: `+${payout}`, territoryId: territory.id };
     }
     case "traffic_shipment": {
-      if (r.money < 250) return { ok: false, message: "No hay dinero suficiente." };
+      const cost = ACTION_COSTS.traffic_shipment;
+      if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
       const partner = payload.partnerCartelId ? game.cartels[payload.partnerCartelId] : null;
       const partnerStatus = partner ? cartel.relations[partner.id]?.status : null;
       if (partner && partnerStatus === "war") {
         return { ok: false, message: `No puedes venderle a ${partner.name}: estáis en guerra.` };
       }
-      r.money -= 250;
+      r.money -= cost;
       const interdictChance = clamp(r.heat / 220, 0.05, 0.5);
       if (chance(interdictChance)) {
         r.heat = Math.min(100, r.heat + randInt(6, 14));
@@ -129,7 +139,7 @@ export function applyAction(game, cartelId, type, payload = {}) {
         return { ok: true, message: "Interceptado." };
       }
       const partnerMultiplier = partnerStatus === "alliance" ? 1.25 : partnerStatus === "neutral" ? 1 : 0.85;
-      const payout = Math.round(250 * (1.6 + Math.random() * 1.2) * partnerMultiplier);
+      const payout = Math.round(cost * (1.6 + Math.random() * 1.2) * partnerMultiplier);
       r.money += payout;
       r.heat = Math.min(100, r.heat + 5);
       if (partner) {
@@ -137,31 +147,34 @@ export function applyAction(game, cartelId, type, payload = {}) {
         const tensionDelta = partnerStatus === "alliance" ? -5 : -2;
         cartel.relations[partner.id].tension = clamp(cartel.relations[partner.id].tension + tensionDelta, 0, 100);
         partner.relations[cartel.id].tension = cartel.relations[partner.id].tension;
-        log(`${cartel.name} completa un envío por valor de ${payout} en sociedad con ${partner.name}.`, "good");
+        log(`${cartel.name} completa un envío por valor de ${fmtMoney(payout)} en sociedad con ${partner.name}.`, "good");
       } else {
-        log(`${cartel.name} completa un envío exitoso por valor de ${payout} en el mercado abierto.`, "good");
+        log(`${cartel.name} completa un envío exitoso por valor de ${fmtMoney(payout)} en el mercado abierto.`, "good");
       }
       return { ok: true, message: `+${payout}` };
     }
     case "corrupt_gov": {
-      if (r.money < 120) return { ok: false, message: "No hay dinero suficiente." };
-      r.money -= 120;
+      const cost = ACTION_COSTS.corrupt_gov;
+      if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
+      r.money -= cost;
       r.corruptGov = Math.min(100, r.corruptGov + randInt(4, 9));
       r.heat = Math.max(0, r.heat - randInt(2, 5));
       log(`${cartel.name} soborna a funcionarios del gobierno.`, "good");
       return { ok: true };
     }
     case "corrupt_police": {
-      if (r.money < 120) return { ok: false, message: "No hay dinero suficiente." };
-      r.money -= 120;
+      const cost = ACTION_COSTS.corrupt_police;
+      if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
+      r.money -= cost;
       r.corruptPolice = Math.min(100, r.corruptPolice + randInt(4, 9));
       r.heat = Math.max(0, r.heat - randInt(2, 5));
       log(`${cartel.name} soborna a mandos policiales.`, "good");
       return { ok: true };
     }
     case "recruit_army": {
-      if (r.money < 100) return { ok: false, message: "No hay dinero suficiente." };
-      r.money -= 100;
+      const cost = ACTION_COSTS.recruit_army;
+      if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
+      r.money -= cost;
       const gained = randInt(15, 35);
       r.armySize += gained;
       r.heat = Math.min(100, r.heat + 1);
@@ -210,7 +223,7 @@ export function applyAction(game, cartelId, type, payload = {}) {
           indemnity = Math.round(target.resources.money * 0.2);
           target.resources.money = Math.max(0, target.resources.money - indemnity);
           r.money += indemnity;
-          treatyNote += ` ${target.name} paga una indemnización de $${indemnity}.`;
+          treatyNote += ` ${target.name} paga una indemnización de ${fmtMoney(indemnity)}.`;
         }
         closeWar(game, cartelId, target.id, treatyNote.trim() || null);
         log(`${target.name} acepta la paz con ${cartel.name}.${treatyNote}`, "good");
@@ -253,8 +266,8 @@ export function applyAction(game, cartelId, type, payload = {}) {
       if (!isAttackable(game, cartelId, territory.id)) {
         return { ok: false, message: "No linda con ninguno de tus dominios: no puedes expandirte ahí todavía." };
       }
-      const cost = territory.value * 15;
-      if (r.money < cost) return { ok: false, message: `Hace falta $${cost} para esta expedición.` };
+      const cost = territory.value * 15 * MONEY_SCALE;
+      if (r.money < cost) return { ok: false, message: `Hace falta ${fmtMoney(cost)} para esta expedición.` };
       r.money -= cost;
       if (chance(0.75)) {
         territory.controllerId = cartelId;
@@ -268,16 +281,18 @@ export function applyAction(game, cartelId, type, payload = {}) {
       return { ok: true, success: false };
     }
     case "press_release": {
-      if (r.money < 80) return { ok: false, message: "No hay dinero suficiente." };
-      r.money -= 80;
+      const cost = ACTION_COSTS.press_release;
+      if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
+      r.money -= cost;
       r.publicImage = Math.min(100, r.publicImage + randInt(5, 10));
       r.heat = Math.max(0, r.heat - randInt(2, 4));
       log(`${cartel.name} emite un comunicado de prensa para suavizar su imagen.`, "good");
       return { ok: true };
     }
     case "corridos_campaign": {
-      if (r.money < 150) return { ok: false, message: "No hay dinero suficiente." };
-      r.money -= 150;
+      const cost = ACTION_COSTS.corridos_campaign;
+      if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
+      r.money -= cost;
       r.publicImage = Math.min(100, r.publicImage + randInt(8, 14));
       r.internationalReputation = Math.min(100, (r.internationalReputation ?? 15) + randInt(3, 6));
       r.heat = Math.min(100, r.heat + randInt(3, 6));
@@ -285,16 +300,18 @@ export function applyAction(game, cartelId, type, payload = {}) {
       return { ok: true };
     }
     case "social_work": {
-      if (r.money < 300) return { ok: false, message: "No hay dinero suficiente." };
-      r.money -= 300;
+      const cost = ACTION_COSTS.social_work;
+      if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
+      r.money -= cost;
       r.publicImage = Math.min(100, r.publicImage + randInt(15, 25));
       r.heat = Math.max(0, r.heat - randInt(8, 12));
       log(`${cartel.name} financia obra social (escuelas, iglesias, caminos) y gana el favor de la comunidad.`, "good");
       return { ok: true };
     }
     case "international_interview": {
-      if (r.money < 200) return { ok: false, message: "No hay dinero suficiente." };
-      r.money -= 200;
+      const cost = ACTION_COSTS.international_interview;
+      if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
+      r.money -= cost;
       const spokesperson = game.characters[cartel.roles.leader] || game.characters[cartel.roles.prChief];
       const charisma = spokesperson ? spokesperson.stats.charisma : 50;
       const successChance = clamp(charisma / 130, 0.2, 0.75);
@@ -310,8 +327,9 @@ export function applyAction(game, cartelId, type, payload = {}) {
       return { ok: true, success: false };
     }
     case "damage_control": {
-      if (r.money < 250) return { ok: false, message: "No hay dinero suficiente." };
-      r.money -= 250;
+      const cost = ACTION_COSTS.damage_control;
+      if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
+      r.money -= cost;
       r.heat = Math.max(0, r.heat - randInt(15, 20));
       log(`${cartel.name} invierte en control de daños para acallar un episodio reciente.`, "good");
       return { ok: true };
@@ -324,8 +342,8 @@ export function applyAction(game, cartelId, type, payload = {}) {
       const fee = Math.round(amount * feeRate);
       r.money -= fee;
       r.launderedMoney = (r.launderedMoney || 0) + amount;
-      r.heat = Math.max(0, r.heat - clamp(Math.round(amount / 50), 2, 20));
-      log(`${cartel.name} lava $${amount} a través de negocios legales (comisión: $${fee}).`, "good");
+      r.heat = Math.max(0, r.heat - clamp(Math.round(amount / (50 * MONEY_SCALE)), 2, 20));
+      log(`${cartel.name} lava ${fmtMoney(amount)} a través de negocios legales (comisión: ${fmtMoney(fee)}).`, "good");
       return { ok: true, fee };
     }
     default:
@@ -433,14 +451,14 @@ function runAiCartels(game) {
     if (!cartel.aiControlled || cartel.destroyed) continue;
     const r = cartel.resources;
     const options = [];
-    if (r.money >= 150) options.push({ item: "invest_production", weight: 3 });
-    if (r.money >= 250) options.push({ item: "traffic_shipment", weight: 3 });
-    if (r.money >= 120) options.push({ item: "corrupt_police", weight: r.heat > 40 ? 4 : 1.5 });
-    if (r.money >= 120) options.push({ item: "corrupt_gov", weight: 1.5 });
-    if (r.money >= 100) options.push({ item: "recruit_army", weight: 2 });
-    if (r.money >= 80) options.push({ item: "press_release", weight: r.publicImage < 40 ? 3 : 1 });
-    if (r.money >= 300) options.push({ item: "social_work", weight: r.publicImage < 30 ? 2 : 0.5 });
-    if (r.money >= 250 && r.heat > 60) options.push({ item: "damage_control", weight: 3 });
+    if (r.money >= ACTION_COSTS.invest_production) options.push({ item: "invest_production", weight: 3 });
+    if (r.money >= ACTION_COSTS.traffic_shipment) options.push({ item: "traffic_shipment", weight: 3 });
+    if (r.money >= ACTION_COSTS.corrupt_police) options.push({ item: "corrupt_police", weight: r.heat > 40 ? 4 : 1.5 });
+    if (r.money >= ACTION_COSTS.corrupt_gov) options.push({ item: "corrupt_gov", weight: 1.5 });
+    if (r.money >= ACTION_COSTS.recruit_army) options.push({ item: "recruit_army", weight: 2 });
+    if (r.money >= ACTION_COSTS.press_release) options.push({ item: "press_release", weight: r.publicImage < 40 ? 3 : 1 });
+    if (r.money >= ACTION_COSTS.social_work) options.push({ item: "social_work", weight: r.publicImage < 30 ? 2 : 0.5 });
+    if (r.money >= ACTION_COSTS.damage_control && r.heat > 60) options.push({ item: "damage_control", weight: 3 });
     options.push({ item: "lay_low", weight: r.heat > 70 ? 5 : 0.5 });
 
     const atWar = Object.values(cartel.relations).some((rel) => rel.status === "war");
@@ -448,7 +466,7 @@ function runAiCartels(game) {
       options.push({ item: "attack_territory", weight: 2 });
     }
     const neutralReachable = Object.values(game.territories).filter((t) => !t.controllerId && isAttackable(game, cartel.id, t.id));
-    if (neutralReachable.length && r.money >= 200) {
+    if (neutralReachable.length && r.money >= 200 * MONEY_SCALE) {
       options.push({ item: "occupy_territory", weight: 2.5 });
     }
 
@@ -501,7 +519,7 @@ function driftBonds(game) {
     if (c.bondWithPlayer === undefined) c.bondWithPlayer = 50;
     let delta = randInt(-1, 1);
     if (cartel.resources.heat > 60) delta -= 1;
-    if (cartel.resources.money > 500) delta += 1;
+    if (cartel.resources.money > 500 * MONEY_SCALE) delta += 1;
     c.bondWithPlayer = clamp(c.bondWithPlayer + delta, 0, 100);
   }
 }
@@ -524,14 +542,14 @@ export function strengthenBond(game, characterId) {
 export function getIncomeBreakdown(game, cartel) {
   const perTerritory = cartel.territories.map((tId) => {
     const t = game.territories[tId];
-    return { territoryId: tId, name: t?.name || tId, value: t?.value || 0, income: (t?.value || 0) * 10 };
+    return { territoryId: tId, name: t?.name || tId, value: t?.value || 0, income: (t?.value || 0) * 10 * MONEY_SCALE };
   });
   const baseIncome = perTerritory.reduce((s, t) => s + t.income, 0);
   // International fame opens pricier overseas markets: a modest, capped bonus on top of local sales.
   const exportBonusRate = clamp((cartel.resources.internationalReputation ?? 15) / 400, 0, 0.25);
   const exportBonus = Math.round(baseIncome * exportBonusRate);
   const territoryIncome = baseIncome + exportBonus;
-  const upkeep = Math.round(cartel.resources.armySize * 0.45);
+  const upkeep = Math.round(cartel.resources.armySize * 0.45 * MONEY_SCALE);
   return { perTerritory, baseIncome, exportBonusRate, exportBonus, territoryIncome, upkeep, net: territoryIncome - upkeep };
 }
 

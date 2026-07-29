@@ -150,7 +150,7 @@
       "aiControlled": false,
       "historicalNote": "Los cargos secundarios del organigrama que no corresponden a figuras públicamente documentadas en ese rol específico son ficticios, generados para completar la mecánica de juego.",
       "resources": {
-        "money": 3400,
+        "money": 34000000,
         "armySize": 1600,
         "corruptGov": 60,
         "corruptPolice": 55,
@@ -179,7 +179,7 @@
       "aiControlled": true,
       "historicalNote": "Los hermanos Rodríguez Orejuela construyeron un imperio empresarial (incluida una cadena real de farmacias) como fachada; ese matiz se refleja narrativamente aunque los cargos secundarios sean ficticios.",
       "resources": {
-        "money": 2000,
+        "money": 20000000,
         "armySize": 900,
         "corruptGov": 70,
         "corruptPolice": 60,
@@ -207,7 +207,7 @@
       "aiControlled": true,
       "historicalNote": "Organización real liderada por Iván Urdinola Grajales, 'El Enano', pionero del narcotráfico en el norte del Valle del Cauca desde principios de los 80, inicialmente próximo a Cali pero con estructura y territorio propios; con el tiempo esta red daría origen al futuro Cartel del Norte del Valle. En la vida real fue capturado en 1992; en el juego su destino depende de tus decisiones. Los cargos secundarios de su organigrama son ficticios.",
       "resources": {
-        "money": 700,
+        "money": 7000000,
         "armySize": 400,
         "corruptGov": 30,
         "corruptPolice": 40,

@@ -190,7 +190,7 @@
       "aiControlled": false,
       "historicalNote": "Pese a la guerra generalizada, logra mantener el control del noroeste del país y expandir su influencia internacional. Cargos no documentados públicamente son ficticios.",
       "resources": {
-        "money": 3200,
+        "money": 32000000,
         "armySize": 2200,
         "corruptGov": 60,
         "corruptPolice": 60,
@@ -215,7 +215,7 @@
       "aiControlled": true,
       "historicalNote": "Fundados por exmilitares de élite como brazo armado del Golfo, rompen relaciones en 2010 y se convierten en cártel independiente, tristemente célebres por su brutalidad.",
       "resources": {
-        "money": 2000,
+        "money": 20000000,
         "armySize": 2400,
         "corruptGov": 35,
         "corruptPolice": 45,
@@ -237,7 +237,7 @@
       "aiControlled": true,
       "historicalNote": "Debilitado tras la ruptura con Los Zetas, entra en una guerra abierta por el control de Tamaulipas.",
       "resources": {
-        "money": 900,
+        "money": 9000000,
         "armySize": 900,
         "corruptGov": 30,
         "corruptPolice": 35,
@@ -258,7 +258,7 @@
       "aiControlled": true,
       "historicalNote": "Organización con retórica pseudo-religiosa fundada por Nazario Moreno; tras su presunta muerte en 2010 (luego confirmada en 2014), una facción se escindiría como Caballeros Templarios.",
       "resources": {
-        "money": 700,
+        "money": 7000000,
         "armySize": 650,
         "corruptGov": 25,
         "corruptPolice": 30,
@@ -279,7 +279,7 @@
       "aiControlled": true,
       "historicalNote": "Escindida del Cártel de Sinaloa en 2008 tras la detención de Alfredo Beltrán Leyva; entra en guerra abierta contra sus antiguos socios.",
       "resources": {
-        "money": 1100,
+        "money": 11000000,
         "armySize": 800,
         "corruptGov": 35,
         "corruptPolice": 40,

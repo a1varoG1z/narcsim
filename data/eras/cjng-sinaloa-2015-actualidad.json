@@ -186,7 +186,7 @@
       "aiControlled": true,
       "historicalNote": "Escindido del Cártel del Milenio hacia 2010-2011, se ha convertido en una de las organizaciones más poderosas y expansivas del mundo, con presencia en múltiples continentes.",
       "resources": {
-        "money": 4200,
+        "money": 42000000,
         "armySize": 3000,
         "corruptGov": 45,
         "corruptPolice": 45,
@@ -211,7 +211,7 @@
       "aiControlled": false,
       "historicalNote": "Tras la extradición de El Chapo en 2017, el liderazgo recae en sus hijos ('Los Chapitos') y en El Mayo Zambada. Las tensiones entre ambas facciones son una amenaza constante de guerra interna.",
       "resources": {
-        "money": 3800,
+        "money": 38000000,
         "armySize": 2600,
         "corruptGov": 55,
         "corruptPolice": 55,
@@ -236,7 +236,7 @@
       "aiControlled": true,
       "historicalNote": "Formado en 2015 por remanentes de la 'vieja escuela' de Los Zetas tras la fragmentación del grupo original.",
       "resources": {
-        "money": 600,
+        "money": 6000000,
         "armySize": 500,
         "corruptGov": 20,
         "corruptPolice": 25,
@@ -256,7 +256,7 @@
       "aiControlled": true,
       "historicalNote": "Fragmentado internamente en facciones rivales (Metros, Ciclones, Escorpiones) sin un liderazgo único y estable; se representa aquí de forma simplificada como una sola entidad.",
       "resources": {
-        "money": 500,
+        "money": 5000000,
         "armySize": 450,
         "corruptGov": 20,
         "corruptPolice": 25,
@@ -276,7 +276,7 @@
       "aiControlled": true,
       "historicalNote": "Grupo regional de Guanajuato especializado en el robo de combustible ('huachicoleo'), en guerra abierta con el CJNG por el control de la región desde 2017.",
       "resources": {
-        "money": 350,
+        "money": 3500000,
         "armySize": 300,
         "corruptGov": 15,
         "corruptPolice": 20,

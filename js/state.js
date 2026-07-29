@@ -62,7 +62,8 @@ export function buildGameFromEra(eraData, options) {
       color: options.color || "#7a4a1f",
       eraId: eraData.id,
       territories: [territoryId],
-      resources: { money: 150, armySize: 120, corruptGov: 5, corruptPolice: 5, publicImage: 45, heat: 5, internationalReputation: 5, launderedMoney: 0 },
+      // 150 base units at turnEngine.js's MONEY_SCALE (10000) — a modest seed capital for a brand-new plaza.
+      resources: { money: 150 * 10000, armySize: 120, corruptGov: 5, corruptPolice: 5, publicImage: 45, heat: 5, internationalReputation: 5, launderedMoney: 0 },
       roles: { leader: player.id },
       characters: [player.id],
       aiControlled: false,

@@ -3,6 +3,7 @@ import { portraitImg, statBar, escapeHtml, roleLabel } from "../../ui/components
 import { ROLE_ORDER } from "../../model.js";
 import { fmtMoney, fmtNum, heatLabel } from "../../utils/text.js";
 import { showCharacterProfile } from "./characterProfile.js";
+import { MONEY_SCALE } from "../../turnEngine.js";
 
 export function showCartelProfile(app, cartelId) {
   const game = app.game;
@@ -14,7 +15,7 @@ export function showCartelProfile(app, cartelId) {
   showModal(`
     <h2><span style="display:inline-block;width:12px;height:12px;background:${cartel.color};border-radius:2px;margin-right:6px"></span>${escapeHtml(cartel.name)}${isPlayer ? " (tú)" : ""}</h2>
     <p class="small text-dim">${escapeHtml(cartel.historicalNote || "")}</p>
-    ${statBar("Dinero", Math.min(100, r.money / 50))}<div class="small text-dim" style="margin-top:-8px">${fmtMoney(r.money)}</div>
+    ${statBar("Dinero", Math.min(100, r.money / (50 * MONEY_SCALE)))}<div class="small text-dim" style="margin-top:-8px">${fmtMoney(r.money)}</div>
     ${statBar("Ejército", Math.min(100, r.armySize / 40))}<div class="small text-dim" style="margin-top:-8px">${fmtNum(r.armySize)} hombres</div>
     ${statBar("Corrupción gob.", r.corruptGov)}
     ${statBar("Corrupción policial", r.corruptPolice)}
