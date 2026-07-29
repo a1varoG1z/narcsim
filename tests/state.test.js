@@ -71,3 +71,20 @@ test("relations are initialized symmetrically for every cartel pair", () => {
   // The scripted war override (Sinaloa vs Tijuana) should be present from turn zero.
   assert.equal(game.cartels.sinaloa.relations.tijuana.status, "war");
 });
+
+test("the 2024 Chapitos-vs-Mayiza era loads with all eras/index.json entries resolvable and starts at war", () => {
+  const index = JSON.parse(fs.readFileSync(path.join(ERA_DIR, "index.json"), "utf8"));
+  for (const entry of index) {
+    assert.doesNotThrow(() => loadEra(entry.file), `era file ${entry.file} listed in index.json should parse`);
+  }
+
+  const era = loadEra("chapitos-mayiza-2024-actualidad.json");
+  const game = buildGameFromEra(era, { mode: "existing", cartelId: "chapitos", characterId: "ivan_archivaldo_24" });
+  assert.equal(game.cartels.chapitos.relations.mayiza.status, "war");
+  assert.equal(game.cartels.mayiza.relations.chapitos.status, "war");
+  // El Chapo and El Mayo are both real, imprisoned patriarchs in this era — genealogy should link
+  // their sons as the actual faction leaders.
+  assert.ok(game.characters.chapo_patriarca_24.childrenIds.includes("ivan_archivaldo_24"));
+  assert.ok(game.characters.mayo_patriarca_24.childrenIds.includes("mayito_flaco_24"));
+  assert.equal(game.characters.chapo_patriarca_24.imprisoned.lifeSentence, true);
+});

@@ -1,6 +1,7 @@
 import { getPlayerCartel } from "../../state.js";
 import { escapeHtml } from "../../ui/components.js";
 import { applyAction, getWarsForCartel } from "../../turnEngine.js";
+import { showModal, closeModal } from "../../ui/modal.js";
 
 const STATUS_LABEL = { war: "En guerra", alliance: "Aliados", neutral: "Neutral" };
 const STATUS_CLASS = { war: "war", alliance: "alliance", neutral: "" };
@@ -41,10 +42,7 @@ export function render(container, app) {
     app.render();
   }));
   container.querySelectorAll("[data-peace]").forEach((btn) => btn.addEventListener("click", () => {
-    const res = applyAction(game, cartel.id, "propose_peace", { targetCartelId: btn.dataset.peace });
-    app.setGame(game);
-    alert(res.accepted ? "Han aceptado la paz." : "Han rechazado tu propuesta de paz.");
-    app.render();
+    showPeaceModal(app, game, cartel, btn.dataset.peace);
   }));
   container.querySelectorAll("[data-alliance]").forEach((btn) => btn.addEventListener("click", () => {
     const res = applyAction(game, cartel.id, "propose_alliance", { targetCartelId: btn.dataset.alliance });
@@ -52,6 +50,47 @@ export function render(container, app) {
     alert(res.accepted ? "Han aceptado la alianza." : "Han rechazado tu propuesta de alianza.");
     app.render();
   }));
+}
+
+function showPeaceModal(app, game, cartel, targetCartelId) {
+  const target = game.cartels[targetCartelId];
+  const myTerritories = cartel.territories.map((id) => game.territories[id]).filter(Boolean);
+  const muchStronger = cartel.resources.armySize > target.resources.armySize * 1.5;
+
+  showModal(`
+    <h2>Proponer paz a ${escapeHtml(target.name)}</h2>
+    <p class="small text-dim">Endulzar la oferta cediendo un territorio sube mucho las probabilidades de que la acepten; exigir una indemnización las baja, pero solo tiene sentido si les superas claramente en fuerza.</p>
+    <label for="peace-cede">Ceder un territorio (opcional)</label>
+    <select id="peace-cede">
+      <option value="">Ninguno</option>
+      ${myTerritories.map((t) => `<option value="${t.id}">${escapeHtml(t.name)}</option>`).join("")}
+    </select>
+    <label style="display:flex;align-items:center;gap:.5rem;margin-top:.8rem">
+      <input type="checkbox" id="peace-indemnity" ${muchStronger ? "" : "disabled"}>
+      Exigir indemnización (20% de su dinero)${muchStronger ? "" : " — necesitas superarles claramente en ejército"}
+    </label>
+    <div class="btn-row mt-2">
+      <button class="primary block" id="send-peace">Enviar propuesta</button>
+      <button class="ghost block" id="close-btn">Cancelar</button>
+    </div>
+  `);
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.getElementById("send-peace").addEventListener("click", () => {
+    const cedeTerritoryId = document.getElementById("peace-cede").value || undefined;
+    const demandIndemnity = document.getElementById("peace-indemnity").checked;
+    const res = applyAction(game, cartel.id, "propose_peace", { targetCartelId, cedeTerritoryId, demandIndemnity });
+    app.setGame(game);
+    closeModal();
+    if (!res.accepted) {
+      alert("Han rechazado tu propuesta de paz.");
+    } else {
+      let msg = "Han aceptado la paz.";
+      if (res.cededTerritory) msg += ` Cedes ${res.cededTerritory}.`;
+      if (res.indemnity) msg += ` Recibes $${res.indemnity} de indemnización.`;
+      alert(msg);
+    }
+    app.render();
+  });
 }
 
 function renderWarHistory(game, cartel) {
@@ -70,6 +109,7 @@ function renderWarHistory(game, cartel) {
       </div>
       <p class="small text-dim">${w.startYear}${w.endYear ? ` – ${w.endYear}` : " – presente"} · Tus bajas: ${myCasualties} · Sus bajas: ${theirCasualties}</p>
       ${w.territoryChanges.length ? `<p class="small">Territorios en disputa: ${w.territoryChanges.map((tc) => `${escapeHtml(tc.territoryName)} (${tc.year}, para ${escapeHtml(game.cartels[tc.to]?.name || "?")})`).join(", ")}</p>` : ""}
+      ${w.treatyNote ? `<p class="small text-dim">Términos del tratado:${escapeHtml(w.treatyNote)}</p>` : ""}
     </div>`;
   }).join("");
 }

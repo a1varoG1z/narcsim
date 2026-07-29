@@ -33,5 +33,12 @@
     "name": "CJNG contra Sinaloa",
     "period": "2015 – actualidad",
     "blurb": "El CJNG emerge como el principal rival del Cártel de Sinaloa. Ambos tienen presencia internacional junto a múltiples grupos escindidos y alianzas regionales."
+  },
+  {
+    "id": "chapitos-mayiza-2024-actualidad",
+    "file": "chapitos-mayiza-2024-actualidad.json",
+    "name": "Los Chapitos contra La Mayiza",
+    "period": "2024 – actualidad",
+    "blurb": "La entrega de El Mayo Zambada a EE.UU. en julio de 2024 fractura al Cártel de Sinaloa en una guerra civil abierta entre 'Los Chapitos' y 'La Mayiza', mientras el CJNG acecha desde fuera."
   }
 ]

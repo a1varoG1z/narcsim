@@ -1,6 +1,7 @@
 import { getPlayerCartel } from "../../state.js";
-import { statBar } from "../../ui/components.js";
+import { statBar, escapeHtml } from "../../ui/components.js";
 import { applyAction } from "../../turnEngine.js";
+import { heatLabel } from "../../utils/text.js";
 
 const ACTIONS = [
   { type: "press_release", label: "Comunicado de prensa", cost: 80, desc: "Suaviza tu imagen ante la opinión pública local. Bajo riesgo, efecto modesto." },
@@ -21,6 +22,7 @@ export function render(container, app) {
       ${statBar("Imagen pública", r.publicImage, "image")}
       ${statBar("Reputación internacional", r.internationalReputation ?? 15)}
       ${statBar("Nivel de búsqueda (heat)", r.heat, "heat")}
+      <div class="small"><strong>${escapeHtml(heatLabel(r.heat))}</strong></div>
       <p class="text-dim small mt-1">La imagen pública mueve a la opinión local. La reputación internacional abre mercados de exportación más rentables (hasta un +25% de ingresos por territorio con fama máxima), pero la exposición tiene un precio en heat.</p>
     </div>
     <div class="card">

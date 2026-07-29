@@ -7,6 +7,7 @@ const WAR_OVERRIDES = {
   "fragmentacion-2006-2015": [["zetas", "golfo"], ["sinaloa", "beltran_leyva"], ["familia_michoacana", "zetas"]],
   "cjng-sinaloa-2015-actualidad": [["cjng", "santa_rosa"]],
   "mexico-rutas-1990-2006": [["sinaloa", "tijuana"]],
+  "chapitos-mayiza-2024-actualidad": [["chapitos", "mayiza"]],
 };
 
 export function buildGameFromEra(eraData, options) {

@@ -104,13 +104,19 @@ export function rollLoyaltyEvents(game, addLog) {
 }
 
 /** Police / military operations against a cartel, scaled by heat and reduced by corruption. */
+/** Shared with the UI (Overview tab) so the displayed risk always matches what actually gets rolled. */
+export function policeOperationChance(cartel) {
+  const heat = cartel.resources.heat;
+  const shield = cartel.resources.corruptPolice * 0.5 + cartel.resources.corruptGov * 0.3;
+  return clamp((heat - shield * 0.4) / 500, 0, 0.5);
+}
+
 export function rollPoliceOperations(game, addLog, year) {
   const arrests = [];
   for (const cartel of Object.values(game.cartels)) {
     if (cartel.destroyed) continue;
     const heat = cartel.resources.heat;
-    const shield = cartel.resources.corruptPolice * 0.5 + cartel.resources.corruptGov * 0.3;
-    const opChance = clamp((heat - shield * 0.4) / 500, 0, 0.5);
+    const opChance = policeOperationChance(cartel);
     if (chance(opChance)) {
       const target = pickArrestTarget(game, cartel);
       if (!target) continue;

@@ -23,17 +23,21 @@ function openWar(game, aId, bId) {
       casualtiesA: 0,
       casualtiesB: 0,
       territoryChanges: [],
+      treatyNote: null,
     };
     game.warHistory.push(war);
   }
   return war;
 }
 
-function closeWar(game, aId, bId) {
+function closeWar(game, aId, bId, treatyNote) {
   if (!game.warHistory) return;
   const key = warKey(aId, bId);
   const war = game.warHistory.find((w) => w.key === key && w.endYear === null);
-  if (war) war.endYear = currentYear(game);
+  if (war) {
+    war.endYear = currentYear(game);
+    if (treatyNote) war.treatyNote = treatyNote;
+  }
 }
 
 export function getWarsForCartel(game, cartelId) {
@@ -166,13 +170,34 @@ export function applyAction(game, cartelId, type, payload = {}) {
       if (!target) return { ok: false };
       const strength = r.armySize;
       const targetStrength = target.resources.armySize;
-      const acceptChance = clamp(0.3 + (targetStrength - strength) / (targetStrength + strength + 1), 0.1, 0.9);
+      let acceptChance = clamp(0.3 + (targetStrength - strength) / (targetStrength + strength + 1), 0.1, 0.9);
+
+      const cedeTerritory = payload.cedeTerritoryId ? game.territories[payload.cedeTerritoryId] : null;
+      const validCession = cedeTerritory && cedeTerritory.controllerId === cartelId;
+      if (validCession) acceptChance = clamp(acceptChance + 0.3, 0.1, 0.97);
+      const demandIndemnity = !!payload.demandIndemnity;
+      if (demandIndemnity) acceptChance = clamp(acceptChance - 0.2, 0.05, 0.97);
+
       if (chance(acceptChance)) {
         cartel.relations[target.id] = { status: "neutral", tension: 30 };
         target.relations[cartel.id] = { status: "neutral", tension: 30 };
-        closeWar(game, cartelId, target.id);
-        log(`${target.name} acepta la paz con ${cartel.name}.`, "good");
-        return { ok: true, accepted: true };
+        let treatyNote = "";
+        if (validCession) {
+          cedeTerritory.controllerId = target.id;
+          cartel.territories = cartel.territories.filter((id) => id !== cedeTerritory.id);
+          target.territories.push(cedeTerritory.id);
+          treatyNote += ` ${cartel.name} cede ${cedeTerritory.name} como parte del acuerdo.`;
+        }
+        let indemnity = 0;
+        if (demandIndemnity) {
+          indemnity = Math.round(target.resources.money * 0.2);
+          target.resources.money = Math.max(0, target.resources.money - indemnity);
+          r.money += indemnity;
+          treatyNote += ` ${target.name} paga una indemnización de $${indemnity}.`;
+        }
+        closeWar(game, cartelId, target.id, treatyNote.trim() || null);
+        log(`${target.name} acepta la paz con ${cartel.name}.${treatyNote}`, "good");
+        return { ok: true, accepted: true, cededTerritory: cedeTerritory?.name, indemnity };
       }
       log(`${target.name} rechaza la propuesta de paz de ${cartel.name}.`, "event");
       return { ok: true, accepted: false };

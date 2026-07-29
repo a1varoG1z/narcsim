@@ -58,20 +58,26 @@ Estado del proyecto tras la primera versión jugable (MVP). Marcado ✅ lo imple
 - ✅ **Segundo evento histórico interactivo**: el "Proceso 8.000" (1995) contra el Cártel de Cali ahora también es una decisión con tres opciones (entrega pactada, resistir sobornando jueces, o escalar la violencia) cuando juegas como Cali, siguiendo el mismo patrón que el evento de Camarena.
 - ✅ **La reputación internacional ya tiene efecto mecánico**: abre un bonus de exportación de hasta +25% sobre el ingreso por territorio con fama máxima, en vez de ser puramente cosmética.
 
+## Sexta pasada: tratados de paz, persecución más visible, sexta época jugable
+
+- ✅ **Tratados de paz con condiciones**: al proponer la paz puedes ofrecer ceder uno de tus territorios (sube mucho la probabilidad de aceptación) o exigir una indemnización del 20% del dinero del rival (si le superas claramente en ejército). Los términos quedan registrados en el historial de guerras.
+- ✅ **Persecución más visible**: el heat ahora muestra una etiqueta descriptiva (Bajo perfil / En el radar / Buscado / Objetivo prioritario / Cacería nacional) y un porcentaje real de "riesgo de operativo este turno", visible en Resumen y en Medios.
+- ✅ **Sexta época jugable: "Los Chapitos contra La Mayiza" (2024-actualidad)**: cubre la guerra civil real dentro del Cártel de Sinaloa desde julio de 2024, cuando Joaquín Guzmán López entregó a El Mayo Zambada a EE.UU. Juegas desde el minuto uno como una de las dos facciones (o fundas tu propio grupo), con El Chapo y El Mayo como patriarcas presos y el CJNG acechando desde fuera. Esto también cubre lo que antes era un evento pendiente de "más eras/variantes".
+
 ## Pendiente / mejoras futuras
 
 ### Mapa
 - ⬜ Mapa geográficamente preciso (actualmente es una disposición esquemática de territorios con adyacencia aproximada, no coordenadas reales).
 
 ### Guerras y combate
-- 🟡 Resolución de batallas por turno con ponderación de mando, adyacencia e historial. Pendiente: tácticas, terreno, refuerzos, moral, guerras prolongadas con objetivos concretos (no solo conquista de una plaza), tratados de paz con condiciones (cesión de territorio, indemnización).
+- 🟡 Resolución de batallas por turno con ponderación de mando, adyacencia, historial y tratados con condiciones (ver arriba). Pendiente: tácticas, terreno, refuerzos, moral, guerras prolongadas con objetivos concretos más allá de la conquista de una plaza.
 
 ### Familia, romances e intriga
 - 🟡 Cortejo, crisis matrimonial, genealogía y vínculos ya implementados. Pendiente: rivalidades entre hermanos, tramas de honor/venganza, amistades explícitas (hoy el vínculo cubre solo la relación jugador↔miembro, no las relaciones entre miembros del cártel entre sí).
 - 🟡 Eventos narrativos únicos: ya van dos hitos convertidos en decisiones interactivas (Camarena, Proceso 8.000). Pendiente: más eventos (capturas de los Arellano Félix, el ascenso del CJNG, etc.) con el mismo patrón interactivo.
 
 ### Policía / persecución
-- 🟡 El heat sube/baja, los operativos policiales escalan con la notoriedad y ya se puede intentar una fuga. Pendiente: mecánica de persecución más visible (barra de "expediente", informantes, redadas planeadas vs. sorpresa), fuga posible incluso desde cadena perpetua (como la extradición/traslados en la vida real).
+- 🟡 El heat ya tiene etiquetas descriptivas y un indicador de riesgo real, y se puede intentar una fuga. Pendiente: informantes, redadas planeadas vs. sorpresa, fuga posible incluso desde cadena perpetua (como la extradición/traslados en la vida real).
 
 ### Imagen pública y medios
 - ✅ Sección de medios con 5 acciones propias y reputación internacional con efecto mecánico real (ver arriba). Pendiente: efectos adicionales más específicos (atraer atención de agencias internacionales concretas, desbloquear aliados extranjeros).
@@ -81,7 +87,7 @@ Estado del proyecto tras la primera versión jugable (MVP). Marcado ✅ lo imple
 
 ### Personajes y datos
 - ⬜ Ampliar el roster de personajes secundarios reales cuando el usuario aporte información adicional (ver nota abajo).
-- ⬜ Más eras/variantes (ej. subdividir 2015-actualidad en la guerra interna de Sinaloa como época jugable propia).
+- ✅ Más eras/variantes: añadida la guerra interna de Sinaloa (Chapitos vs. Mayiza, 2024-actualidad) como época jugable propia (ver arriba).
 - ⬜ Editor visual de nuevas épocas/escenarios desde la propia interfaz (hoy los `.json` de época se editan a mano).
 
 ### Técnico / calidad de vida

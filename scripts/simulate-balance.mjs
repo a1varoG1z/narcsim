@@ -18,6 +18,7 @@ const eraFiles = [
   "mexico-rutas-1990-2006.json",
   "fragmentacion-2006-2015.json",
   "cjng-sinaloa-2015-actualidad.json",
+  "chapitos-mayiza-2024-actualidad.json",
 ];
 
 function playerTurnPolicy(game) {

@@ -1,7 +1,8 @@
 import { getPlayerCartel, getPlayerCharacter, currentYear } from "../../state.js";
 import { portraitImg, statBar, escapeHtml } from "../../ui/components.js";
 import { STATS, STAT_ORDER, age } from "../../model.js";
-import { fmtMoney, fmtNum } from "../../utils/text.js";
+import { fmtMoney, fmtNum, heatLabel } from "../../utils/text.js";
+import { policeOperationChance } from "../../events.js";
 
 export function render(container, app) {
   const game = app.game;
@@ -38,6 +39,7 @@ export function render(container, app) {
       ${statBar("Corrupción policial", r.corruptPolice)}
       ${statBar("Imagen pública", r.publicImage, "image")}
       ${statBar("Nivel de búsqueda (heat)", r.heat, "heat")}
+      <div class="small mt-1"><strong>${escapeHtml(heatLabel(r.heat))}</strong> · riesgo de operativo este turno: ${Math.round(policeOperationChance(cartel) * 100)}%</div>
       <div class="small text-dim mt-1">Territorios: ${cartel.territories.map((id) => escapeHtml(game.territories[id]?.name || id)).join(", ") || "ninguno"}</div>
     </div>
 
