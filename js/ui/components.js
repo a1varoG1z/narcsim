@@ -1,9 +1,15 @@
 import { ROLES } from "../model.js";
+import { generateProceduralPortrait } from "../portraitGenerator.js";
 
 const DEFAULT_PORTRAIT = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%232d241f'/%3E%3Ccircle cx='50' cy='38' r='18' fill='%234a382c'/%3E%3Cellipse cx='50' cy='88' rx='30' ry='22' fill='%234a382c'/%3E%3C/svg%3E";
 
 export function portraitImg(character, sizeClass = "") {
-  const src = character?.portrait || DEFAULT_PORTRAIT;
+  let src = character?.portrait;
+  if (!src) {
+    // Only fabricate a face for characters the game invented — never for real historical
+    // figures, who keep the neutral silhouette unless a real photo is uploaded for them.
+    src = character && character.historical === false ? generateProceduralPortrait(character) : DEFAULT_PORTRAIT;
+  }
   return `<img class="portrait ${sizeClass}" src="${src}" alt="${character ? escapeHtml(character.name) : ""}">`;
 }
 
