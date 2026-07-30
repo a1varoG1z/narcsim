@@ -463,11 +463,21 @@ export function applyAction(game, cartelId, type, payload = {}) {
       if (!target || !target.alive || !targetCartel || targetCartel.id === cartelId) {
         return { ok: false, message: "Objetivo no válido." };
       }
+      const method = payload.method || "sicario";
       r.money -= cost;
       const hitman = game.characters[cartel.roles.sicariosChief];
       const attackSkill = hitman ? (hitman.stats.stealth + hitman.stats.violence) / 2 : 40;
       const defenseSkill = target.stats.stealth + targetCartel.resources.corruptPolice / 4;
-      const successChance = clamp(0.35 + (attackSkill - defenseSkill) / 150, 0.1, 0.75);
+      let successChance = clamp(0.35 + (attackSkill - defenseSkill) / 150, 0.1, 0.75);
+      if (method === "accident") successChance = clamp(successChance - 0.15, 0.05, 0.6);
+      else if (method === "public") successChance = clamp(successChance + 0.05, 0.1, 0.85);
+
+      const goToWar = () => {
+        cartel.relations[targetCartel.id] = { status: "war", tension: 95 };
+        targetCartel.relations[cartelId] = { status: "war", tension: 95 };
+        openWar(game, cartelId, targetCartel.id);
+      };
+
       if (chance(successChance)) {
         target.alive = false;
         target.deathYear = currentYear(game);
@@ -478,19 +488,33 @@ export function applyAction(game, cartelId, type, payload = {}) {
           vacateRole(game, targetCartel.id, target.id);
           fillVacantRoles(targetCartel, game.characters, currentYear(game));
         }
-        targetCartel.resources.heat = Math.min(100, targetCartel.resources.heat + randInt(10, 20));
-        r.heat = Math.min(100, r.heat + randInt(20, 35));
-        cartel.relations[targetCartel.id] = { status: "war", tension: 95 };
-        targetCartel.relations[cartelId] = { status: "war", tension: 95 };
-        openWar(game, cartelId, targetCartel.id);
-        log(`${target.name} muere en un atentado ordenado por ${cartel.name}.`, "death");
+        if (method === "accident") {
+          targetCartel.resources.heat = Math.min(100, targetCartel.resources.heat + randInt(3, 8));
+          r.heat = Math.min(100, r.heat + randInt(5, 12));
+          log(`${target.name} muere en un aparente accidente orquestado en secreto por ${cartel.name}. Nadie sospecha... por ahora.`, "death");
+        } else if (method === "public") {
+          targetCartel.resources.heat = Math.min(100, targetCartel.resources.heat + randInt(15, 25));
+          targetCartel.resources.publicImage = Math.max(0, targetCartel.resources.publicImage - randInt(10, 20));
+          r.heat = Math.min(100, r.heat + randInt(25, 40));
+          goToWar();
+          log(`${target.name} muere en un ataque público y brutal ordenado por ${cartel.name}, pensado para sembrar el terror.`, "death");
+        } else {
+          targetCartel.resources.heat = Math.min(100, targetCartel.resources.heat + randInt(10, 20));
+          r.heat = Math.min(100, r.heat + randInt(20, 35));
+          goToWar();
+          log(`${target.name} muere en un atentado ordenado por ${cartel.name}.`, "death");
+        }
         return { ok: true, success: true };
       }
-      r.heat = Math.min(100, r.heat + randInt(25, 40));
-      targetCartel.relations[cartelId] = { status: "war", tension: 90 };
-      cartel.relations[targetCartel.id] = { status: "war", tension: 90 };
-      openWar(game, cartelId, targetCartel.id);
-      log(`El atentado de ${cartel.name} contra ${target.name} fracasa y expone su autoría.`, "event");
+      if (method === "accident") {
+        r.heat = Math.min(100, r.heat + randInt(20, 32));
+        goToWar();
+        log(`El intento de disfrazar un atentado contra ${target.name} como accidente fracasa y delata a ${cartel.name}.`, "event");
+      } else {
+        r.heat = Math.min(100, r.heat + randInt(25, 40));
+        goToWar();
+        log(`El atentado de ${cartel.name} contra ${target.name} fracasa y expone su autoría.`, "event");
+      }
       return { ok: true, success: false };
     }
     case "sabotage_rival": {

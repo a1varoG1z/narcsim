@@ -109,6 +109,58 @@ test("assassinate_rival kills the target on success, triggers succession if they
   assert.equal(wars.length, 1);
 });
 
+test("assassinate_rival's 'accident' method avoids a war on success but still exposes and triggers one on failure", () => {
+  const originalRandom = Math.random;
+  try {
+    const successGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    successGame.cartels.sinaloa.resources.money = 100_000_000;
+    const successTargetId = successGame.cartels.cjng.roles.leader;
+    Math.random = () => 0; // guarantees success regardless of the (lower) accident success chance
+    const successResult = applyAction(successGame, "sinaloa", "assassinate_rival", { targetCharacterId: successTargetId, method: "accident" });
+    assert.equal(successResult.ok, true);
+    assert.equal(successResult.success, true);
+    assert.equal(successGame.characters[successTargetId].alive, false);
+    assert.equal(successGame.cartels.sinaloa.relations.cjng?.status ?? "neutral", "neutral", "a successful staged accident shouldn't be attributed to you, so no war");
+    assert.equal(getWarsForCartel(successGame, "sinaloa").filter((w) => w.cartelA === "cjng" || w.cartelB === "cjng").length, 0);
+
+    const failGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    failGame.cartels.sinaloa.resources.money = 100_000_000;
+    const failTargetId = failGame.cartels.cjng.roles.leader;
+    Math.random = () => 0.99; // guarantees failure
+    const failResult = applyAction(failGame, "sinaloa", "assassinate_rival", { targetCharacterId: failTargetId, method: "accident" });
+    assert.equal(failResult.ok, true);
+    assert.equal(failResult.success, false);
+    assert.equal(failGame.characters[failTargetId].alive, true);
+    assert.equal(failGame.cartels.sinaloa.relations.cjng.status, "war", "a botched cover-up should still expose you and start a war");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("assassinate_rival's 'public' method damages the target cartel's public image on top of opening a war", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  cartel.resources.money = 100_000_000;
+  const targetCartel = game.cartels.cjng;
+  const targetLeaderId = targetCartel.roles.leader;
+  const imageBefore = targetCartel.resources.publicImage;
+
+  const originalRandom = Math.random;
+  Math.random = () => 0;
+  let result;
+  try {
+    result = applyAction(game, "sinaloa", "assassinate_rival", { targetCharacterId: targetLeaderId, method: "public" });
+  } finally {
+    Math.random = originalRandom;
+  }
+
+  assert.equal(result.ok, true);
+  assert.equal(result.success, true);
+  assert.equal(game.characters[targetLeaderId].alive, false);
+  assert.equal(cartel.relations.cjng.status, "war");
+  assert.ok(targetCartel.resources.publicImage < imageBefore, "a public, brutal hit should damage the target's public image");
+});
+
 test("assassinate_rival refuses insufficient funds and an invalid or same-cartel target", () => {
   const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
   const cartel = game.cartels.sinaloa;

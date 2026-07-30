@@ -109,7 +109,7 @@ function showAssassinateModal(app, game, cartel, targetCartelId) {
 
   showModal(`
     <h2>Ordenar un atentado contra ${escapeHtml(target.name)}</h2>
-    <p class="small text-dim">Coste: ${fmtMoney(ACTION_COSTS.assassinate_rival)}. El éxito depende de tu jefe de sicarios frente al sigilo del objetivo. Si falla, o si tiene éxito, quedará claro quién lo ordenó: entráis en guerra.</p>
+    <p class="small text-dim">Coste: ${fmtMoney(ACTION_COSTS.assassinate_rival)}. El éxito depende de tu jefe de sicarios frente al sigilo del objetivo.</p>
     ${candidates.length ? candidates.map((c) => `
       <button class="block" data-target="${c.id}">
         <div class="person-row" style="border:none;padding:0">
@@ -123,16 +123,47 @@ function showAssassinateModal(app, game, cartel, targetCartelId) {
   document.getElementById("close-btn").addEventListener("click", closeModal);
   document.querySelectorAll("[data-target]").forEach((btn) => {
     btn.addEventListener("click", () => {
-      const result = applyAction(game, cartel.id, "assassinate_rival", { targetCharacterId: btn.dataset.target });
-      app.setGame(game);
-      closeModal();
-      if (!result.ok) {
-        alert(result.message);
-      } else {
-        alert(result.success ? "El atentado tiene éxito." : "El atentado fracasa y expone tu implicación.");
-      }
-      app.render();
+      const targetChar = game.characters[btn.dataset.target];
+      showAssassinateMethodModal(app, game, cartel, targetCartelId, targetChar);
     });
+  });
+}
+
+function showAssassinateMethodModal(app, game, cartel, targetCartelId, targetChar) {
+  const target = game.cartels[targetCartelId];
+
+  const order = (method) => {
+    const result = applyAction(game, cartel.id, "assassinate_rival", { targetCharacterId: targetChar.id, method });
+    app.setGame(game);
+    closeModal();
+    if (!result.ok) {
+      alert(result.message);
+    } else {
+      alert(result.success ? "El atentado tiene éxito." : "El atentado fracasa y expone tu implicación.");
+    }
+    app.render();
+  };
+
+  showModal(`
+    <h2>¿Cómo ordenas el golpe contra ${escapeHtml(targetChar.name)}?</h2>
+    <p class="small text-dim">La forma de hacerlo cambia tus probabilidades y las consecuencias si sale a la luz.</p>
+    <button class="danger block" data-method="sicario">
+      Golpe directo de tus sicarios
+      <div class="small text-dim">La opción estándar, buena probabilidad de éxito. Tanto si falla como si tiene éxito quedará claro quién lo ordenó: entráis en guerra.</div>
+    </button>
+    <button class="danger block" data-method="accident">
+      Disfrazarlo de accidente
+      <div class="small text-dim">Más difícil de ejecutar con éxito, pero si sale bien nadie sospecha de ti por ahora y el heat apenas sube — no entráis en guerra. Si se descubre el montaje, la reacción es aún peor.</div>
+    </button>
+    <button class="danger block" data-method="public">
+      Un ataque público y brutal, para sembrar el terror
+      <div class="small text-dim">Algo más fácil de ejecutar y además daña la imagen pública de ${escapeHtml(target.name)}, pero el heat que generas es mucho mayor.</div>
+    </button>
+    <button class="ghost block mt-1" id="close-btn">Cancelar</button>
+  `);
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.querySelectorAll("[data-method]").forEach((btn) => {
+    btn.addEventListener("click", () => order(btn.dataset.method));
   });
 }
 
