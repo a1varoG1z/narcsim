@@ -104,7 +104,21 @@
       "controllerId": "zetas",
       "value": 16,
       "adj": [
-        "tamaulipas"
+        "tamaulipas",
+        "guatemala"
+      ]
+    },
+    {
+      "id": "guatemala",
+      "name": "Guatemala (avance de Los Zetas)",
+      "x": 56,
+      "y": 64,
+      "w": 20,
+      "h": 16,
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "veracruz"
       ]
     },
     {
