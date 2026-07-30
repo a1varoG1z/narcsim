@@ -419,6 +419,71 @@ test("sabotage_rival always costs money and damages the target's money on succes
   assert.equal(poorResult.ok, false);
 });
 
+test("intercept_shipment refuses insufficient funds and an invalid or same-cartel target", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+
+  cartel.resources.money = 0;
+  const poorResult = applyAction(game, "sinaloa", "intercept_shipment", { targetCartelId: "cjng" });
+  assert.equal(poorResult.ok, false);
+
+  cartel.resources.money = 100_000_000;
+  const sameCartelResult = applyAction(game, "sinaloa", "intercept_shipment", { targetCartelId: "sinaloa" });
+  assert.equal(sameCartelResult.ok, false);
+
+  const missingResult = applyAction(game, "sinaloa", "intercept_shipment", { targetCartelId: "does-not-exist" });
+  assert.equal(missingResult.ok, false);
+});
+
+test("intercept_shipment moves money from the target to the attacker (keeping half of what's seized) and draws heat on both sides when it succeeds", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  const cjng = game.cartels.cjng;
+  cartel.resources.money = 100_000_000;
+  cartel.resources.heat = 20;
+  cjng.resources.money = 50_000_000;
+  cjng.resources.heat = 20;
+  const cjngMoneyBefore = cjng.resources.money;
+
+  const originalRandom = Math.random;
+  let result;
+  try {
+    Math.random = () => 0; // guarantee success regardless of era/stat variance
+    result = applyAction(game, "sinaloa", "intercept_shipment", { targetCartelId: "cjng" });
+  } finally {
+    Math.random = originalRandom;
+  }
+  assert.equal(result.ok, true);
+  assert.equal(result.success, true);
+  assert.ok(result.seized > 0);
+  assert.equal(result.gained, Math.round(result.seized * 0.5), "the attacker should only pocket half of what was seized from the target");
+  assert.equal(cjng.resources.money, cjngMoneyBefore - result.seized, "the target should lose exactly the seized amount");
+  assert.ok(cartel.resources.heat > 20, "the attacker should draw heat from the ambush");
+  assert.ok(cjng.resources.heat > 20, "the target should draw heat too since their route got hit");
+});
+
+test("intercept_shipment costs the attacker army and heat on failure, without touching the target's money at all", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  const cjng = game.cartels.cjng;
+  cartel.resources.money = 100_000_000;
+  cartel.resources.armySize = 1000;
+  const cjngMoneyBefore = cjng.resources.money;
+
+  const originalRandom = Math.random;
+  let result;
+  try {
+    Math.random = () => 0.99; // above the 0.8 success-chance ceiling regardless of era/stat variance: guaranteed failure
+    result = applyAction(game, "sinaloa", "intercept_shipment", { targetCartelId: "cjng" });
+  } finally {
+    Math.random = originalRandom;
+  }
+  assert.equal(result.ok, true);
+  assert.equal(result.success, false);
+  assert.equal(cjng.resources.money, cjngMoneyBefore, "a failed ambush shouldn't touch the target's money at all");
+  assert.ok(cartel.resources.armySize < 1000, "a failed ambush should cost the attacker some men");
+});
+
 test("recruit_informant succeeds or fails, refuses invalid targets/insufficient funds, and the resulting informant decays over its turn duration", () => {
   const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
   const cartel = game.cartels.sinaloa;

@@ -94,6 +94,7 @@ export const ACTION_COSTS = {
   extort_territory: 0,
   assassinate_rival: 200 * MONEY_SCALE,
   sabotage_rival: 100 * MONEY_SCALE,
+  intercept_shipment: 150 * MONEY_SCALE,
   recruit_informant: 150 * MONEY_SCALE,
   poach_member: 350 * MONEY_SCALE,
   raid_territory: 150 * MONEY_SCALE,
@@ -641,6 +642,49 @@ export function applyAction(game, cartelId, type, payload = {}) {
       }
       return { ok: true, success: false };
     }
+    case "intercept_shipment": {
+      // Distinct from sabotage_rival: this is a violent ambush on a specific shipment in transit,
+      // not covert financial sabotage. Money moves from the target straight into your own pocket
+      // (you seize product, not just destroy value), it's sensitive to the era's own drug profile
+      // (bulkier, easier-to-track shipments per DRUG_PROFILES.seizureMult are easier to intercept),
+      // and a failed ambush costs you men, not just heat.
+      const cost = ACTION_COSTS.intercept_shipment;
+      if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
+      const target = game.cartels[payload.targetCartelId];
+      if (!target || target.id === cartelId || target.destroyed) return { ok: false, message: "Objetivo no válido." };
+      r.money -= cost;
+      const raider = game.characters[cartel.roles.sicariosChief] || game.characters[cartel.roles.intelChief];
+      const skill = raider ? (raider.stats.violence + raider.stats.stealth) / 2 : 40;
+      const defense = target.resources.corruptPolice / 2 + 20;
+      const drug = getDrugProfile(game);
+      let successChance = clamp(clamp(0.35 + (skill - defense) / 150, 0.15, 0.7) * drug.seizureMult, 0.1, 0.8);
+      if (hasActiveInformant(cartel, target.id)) successChance = clamp(successChance + INFORMANT_SUCCESS_BONUS, 0.1, 0.9);
+      const bumpTension = (delta) => {
+        const status = cartel.relations[target.id]?.status || "neutral";
+        const tension = clamp((cartel.relations[target.id]?.tension || 30) + delta, 0, 100);
+        cartel.relations[target.id] = { status, tension };
+        target.relations[cartelId] = { status, tension };
+      };
+      if (chance(successChance)) {
+        const seized = Math.round(cost * (1.4 + Math.random()) * drug.payoutMult);
+        const gained = Math.round(seized * 0.5);
+        target.resources.money = Math.max(0, target.resources.money - seized);
+        r.money += gained;
+        target.resources.heat = Math.min(100, target.resources.heat + randInt(8, 15));
+        r.heat = Math.min(100, r.heat + randInt(8, 15));
+        bumpTension(randInt(15, 25));
+        log(`${cartel.name} intercepta en tránsito un cargamento de ${target.name} valorado en ${fmtMoney(seized)}.`, "event");
+        if (game._reactiveEvents && target.id === game.playerCartelId) {
+          game._reactiveEvents.push({ type: "shipmentIntercepted", byCartelId: cartel.id, byCartelName: cartel.name, amount: seized });
+        }
+        return { ok: true, success: true, seized, gained };
+      }
+      r.heat = Math.min(100, r.heat + randInt(12, 20));
+      cartel.resources.armySize = Math.max(0, cartel.resources.armySize - randInt(2, 8));
+      bumpTension(randInt(10, 20));
+      log(`El intento de ${cartel.name} de interceptar un cargamento de ${target.name} termina en un tiroteo y fracasa.`, "event");
+      return { ok: true, success: false };
+    }
     case "recruit_informant": {
       const cost = ACTION_COSTS.recruit_informant;
       if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
@@ -1028,6 +1072,9 @@ function runAiCartels(game) {
     if (rivalCartels.length && r.money >= ACTION_COSTS.sabotage_rival) {
       options.push({ item: "sabotage_rival", weight: 1 });
     }
+    if (rivalCartels.length && r.money >= ACTION_COSTS.intercept_shipment) {
+      options.push({ item: "intercept_shipment", weight: atWar ? 1.5 : 0.7 });
+    }
     const informantTargets = rivalCartels.filter((c) => !hasActiveInformant(cartel, c.id));
     if (informantTargets.length && r.money >= ACTION_COSTS.recruit_informant) {
       options.push({ item: "recruit_informant", weight: atWar ? 1.2 : 0.6 });
@@ -1108,6 +1155,15 @@ function runAiCartels(game) {
         continue;
       }
       choice = "corrupt_gov";
+      if (!canAfford(cartel, choice)) continue;
+    }
+    if (choice === "intercept_shipment") {
+      const target = rivalCartels.length ? pick(rivalCartels) : null;
+      if (target) {
+        applyAction(game, cartel.id, "intercept_shipment", { targetCartelId: target.id });
+        continue;
+      }
+      choice = "corrupt_police";
       if (!canAfford(cartel, choice)) continue;
     }
     if (choice === "recruit_informant") {

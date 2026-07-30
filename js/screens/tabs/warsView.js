@@ -24,7 +24,7 @@ export function render(container, app) {
   container.innerHTML = `
     <div class="card">
       <h2>Relaciones exteriores</h2>
-      <p class="text-dim small">Declarar guerra, atacar, ocupar y proponer paz/alianza no gastan acciones. Ordenar un atentado, sabotear, hacer una redada, reclutar informantes y reclutar a un miembro rival sí (te quedan ${getActionsRemaining(game)}).</p>
+      <p class="text-dim small">Declarar guerra, atacar, ocupar y proponer paz/alianza no gastan acciones. Ordenar un atentado, sabotear, hacer una redada, reclutar informantes, reclutar a un miembro rival e interceptar un cargamento sí (te quedan ${getActionsRemaining(game)}).</p>
       ${others.map((o) => {
         const rel = cartel.relations[o.id] || { status: "neutral", tension: 0 };
         return `
@@ -40,6 +40,7 @@ export function render(container, app) {
             ${rel.status === "neutral" ? `<button data-alliance="${o.id}">Proponer alianza</button>` : ""}
             <button class="danger" data-assassinate="${o.id}" ${cartel.resources.money < ACTION_COSTS.assassinate_rival || noActionsLeft ? "disabled" : ""}>Ordenar un atentado</button>
             <button class="danger" data-sabotage="${o.id}" ${cartel.resources.money < ACTION_COSTS.sabotage_rival || noActionsLeft ? "disabled" : ""}>Sabotear</button>
+            <button class="danger" data-intercept="${o.id}" ${cartel.resources.money < ACTION_COSTS.intercept_shipment || noActionsLeft ? "disabled" : ""}>Interceptar un cargamento</button>
             <button class="danger" data-raid="${o.id}" ${cartel.resources.money < ACTION_COSTS.raid_territory || noActionsLeft ? "disabled" : ""}>Redada</button>
             <button data-informant="${o.id}" ${cartel.resources.money < ACTION_COSTS.recruit_informant || noActionsLeft || hasActiveInformant(cartel, o.id) ? "disabled" : ""}>Reclutar informante</button>
             <button data-poach="${o.id}" ${cartel.resources.money < ACTION_COSTS.poach_member || noActionsLeft ? "disabled" : ""}>Reclutar a un miembro</button>
@@ -90,6 +91,14 @@ export function render(container, app) {
     app.setGame(game);
     if (!result.ok) alert(result.message);
     else alert(result.success ? `Sabotaje con éxito: le causas ${fmtMoney(result.damage)} en pérdidas.` : "El sabotaje fracasa y expone tu implicación.");
+    app.render();
+  }));
+  container.querySelectorAll("[data-intercept]").forEach((btn) => btn.addEventListener("click", () => {
+    if (!confirm(`¿Interceptar un cargamento de ${game.cartels[btn.dataset.intercept].name} por ${fmtMoney(ACTION_COSTS.intercept_shipment)}?`)) return;
+    const result = applyAction(game, cartel.id, "intercept_shipment", { targetCartelId: btn.dataset.intercept });
+    app.setGame(game);
+    if (!result.ok) alert(result.message);
+    else alert(result.success ? `Interceptado con éxito: les causas ${fmtMoney(result.seized)} en pérdidas y te llevas ${fmtMoney(result.gained)}.` : "El intento termina en un tiroteo y fracasa.");
     app.render();
   }));
   container.querySelectorAll("[data-raid]").forEach((btn) => btn.addEventListener("click", () => {
