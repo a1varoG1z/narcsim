@@ -14,6 +14,12 @@ export function render(container, app) {
   const cartel = getPlayerCartel(game);
   const others = Object.values(game.cartels).filter((c) => c.id !== cartel.id && !c.destroyed);
   const noActionsLeft = getActionsRemaining(game) <= 0;
+  const internalTargets = ROLE_ORDER
+    .filter((role) => role !== "leader")
+    .map((role) => cartel.roles[role])
+    .filter((id, i, arr) => id && id !== game.playerCharacterId && arr.indexOf(id) === i)
+    .map((id) => game.characters[id])
+    .filter((c) => c && c.alive);
 
   container.innerHTML = `
     <div class="card">
@@ -41,6 +47,19 @@ export function render(container, app) {
       }).join("")}
     </div>
     <div class="card">
+      <h2>Purga interna</h2>
+      <p class="text-dim small">Ordena un atentado contra alguien de tu propio cártel (por ejemplo, un traidor ya descubierto). No hay guerra que declarar, pero un golpe contra los tuyos siembra desconfianza en el resto de tu cúpula, tanto si sale bien como si fracasa.</p>
+      ${internalTargets.length ? internalTargets.map((m) => `
+        <div class="person-row">
+          <div style="display:flex;gap:.6rem;flex:1;min-width:0;align-items:center">
+            ${portraitImg(m)}
+            <div class="info"><div class="name">${escapeHtml(m.name)}</div><div class="role">${m.role ? roleLabel(m.role) : "Sin cargo"}</div></div>
+          </div>
+          <button class="danger" data-purge="${m.id}" ${cartel.resources.money < ACTION_COSTS.assassinate_rival || noActionsLeft ? "disabled" : ""}>Ordenar un atentado</button>
+        </div>
+      `).join("") : `<p class="small text-dim">No hay nadie más en tu cúpula ahora mismo.</p>`}
+    </div>
+    <div class="card">
       <h2>Historial de guerras</h2>
       ${renderWarHistory(game, cartel)}
     </div>
@@ -60,6 +79,9 @@ export function render(container, app) {
   }));
   container.querySelectorAll("[data-assassinate]").forEach((btn) => btn.addEventListener("click", () => {
     showAssassinateModal(app, game, cartel, btn.dataset.assassinate);
+  }));
+  container.querySelectorAll("[data-purge]").forEach((btn) => btn.addEventListener("click", () => {
+    showAssassinateMethodModal(app, game, cartel, cartel.id, game.characters[btn.dataset.purge]);
   }));
   container.querySelectorAll("[data-sabotage]").forEach((btn) => btn.addEventListener("click", () => {
     if (!confirm(`¿Sabotear a ${game.cartels[btn.dataset.sabotage].name} por ${fmtMoney(ACTION_COSTS.sabotage_rival)}?`)) return;
@@ -144,7 +166,8 @@ function showAssassinateModal(app, game, cartel, targetCartelId) {
 }
 
 function showAssassinateMethodModal(app, game, cartel, targetCartelId, targetChar) {
-  const target = game.cartels[targetCartelId];
+  const isInternal = targetCartelId === cartel.id;
+  const target = isInternal ? cartel : game.cartels[targetCartelId];
 
   const order = (method) => {
     const result = applyAction(game, cartel.id, "assassinate_rival", { targetCharacterId: targetChar.id, method });
@@ -163,15 +186,15 @@ function showAssassinateMethodModal(app, game, cartel, targetCartelId, targetCha
     <p class="small text-dim">La forma de hacerlo cambia tus probabilidades y las consecuencias si sale a la luz.</p>
     <button class="danger block" data-method="sicario">
       Golpe directo de tus sicarios
-      <div class="small text-dim">La opción estándar, buena probabilidad de éxito. Tanto si falla como si tiene éxito quedará claro quién lo ordenó: entráis en guerra.</div>
+      <div class="small text-dim">La opción estándar, buena probabilidad de éxito. ${isInternal ? "Tanto si falla como si tiene éxito, el resto de tu cúpula sabrá que fuiste tú y confiará menos en ti." : "Tanto si falla como si tiene éxito quedará claro quién lo ordenó: entráis en guerra."}</div>
     </button>
     <button class="danger block" data-method="accident">
       Disfrazarlo de accidente
-      <div class="small text-dim">Más difícil de ejecutar con éxito, pero si sale bien nadie sospecha de ti por ahora y el heat apenas sube — no entráis en guerra. Si se descubre el montaje, la reacción es aún peor.</div>
+      <div class="small text-dim">Más difícil de ejecutar con éxito, pero si sale bien nadie sospecha de ti por ahora y el heat apenas sube${isInternal ? "" : " — no entráis en guerra"}. Si se descubre el montaje, la reacción es aún peor.</div>
     </button>
     <button class="danger block" data-method="public">
       Un ataque público y brutal, para sembrar el terror
-      <div class="small text-dim">Algo más fácil de ejecutar y además daña la imagen pública de ${escapeHtml(target.name)}, pero el heat que generas es mucho mayor.</div>
+      <div class="small text-dim">Algo más fácil de ejecutar${isInternal ? `, pero daña tu propia imagen pública y siembra el pánico entre tus propios mandos` : ` y además daña la imagen pública de ${escapeHtml(target.name)}`}, y el heat que generas es mucho mayor.</div>
     </button>
     <button class="ghost block mt-1" id="close-btn">Cancelar</button>
   `);

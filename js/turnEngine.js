@@ -485,8 +485,15 @@ export function applyAction(game, cartelId, type, payload = {}) {
       if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
       const target = game.characters[payload.targetCharacterId];
       const targetCartel = target ? game.cartels[target.cartelId] : null;
-      if (!target || !target.alive || !targetCartel || targetCartel.id === cartelId) {
+      if (!target || !target.alive || !targetCartel) {
         return { ok: false, message: "Objetivo no válido." };
+      }
+      // Internal hits (ordering a killing within your own cartel — e.g. a traitor already
+      // discovered) are allowed, but never against your own cartel's leader or whoever you're
+      // currently controlling: this action models an order given BY the leadership, not a self-coup.
+      const isInternal = targetCartel.id === cartelId;
+      if (isInternal && (targetCartel.roles.leader === target.id || target.id === game.playerCharacterId)) {
+        return { ok: false, message: "No puedes ordenar un atentado contra ti mismo." };
       }
       const method = payload.method || "sicario";
       r.money -= cost;
@@ -496,7 +503,7 @@ export function applyAction(game, cartelId, type, payload = {}) {
       let successChance = clamp(0.35 + (attackSkill - defenseSkill) / 150, 0.1, 0.75);
       if (method === "accident") successChance = clamp(successChance - 0.15, 0.05, 0.6);
       else if (method === "public") successChance = clamp(successChance + 0.05, 0.1, 0.85);
-      if (hasActiveInformant(cartel, targetCartel.id)) successChance = clamp(successChance + INFORMANT_SUCCESS_BONUS, 0.05, 0.9);
+      if (!isInternal && hasActiveInformant(cartel, targetCartel.id)) successChance = clamp(successChance + INFORMANT_SUCCESS_BONUS, 0.05, 0.9);
       // A leader's own private security detail (invest_security) only protects them specifically —
       // it doesn't help the rest of the cartel's roster.
       if (targetCartel.roles.leader === target.id && targetCartel.resources.securityBonus) {
@@ -507,6 +514,18 @@ export function applyAction(game, cartelId, type, payload = {}) {
         cartel.relations[targetCartel.id] = { status: "war", tension: 95 };
         targetCartel.relations[cartelId] = { status: "war", tension: 95 };
         openWar(game, cartelId, targetCartel.id);
+      };
+      // An internal purge has no rival to declare war on, but it does poison trust across the
+      // rest of the leadership circle: everyone else quietly registers that their boss is willing
+      // to have one of their own killed.
+      const chillInternalTrust = (delta) => {
+        for (const role of ROLE_ORDER) {
+          if (role === "leader") continue;
+          const holder = game.characters[cartel.roles[role]];
+          if (holder && holder.alive && holder.id !== target.id) {
+            holder.bondWithPlayer = clamp((holder.bondWithPlayer ?? 50) + delta, 0, 100);
+          }
+        }
       };
 
       if (chance(successChance)) {
@@ -536,7 +555,22 @@ export function applyAction(game, cartelId, type, payload = {}) {
         }
         const verb = survives ? "sobrevive por poco a" : "muere en";
         const logType = survives ? "good" : "death";
-        if (method === "accident") {
+        if (isInternal) {
+          if (method === "accident") {
+            r.heat = Math.min(100, r.heat + randInt(3, 8));
+            chillInternalTrust(-randInt(3, 8));
+            log(`${target.name} ${verb} un aparente accidente orquestado en secreto por su propio cártel tras ser señalado como traidor.`, logType);
+          } else if (method === "public") {
+            r.heat = Math.min(100, r.heat + randInt(10, 18));
+            r.publicImage = Math.max(0, r.publicImage - randInt(5, 12));
+            chillInternalTrust(-randInt(10, 18));
+            log(`${cartel.name} ejecuta públicamente a ${target.name} por traición, sembrando el terror dentro de sus propias filas.`, logType);
+          } else {
+            r.heat = Math.min(100, r.heat + randInt(6, 14));
+            chillInternalTrust(-randInt(6, 12));
+            log(`${target.name} ${verb} una purga interna ordenada por ${cartel.name} tras ser señalado como traidor.`, logType);
+          }
+        } else if (method === "accident") {
           targetCartel.resources.heat = Math.min(100, targetCartel.resources.heat + randInt(3, 8));
           r.heat = Math.min(100, r.heat + randInt(5, 12));
           log(`${target.name} ${verb} un aparente accidente orquestado en secreto por ${cartel.name}. Nadie sospecha... por ahora.`, logType);
@@ -554,7 +588,11 @@ export function applyAction(game, cartelId, type, payload = {}) {
         }
         return { ok: true, success: true, survived: survives };
       }
-      if (method === "accident") {
+      if (isInternal) {
+        r.heat = Math.min(100, r.heat + randInt(8, 16));
+        chillInternalTrust(-randInt(10, 20));
+        log(`El intento de purga interna de ${cartel.name} contra ${target.name} fracasa y siembra el miedo entre sus propios mandos.`, "event");
+      } else if (method === "accident") {
         r.heat = Math.min(100, r.heat + randInt(20, 32));
         goToWar();
         log(`El intento de disfrazar un atentado contra ${target.name} como accidente fracasa y delata a ${cartel.name}.`, "event");

@@ -210,6 +210,54 @@ test("assassinate_rival refuses insufficient funds and an invalid or same-cartel
   assert.equal(missingResult.ok, false);
 });
 
+test("assassinate_rival can target a member of your own cartel (e.g. a discovered traitor), but never your own leader or the character you control", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  cartel.resources.money = 100_000_000;
+
+  const leaderResult = applyAction(game, "sinaloa", "assassinate_rival", { targetCharacterId: cartel.roles.leader });
+  assert.equal(leaderResult.ok, false, "ordering a hit on your own cartel's leader should be refused");
+
+  const selfResult = applyAction(game, "sinaloa", "assassinate_rival", { targetCharacterId: game.playerCharacterId });
+  assert.equal(selfResult.ok, false, "ordering a hit on whoever you currently control should be refused");
+
+  const underbossId = cartel.roles.underboss;
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0; // guarantee both the attempt and (if it were the player) the survival roll succeed
+    const result = applyAction(game, "sinaloa", "assassinate_rival", { targetCharacterId: underbossId });
+    assert.equal(result.ok, true, "hitting a non-leader member of your own cartel should be a valid order");
+    assert.equal(result.success, true);
+  } finally {
+    Math.random = originalRandom;
+  }
+  assert.equal(game.characters[underbossId].alive, false);
+  assert.notEqual(cartel.roles.underboss, underbossId, "the role should have been vacated (and refilled by fillVacantRoles) rather than still pointing at the dead character");
+  // No rival cartel was involved, so there's nothing to go to war over.
+  assert.equal(Object.values(cartel.relations).some((rel) => rel.status === "war"), false);
+});
+
+test("a successful or failed internal purge damages bondWithPlayer for the rest of the leadership circle, not the target", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  cartel.resources.money = 100_000_000;
+  const underbossId = cartel.roles.underboss;
+  const sicariosChiefId = cartel.roles.sicariosChief;
+  game.characters[sicariosChiefId].bondWithPlayer = 50;
+
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.99; // guarantee the hit fails
+    const result = applyAction(game, "sinaloa", "assassinate_rival", { targetCharacterId: underbossId });
+    assert.equal(result.ok, true);
+    assert.equal(result.success, false);
+  } finally {
+    Math.random = originalRandom;
+  }
+  assert.equal(game.characters[underbossId].alive, true, "a failed attempt should leave the target alive");
+  assert.ok(game.characters[sicariosChiefId].bondWithPlayer < 50, "a bystander in the leadership circle should trust you less after a failed internal purge");
+});
+
 test("assassinate_rival killing the player's own character defers to the succession pipeline instead of silently calling autoSuccession", () => {
   // The player leads sinaloa; a rival AI cartel (cjng) successfully assassinates them.
   const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
