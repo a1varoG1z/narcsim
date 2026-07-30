@@ -16,7 +16,8 @@ export function render(container, app) {
     : game.playerControlMode === "waiting"
     ? `<p class="text-danger small">Estás en prisión. El cártel avanza sin liderazgo directo.</p>`
     : "";
-  const canEscape = character.imprisoned && !character.imprisoned.lifeSentence;
+  const canEscape = !!character.imprisoned;
+  const isLifeSentence = character.imprisoned?.lifeSentence;
 
   container.innerHTML = `
     <div class="card">
@@ -28,7 +29,10 @@ export function render(container, app) {
         </div>
       </div>
       ${controlNote}
-      ${canEscape ? `<button class="danger block" id="escape-btn">Intentar fuga de prisión</button>` : ""}
+      ${canEscape ? `
+        <button class="danger block" id="escape-btn">Intentar fuga de prisión</button>
+        ${isLifeSentence ? `<p class="small text-dim">Cumples cadena perpetua: una fuga de máxima seguridad es muchísimo más difícil (aunque no imposible, como demuestra la historia real), y un intento fallido trae vigilancia redoblada.</p>` : ""}
+      ` : ""}
       ${STAT_ORDER.map((k) => statBar(STATS[k], character.stats[k])).join("")}
     </div>
 

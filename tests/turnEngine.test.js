@@ -175,27 +175,33 @@ test("occupy_territory's success chance scales with army strength relative to th
   }
 });
 
-test("attemptEscape refuses to break a life sentence and succeeds/fails deterministically otherwise", () => {
+test("attemptEscape allows breaking a life sentence, but far less reliably than a regular one, and succeeds/fails deterministically otherwise", () => {
   const game = newGame("mexico-rutas-1990-2006.json", "sinaloa", "chapo_guzman");
   const chapo = game.characters.chapo_guzman;
-
-  chapo.imprisoned = { sinceTurn: 0, releaseTurn: null, lifeSentence: true };
-  const lifeResult = attemptEscape(game);
-  assert.equal(lifeResult.ok, false);
-  assert.ok(chapo.imprisoned, "life sentence must not be liftable via escape");
-
-  chapo.imprisoned = { sinceTurn: 0, releaseTurn: 10, lifeSentence: false };
   chapo.stats.stealth = 95;
   chapo.stats.intrigue = 95;
   game.cartels.sinaloa.resources.corruptPolice = 90;
-  const result = attemptEscape(game);
-  assert.equal(result.ok, true);
-  // With max stats the clamp caps success at 0.75, so failure is still possible; either way the
-  // sentence object must be updated in a well-defined way (cleared on success, extended on failure).
-  if (result.success) {
+
+  const originalRandom = Math.random;
+  try {
+    // Max stats give a regular sentence a real (clamped at 0.75) shot, but a life sentence should
+    // stay capped far lower (0.15) for the exact same character/cartel strength — proven with a
+    // single fixed roll that succeeds against the regular cap but fails against the life-sentence one.
+    Math.random = () => 0.5;
+
+    chapo.imprisoned = { sinceTurn: 0, releaseTurn: 10, lifeSentence: false };
+    const regularResult = attemptEscape(game);
+    assert.equal(regularResult.ok, true);
+    assert.equal(regularResult.success, true, "a well-connected, stealthy character should escape a regular sentence at this roll");
     assert.equal(chapo.imprisoned, null);
-  } else {
-    assert.ok(chapo.imprisoned.releaseTurn > 10);
+
+    chapo.imprisoned = { sinceTurn: 0, releaseTurn: 10, lifeSentence: true };
+    const lifeResult = attemptEscape(game);
+    assert.equal(lifeResult.ok, true, "a life sentence should now be attemptable rather than flatly refused");
+    assert.equal(lifeResult.success, false, "the exact same roll that broke a regular sentence should fail against a life sentence's much lower cap");
+    assert.ok(chapo.imprisoned, "a failed life-sentence attempt should leave the character imprisoned");
+  } finally {
+    Math.random = originalRandom;
   }
 });
 

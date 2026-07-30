@@ -1445,20 +1445,33 @@ export function attemptEscape(game) {
   const original = game.characters[game.playerCharacterId];
   const cartel = getPlayerCartel(game);
   if (!original || !original.imprisoned) return { ok: false, message: "No estás en prisión." };
-  if (original.imprisoned.lifeSentence) return { ok: false, message: "Una cadena perpetua no se puede burlar así." };
 
-  const successChance = clamp(
-    (original.stats.stealth * 0.4 + original.stats.intrigue * 0.35 + cartel.resources.corruptPolice * 0.25) / 100 - 0.1,
-    0.05,
-    0.75
-  );
+  const lifeSentence = original.imprisoned.lifeSentence;
+  // Real max-security escapes (like El Chapo's 2001 and 2015 breakouts) are vanishingly rare but
+  // not fictional, so a life sentence is now brutally hard rather than flatly impossible: the
+  // chance is capped far lower, and a failed attempt draws a much harsher crackdown.
+  const successChance = lifeSentence
+    ? clamp((original.stats.stealth * 0.4 + original.stats.intrigue * 0.35 + cartel.resources.corruptPolice * 0.25) / 100 - 0.35, 0.02, 0.15)
+    : clamp((original.stats.stealth * 0.4 + original.stats.intrigue * 0.35 + cartel.resources.corruptPolice * 0.25) / 100 - 0.1, 0.05, 0.75);
 
   if (chance(successChance)) {
     original.imprisoned = null;
     restorePlayerLeadership(game);
     cartel.resources.heat = Math.min(100, cartel.resources.heat + randInt(20, 30));
-    addLog(game, `${original.name} protagoniza una fuga espectacular y recupera el control de ${cartel.name}. La noticia recorre el país.`, "good");
+    addLog(
+      game,
+      lifeSentence
+        ? `${original.name} protagoniza una fuga histórica de una prisión de máxima seguridad, algo que casi nunca ocurre en la vida real, y recupera el control de ${cartel.name}. La noticia da la vuelta al mundo.`
+        : `${original.name} protagoniza una fuga espectacular y recupera el control de ${cartel.name}. La noticia recorre el país.`,
+      "good"
+    );
     return { ok: true, success: true };
+  }
+
+  if (lifeSentence) {
+    cartel.resources.heat = Math.min(100, cartel.resources.heat + randInt(10, 20));
+    addLog(game, `El intento de fuga de ${original.name} de una prisión de máxima seguridad fracasa: lo trasladan a una celda de aislamiento y la vigilancia se redobla.`, "event");
+    return { ok: true, success: false };
   }
 
   const extra = randInt(4, 10);
