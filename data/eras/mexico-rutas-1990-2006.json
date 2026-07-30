@@ -150,7 +150,21 @@
       "controllerId": "milenio",
       "value": 10,
       "adj": [
-        "jalisco"
+        "jalisco",
+        "honduras"
+      ]
+    },
+    {
+      "id": "honduras",
+      "name": "Honduras (escala aérea de \"El Señor de los Cielos\")",
+      "x": 34,
+      "y": 70,
+      "w": 20,
+      "h": 16,
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "michoacan"
       ]
     }
   ],

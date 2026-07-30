@@ -134,7 +134,21 @@
       "controllerId": "guerreros_unidos",
       "value": 12,
       "adj": [
-        "michoacan"
+        "michoacan",
+        "guatemala"
+      ]
+    },
+    {
+      "id": "guatemala",
+      "name": "Guatemala (expansión del CJNG)",
+      "x": 13,
+      "y": 89,
+      "w": 17,
+      "h": 10,
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "guerrero"
       ]
     }
   ],
