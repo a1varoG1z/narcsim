@@ -258,6 +258,91 @@ test("a successful or failed internal purge damages bondWithPlayer for the rest 
   assert.ok(game.characters[sicariosChiefId].bondWithPlayer < 50, "a bystander in the leadership circle should trust you less after a failed internal purge");
 });
 
+test("poach_member refuses insufficient funds, an invalid target, and a rival cartel's own leader", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  const cjng = game.cartels.cjng;
+
+  cartel.resources.money = 0;
+  const poorResult = applyAction(game, "sinaloa", "poach_member", { targetCharacterId: cjng.roles.underboss });
+  assert.equal(poorResult.ok, false);
+
+  cartel.resources.money = 100_000_000;
+  const leaderResult = applyAction(game, "sinaloa", "poach_member", { targetCharacterId: cjng.roles.leader });
+  assert.equal(leaderResult.ok, false, "a rival cartel's own leader should never be poachable");
+
+  const sameCartelResult = applyAction(game, "sinaloa", "poach_member", { targetCharacterId: cartel.roles.underboss });
+  assert.equal(sameCartelResult.ok, false, "you can't poach your own cartel's members");
+
+  const missingResult = applyAction(game, "sinaloa", "poach_member", { targetCharacterId: "does-not-exist" });
+  assert.equal(missingResult.ok, false);
+});
+
+test("poach_member moves a successfully recruited rival member into your own cartel and spikes tension; a failure leaves them in place", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  const cjng = game.cartels.cjng;
+  cartel.resources.money = 100_000_000;
+  const underbossId = cjng.roles.underboss;
+  const originalTension = cartel.relations.cjng?.tension ?? 30;
+
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0; // guarantee success
+    const result = applyAction(game, "sinaloa", "poach_member", { targetCharacterId: underbossId });
+    assert.equal(result.ok, true);
+    assert.equal(result.success, true);
+  } finally {
+    Math.random = originalRandom;
+  }
+  const poached = game.characters[underbossId];
+  assert.equal(poached.cartelId, "sinaloa", "the poached member should now belong to the recruiting cartel");
+  assert.ok(cartel.characters.includes(underbossId), "the poached member should be added to the new cartel's roster");
+  assert.ok(!cjng.characters.includes(underbossId), "the poached member should be removed from their old cartel's roster");
+  assert.notEqual(cjng.roles.underboss, underbossId, "their old role should have been vacated (and refilled)");
+  assert.ok(cartel.relations.cjng.tension > originalTension, "poaching a rival's member should spike tension between the two cartels");
+  assert.equal(cjng.relations.sinaloa.tension, cartel.relations.cjng.tension, "tension should be mirrored symmetrically on both sides");
+});
+
+test("poach_member's success chance improves when the two cartels are already at war, reflecting easier wartime defections", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  const cjng = game.cartels.cjng;
+  cartel.resources.money = 100_000_000 * 3;
+  const target = game.characters[cjng.roles.underboss];
+  target.stats.loyaltyInspiring = 90;
+  target.bondWithPlayer = 90;
+  // Pin the recruiter's persuasion low so the math is fully deterministic regardless of era data:
+  // loyalty = 90 + (90-50)/2 = 110; neutral chance = clamp(0.3 + (10-110)/150, .1, .6) = 0.1 (floor);
+  // at-war chance = clamp(0.1 + 0.12, .1, .7) = 0.22.
+  const recruiter = game.characters[cartel.roles.diplomatChief];
+  recruiter.stats.charisma = 10;
+  recruiter.stats.intrigue = 10;
+
+  cjng.relations.sinaloa = { status: "neutral", tension: 30 };
+  cartel.relations.cjng = { status: "neutral", tension: 30 };
+  const originalRandom = Math.random;
+  let neutralResult;
+  try {
+    Math.random = () => 0.15; // above the neutral floor (0.1) but below the at-war boosted chance (0.22)
+    neutralResult = applyAction(game, "sinaloa", "poach_member", { targetCharacterId: target.id });
+  } finally {
+    Math.random = originalRandom;
+  }
+  assert.equal(neutralResult.success, false, "such a loyal target should resist recruitment while at peace");
+
+  cartel.resources.money = 100_000_000;
+  cjng.relations.sinaloa = { status: "war", tension: 95 };
+  cartel.relations.cjng = { status: "war", tension: 95 };
+  try {
+    Math.random = () => 0.15;
+    const warResult = applyAction(game, "sinaloa", "poach_member", { targetCharacterId: target.id });
+    assert.equal(warResult.success, true, "the same roll should succeed once being at war makes defection easier");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
 test("assassinate_rival killing the player's own character defers to the succession pipeline instead of silently calling autoSuccession", () => {
   // The player leads sinaloa; a rival AI cartel (cjng) successfully assassinates them.
   const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");

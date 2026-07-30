@@ -123,6 +123,7 @@ const app = {
     const icon = (type) => (type === "death" ? "💀" : type === "good" ? "✅" : "⚠️");
     const territoryLosses = (reactiveEvents || []).filter((e) => e.type === "territoryLost");
     const sabotages = (reactiveEvents || []).filter((e) => e.type === "sabotaged");
+    const poachings = (reactiveEvents || []).filter((e) => e.type === "poached");
     showModal(`
       <h2>Resumen del turno</h2>
       <p>Esto ha pasado mientras avanzabas el tiempo:</p>
@@ -130,6 +131,11 @@ const app = {
         ${events.map((e) => `<div class="entry ${e.type}">${icon(e.type)} ${escapeHtml(e.text)}</div>`).join("")}
       </div>
       ${territoryLosses.length || sabotages.length ? `<h3>¿Reaccionas ahora?</h3>` : ""}
+      ${poachings.map((e) => `
+        <div class="card tight mt-1">
+          <p class="small">${e.success ? `${escapeHtml(e.byCartelName)} se ha llevado a <strong>${escapeHtml(e.characterName)}</strong> a sus filas.` : `${escapeHtml(e.byCartelName)} ha intentado reclutar a ${escapeHtml(e.characterName)} (el intento fracasó).`}</p>
+        </div>
+      `).join("")}
       ${territoryLosses.map((e, i) => `
         <div class="card tight mt-1" data-reactive-row="territory-${i}">
           <p class="small">${escapeHtml(e.toCartelName)} te ha arrebatado <strong>${escapeHtml(e.territoryName)}</strong>.</p>

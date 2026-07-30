@@ -24,7 +24,7 @@ export function render(container, app) {
   container.innerHTML = `
     <div class="card">
       <h2>Relaciones exteriores</h2>
-      <p class="text-dim small">Declarar guerra, atacar, ocupar y proponer paz/alianza no gastan acciones. Ordenar un atentado, sabotear, hacer una redada y reclutar informantes sí (te quedan ${getActionsRemaining(game)}).</p>
+      <p class="text-dim small">Declarar guerra, atacar, ocupar y proponer paz/alianza no gastan acciones. Ordenar un atentado, sabotear, hacer una redada, reclutar informantes y reclutar a un miembro rival sí (te quedan ${getActionsRemaining(game)}).</p>
       ${others.map((o) => {
         const rel = cartel.relations[o.id] || { status: "neutral", tension: 0 };
         return `
@@ -42,6 +42,7 @@ export function render(container, app) {
             <button class="danger" data-sabotage="${o.id}" ${cartel.resources.money < ACTION_COSTS.sabotage_rival || noActionsLeft ? "disabled" : ""}>Sabotear</button>
             <button class="danger" data-raid="${o.id}" ${cartel.resources.money < ACTION_COSTS.raid_territory || noActionsLeft ? "disabled" : ""}>Redada</button>
             <button data-informant="${o.id}" ${cartel.resources.money < ACTION_COSTS.recruit_informant || noActionsLeft || hasActiveInformant(cartel, o.id) ? "disabled" : ""}>Reclutar informante</button>
+            <button data-poach="${o.id}" ${cartel.resources.money < ACTION_COSTS.poach_member || noActionsLeft ? "disabled" : ""}>Reclutar a un miembro</button>
           </div>
         </div>`;
       }).join("")}
@@ -102,6 +103,44 @@ export function render(container, app) {
     else alert(result.success ? "Reclutas a un informante con éxito." : "El intento fracasa y despierta sospechas.");
     app.render();
   }));
+  container.querySelectorAll("[data-poach]").forEach((btn) => btn.addEventListener("click", () => {
+    showPoachModal(app, game, cartel, btn.dataset.poach);
+  }));
+}
+
+function showPoachModal(app, game, cartel, targetCartelId) {
+  const target = game.cartels[targetCartelId];
+  const candidates = ROLE_ORDER
+    .filter((role) => role !== "leader")
+    .map((role) => target.roles[role])
+    .filter((id, i, arr) => id && arr.indexOf(id) === i)
+    .map((id) => game.characters[id])
+    .filter((c) => c && c.alive);
+
+  showModal(`
+    <h2>Reclutar a un miembro de ${escapeHtml(target.name)}</h2>
+    <p class="small text-dim">Coste: ${fmtMoney(ACTION_COSTS.poach_member)}. Ofreces un cambio de bando a alguien de su cúpula (nunca a su líder): cuanto más leal sea a su jefe, más difícil será convencerlo. Si ya estáis en guerra, es más fácil que acepte desertar.</p>
+    ${candidates.length ? candidates.map((c) => `
+      <button class="block" data-target="${c.id}">
+        <div class="person-row" style="border:none;padding:0">
+          ${portraitImg(c)}
+          <div class="info"><div class="name">${escapeHtml(c.name)}</div><div class="role">${c.role ? roleLabel(c.role) : "Sin cargo"}</div></div>
+        </div>
+      </button>
+    `).join("") : `<p class="small text-dim">No hay objetivos disponibles en este cártel.</p>`}
+    <button class="ghost block" id="close-btn">Cancelar</button>
+  `);
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.querySelectorAll("[data-target]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const result = applyAction(game, cartel.id, "poach_member", { targetCharacterId: btn.dataset.target });
+      app.setGame(game);
+      closeModal();
+      if (!result.ok) alert(result.message);
+      else alert(result.success ? "Se une a tu cártel." : "El intento fracasa y expone la maniobra.");
+      app.render();
+    });
+  });
 }
 
 function hasActiveInformant(cartel, targetCartelId) {

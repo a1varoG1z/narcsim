@@ -95,6 +95,7 @@ export const ACTION_COSTS = {
   assassinate_rival: 200 * MONEY_SCALE,
   sabotage_rival: 100 * MONEY_SCALE,
   recruit_informant: 150 * MONEY_SCALE,
+  poach_member: 350 * MONEY_SCALE,
   raid_territory: 150 * MONEY_SCALE,
   invest_property: 400 * MONEY_SCALE,
   invest_art: 300 * MONEY_SCALE,
@@ -663,6 +664,54 @@ export function applyAction(game, cartelId, type, payload = {}) {
       log(`El intento de infiltrar a ${target.name} fracasa y despierta sus sospechas.`, "event");
       return { ok: true, success: false };
     }
+    case "poach_member": {
+      const cost = ACTION_COSTS.poach_member;
+      if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
+      const target = game.characters[payload.targetCharacterId];
+      const targetCartel = target ? game.cartels[target.cartelId] : null;
+      if (!target || !target.alive || target.imprisoned || !targetCartel || targetCartel.id === cartelId || targetCartel.destroyed) {
+        return { ok: false, message: "Objetivo no válido." };
+      }
+      if (targetCartel.roles.leader === target.id) {
+        return { ok: false, message: "El líder de un cártel no se deja reclutar así." };
+      }
+      r.money -= cost;
+      const recruiter = game.characters[cartel.roles.diplomatChief] || game.characters[cartel.roles.intelChief];
+      const persuasion = recruiter ? (recruiter.stats.charisma + recruiter.stats.intrigue) / 2 : 40;
+      const loyalty = target.stats.loyaltyInspiring + ((target.bondWithPlayer ?? 50) - 50) / 2;
+      const atWarWithThem = (targetCartel.relations[cartelId]?.status || "neutral") === "war";
+      let successChance = clamp(0.3 + (persuasion - loyalty) / 150, 0.1, 0.6);
+      // A cartel already at war and bleeding is a much easier place to poach a defector from.
+      if (atWarWithThem) successChance = clamp(successChance + 0.12, 0.1, 0.7);
+      const bumpTension = (delta) => {
+        const status = cartel.relations[targetCartel.id]?.status || "neutral";
+        const tension = clamp((cartel.relations[targetCartel.id]?.tension || 30) + delta, 0, 100);
+        cartel.relations[targetCartel.id] = { status, tension };
+        targetCartel.relations[cartelId] = { status, tension };
+      };
+      if (chance(successChance)) {
+        vacateRole(game, targetCartel.id, target.id);
+        fillVacantRoles(targetCartel, game.characters, currentYear(game));
+        targetCartel.characters = targetCartel.characters.filter((id) => id !== target.id);
+        target.cartelId = cartelId;
+        target.role = null;
+        target.bondWithPlayer = 50;
+        cartel.characters.push(target.id);
+        bumpTension(randInt(20, 35));
+        log(`${target.name} deja ${targetCartel.name} y se une a ${cartel.name}.`, "good");
+        if (game._reactiveEvents && targetCartel.id === game.playerCartelId) {
+          game._reactiveEvents.push({ type: "poached", byCartelId: cartel.id, byCartelName: cartel.name, characterName: target.name, success: true });
+        }
+        return { ok: true, success: true };
+      }
+      r.heat = Math.min(100, r.heat + randInt(5, 12));
+      bumpTension(randInt(10, 20));
+      log(`El intento de ${cartel.name} de reclutar a ${target.name} fracasa y expone la maniobra.`, "event");
+      if (game._reactiveEvents && targetCartel.id === game.playerCartelId) {
+        game._reactiveEvents.push({ type: "poached", byCartelId: cartel.id, byCartelName: cartel.name, characterName: target.name, success: false });
+      }
+      return { ok: true, success: false };
+    }
     case "raid_territory": {
       const cost = ACTION_COSTS.raid_territory;
       const territory = game.territories[payload.territoryId];
@@ -974,6 +1023,16 @@ function runAiCartels(game) {
     if (informantTargets.length && r.money >= ACTION_COSTS.recruit_informant) {
       options.push({ item: "recruit_informant", weight: atWar ? 1.2 : 0.6 });
     }
+    const poachTargets = rivalCartels.flatMap((rc) =>
+      ROLE_ORDER.filter((role) => role !== "leader")
+        .map((role) => rc.roles[role])
+        .filter((id, i, arr) => id && arr.indexOf(id) === i)
+        .map((id) => game.characters[id])
+        .filter((holder) => holder && holder.alive)
+    );
+    if (poachTargets.length && r.money >= ACTION_COSTS.poach_member) {
+      options.push({ item: "poach_member", weight: 0.5 });
+    }
     const raidable = rivalCartels.flatMap((c) => c.territories.filter((tId) => isAttackable(game, cartel.id, tId)));
     if (raidable.length && r.money >= ACTION_COSTS.raid_territory) {
       options.push({ item: "raid_territory", weight: atWar ? 2 : 0.8 });
@@ -1056,6 +1115,15 @@ function runAiCartels(game) {
         continue;
       }
       choice = "recruit_army";
+      if (!canAfford(cartel, choice)) continue;
+    }
+    if (choice === "poach_member") {
+      const targetChar = poachTargets.length ? pick(poachTargets) : null;
+      if (targetChar) {
+        applyAction(game, cartel.id, "poach_member", { targetCharacterId: targetChar.id });
+        continue;
+      }
+      choice = "corrupt_gov";
       if (!canAfford(cartel, choice)) continue;
     }
     if (choice) applyAction(game, cartel.id, choice, {});
