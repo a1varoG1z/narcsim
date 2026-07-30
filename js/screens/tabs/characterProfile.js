@@ -3,6 +3,9 @@ import { portraitImg, statBar, escapeHtml, roleLabel } from "../../ui/components
 import { STATS, STAT_ORDER, ROLE_ORDER, age } from "../../model.js";
 import { currentYear, getPlayerCartel } from "../../state.js";
 import { getMemberBond } from "../../events.js";
+import { getWarsForCartel } from "../../turnEngine.js";
+
+const HISTORY_ICON = { death: "💀", good: "✅", event: "⚠️" };
 
 export function showCharacterProfile(app, characterId) {
   const game = app.game;
@@ -29,6 +32,17 @@ export function showCharacterProfile(app, characterId) {
     : c.imprisoned
     ? (c.imprisoned.lifeSentence ? "Cumple cadena perpetua." : `Preso, posible salida en el turno ${c.imprisoned.releaseTurn}.`)
     : "Activo.";
+
+  // "What has this person actually done" — reuses the same named-log-entry matching the turn
+  // summary/significant-events views already rely on elsewhere, rather than tracking a whole
+  // separate per-character event log. Capped to the most recent 40 mentions for readability;
+  // the underlying game.log itself is capped at 400 entries game-wide, so extremely early events
+  // in very long playthroughs may have already rolled off by the time you check this.
+  const personalHistory = c.name
+    ? game.log.filter((entry) => entry.text.includes(c.name)).slice(-40).reverse()
+    : [];
+  const isCurrentLeader = cartel && !cartel.destroyed && cartel.roles.leader === c.id;
+  const cartelWars = isCurrentLeader ? getWarsForCartel(game, cartel.id).sort((a, b) => b.startYear - a.startYear) : [];
 
   showModal(`
     <div style="display:flex;gap:1rem;align-items:center">
@@ -58,6 +72,20 @@ export function showCharacterProfile(app, characterId) {
       ${children.length ? "Hijos: " + children.map((ch) => escapeHtml(ch.name)).join(", ") : "Sin descendencia registrada."}
     </p>
     ${c.notes ? `<h3 class="mt-2">Notas</h3><p class="small text-dim">${escapeHtml(c.notes)}</p>` : ""}
+    ${cartelWars.length ? `
+      <h3 class="mt-2">Guerras lideradas</h3>
+      ${cartelWars.map((w) => {
+        const otherId = w.cartelA === cartel.id ? w.cartelB : w.cartelA;
+        const other = game.cartels[otherId];
+        return `<p class="small text-dim">${w.startYear}${w.endYear ? ` – ${w.endYear}` : " – presente"}: contra ${escapeHtml(other?.name || "un cártel desaparecido")}${w.endYear ? " (terminada)" : " (en curso)"}</p>`;
+      }).join("")}
+    ` : ""}
+    ${personalHistory.length ? `
+      <h3 class="mt-2">Historial personal</h3>
+      <div class="log" style="margin-bottom:1rem">
+        ${personalHistory.map((entry) => `<div class="entry ${entry.type}">${HISTORY_ICON[entry.type] || "⚠️"} <span class="text-dim">${entry.year}</span> — ${escapeHtml(entry.text)}</div>`).join("")}
+      </div>
+    ` : ""}
     <button class="ghost block" id="close-profile">Cerrar</button>
   `);
   document.getElementById("close-profile").addEventListener("click", () => document.getElementById("modal-root").replaceChildren());
