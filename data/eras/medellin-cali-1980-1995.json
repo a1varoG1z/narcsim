@@ -63,7 +63,21 @@
       "adj": [
         "la_guajira",
         "antioquia",
-        "magdalena_medio"
+        "magdalena_medio",
+        "panama"
+      ]
+    },
+    {
+      "id": "panama",
+      "name": "Panamá (bajo Noriega)",
+      "x": 4,
+      "y": 2,
+      "w": 22,
+      "h": 16,
+      "controllerId": null,
+      "value": 16,
+      "adj": [
+        "caribe_atlantico"
       ]
     },
     {
