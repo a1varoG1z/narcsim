@@ -8,7 +8,7 @@
   --text-dim: #b3a08e;
   --accent: #c9a13b;
   --accent-2: #8a2c2c;
-  --danger: #b3261e;
+  --danger: #d1453b;
   --danger-bg: #3a1512;
   --success: #4c8b4c;
   --warn: #c98a2b;
@@ -209,7 +209,7 @@ label { display: block; font-size: .82rem; color: var(--text-dim); margin: .5rem
 }
 .badge.war { color: #ffb4ac; border-color: var(--danger); }
 .badge.alliance { color: #9fd39f; border-color: var(--success); }
-.badge.dead { color: #7a7a7a; }
+.badge.dead { color: #999999; }
 
 .portrait {
   width: 56px; height: 56px;
