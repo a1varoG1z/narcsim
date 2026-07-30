@@ -506,12 +506,19 @@ export function applyAction(game, cartelId, type, payload = {}) {
       if (chance(successChance)) {
         target.alive = false;
         target.deathYear = currentYear(game);
-        const wasLeader = targetCartel.roles.leader === target.id;
-        if (wasLeader) {
-          autoSuccession(game, targetCartel.id, target.id, "atentado");
-        } else if (target.role) {
-          vacateRole(game, targetCartel.id, target.id);
-          fillVacantRoles(targetCartel, game.characters, currentYear(game));
+        if (target.id === game.playerCharacterId) {
+          // Defer to the same succession pipeline as any other player death (endTurn's own
+          // deaths loop) instead of silently reassigning leadership via autoSuccession — the
+          // player needs to be the one who picks their heir, not have it happen to them unseen.
+          game._pendingPlayerDeath = { characterId: target.id, cartelId: targetCartel.id, reason: "atentado" };
+        } else {
+          const wasLeader = targetCartel.roles.leader === target.id;
+          if (wasLeader) {
+            autoSuccession(game, targetCartel.id, target.id, "atentado");
+          } else if (target.role) {
+            vacateRole(game, targetCartel.id, target.id);
+            fillVacantRoles(targetCartel, game.characters, currentYear(game));
+          }
         }
         if (method === "accident") {
           targetCartel.resources.heat = Math.min(100, targetCartel.resources.heat + randInt(3, 8));
@@ -1197,6 +1204,10 @@ export function endTurn(game) {
   autoResolveWars(game);
   rollNewCartelSpawns(game, year);
   const deaths = rollMortality(game, (t, ty) => addLog(game, t, ty), year);
+  if (game._pendingPlayerDeath) {
+    deaths.push(game._pendingPlayerDeath);
+    game._pendingPlayerDeath = null;
+  }
   rollFamilyEvents(game, (t, ty) => addLog(game, t, ty), year);
   deaths.push(...rollSiblingRivalry(game, (t, ty) => addLog(game, t, ty), year));
   processPregnancies(game);
@@ -1228,7 +1239,7 @@ export function endTurn(game) {
 
   for (const d of deaths) {
     if (d.characterId === game.playerCharacterId) {
-      pendingSuccession = { deceasedId: d.characterId, cartelId: d.cartelId, reason: "death" };
+      pendingSuccession = { deceasedId: d.characterId, cartelId: d.cartelId, reason: d.reason === "atentado" ? "atentado" : "death" };
     } else if (d.wasLeader) {
       autoSuccession(game, d.cartelId, d.characterId, "muerte");
     } else if (d.role) {
@@ -1282,6 +1293,7 @@ export function endTurn(game) {
   const significantEvents = collectSignificantPlayerEvents(game, startIndex);
   const reactiveEvents = game._reactiveEvents || [];
   delete game._reactiveEvents; // transient, turn-scoped only — not part of persisted save state
+  delete game._pendingPlayerDeath; // same: consumed into `deaths` above, never persisted
 
   game.turn += 1;
   game.year = currentYear(game);

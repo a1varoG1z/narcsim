@@ -193,6 +193,8 @@ const app = {
     const candidates = getSuccessionCandidates(this.game, info.cartelId, info.deceasedId);
     const reasonText = info.reason === "arrest-life"
       ? `${deceased.name} ha sido condenado/a a cadena perpetua.`
+      : info.reason === "atentado"
+      ? `${deceased.name} ha muerto en un atentado.`
       : `${deceased.name} ha muerto.`;
     if (!candidates.length) {
       showModal(`

@@ -4,7 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildGameFromEra } from "../js/state.js";
-import { applyAction, getWarsForCartel, resolveScriptedChoice, endTurn, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, getIncomeBreakdown, MONEY_SCALE, getDrugProfile, DRUG_PROFILES, resolveRaidTip } from "../js/turnEngine.js";
+import { applyAction, getWarsForCartel, resolveScriptedChoice, endTurn, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, getIncomeBreakdown, MONEY_SCALE, getDrugProfile, DRUG_PROFILES, resolveRaidTip, getSuccessionCandidates, resolveSuccession } from "../js/turnEngine.js";
 import { rollScriptedEvents } from "../js/scriptedEvents.js";
 import { rollLoyaltyEvents, getMemberBond, driftMemberBonds, rollSiblingRivalry, rollPoliceOperations } from "../js/events.js";
 
@@ -208,6 +208,55 @@ test("assassinate_rival refuses insufficient funds and an invalid or same-cartel
 
   const missingResult = applyAction(game, "sinaloa", "assassinate_rival", { targetCharacterId: "does-not-exist" });
   assert.equal(missingResult.ok, false);
+});
+
+test("assassinate_rival killing the player's own character defers to the succession pipeline instead of silently calling autoSuccession", () => {
+  // The player leads sinaloa; a rival AI cartel (cjng) successfully assassinates them.
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const player = game.cartels.sinaloa;
+  const playerCharacterId = game.playerCharacterId;
+  game.cartels.cjng.resources.money = 100_000_000;
+
+  const originalRandom = Math.random;
+  let result;
+  try {
+    Math.random = () => 0; // guarantees the assassination succeeds
+    result = applyAction(game, "cjng", "assassinate_rival", { targetCharacterId: playerCharacterId });
+  } finally {
+    Math.random = originalRandom;
+  }
+
+  assert.equal(result.ok, true);
+  assert.equal(result.success, true);
+  assert.equal(game.characters[playerCharacterId].alive, false);
+  assert.deepEqual(game._pendingPlayerDeath, { characterId: playerCharacterId, cartelId: "sinaloa", reason: "atentado" });
+  // Crucially, leadership must NOT already have been silently reassigned via autoSuccession —
+  // that's left for resolveSuccession once the player actually picks a successor.
+  assert.equal(player.roles.leader, playerCharacterId, "leadership shouldn't change until the player picks an heir");
+  assert.equal(game.playerCharacterId, playerCharacterId, "playerCharacterId shouldn't change until resolveSuccession runs");
+});
+
+test("endTurn surfaces a pendingSuccession (reason 'atentado') when an AI's assassinate_rival kills the player mid-turn, and resolveSuccession then hands over control correctly", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const playerCharacterId = game.playerCharacterId;
+  const player = game.cartels.sinaloa;
+  // Simulate exactly what runAiCartels would have done: an AI cartel's assassinate_rival
+  // succeeded against the player earlier in this same endTurn call.
+  game._pendingPlayerDeath = { characterId: playerCharacterId, cartelId: "sinaloa", reason: "atentado" };
+  game.characters[playerCharacterId].alive = false;
+  game.characters[playerCharacterId].deathYear = game.year;
+
+  const result = endTurn(game);
+  assert.ok(result.pendingSuccession, "the deferred player death should surface as a pendingSuccession");
+  assert.equal(result.pendingSuccession.deceasedId, playerCharacterId);
+  assert.equal(result.pendingSuccession.reason, "atentado");
+  assert.equal("_pendingPlayerDeath" in game, false, "the transient scratch field should never leak into persisted game state");
+
+  const candidates = getSuccessionCandidates(game, result.pendingSuccession.cartelId, playerCharacterId);
+  assert.ok(candidates.length > 0, "expected at least one succession candidate in this roster");
+  resolveSuccession(game, candidates[0].id);
+  assert.equal(game.playerCharacterId, candidates[0].id, "control should now be handed over to the chosen heir");
+  assert.equal(player.roles.leader, candidates[0].id);
 });
 
 test("sabotage_rival always costs money and damages the target's money on success, but refuses invalid or same-cartel targets", () => {
