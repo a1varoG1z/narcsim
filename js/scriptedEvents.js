@@ -361,6 +361,68 @@ export const SCRIPTED_EVENTS = {
   ],
   "cjng-sinaloa-2015-actualidad": [
     {
+      id: "viernes-negro-2015",
+      year: 2015,
+      interactive: true,
+      cartelId: "cjng",
+      title: "Viernes Negro: el Ejército cerca a El Mencho",
+      description:
+        'El Ejército mexicano lanza un operativo para capturar a Nemesio "El Mencho" Oseguera en Jalisco. Tus sicarios tienen la oportunidad de intervenir antes de que el cerco se cierre sobre él. ¿Cómo actúas?',
+      options: [
+        { id: "shoot_down", label: "Derribar su helicóptero y bloquear las carreteras de la región" },
+        { id: "evacuate", label: "Evacuar a El Mencho en silencio y evitar el enfrentamiento" },
+        { id: "bribe", label: "Sobornar a mandos del operativo para que lo desvíen" },
+      ],
+      applyDefault(game, addLog) {
+        const c = game.cartels.cjng;
+        if (!c || c.destroyed) return;
+        c.resources.heat = Math.min(100, c.resources.heat + randInt(35, 50));
+        c.resources.armySize = Math.max(0, c.resources.armySize - randInt(10, 25));
+        c.resources.corruptGov = Math.max(0, c.resources.corruptGov - randInt(10, 20));
+        addLog(
+          'Tus sicarios derriban un helicóptero militar con un lanzacohetes y bloquean carreteras en todo Jalisco con vehículos incendiados. El "Viernes Negro" deja claro el poder de fuego del CJNG, a un costo altísimo en atención internacional.',
+          "event"
+        );
+      },
+      applyChoice(game, addLog, optionId) {
+        const c = game.cartels.cjng;
+        if (!c || c.destroyed) return;
+        if (optionId === "shoot_down") {
+          c.resources.heat = Math.min(100, c.resources.heat + randInt(35, 50));
+          c.resources.armySize = Math.max(0, c.resources.armySize - randInt(10, 25));
+          c.resources.corruptGov = Math.max(0, c.resources.corruptGov - randInt(10, 20));
+          addLog(
+            'Ordenas derribar el helicóptero militar y bloquear las carreteras de Jalisco. El golpe cimenta tu fama de poder de fuego imparable, pero desata una ofensiva estatal sin precedentes contra el cártel.',
+            "death"
+          );
+        } else if (optionId === "evacuate") {
+          c.resources.heat = Math.min(100, c.resources.heat + randInt(10, 20));
+          c.resources.publicImage = Math.min(100, c.resources.publicImage + randInt(3, 8));
+          addLog(
+            "Evacuas a El Mencho en silencio antes de que el cerco se cierre, evitando el enfrentamiento directo. La operación pasa casi desapercibida.",
+            "event"
+          );
+        } else {
+          const success = chance(0.4);
+          c.resources.corruptGov = Math.max(0, c.resources.corruptGov - randInt(15, 25));
+          if (success) {
+            addLog(
+              "El soborno funciona: mandos corruptos desvían el operativo antes de que llegue hasta El Mencho, sin disparar un solo tiro.",
+              "event"
+            );
+          } else {
+            c.resources.heat = Math.min(100, c.resources.heat + randInt(35, 50));
+            c.resources.armySize = Math.max(0, c.resources.armySize - randInt(10, 25));
+            c.resources.publicImage = Math.max(0, c.resources.publicImage - randInt(10, 20));
+            addLog(
+              "El soborno fracasa y se filtra a la prensa: el operativo sigue su curso, tus sicarios derriban un helicóptero militar y bloquean carreteras en Jalisco, y encima queda al descubierto el intento de comprar a los mandos.",
+              "death"
+            );
+          }
+        }
+      },
+    },
+    {
       id: "guerra-chapitos-mayiza-2024",
       year: 2024,
       run(game, addLog) {

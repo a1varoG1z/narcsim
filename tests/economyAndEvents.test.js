@@ -489,6 +489,69 @@ test("the Posadas Ocampo (1993) event pauses for a player choice when the player
   assert.equal(npcGame.firedScriptedEvents.includes("posadas-ocampo-1993"), true);
 });
 
+test("the Viernes Negro (2015) event pauses for a player choice when the player controls CJNG, and applies immediately for NPC-controlled CJNG", () => {
+  const era = loadEra("cjng-sinaloa-2015-actualidad.json");
+
+  const playerGame = buildGameFromEra(era, { mode: "existing", cartelId: "cjng", characterId: "el_mencho" });
+  const playerResult = rollScriptedEvents(playerGame, () => {}, 2015);
+  assert.ok(playerResult.pendingChoice, "expected a pending choice when the player controls CJNG");
+  assert.equal(playerResult.pendingChoice.eventId, "viernes-negro-2015");
+  assert.equal(playerGame.firedScriptedEvents.includes("viernes-negro-2015"), false, "should stay unfired until resolved");
+
+  resolveScriptedChoice(playerGame, "viernes-negro-2015", "evacuate");
+  assert.equal(playerGame.firedScriptedEvents.includes("viernes-negro-2015"), true);
+
+  const npcGame = buildGameFromEra(era, { mode: "existing", cartelId: "sinaloa", characterId: "ivan_archivaldo" });
+  const npcHeatBefore = npcGame.cartels.cjng.resources.heat;
+  const npcResult = rollScriptedEvents(npcGame, () => {}, 2015);
+  assert.equal(npcResult.pendingChoice, null, "should auto-resolve when the player isn't CJNG");
+  assert.ok(npcGame.cartels.cjng.resources.heat > npcHeatBefore, "the historical default outcome (shooting down the helicopter) always raises heat a lot");
+  assert.equal(npcGame.firedScriptedEvents.includes("viernes-negro-2015"), true);
+});
+
+test("the Viernes Negro event's 'evacuate' choice generates far less heat than 'shoot_down', and slightly improves public image", () => {
+  const era = loadEra("cjng-sinaloa-2015-actualidad.json");
+
+  const shootGame = buildGameFromEra(era, { mode: "existing", cartelId: "cjng", characterId: "el_mencho" });
+  const shootHeatBefore = shootGame.cartels.cjng.resources.heat;
+  rollScriptedEvents(shootGame, () => {}, 2015);
+  resolveScriptedChoice(shootGame, "viernes-negro-2015", "shoot_down");
+  const shootHeatDelta = shootGame.cartels.cjng.resources.heat - shootHeatBefore;
+
+  const evacGame = buildGameFromEra(era, { mode: "existing", cartelId: "cjng", characterId: "el_mencho" });
+  const evacHeatBefore = evacGame.cartels.cjng.resources.heat;
+  const evacImageBefore = evacGame.cartels.cjng.resources.publicImage;
+  rollScriptedEvents(evacGame, () => {}, 2015);
+  resolveScriptedChoice(evacGame, "viernes-negro-2015", "evacuate");
+  const evacHeatDelta = evacGame.cartels.cjng.resources.heat - evacHeatBefore;
+
+  assert.ok(evacHeatDelta < shootHeatDelta, "evacuating quietly should generate much less heat than shooting down the helicopter");
+  assert.ok(evacGame.cartels.cjng.resources.publicImage > evacImageBefore, "avoiding the massacre should slightly improve public image");
+});
+
+test("the Viernes Negro event's 'bribe' choice can either quietly redirect the operation (low roll) or fail into the same fallout as 'shoot_down' plus a public-image hit (high roll)", () => {
+  const era = loadEra("cjng-sinaloa-2015-actualidad.json");
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.1; // under the 0.4 success threshold
+    const luckyGame = buildGameFromEra(era, { mode: "existing", cartelId: "cjng", characterId: "el_mencho" });
+    const luckyHeatBefore = luckyGame.cartels.cjng.resources.heat;
+    rollScriptedEvents(luckyGame, () => {}, 2015);
+    resolveScriptedChoice(luckyGame, "viernes-negro-2015", "bribe");
+    assert.equal(luckyGame.cartels.cjng.resources.heat, luckyHeatBefore, "a successful bribe should redirect the operation without any heat spike");
+
+    Math.random = () => 0.9; // over the 0.4 success threshold
+    const unluckyGame = buildGameFromEra(era, { mode: "existing", cartelId: "cjng", characterId: "el_mencho" });
+    const unluckyImageBefore = unluckyGame.cartels.cjng.resources.publicImage;
+    rollScriptedEvents(unluckyGame, () => {}, 2015);
+    resolveScriptedChoice(unluckyGame, "viernes-negro-2015", "bribe");
+    assert.ok(unluckyGame.cartels.cjng.resources.heat > 0, "a failed bribe should still let the operation (and the heat spike) go through");
+    assert.ok(unluckyGame.cartels.cjng.resources.publicImage < unluckyImageBefore, "a failed, exposed bribe attempt should additionally hurt public image");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
 test("the El Mochomo arrest (2008) event pauses for a player choice when the player controls Beltrán Leyva, and applies immediately for NPC-controlled Beltrán Leyva", () => {
   const era = loadEra("fragmentacion-2006-2015.json");
 
