@@ -136,7 +136,7 @@ function showExtortModal(app, game, cartel) {
   const territories = cartel.territories.map((id) => game.territories[id]).filter(Boolean);
   showModal(`
     <h2>Extorsionar un territorio</h2>
-    <p class="small text-dim">Elige qué territorio presionar. El pago es inmediato pero daña tu imagen pública y sube el heat.</p>
+    <p class="small text-dim">Elige qué territorio presionar. El pago es inmediato, pero daña tu imagen pública y sube el heat.</p>
     ${territories.map((t) => `
       <button class="block" data-territory="${t.id}">
         ${escapeHtml(t.name)}
@@ -148,12 +148,42 @@ function showExtortModal(app, game, cartel) {
   document.getElementById("close-btn").addEventListener("click", closeModal);
   document.querySelectorAll("[data-territory]").forEach((btn) => {
     btn.addEventListener("click", () => {
-      const result = applyAction(game, cartel.id, "extort_territory", { territoryId: btn.dataset.territory });
-      app.setGame(game);
-      closeModal();
-      if (!result.ok) alert(result.message);
-      app.render();
+      showExtortApproachModal(app, game, cartel, btn.dataset.territory);
     });
+  });
+}
+
+function showExtortApproachModal(app, game, cartel, territoryId) {
+  const territory = game.territories[territoryId];
+
+  const apply = (approach) => {
+    const result = applyAction(game, cartel.id, "extort_territory", { territoryId, approach });
+    app.setGame(game);
+    closeModal();
+    if (!result.ok) alert(result.message);
+    app.render();
+  };
+
+  showModal(`
+    <h2>¿Cómo presionas a ${escapeHtml(territory.name)}?</h2>
+    <p class="small text-dim">El método cambia cuánto sacas y cuánto te cuesta en heat e imagen.</p>
+    <button class="block" data-approach="lenient">
+      Cobro discreto y moderado
+      <div class="small text-dim">Menos dinero, pero el heat casi no sube y hasta puede mejorar algo tu imagen.</div>
+    </button>
+    <button class="block" data-approach="discreet">
+      Cobro forzoso normal
+      <div class="small text-dim">El equilibrio de siempre entre dinero, heat e imagen.</div>
+    </button>
+    <button class="danger block" data-approach="brutal">
+      Amenazas abiertas y violencia visible
+      <div class="small text-dim">Mucho más dinero, pero el heat y el golpe a tu imagen son severos, y el negocio local puede resentirse más.</div>
+    </button>
+    <button class="ghost block mt-1" id="close-btn">Cancelar</button>
+  `);
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.querySelectorAll("[data-approach]").forEach((btn) => {
+    btn.addEventListener("click", () => apply(btn.dataset.approach));
   });
 }
 

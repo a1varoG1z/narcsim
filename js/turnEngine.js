@@ -451,11 +451,26 @@ export function applyAction(game, cartelId, type, payload = {}) {
     case "extort_territory": {
       const territory = game.territories[payload.territoryId];
       if (!territory || territory.controllerId !== cartelId) return { ok: false, message: "Ese territorio no es tuyo." };
-      const payout = Math.round(territory.value * 4 * MONEY_SCALE * (0.8 + Math.random() * 0.6));
+      const approach = payload.approach || "discreet";
+      const basePayout = territory.value * 4 * MONEY_SCALE * (0.8 + Math.random() * 0.6);
+      let payout, backlashChance;
+      if (approach === "lenient") {
+        payout = Math.round(basePayout * 0.6);
+        r.heat = Math.min(100, r.heat + randInt(0, 2));
+        r.publicImage = Math.min(100, r.publicImage + randInt(1, 3));
+        backlashChance = clamp(r.heat / 500, 0.02, 0.12);
+      } else if (approach === "brutal") {
+        payout = Math.round(basePayout * 1.4);
+        r.heat = Math.min(100, r.heat + randInt(8, 15));
+        r.publicImage = Math.max(0, r.publicImage - randInt(12, 20));
+        backlashChance = clamp(r.heat / 200, 0.15, 0.5);
+      } else {
+        payout = Math.round(basePayout);
+        r.heat = Math.min(100, r.heat + randInt(3, 7));
+        r.publicImage = Math.max(0, r.publicImage - randInt(3, 8));
+        backlashChance = clamp(r.heat / 300, 0.05, 0.3);
+      }
       r.money += payout;
-      r.heat = Math.min(100, r.heat + randInt(3, 7));
-      r.publicImage = Math.max(0, r.publicImage - randInt(3, 8));
-      const backlashChance = clamp(r.heat / 300, 0.05, 0.3);
       if (chance(backlashChance)) {
         territory.value = Math.max(1, territory.value - 1);
         log(`${cartel.name} extorsiona a comerciantes de ${territory.name} por ${fmtMoney(payout)}, pero el negocio local se resiente.`, "event");

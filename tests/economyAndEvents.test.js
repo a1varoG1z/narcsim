@@ -59,6 +59,39 @@ test("extort_territory pays out immediately with no upfront cost but refuses a t
   assert.equal(foreignResult.ok, false);
 });
 
+test("extort_territory's approach changes the trade-off: 'brutal' pays more but costs far more heat/image than 'lenient', which can even improve image", () => {
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.5; // pins the payout's own randomness identically across all three calls
+
+    const lenientGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    const lenientCartel = lenientGame.cartels.sinaloa;
+    const lenientTerritoryId = lenientCartel.territories[0];
+    const lenientHeatBefore = lenientCartel.resources.heat;
+    const lenientImageBefore = lenientCartel.resources.publicImage;
+    const lenientResult = applyAction(lenientGame, "sinaloa", "extort_territory", { territoryId: lenientTerritoryId, approach: "lenient" });
+
+    const discreetGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    const discreetCartel = discreetGame.cartels.sinaloa;
+    const discreetTerritoryId = discreetCartel.territories[0];
+    const discreetResult = applyAction(discreetGame, "sinaloa", "extort_territory", { territoryId: discreetTerritoryId });
+
+    const brutalGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    const brutalCartel = brutalGame.cartels.sinaloa;
+    const brutalTerritoryId = brutalCartel.territories[0];
+    const brutalResult = applyAction(brutalGame, "sinaloa", "extort_territory", { territoryId: brutalTerritoryId, approach: "brutal" });
+
+    assert.ok(brutalResult.payout > discreetResult.payout, "brutal should pay out more than the default discreet approach");
+    assert.ok(discreetResult.payout > lenientResult.payout, "discreet should pay out more than lenient");
+    assert.ok(brutalCartel.resources.heat > discreetCartel.resources.heat, "brutal should generate more heat than discreet");
+    assert.ok(discreetCartel.resources.heat > lenientCartel.resources.heat, "discreet should generate more heat than lenient");
+    assert.ok(lenientCartel.resources.heat - lenientHeatBefore <= 2, "lenient's heat bump should be minimal");
+    assert.ok(lenientCartel.resources.publicImage > lenientImageBefore, "lenient extortion can actually improve public image");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
 test("develop_territory permanently raises a territory's value when affordable, and refuses once maxed out", () => {
   const game = newGame("mexico-rutas-1990-2006.json", "sinaloa");
   const cartel = game.cartels.sinaloa;
