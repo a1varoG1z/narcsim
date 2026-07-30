@@ -2,6 +2,7 @@ import { escapeHtml, portraitImg } from "../../ui/components.js";
 import { STATS, STAT_ORDER, ROLE_ORDER, ROLES } from "../../model.js";
 import { exportGameToFile, exportJSONFile, importGameFromFile, deleteSaveSlot, readImageAsDataURL } from "../../utils/storage.js";
 import { defaultConceptionDialogue, isValidDialogueTree } from "../../dialogues.js";
+import { getGithubToken, setGithubToken, saveGameToGist, loadGameFromGist } from "../../utils/github.js";
 
 const STATUS_LABEL = { war: "En guerra", alliance: "Aliados", neutral: "Neutral" };
 
@@ -57,6 +58,21 @@ export function render(container, app) {
       <h3>Partida</h3>
       <button class="block" id="export-btn">Exportar partida (.json)</button>
       <button class="block danger" id="reset-btn">Borrar partida y volver al menú</button>
+      <h4 class="mt-2">Sincronizar con GitHub (Gist secreto)</h4>
+      <p class="text-dim small">
+        Pega tu propio token de GitHub (permiso <code>gist</code> únicamente) para subir o bajar esta partida como un Gist de tu cuenta.
+        El token se guarda solo en este navegador (localStorage): nunca se envía a ningún sitio salvo directamente a la API de GitHub, y no queda en el código ni en la partida exportada.
+        Aviso: un Gist "secreto" es solo no-listado, no privado de verdad — cualquiera con el enlace o el ID puede leerlo.
+      </p>
+      <label>Token de GitHub (scope "gist")</label>
+      <input type="password" id="gh-token" placeholder="ghp_..." autocomplete="off" value="${escapeHtml(getGithubToken())}">
+      <label class="mt-1">ID del Gist (vacío = crear uno nuevo al subir)</label>
+      <input type="text" id="gh-gist-id" placeholder="Ej: 1a2b3c4d5e6f7890abcdef" value="${escapeHtml(game.githubGistId || "")}">
+      <div class="btn-row mt-1">
+        <button class="block" id="gh-save-btn">Subir partida a GitHub</button>
+        <button class="block" id="gh-load-btn">Cargar partida desde GitHub</button>
+      </div>
+      <p id="gh-status" class="small text-dim" role="status"></p>
     </div>
   `;
 
@@ -458,5 +474,49 @@ export function render(container, app) {
     if (game.saveSlotId) deleteSaveSlot(game.saveSlotId);
     app.game = null;
     app.navigate("menu");
+  });
+
+  const ghTokenInput = container.querySelector("#gh-token");
+  const ghGistIdInput = container.querySelector("#gh-gist-id");
+  const ghStatus = container.querySelector("#gh-status");
+  ghTokenInput.addEventListener("change", () => setGithubToken(ghTokenInput.value.trim()));
+
+  container.querySelector("#gh-save-btn").addEventListener("click", async () => {
+    const token = ghTokenInput.value.trim();
+    if (!token) {
+      ghStatus.textContent = "Pega tu token de GitHub primero.";
+      return;
+    }
+    setGithubToken(token);
+    ghStatus.textContent = "Subiendo…";
+    try {
+      const gistId = await saveGameToGist(token, ghGistIdInput.value.trim() || null, game);
+      game.githubGistId = gistId;
+      ghGistIdInput.value = gistId;
+      app.setGame(game);
+      ghStatus.textContent = `Partida subida. ID del Gist: ${gistId}`;
+    } catch (err) {
+      ghStatus.textContent = `Error al subir: ${err.message}`;
+    }
+  });
+
+  container.querySelector("#gh-load-btn").addEventListener("click", async () => {
+    const token = ghTokenInput.value.trim();
+    const gistId = ghGistIdInput.value.trim();
+    if (!token || !gistId) {
+      ghStatus.textContent = "Necesitas el token y el ID del Gist.";
+      return;
+    }
+    if (!confirm("Esto sobrescribirá la partida actual con la versión guardada en GitHub. ¿Continuar?")) return;
+    setGithubToken(token);
+    ghStatus.textContent = "Descargando…";
+    try {
+      const data = await loadGameFromGist(token, gistId);
+      data.saveSlotId = game.saveSlotId;
+      app.setGame(data);
+      app.navigate("dashboard");
+    } catch (err) {
+      ghStatus.textContent = `Error al cargar: ${err.message}`;
+    }
   });
 }
