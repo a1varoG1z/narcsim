@@ -4,7 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildGameFromEra } from "../js/state.js";
-import { applyAction, getWarsForCartel, resolveScriptedChoice, endTurn, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, getIncomeBreakdown, MONEY_SCALE } from "../js/turnEngine.js";
+import { applyAction, getWarsForCartel, resolveScriptedChoice, endTurn, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, getIncomeBreakdown, MONEY_SCALE, getDrugProfile, DRUG_PROFILES } from "../js/turnEngine.js";
 import { rollScriptedEvents } from "../js/scriptedEvents.js";
 import { rollLoyaltyEvents, getMemberBond, driftMemberBonds, rollSiblingRivalry } from "../js/events.js";
 
@@ -574,6 +574,51 @@ test("rollSiblingRivalry with a real rivalry (bond < 35) escalates to reputation
     const deceased = violentGame.characters[violentDeaths[0].characterId];
     assert.equal(deceased.alive, false);
     assert.equal(violentDeaths[0].wasLeader, false, "a sibling is never the leader in this scenario");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("getDrugProfile returns the era-specific profile, or a neutral default for an unknown era", () => {
+  const chapitosGame = newGame("chapitos-mayiza-2024-actualidad.json", "chapitos");
+  assert.equal(getDrugProfile(chapitosGame).name, DRUG_PROFILES["chapitos-mayiza-2024-actualidad"].name);
+
+  const fallback = getDrugProfile({ eraId: "not-a-real-era" });
+  assert.equal(fallback.payoutMult, 1);
+  assert.equal(fallback.heatMult, 1);
+  assert.equal(fallback.seizureMult, 1);
+});
+
+test("invest_production's payout scales with the era's drug profile, everything else held equal", () => {
+  const originalRandom = Math.random;
+  try {
+    // 0.99 clears the seizure-chance roll in both games (its floor is ~0.03-0.04 even at heat=0,
+    // so a literal 0 stub would trigger a seizure every time instead) and feeds the same value
+    // into the payout's own random factor, isolating the drug profile as the only real difference.
+    Math.random = () => 0.99;
+
+    const lowMarginGame = newGame("guadalajara-1975-1989.json", "guadalajara"); // marijuana/heroin, payoutMult 0.85
+    const lowCartel = lowMarginGame.cartels.guadalajara;
+    lowCartel.resources.money = ACTION_COSTS.invest_production * 10;
+    lowCartel.resources.heat = 0;
+    const lowTerritoryId = lowCartel.territories[0];
+    lowMarginGame.territories[lowTerritoryId].value = 20;
+
+    const highMarginGame = newGame("chapitos-mayiza-2024-actualidad.json", "chapitos"); // fentanyl, payoutMult 1.5
+    const highCartel = highMarginGame.cartels.chapitos;
+    highCartel.resources.money = ACTION_COSTS.invest_production * 10;
+    highCartel.resources.heat = 0;
+    const highTerritoryId = highCartel.territories[0];
+    highMarginGame.territories[highTerritoryId].value = 20;
+
+    const lowResult = applyAction(lowMarginGame, "guadalajara", "invest_production", { territoryId: lowTerritoryId });
+    const highResult = applyAction(highMarginGame, "chapitos", "invest_production", { territoryId: highTerritoryId });
+
+    assert.equal(lowResult.ok, true);
+    assert.equal(highResult.ok, true);
+    const lowPayout = Number(lowResult.message.replace("+", ""));
+    const highPayout = Number(highResult.message.replace("+", ""));
+    assert.ok(highPayout > lowPayout, "the higher-margin era's drug profile should yield a bigger payout for the identical territory value and roll");
   } finally {
     Math.random = originalRandom;
   }

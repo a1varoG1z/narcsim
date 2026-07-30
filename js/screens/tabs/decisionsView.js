@@ -1,5 +1,5 @@
 import { getPlayerCartel } from "../../state.js";
-import { applyAction, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, MONEY_SCALE } from "../../turnEngine.js";
+import { applyAction, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, MONEY_SCALE, getDrugProfile } from "../../turnEngine.js";
 import { showModal, closeModal } from "../../ui/modal.js";
 import { escapeHtml } from "../../ui/components.js";
 import { fmtMoney } from "../../utils/text.js";
@@ -23,16 +23,26 @@ const INVESTMENTS = [
   { type: "invest_weapons", label: "Armar y equipar a tu gente", desc: "Bonificación de combate permanente y acumulable (hasta un máximo), a cambio de heat." },
 ];
 
+function describeDrugProfile(drug) {
+  const margin = drug.payoutMult > 1.2 ? "muy rentable" : drug.payoutMult > 1.05 ? "rentable" : drug.payoutMult < 0.95 ? "de margen modesto" : "de margen normal";
+  const heat = drug.heatMult > 1.2 ? "atrae muchísima atención internacional" : drug.heatMult > 1.05 ? "atrae bastante atención" : drug.heatMult < 0.95 ? "genera menos escándalo de lo habitual" : "genera la atención habitual";
+  const seizure = drug.seizureMult < 0.95 ? "más fácil de esconder de lo habitual" : drug.seizureMult > 1.05 ? "más difícil de esconder de lo habitual" : "con un riesgo de decomiso normal";
+  return `Un negocio ${margin}, que ${heat} y es ${seizure}. Afecta a "Invertir en producción" y "Enviar cargamento".`;
+}
+
 export function render(container, app) {
   const game = app.game;
   const cartel = getPlayerCartel(game);
   const remaining = getActionsRemaining(game);
   const exhausted = remaining <= 0;
+  const drug = getDrugProfile(game);
 
   container.innerHTML = `
     <div class="card">
       <h2>Decisiones de este turno</h2>
       <p class="text-dim small">Tienes <strong>${remaining}/${ACTIONS_PER_TURN}</strong> acciones disponibles antes de avanzar el turno. Las decisiones diplomáticas y militares no gastan acciones.</p>
+      <p class="small">📦 <strong>${escapeHtml(drug.name)}</strong></p>
+      <p class="text-dim small">${escapeHtml(describeDrugProfile(drug))}</p>
       ${ACTIONS.map((a) => {
         const cost = ACTION_COSTS[a.type] || 0;
         const noTerritories = a.type === "extort_territory" && !cartel.territories.length;

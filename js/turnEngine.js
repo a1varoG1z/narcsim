@@ -52,6 +52,24 @@ export function getWarsForCartel(game, cartelId) {
  * of reading as a few hundred literal dollars. */
 export const MONEY_SCALE = 10000;
 
+// Which drug each era's economy really turned on, and a rough mechanical shorthand for how that
+// changed the risk/reward profile: bulkier plant-based drugs (marijuana/heroin) were harder to
+// conceal but drew less international heat than the cocaine boom; modern synthetics (meth/fentanyl)
+// are far more profitable per shipment and easier to hide, but draw the most intense scrutiny of all.
+export const DRUG_PROFILES = {
+  "guadalajara-1975-1989": { name: "Marihuana y heroína", payoutMult: 0.85, heatMult: 0.9, seizureMult: 1.15 },
+  "medellin-cali-1980-1995": { name: "Cocaína", payoutMult: 1.3, heatMult: 1.2, seizureMult: 1 },
+  "mexico-rutas-1990-2006": { name: "Cocaína en tránsito hacia EE. UU.", payoutMult: 1.1, heatMult: 1, seizureMult: 1 },
+  "fragmentacion-2006-2015": { name: "Cocaína, bajo una guerra abierta contra el narco", payoutMult: 1.15, heatMult: 1.3, seizureMult: 1.2 },
+  "cjng-sinaloa-2015-actualidad": { name: "Metanfetamina y fentanilo", payoutMult: 1.4, heatMult: 1.4, seizureMult: 0.9 },
+  "chapitos-mayiza-2024-actualidad": { name: "Fentanilo", payoutMult: 1.5, heatMult: 1.5, seizureMult: 0.85 },
+};
+const DEFAULT_DRUG_PROFILE = { name: "Narcóticos diversos", payoutMult: 1, heatMult: 1, seizureMult: 1 };
+
+export function getDrugProfile(game) {
+  return DRUG_PROFILES[game.eraId] || DEFAULT_DRUG_PROFILE;
+}
+
 export const ACTION_COSTS = {
   invest_production: 150 * MONEY_SCALE,
   traffic_shipment: 250 * MONEY_SCALE,
@@ -121,15 +139,16 @@ export function applyAction(game, cartelId, type, payload = {}) {
         territory = owned.reduce((best, t) => (t.value > best.value ? t : best), owned[0]);
       }
       r.money -= cost;
-      const seizeChance = clamp(r.heat / 300, 0.03, 0.35);
+      const drug = getDrugProfile(game);
+      const seizeChance = clamp(clamp(r.heat / 300, 0.03, 0.35) * drug.seizureMult, 0.02, 0.5);
       if (chance(seizeChance)) {
-        r.heat = Math.min(100, r.heat + randInt(3, 8));
+        r.heat = Math.min(100, r.heat + Math.round(randInt(3, 8) * drug.heatMult));
         log(`Un cargamento de ${cartel.name} es decomisado durante la producción en ${territory.name}.`, "event");
         return { ok: true, message: "Decomiso.", territoryId: territory.id };
       }
-      const payout = Math.round((90 + territory.value * 12) * MONEY_SCALE * (1.1 + Math.random() * 0.5));
+      const payout = Math.round((90 + territory.value * 12) * MONEY_SCALE * (1.1 + Math.random() * 0.5) * drug.payoutMult);
       r.money += payout;
-      r.heat = Math.min(100, r.heat + 2);
+      r.heat = Math.min(100, r.heat + Math.round(2 * drug.heatMult));
       log(`${cartel.name} invierte en producción en ${territory.name} y obtiene ${fmtMoney(payout)} en ganancias.`, "good");
       return { ok: true, message: `+${payout}`, territoryId: territory.id };
     }
@@ -142,16 +161,17 @@ export function applyAction(game, cartelId, type, payload = {}) {
         return { ok: false, message: `No puedes venderle a ${partner.name}: estáis en guerra.` };
       }
       r.money -= cost;
-      const interdictChance = clamp(r.heat / 220, 0.05, 0.5);
+      const drug = getDrugProfile(game);
+      const interdictChance = clamp(clamp(r.heat / 220, 0.05, 0.5) * drug.seizureMult, 0.03, 0.65);
       if (chance(interdictChance)) {
-        r.heat = Math.min(100, r.heat + randInt(6, 14));
+        r.heat = Math.min(100, r.heat + Math.round(randInt(6, 14) * drug.heatMult));
         log(`Un envío de ${cartel.name} es interceptado en la ruta.`, "event");
         return { ok: true, message: "Interceptado." };
       }
       const partnerMultiplier = partnerStatus === "alliance" ? 1.25 : partnerStatus === "neutral" ? 1 : 0.85;
-      const payout = Math.round(cost * (1.6 + Math.random() * 1.2) * partnerMultiplier);
+      const payout = Math.round(cost * (1.6 + Math.random() * 1.2) * partnerMultiplier * drug.payoutMult);
       r.money += payout;
-      r.heat = Math.min(100, r.heat + 5);
+      r.heat = Math.min(100, r.heat + Math.round(5 * drug.heatMult));
       if (partner) {
         partner.resources.money = Math.round(partner.resources.money + payout * 0.15);
         const tensionDelta = partnerStatus === "alliance" ? -5 : -2;
