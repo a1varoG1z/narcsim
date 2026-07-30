@@ -24,6 +24,34 @@ function killScriptedCharacter(game, characterId, addLog, causeText) {
   return [{ characterId: c.id, cartelId: c.cartelId, wasLeader, role: c.role }];
 }
 
+function openWarEntry(game, aId, bId) {
+  if (!game.warHistory) game.warHistory = [];
+  const key = [aId, bId].sort().join("|");
+  let war = game.warHistory.find((w) => w.key === key && w.endYear === null);
+  if (!war) {
+    war = {
+      key,
+      cartelA: aId,
+      cartelB: bId,
+      startYear: game.year,
+      endYear: null,
+      casualtiesA: 0,
+      casualtiesB: 0,
+      territoryChanges: [],
+      treatyNote: null,
+    };
+    game.warHistory.push(war);
+  }
+  return war;
+}
+
+function closeWarEntry(game, aId, bId) {
+  if (!game.warHistory) return;
+  const key = [aId, bId].sort().join("|");
+  const war = game.warHistory.find((w) => w.key === key && w.endYear === null);
+  if (war) war.endYear = game.year;
+}
+
 export const SCRIPTED_EVENTS = {
   "guadalajara-1975-1989": [
     {
@@ -231,6 +259,84 @@ export const SCRIPTED_EVENTS = {
     },
   ],
   "fragmentacion-2006-2015": [
+    {
+      id: "arresto-mochomo-2008",
+      year: 2008,
+      interactive: true,
+      cartelId: "beltran_leyva",
+      title: 'La detención de "El Mochomo"',
+      description:
+        'En plena guerra contra el Cártel de Sinaloa, la Marina captura en Culiacán a tu hermano Alfredo Beltrán Leyva "El Mochomo". Estás convencido de que fue "El Chapo" Guzmán quien lo delató para golpearte desde dentro. ¿Cómo respondes?',
+      options: [
+        { id: "war", label: "Redoblar la ofensiva contra Sinaloa" },
+        { id: "zetas", label: "Sellar una alianza con Los Zetas para reforzarte" },
+        { id: "reconcile", label: "Intentar una tregua secreta con Sinaloa pese a todo" },
+      ],
+      applyDefault(game, addLog) {
+        const c = game.cartels.beltran_leyva;
+        const zetas = game.cartels.zetas;
+        if (!c || c.destroyed) return;
+        if (zetas && !zetas.destroyed) {
+          c.relations[zetas.id] = { status: "alliance", tension: 5 };
+          zetas.relations[c.id] = { status: "alliance", tension: 5 };
+          c.resources.armySize += randInt(20, 45);
+        }
+        c.resources.heat = Math.min(100, c.resources.heat + 20);
+        addLog(
+          'La detención de Alfredo Beltrán Leyva "El Mochomo" convence a Arturo Beltrán Leyva de que "El Chapo" lo delató. La Organización Beltrán Leyva sella una alianza con Los Zetas para resistir la guerra contra el Cártel de Sinaloa.',
+          "event"
+        );
+      },
+      applyChoice(game, addLog, optionId) {
+        const c = game.cartels.beltran_leyva;
+        const sinaloa = game.cartels.sinaloa;
+        const zetas = game.cartels.zetas;
+        if (!c || c.destroyed) return;
+        if (optionId === "war") {
+          if (sinaloa && !sinaloa.destroyed) {
+            c.relations[sinaloa.id] = { status: "war", tension: 95 };
+            sinaloa.relations[c.id] = { status: "war", tension: 95 };
+            openWarEntry(game, c.id, sinaloa.id);
+          }
+          c.resources.heat = Math.min(100, c.resources.heat + 30);
+          c.resources.armySize = Math.max(10, Math.round(c.resources.armySize * 0.9));
+          addLog('Redoblas la ofensiva contra "El Chapo": la guerra con el Cártel de Sinaloa se vuelve aún más sangrienta.', "event");
+        } else if (optionId === "zetas") {
+          if (sinaloa && !sinaloa.destroyed) {
+            c.relations[sinaloa.id] = { status: "war", tension: 95 };
+            sinaloa.relations[c.id] = { status: "war", tension: 95 };
+            openWarEntry(game, c.id, sinaloa.id);
+          }
+          if (zetas && !zetas.destroyed) {
+            c.relations[zetas.id] = { status: "alliance", tension: 5 };
+            zetas.relations[c.id] = { status: "alliance", tension: 5 };
+            c.resources.armySize += randInt(20, 45);
+          }
+          c.resources.heat = Math.min(100, c.resources.heat + 20);
+          addLog("Sellas una alianza con Los Zetas: refuerzos y protección a cambio de sumarte a su propia guerra contra Sinaloa.", "event");
+        } else {
+          const success = chance(0.25);
+          if (success && sinaloa && !sinaloa.destroyed) {
+            c.relations[sinaloa.id] = { status: "neutral", tension: 65 };
+            sinaloa.relations[c.id] = { status: "neutral", tension: 65 };
+            closeWarEntry(game, c.id, sinaloa.id);
+            addLog(
+              "Contra todo pronóstico, logras una tregua secreta: la guerra con el Cártel de Sinaloa se apaga, aunque la desconfianza sigue ahí.",
+              "event"
+            );
+          } else {
+            if (sinaloa && !sinaloa.destroyed) {
+              c.relations[sinaloa.id] = { status: "war", tension: 95 };
+              sinaloa.relations[c.id] = { status: "war", tension: 95 };
+              openWarEntry(game, c.id, sinaloa.id);
+            }
+            c.resources.publicImage = Math.max(0, c.resources.publicImage - 10);
+            c.resources.heat = Math.min(100, c.resources.heat + 30);
+            addLog("Tu intento de tregua fracasa: Sinaloa interpreta el acercamiento como debilidad y la guerra sigue igual de sangrienta.", "event");
+          }
+        }
+      },
+    },
     {
       id: "muerte-arturo-beltran-2009",
       year: 2009,

@@ -380,6 +380,70 @@ test("the Posadas Ocampo (1993) event pauses for a player choice when the player
   assert.equal(npcGame.firedScriptedEvents.includes("posadas-ocampo-1993"), true);
 });
 
+test("the El Mochomo arrest (2008) event pauses for a player choice when the player controls Beltrán Leyva, and applies immediately for NPC-controlled Beltrán Leyva", () => {
+  const era = loadEra("fragmentacion-2006-2015.json");
+
+  const playerGame = buildGameFromEra(era, { mode: "existing", cartelId: "beltran_leyva", characterId: "arturo_beltran_leyva" });
+  playerGame.year = 2008;
+  assert.equal(playerGame.cartels.beltran_leyva.relations.sinaloa.status, "war", "this era already starts Beltrán Leyva and Sinaloa at war");
+  const playerResult = rollScriptedEvents(playerGame, () => {}, 2008);
+  assert.ok(playerResult.pendingChoice, "expected a pending choice when the player controls Beltrán Leyva");
+  assert.equal(playerResult.pendingChoice.eventId, "arresto-mochomo-2008");
+  assert.equal(playerGame.firedScriptedEvents.includes("arresto-mochomo-2008"), false, "should stay unfired until resolved");
+
+  resolveScriptedChoice(playerGame, "arresto-mochomo-2008", "war");
+  assert.equal(playerGame.firedScriptedEvents.includes("arresto-mochomo-2008"), true);
+  assert.equal(playerGame.cartels.beltran_leyva.relations.sinaloa.status, "war");
+  assert.equal(playerGame.cartels.sinaloa.relations.beltran_leyva.status, "war");
+  assert.ok(playerGame.warHistory.some((w) => w.key === ["beltran_leyva", "sinaloa"].sort().join("|") && w.endYear === null), "should still be tracked as an open war");
+
+  const npcGame = buildGameFromEra(era, { mode: "existing", cartelId: "sinaloa", characterId: "chapo_guzman_06" });
+  npcGame.year = 2008;
+  const npcHeatBefore = npcGame.cartels.beltran_leyva.resources.heat;
+  const npcResult = rollScriptedEvents(npcGame, () => {}, 2008);
+  assert.equal(npcResult.pendingChoice, null, "should auto-resolve when the player isn't Beltrán Leyva");
+  assert.ok(npcGame.cartels.beltran_leyva.resources.heat > npcHeatBefore);
+  assert.equal(npcGame.cartels.beltran_leyva.relations.zetas.status, "alliance", "the historical default outcome is a Zetas alliance");
+  assert.equal(npcGame.firedScriptedEvents.includes("arresto-mochomo-2008"), true);
+});
+
+test("the El Mochomo event's 'zetas' choice grants Beltrán Leyva a Zetas alliance and an army boost on top of the ongoing Sinaloa war", () => {
+  const era = loadEra("fragmentacion-2006-2015.json");
+  const game = buildGameFromEra(era, { mode: "existing", cartelId: "beltran_leyva", characterId: "arturo_beltran_leyva" });
+  game.year = 2008;
+  const armyBefore = game.cartels.beltran_leyva.resources.armySize;
+  rollScriptedEvents(game, () => {}, 2008);
+  resolveScriptedChoice(game, "arresto-mochomo-2008", "zetas");
+  assert.equal(game.cartels.beltran_leyva.relations.sinaloa.status, "war");
+  assert.equal(game.cartels.beltran_leyva.relations.zetas.status, "alliance");
+  assert.equal(game.cartels.zetas.relations.beltran_leyva.status, "alliance");
+  assert.ok(game.cartels.beltran_leyva.resources.armySize > armyBefore, "the Zetas alliance should reinforce the army");
+});
+
+test("the El Mochomo event's 'reconcile' choice can either end the ongoing war (low roll) or fail and keep it going (high roll)", () => {
+  const era = loadEra("fragmentacion-2006-2015.json");
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.01; // well under the 0.25 success threshold
+    const luckyGame = buildGameFromEra(era, { mode: "existing", cartelId: "beltran_leyva", characterId: "arturo_beltran_leyva" });
+    luckyGame.year = 2008;
+    rollScriptedEvents(luckyGame, () => {}, 2008);
+    resolveScriptedChoice(luckyGame, "arresto-mochomo-2008", "reconcile");
+    assert.equal(luckyGame.cartels.beltran_leyva.relations.sinaloa.status, "neutral", "a successful truce should end the open war");
+    const closedWar = luckyGame.warHistory.find((w) => w.key === ["beltran_leyva", "sinaloa"].sort().join("|"));
+    assert.equal(closedWar.endYear, 2008, "the pre-existing war entry should be formally closed");
+
+    Math.random = () => 0.99; // well over the 0.25 success threshold
+    const unluckyGame = buildGameFromEra(era, { mode: "existing", cartelId: "beltran_leyva", characterId: "arturo_beltran_leyva" });
+    unluckyGame.year = 2008;
+    rollScriptedEvents(unluckyGame, () => {}, 2008);
+    resolveScriptedChoice(unluckyGame, "arresto-mochomo-2008", "reconcile");
+    assert.equal(unluckyGame.cartels.beltran_leyva.relations.sinaloa.status, "war", "a failed truce should leave the war going");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
 test("invest_production lets you target a specific owned territory and scales payout with its value", () => {
   const game = newGame("mexico-rutas-1990-2006.json", "sinaloa");
   game.cartels.sinaloa.resources.money = ACTION_COSTS.invest_production * 10;
