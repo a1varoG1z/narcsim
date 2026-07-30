@@ -200,6 +200,63 @@ test("sabotage_rival always costs money and damages the target's money on succes
   assert.equal(poorResult.ok, false);
 });
 
+test("recruit_informant succeeds or fails, refuses invalid targets/insufficient funds, and the resulting informant decays over its turn duration", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  cartel.resources.money = 0;
+  const poorResult = applyAction(game, "sinaloa", "recruit_informant", { targetCartelId: "cjng" });
+  assert.equal(poorResult.ok, false);
+
+  cartel.resources.money = 100_000_000;
+  const sameCartelResult = applyAction(game, "sinaloa", "recruit_informant", { targetCartelId: "sinaloa" });
+  assert.equal(sameCartelResult.ok, false);
+
+  const missingResult = applyAction(game, "sinaloa", "recruit_informant", { targetCartelId: "does-not-exist" });
+  assert.equal(missingResult.ok, false);
+
+  const originalRandom = Math.random;
+  let result;
+  try {
+    Math.random = () => 0; // guarantees the recruitment attempt succeeds
+    result = applyAction(game, "sinaloa", "recruit_informant", { targetCartelId: "cjng" });
+  } finally {
+    Math.random = originalRandom;
+  }
+  assert.equal(result.ok, true);
+  assert.equal(result.success, true);
+  assert.ok(cartel.informants && cartel.informants.cjng, "a successful recruitment should register an informant");
+  const turns = cartel.informants.cjng.turnsRemaining;
+  assert.ok(turns >= 4 && turns <= 8, "the informant's duration should be within the documented 4-8 turn range");
+
+  for (let i = 0; i < turns; i++) endTurn(game);
+  assert.equal(cartel.informants.cjng, undefined, "the informant should have expired after its duration in turns");
+});
+
+test("an active informant grants a real success-chance bonus for sabotage_rival against that specific cartel", () => {
+  const originalRandom = Math.random;
+  try {
+    const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    const cartel = game.cartels.sinaloa;
+    const target = game.cartels.cjng;
+    cartel.resources.money = 100_000_000;
+    target.resources.corruptPolice = 0; // pins the base defense at a known low value (defense = 0/2 + 20 = 20)
+    const saboteur = game.characters[cartel.roles.intelChief] || game.characters[cartel.roles.sicariosChief];
+    saboteur.stats.stealth = 100;
+    saboteur.stats.intrigue = 100; // skill = 100, so (skill - defense)/150 = 0.53, saturating the base 0.75 ceiling
+
+    Math.random = () => 0.8; // between the unboosted 0.75 ceiling and the informant-boosted 0.87
+    const withoutInformant = applyAction(game, "sinaloa", "sabotage_rival", { targetCartelId: "cjng" });
+    assert.equal(withoutInformant.success, false, "0.8 should fail against the unboosted 0.75 ceiling");
+
+    cartel.informants = { cjng: { turnsRemaining: 3 } };
+    cartel.resources.money = 100_000_000;
+    const withInformant = applyAction(game, "sinaloa", "sabotage_rival", { targetCartelId: "cjng" });
+    assert.equal(withInformant.success, true, "the informant bonus should push the same 0.8 roll under the boosted chance");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
 test("raid_territory only works on an adjacent enemy-owned territory, causing casualties and permanently lowering its value", () => {
   const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
   const cartel = game.cartels.sinaloa;

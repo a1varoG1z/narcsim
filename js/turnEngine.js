@@ -10,6 +10,14 @@ function warKey(a, b) {
   return [a, b].sort().join("|");
 }
 
+/** Whether cartelId currently has a live informant inside targetCartelId, planted via
+ * recruit_informant. Informants give better-planned (vs. blind) sabotage/assassination odds. */
+function hasActiveInformant(cartel, targetCartelId) {
+  return !!(cartel.informants && cartel.informants[targetCartelId] && cartel.informants[targetCartelId].turnsRemaining > 0);
+}
+
+const INFORMANT_SUCCESS_BONUS = 0.12;
+
 function openWar(game, aId, bId) {
   if (!game.warHistory) game.warHistory = [];
   const key = warKey(aId, bId);
@@ -86,6 +94,7 @@ export const ACTION_COSTS = {
   extort_territory: 0,
   assassinate_rival: 200 * MONEY_SCALE,
   sabotage_rival: 100 * MONEY_SCALE,
+  recruit_informant: 150 * MONEY_SCALE,
   raid_territory: 150 * MONEY_SCALE,
   invest_property: 400 * MONEY_SCALE,
   invest_art: 300 * MONEY_SCALE,
@@ -471,6 +480,7 @@ export function applyAction(game, cartelId, type, payload = {}) {
       let successChance = clamp(0.35 + (attackSkill - defenseSkill) / 150, 0.1, 0.75);
       if (method === "accident") successChance = clamp(successChance - 0.15, 0.05, 0.6);
       else if (method === "public") successChance = clamp(successChance + 0.05, 0.1, 0.85);
+      if (hasActiveInformant(cartel, targetCartel.id)) successChance = clamp(successChance + INFORMANT_SUCCESS_BONUS, 0.05, 0.9);
 
       const goToWar = () => {
         cartel.relations[targetCartel.id] = { status: "war", tension: 95 };
@@ -526,7 +536,8 @@ export function applyAction(game, cartelId, type, payload = {}) {
       const saboteur = game.characters[cartel.roles.intelChief] || game.characters[cartel.roles.sicariosChief];
       const skill = saboteur ? (saboteur.stats.stealth + saboteur.stats.intrigue) / 2 : 40;
       const defense = target.resources.corruptPolice / 2 + 20;
-      const successChance = clamp(0.4 + (skill - defense) / 150, 0.15, 0.75);
+      let successChance = clamp(0.4 + (skill - defense) / 150, 0.15, 0.75);
+      if (hasActiveInformant(cartel, target.id)) successChance = clamp(successChance + INFORMANT_SUCCESS_BONUS, 0.1, 0.9);
       const bumpTension = (delta) => {
         const status = cartel.relations[target.id]?.status || "neutral";
         const tension = clamp((cartel.relations[target.id]?.tension || 30) + delta, 0, 100);
@@ -550,6 +561,30 @@ export function applyAction(game, cartelId, type, payload = {}) {
       if (game._reactiveEvents && target.id === game.playerCartelId) {
         game._reactiveEvents.push({ type: "sabotaged", byCartelId: cartel.id, byCartelName: cartel.name, damage: 0, success: false });
       }
+      return { ok: true, success: false };
+    }
+    case "recruit_informant": {
+      const cost = ACTION_COSTS.recruit_informant;
+      if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
+      const target = game.cartels[payload.targetCartelId];
+      if (!target || target.id === cartelId || target.destroyed) return { ok: false, message: "Objetivo no válido." };
+      r.money -= cost;
+      const recruiter = game.characters[cartel.roles.intelChief] || game.characters[cartel.roles.sicariosChief];
+      const skill = recruiter ? (recruiter.stats.intrigue + recruiter.stats.stealth) / 2 : 40;
+      const defense = target.resources.corruptPolice / 2 + 25;
+      const successChance = clamp(0.35 + (skill - defense) / 150, 0.15, 0.7);
+      if (chance(successChance)) {
+        if (!cartel.informants) cartel.informants = {};
+        cartel.informants[target.id] = { turnsRemaining: randInt(4, 8) };
+        log(`${cartel.name} recluta un informante dentro de ${target.name}: tus próximos golpes contra ellos irán mejor informados.`, "event");
+        return { ok: true, success: true };
+      }
+      r.heat = Math.min(100, r.heat + randInt(5, 12));
+      const status = cartel.relations[target.id]?.status || "neutral";
+      const tension = clamp((cartel.relations[target.id]?.tension || 30) + randInt(8, 16), 0, 100);
+      cartel.relations[target.id] = { status, tension };
+      target.relations[cartelId] = { status, tension };
+      log(`El intento de infiltrar a ${target.name} fracasa y despierta sus sospechas.`, "event");
       return { ok: true, success: false };
     }
     case "raid_territory": {
@@ -830,6 +865,10 @@ function runAiCartels(game) {
     if (rivalCartels.length && r.money >= ACTION_COSTS.sabotage_rival) {
       options.push({ item: "sabotage_rival", weight: 1 });
     }
+    const informantTargets = rivalCartels.filter((c) => !hasActiveInformant(cartel, c.id));
+    if (informantTargets.length && r.money >= ACTION_COSTS.recruit_informant) {
+      options.push({ item: "recruit_informant", weight: atWar ? 1.2 : 0.6 });
+    }
     const raidable = rivalCartels.flatMap((c) => c.territories.filter((tId) => isAttackable(game, cartel.id, tId)));
     if (raidable.length && r.money >= ACTION_COSTS.raid_territory) {
       options.push({ item: "raid_territory", weight: atWar ? 2 : 0.8 });
@@ -896,6 +935,15 @@ function runAiCartels(game) {
       choice = "corrupt_gov";
       if (!canAfford(cartel, choice)) continue;
     }
+    if (choice === "recruit_informant") {
+      const target = informantTargets.length ? pick(informantTargets) : null;
+      if (target) {
+        applyAction(game, cartel.id, "recruit_informant", { targetCartelId: target.id });
+        continue;
+      }
+      choice = "corrupt_police";
+      if (!canAfford(cartel, choice)) continue;
+    }
     if (choice === "raid_territory") {
       if (raidable.length) {
         applyAction(game, cartel.id, "raid_territory", { territoryId: pick(raidable) });
@@ -933,6 +981,17 @@ function driftBonds(game) {
     if (cartel.resources.heat > 60) delta -= 1;
     if (cartel.resources.money > 500 * MONEY_SCALE) delta += 1;
     c.bondWithPlayer = clamp(c.bondWithPlayer + delta, 0, 100);
+  }
+}
+
+/** Informants planted via recruit_informant expire after a few turns. */
+function decayInformants(game) {
+  for (const cartel of Object.values(game.cartels)) {
+    if (!cartel.informants) continue;
+    for (const targetId of Object.keys(cartel.informants)) {
+      cartel.informants[targetId].turnsRemaining -= 1;
+      if (cartel.informants[targetId].turnsRemaining <= 0) delete cartel.informants[targetId];
+    }
   }
 }
 
@@ -1125,6 +1184,7 @@ export function endTurn(game) {
   incomeTick(game);
   driftBonds(game);
   driftMemberBonds(game);
+  decayInformants(game);
 
   let pendingSuccession = null;
   let pendingRegentChoice = null;

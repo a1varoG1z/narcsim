@@ -18,7 +18,7 @@ export function render(container, app) {
   container.innerHTML = `
     <div class="card">
       <h2>Relaciones exteriores</h2>
-      <p class="text-dim small">Declarar guerra, atacar, ocupar y proponer paz/alianza no gastan acciones. Ordenar un atentado, sabotear y hacer una redada sí (te quedan ${getActionsRemaining(game)}).</p>
+      <p class="text-dim small">Declarar guerra, atacar, ocupar y proponer paz/alianza no gastan acciones. Ordenar un atentado, sabotear, hacer una redada y reclutar informantes sí (te quedan ${getActionsRemaining(game)}).</p>
       ${others.map((o) => {
         const rel = cartel.relations[o.id] || { status: "neutral", tension: 0 };
         return `
@@ -28,12 +28,14 @@ export function render(container, app) {
             <span class="badge ${STATUS_CLASS[rel.status]}">${STATUS_LABEL[rel.status]}</span>
           </div>
           <p class="small text-dim">Tensión: ${rel.tension}/100 · Ejército: ${o.resources.armySize} · Territorios: ${o.territories.length}</p>
+          ${hasActiveInformant(cartel, o.id) ? `<p class="small text-dim">🕵️ Tienes un informante infiltrado aquí (${cartel.informants[o.id].turnsRemaining} turnos más): mejores probabilidades en atentados y sabotajes.</p>` : ""}
           <div class="btn-row">
             ${rel.status !== "war" ? `<button class="danger" data-war="${o.id}">Declarar guerra</button>` : `<button data-peace="${o.id}">Proponer paz</button>`}
             ${rel.status === "neutral" ? `<button data-alliance="${o.id}">Proponer alianza</button>` : ""}
             <button class="danger" data-assassinate="${o.id}" ${cartel.resources.money < ACTION_COSTS.assassinate_rival || noActionsLeft ? "disabled" : ""}>Ordenar un atentado</button>
             <button class="danger" data-sabotage="${o.id}" ${cartel.resources.money < ACTION_COSTS.sabotage_rival || noActionsLeft ? "disabled" : ""}>Sabotear</button>
             <button class="danger" data-raid="${o.id}" ${cartel.resources.money < ACTION_COSTS.raid_territory || noActionsLeft ? "disabled" : ""}>Redada</button>
+            <button data-informant="${o.id}" ${cartel.resources.money < ACTION_COSTS.recruit_informant || noActionsLeft || hasActiveInformant(cartel, o.id) ? "disabled" : ""}>Reclutar informante</button>
           </div>
         </div>`;
       }).join("")}
@@ -70,6 +72,18 @@ export function render(container, app) {
   container.querySelectorAll("[data-raid]").forEach((btn) => btn.addEventListener("click", () => {
     showRaidModal(app, game, cartel, btn.dataset.raid);
   }));
+  container.querySelectorAll("[data-informant]").forEach((btn) => btn.addEventListener("click", () => {
+    if (!confirm(`¿Reclutar un informante dentro de ${game.cartels[btn.dataset.informant].name} por ${fmtMoney(ACTION_COSTS.recruit_informant)}?`)) return;
+    const result = applyAction(game, cartel.id, "recruit_informant", { targetCartelId: btn.dataset.informant });
+    app.setGame(game);
+    if (!result.ok) alert(result.message);
+    else alert(result.success ? "Reclutas a un informante con éxito." : "El intento fracasa y despierta sospechas.");
+    app.render();
+  }));
+}
+
+function hasActiveInformant(cartel, targetCartelId) {
+  return !!(cartel.informants && cartel.informants[targetCartelId] && cartel.informants[targetCartelId].turnsRemaining > 0);
 }
 
 function showRaidModal(app, game, cartel, targetCartelId) {
