@@ -1,5 +1,5 @@
 import { buildGameFromEra, restoreSlot, persist, getPlayerCartel } from "./state.js";
-import { endTurn, resolveSuccession, resolveRegentChoice, getSuccessionCandidates, checkRelease, attemptEscape, resolveMarriageEvent, resolveScriptedChoice, applyAction, ACTION_COSTS } from "./turnEngine.js";
+import { endTurn, resolveSuccession, resolveRegentChoice, getSuccessionCandidates, checkRelease, attemptEscape, resolveMarriageEvent, resolveScriptedChoice, resolveRaidTip, applyAction, ACTION_COSTS, MONEY_SCALE } from "./turnEngine.js";
 import { showModal, closeModal } from "./ui/modal.js";
 import { portraitImg, escapeHtml } from "./ui/components.js";
 import { deleteSaveSlot } from "./utils/storage.js";
@@ -98,6 +98,10 @@ const app = {
     }
     if (result.pendingMarriageEvent) {
       this.showMarriageModal(result.pendingMarriageEvent);
+      return;
+    }
+    if (result.pendingRaidTip) {
+      this.showRaidTipModal();
       return;
     }
     if (result.pendingScriptedChoice) {
@@ -270,6 +274,35 @@ const app = {
     document.getElementById("marriage-forgive").addEventListener("click", () => resolve("forgive"));
     document.getElementById("marriage-ignore").addEventListener("click", () => resolve("ignore"));
     document.getElementById("marriage-divorce").addEventListener("click", () => resolve("divorce"));
+  },
+
+  showRaidTipModal() {
+    showModal(`
+      <h2>🚨 Aviso: hay un operativo en marcha contra ti</h2>
+      <p>Un contacto te avisa a tiempo: la policía se prepara para caer sobre ti este mismo turno. ¿Qué haces?</p>
+      <button class="danger block" id="raid-hide">Esconderte de inmediato</button>
+      <div class="small text-dim">Evitas la redada por completo, aunque desaparecer un tiempo llama algo la atención (sube el heat).</div>
+      <button class="danger block mt-1" id="raid-bribe">Sobornar a los agentes en el último momento (hasta ${fmtMoney(150 * MONEY_SCALE)})</button>
+      <div class="small text-dim">Cuanto más puedas pagar y mejor sea tu red de corrupción policial, más probable que funcione. Si falla, la redada sigue su curso.</div>
+      <button class="ghost block mt-1" id="raid-risk">Seguir como si nada y arriesgarte</button>
+    `, { dismissible: false });
+    const resolve = (action) => {
+      const outcome = resolveRaidTip(this.game, action);
+      persist(this.game);
+      closeModal();
+      if (outcome.pendingRegentChoice) {
+        this.showRegentModal(outcome.pendingRegentChoice);
+        return;
+      }
+      if (outcome.pendingSuccession) {
+        this.showSuccessionModal(outcome.pendingSuccession);
+        return;
+      }
+      this.render();
+    };
+    document.getElementById("raid-hide").addEventListener("click", () => resolve("hide"));
+    document.getElementById("raid-bribe").addEventListener("click", () => resolve("bribe"));
+    document.getElementById("raid-risk").addEventListener("click", () => resolve("risk"));
   },
 
   showScriptedChoiceModal(info) {

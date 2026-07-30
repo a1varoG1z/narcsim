@@ -1180,7 +1180,8 @@ export function endTurn(game) {
   }
   const scriptedResult = rollScriptedEvents(game, (t, ty) => addLog(game, t, ty), year);
   deaths.push(...scriptedResult.deaths);
-  const arrests = rollPoliceOperations(game, (t, ty) => addLog(game, t, ty), year);
+  const policeResult = rollPoliceOperations(game, (t, ty) => addLog(game, t, ty), year);
+  const arrests = policeResult.arrests;
   incomeTick(game);
   driftBonds(game);
   driftMemberBonds(game);
@@ -1240,7 +1241,8 @@ export function endTurn(game) {
   restorePlayerLeadership(game);
 
   const pendingMarriageEvent = !pendingSuccession && !pendingRegentChoice ? rollMarriageCrisis(game) : null;
-  const pendingScriptedChoice = !pendingSuccession && !pendingRegentChoice ? scriptedResult.pendingChoice : null;
+  const pendingRaidTip = !pendingSuccession && !pendingRegentChoice && !pendingMarriageEvent && policeResult.pendingRaidTip ? {} : null;
+  const pendingScriptedChoice = !pendingSuccession && !pendingRegentChoice && !pendingMarriageEvent && !pendingRaidTip ? scriptedResult.pendingChoice : null;
   const significantEvents = collectSignificantPlayerEvents(game, startIndex);
   const reactiveEvents = game._reactiveEvents || [];
   delete game._reactiveEvents; // transient, turn-scoped only — not part of persisted save state
@@ -1259,6 +1261,7 @@ export function endTurn(game) {
     pendingSuccession,
     pendingRegentChoice,
     pendingMarriageEvent,
+    pendingRaidTip,
     pendingScriptedChoice,
     significantEvents,
     reactiveEvents,
@@ -1465,6 +1468,55 @@ export function resolveMarriageEvent(game, action) {
     player.marriageBond = undefined;
     addLog(game, `Te divorcias de ${spouse.name}.`, "event");
   }
+}
+
+/** Resolves a pending police-raid tip-off against the player's own character (see
+ * rollPoliceOperations). Returns { pendingRegentChoice, pendingSuccession } — both null unless
+ * the raid ends up going through and results in an arrest, mirroring how endTurn's own arrests
+ * loop handles a player-character arrest. */
+export function resolveRaidTip(game, action) {
+  const player = getPlayerCharacter(game);
+  const cartel = getPlayerCartel(game);
+  if (!player || !cartel) return { pendingRegentChoice: null, pendingSuccession: null };
+  const r = cartel.resources;
+
+  if (action === "hide") {
+    r.heat = Math.min(100, r.heat + randInt(2, 6));
+    addLog(game, `${player.name} se esconde a tiempo gracias al aviso y evita la redada.`, "good");
+    return { pendingRegentChoice: null, pendingSuccession: null };
+  }
+
+  if (action === "bribe") {
+    const fullCost = 150 * MONEY_SCALE;
+    const spend = Math.min(r.money, fullCost);
+    r.money -= spend;
+    const bribeChance = clamp((0.3 + r.corruptPolice / 200) * (spend / fullCost), 0.05, 0.85);
+    if (chance(bribeChance)) {
+      addLog(game, `${player.name} soborna a tiempo a los agentes y frena el operativo en el último momento.`, "good");
+      return { pendingRegentChoice: null, pendingSuccession: null };
+    }
+    addLog(game, `El soborno de última hora no basta para frenar el operativo contra ${player.name}.`, "event");
+  }
+
+  // "risk", or a bribe that failed: the raid goes ahead exactly as an unwarned one would.
+  const heat = r.heat;
+  r.armySize = Math.max(0, Math.round(r.armySize * (1 - randInt(2, 12) / 100)));
+  const resistChance = clamp((r.corruptPolice - heat * 0.3) / 150, 0.05, 0.7);
+  if (chance(resistChance)) {
+    addLog(game, `El operativo contra ${player.name} fracasa gracias a la corrupción policial.`, "event");
+    return { pendingRegentChoice: null, pendingSuccession: null };
+  }
+  const lifeSentenceChance = clamp((player.stats.violence + heat) / 260, 0.1, 0.85);
+  const lifeSentence = chance(lifeSentenceChance);
+  const releaseTurn = lifeSentence ? null : game.turn + randInt(6, 30);
+  player.imprisoned = { sinceTurn: game.turn, releaseTurn, lifeSentence };
+  addLog(game, `${player.name} ha sido arrestado/a. ${lifeSentence ? "Enfrenta cadena perpetua." : "Podría salir en libertad en el futuro."}`, "death");
+  r.heat = Math.max(0, r.heat - randInt(10, 25));
+
+  if (lifeSentence) {
+    return { pendingRegentChoice: null, pendingSuccession: { deceasedId: player.id, cartelId: cartel.id, reason: "arrest-life" } };
+  }
+  return { pendingRegentChoice: { characterId: player.id, cartelId: cartel.id, releaseTurn }, pendingSuccession: null };
 }
 
 function recordHistory(game) {

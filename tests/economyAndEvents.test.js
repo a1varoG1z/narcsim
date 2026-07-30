@@ -4,9 +4,9 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildGameFromEra } from "../js/state.js";
-import { applyAction, getWarsForCartel, resolveScriptedChoice, endTurn, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, getIncomeBreakdown, MONEY_SCALE, getDrugProfile, DRUG_PROFILES } from "../js/turnEngine.js";
+import { applyAction, getWarsForCartel, resolveScriptedChoice, endTurn, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, getIncomeBreakdown, MONEY_SCALE, getDrugProfile, DRUG_PROFILES, resolveRaidTip } from "../js/turnEngine.js";
 import { rollScriptedEvents } from "../js/scriptedEvents.js";
-import { rollLoyaltyEvents, getMemberBond, driftMemberBonds, rollSiblingRivalry } from "../js/events.js";
+import { rollLoyaltyEvents, getMemberBond, driftMemberBonds, rollSiblingRivalry, rollPoliceOperations } from "../js/events.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ERA_DIR = path.join(__dirname, "..", "data", "eras");
@@ -792,6 +792,127 @@ test("invest_production's payout scales with the era's drug profile, everything 
     const lowPayout = Number(lowResult.message.replace("+", ""));
     const highPayout = Number(highResult.message.replace("+", ""));
     assert.ok(highPayout > lowPayout, "the higher-margin era's drug profile should yield a bigger payout for the identical territory value and roll");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+/** A minimal synthetic game with a single cartel/character, just enough for rollPoliceOperations
+ * to run deterministically without needing to account for other cartels' independent rolls. */
+function makeMiniGame({ heat, corruptPolice, violence }) {
+  return {
+    turn: 5,
+    playerCharacterId: "player1",
+    cartels: {
+      mine: {
+        id: "mine",
+        destroyed: false,
+        roles: { leader: "player1" },
+        resources: { heat, corruptPolice, corruptGov: 0, armySize: 500 },
+      },
+    },
+    characters: {
+      player1: { id: "player1", cartelId: "mine", alive: true, imprisoned: null, stats: { violence }, name: "El Jefe" },
+    },
+  };
+}
+
+test("rollPoliceOperations defers to a pendingRaidTip instead of an immediate arrest when the player is tipped off in advance", () => {
+  const game = makeMiniGame({ heat: 80, corruptPolice: 50, violence: 50 });
+  const originalRandom = Math.random;
+  let result;
+  try {
+    Math.random = () => 0; // guarantees both the op firing and the tip-off succeeding
+    result = rollPoliceOperations(game, () => {}, 2020);
+  } finally {
+    Math.random = originalRandom;
+  }
+  assert.equal(result.pendingRaidTip, true);
+  assert.equal(result.arrests.length, 0, "the arrest should be deferred, not committed, when tipped off");
+  assert.equal(game.characters.player1.imprisoned, null, "the player shouldn't actually be imprisoned yet");
+});
+
+test("rollPoliceOperations falls through to an immediate, undeferred arrest when the tip-off roll fails", () => {
+  const game = makeMiniGame({ heat: 50, corruptPolice: 0, violence: 10 });
+  const originalRandom = Math.random;
+  const sequence = [
+    0, // 1: chance(opChance) -> true, the operation fires
+    0, // 2: pick() inside pickArrestTarget -> irrelevant, only one candidate
+    0.99, // 3: chance(tipOffChance) -> false, the tip-off attempt fails
+    0, // 4: randInt(2,12) for the armySize hit -> value irrelevant
+    0.99, // 5: chance(resistChance) -> false, corruption doesn't save them
+    0.99, // 6: chance(lifeSentenceChance) -> false, not a life sentence
+    0, // 7: randInt(6,30) for releaseTurn -> only consumed since lifeSentence is false
+  ];
+  let i = 0;
+  let result;
+  try {
+    Math.random = () => sequence[Math.min(i++, sequence.length - 1)];
+    result = rollPoliceOperations(game, () => {}, 2020);
+  } finally {
+    Math.random = originalRandom;
+  }
+  assert.equal(result.pendingRaidTip, null, "a failed tip-off roll should not defer anything");
+  assert.equal(result.arrests.length, 1);
+  assert.equal(result.arrests[0].characterId, "player1");
+  assert.equal(result.arrests[0].wasLeader, true);
+  assert.equal(result.arrests[0].lifeSentence, false);
+  assert.equal(game.characters.player1.imprisoned.lifeSentence, false);
+});
+
+test("resolveRaidTip's 'hide' choice always avoids the arrest, at the cost of a small heat increase", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  const heatBefore = cartel.resources.heat;
+  const outcome = resolveRaidTip(game, "hide");
+  assert.equal(outcome.pendingRegentChoice, null);
+  assert.equal(outcome.pendingSuccession, null);
+  assert.equal(game.characters[game.playerCharacterId].imprisoned, null);
+  assert.ok(cartel.resources.heat > heatBefore, "hiding should still bump heat somewhat");
+});
+
+test("resolveRaidTip's 'bribe' choice spends money on the attempt and avoids arrest on success, but falls through to a normal arrest on failure", () => {
+  const originalRandom = Math.random;
+  try {
+    const successGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    successGame.cartels.sinaloa.resources.money = 100_000_000;
+    const moneyBefore = successGame.cartels.sinaloa.resources.money;
+    Math.random = () => 0; // guarantees the bribe succeeds
+    const successOutcome = resolveRaidTip(successGame, "bribe");
+    assert.equal(successOutcome.pendingRegentChoice, null);
+    assert.equal(successOutcome.pendingSuccession, null);
+    assert.ok(successGame.cartels.sinaloa.resources.money < moneyBefore, "the bribe attempt should cost money even though it succeeded");
+    assert.equal(successGame.characters[successGame.playerCharacterId].imprisoned, null);
+
+    const failGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    failGame.cartels.sinaloa.resources.money = 100_000_000;
+    failGame.cartels.sinaloa.resources.corruptPolice = 0;
+    failGame.cartels.sinaloa.resources.heat = 90;
+    Math.random = () => 0.99; // guarantees the bribe fails, and then the follow-up arrest resolution also fails to resist
+    const failOutcome = resolveRaidTip(failGame, "bribe");
+    assert.ok(failOutcome.pendingRegentChoice || failOutcome.pendingSuccession, "a failed bribe should fall through to a real arrest attempt");
+    assert.ok(failGame.characters[failGame.playerCharacterId].imprisoned, "the player should end up imprisoned after the bribe fails and the raid proceeds");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("resolveRaidTip's 'risk' choice goes through the same resolution as a normal, unwarned raid, including the life-sentence branch", () => {
+  const originalRandom = Math.random;
+  try {
+    const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    const cartel = game.cartels.sinaloa;
+    cartel.resources.corruptPolice = 0;
+    cartel.resources.heat = 90;
+    const player = game.characters[game.playerCharacterId];
+    player.stats.violence = 90;
+    // 0.3 is above the floored 0.05 resistChance (fails to resist) but below the ~0.69 lifeSentenceChance (life sentence).
+    Math.random = () => 0.3;
+    const outcome = resolveRaidTip(game, "risk");
+    assert.ok(player.imprisoned, "risking it should be able to result in a real arrest");
+    assert.equal(player.imprisoned.lifeSentence, true);
+    assert.ok(outcome.pendingSuccession, "a life-sentence arrest of the player should surface a pendingSuccession, just like an unwarned arrest would");
+    assert.equal(outcome.pendingRegentChoice, null);
   } finally {
     Math.random = originalRandom;
   }

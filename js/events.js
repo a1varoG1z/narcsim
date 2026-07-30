@@ -202,8 +202,13 @@ export function policeOperationChance(cartel) {
   return clamp((heat - shield * 0.4) / 500, 0, 0.5);
 }
 
+/** Returns { arrests, pendingRaidTip }. When the operation would hit the player's own character,
+ * a corrupt-police-scaled chance gives advance warning instead of an immediate arrest: the raid
+ * is deferred so the player can react (via resolveRaidTip in turnEngine.js) rather than just
+ * finding out after the fact. Everyone else's arrests still resolve immediately, as before. */
 export function rollPoliceOperations(game, addLog, year) {
   const arrests = [];
+  let pendingRaidTip = null;
   for (const cartel of Object.values(game.cartels)) {
     if (cartel.destroyed) continue;
     const heat = cartel.resources.heat;
@@ -211,6 +216,13 @@ export function rollPoliceOperations(game, addLog, year) {
     if (chance(opChance)) {
       const target = pickArrestTarget(game, cartel);
       if (!target) continue;
+      if (!pendingRaidTip && target.id === game.playerCharacterId) {
+        const tipOffChance = clamp((cartel.resources.corruptPolice - heat * 0.2) / 140, 0.1, 0.65);
+        if (chance(tipOffChance)) {
+          pendingRaidTip = true;
+          continue;
+        }
+      }
       cartel.resources.armySize = Math.max(0, Math.round(cartel.resources.armySize * (1 - randInt(2, 12) / 100)));
       const resistChance = clamp((cartel.resources.corruptPolice - heat * 0.3) / 150, 0.05, 0.7);
       if (chance(resistChance)) {
@@ -226,7 +238,7 @@ export function rollPoliceOperations(game, addLog, year) {
       cartel.resources.heat = Math.max(0, cartel.resources.heat - randInt(10, 25));
     }
   }
-  return arrests;
+  return { arrests, pendingRaidTip };
 }
 
 function pickArrestTarget(game, cartel) {
