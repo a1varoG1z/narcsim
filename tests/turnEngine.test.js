@@ -23,6 +23,7 @@ import {
   processPregnancies,
   rollNewCartelSpawns,
   collectSignificantPlayerEvents,
+  autoResolveWars,
   ACTION_COSTS,
 } from "../js/turnEngine.js";
 
@@ -506,5 +507,68 @@ test("endTurn's significantEvents, whenever present, always mention the player c
         assert.ok(mentionsCartel || mentionsMember, `event "${e.text}" should mention the player cartel or one of its people`);
       }
     }
+  }
+});
+
+test("war weariness ends a long-stalemated AI-vs-AI war (no shared border) once enough years have passed, but never touches a war involving the player", () => {
+  const originalRandom = Math.random;
+  try {
+    // cjng and santa_rosa start at war (WAR_OVERRIDES); the player is sinaloa, uninvolved.
+    const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    const cjng = game.cartels.cjng;
+    const santaRosa = game.cartels.santa_rosa;
+    cjng.territories = []; // no shared border possible: reachable.length will always be 0
+    const war = game.warHistory.find((w) => w.key === ["cjng", "santa_rosa"].sort().join("|") && w.endYear === null);
+    assert.ok(war, "expected the era's built-in cjng/santa_rosa war to be tracked in warHistory");
+    war.startYear -= 10; // pretend the stalemate has dragged on for a decade
+
+    Math.random = () => 0; // guarantees both the outer 60% flare-up roll and the weariness roll succeed
+    autoResolveWars(game);
+
+    assert.equal(cjng.relations.santa_rosa.status, "neutral", "a decade-long, unreachable stalemate should be able to end in negotiated peace");
+    assert.equal(santaRosa.relations.cjng.status, "neutral");
+    assert.notEqual(war.endYear, null, "the war entry should be formally closed");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("war weariness never fires for a war that's too fresh, even with a guaranteed-success roll", () => {
+  const originalRandom = Math.random;
+  try {
+    const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    const cjng = game.cartels.cjng;
+    const santaRosa = game.cartels.santa_rosa;
+    cjng.territories = [];
+    // war.startYear is left at the era's default (the war just started): yearsAtWar < 2.
+
+    Math.random = () => 0;
+    autoResolveWars(game);
+
+    assert.equal(cjng.relations.santa_rosa.status, "war", "a war that just started shouldn't be endable by weariness yet");
+    assert.equal(santaRosa.relations.cjng.status, "war");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("war weariness never auto-ends a war the player is part of, regardless of how old or unreachable it is", () => {
+  const originalRandom = Math.random;
+  try {
+    // The player controls cjng directly this time, still at war with santa_rosa.
+    const game = newGame("cjng-sinaloa-2015-actualidad.json", "cjng");
+    const cjng = game.cartels.cjng;
+    const santaRosa = game.cartels.santa_rosa;
+    cjng.territories = [];
+    const war = game.warHistory.find((w) => w.key === ["cjng", "santa_rosa"].sort().join("|") && w.endYear === null);
+    war.startYear -= 10;
+
+    Math.random = () => 0;
+    autoResolveWars(game);
+
+    assert.equal(cjng.relations.santa_rosa.status, "war", "the player's own war should require an explicit propose_peace, not silent auto-resolution");
+    assert.equal(war.endYear, null);
+  } finally {
+    Math.random = originalRandom;
   }
 });

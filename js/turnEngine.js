@@ -772,7 +772,25 @@ function resolveBattle(game, attacker, defender, territory) {
   return { attackerWins, casualtiesAtk, casualtiesDef };
 }
 
-function autoResolveWars(game) {
+/** Neither side at war can currently reach the other: rather than let two AI cartels stay locked
+ * in an unresolvable war forever, growing war-weariness gives them a chance to negotiate an end
+ * to it, scaled by how many years the stalemate has dragged on. Left alone for wars involving the
+ * player — ending those still requires an explicit propose_peace from them. */
+function attemptWarWeariness(game, cartel, other) {
+  if (cartel.id === game.playerCartelId || other.id === game.playerCartelId) return;
+  const war = (game.warHistory || []).find((w) => w.key === warKey(cartel.id, other.id) && w.endYear === null);
+  if (!war) return;
+  const yearsAtWar = currentYear(game) - war.startYear;
+  if (yearsAtWar < 2) return; // give a stalemate a couple of years before exhaustion can end it
+  const wearinessChance = clamp(0.05 + yearsAtWar * 0.03, 0.05, 0.4);
+  if (!chance(wearinessChance)) return;
+  cartel.relations[other.id] = { status: "neutral", tension: 40 };
+  other.relations[cartel.id] = { status: "neutral", tension: 40 };
+  closeWar(game, cartel.id, other.id, "Ambos bandos negocian la paz, exhaustos tras años de conflicto sin un vencedor claro.");
+  addLog(game, `${cartel.name} y ${other.name} negocian la paz, exhaustos tras años de guerra sin un vencedor claro.`, "event");
+}
+
+export function autoResolveWars(game) {
   const seenPairs = new Set();
   for (const cartel of Object.values(game.cartels)) {
     if (cartel.destroyed) continue;
@@ -787,7 +805,10 @@ function autoResolveWars(game) {
       const attackerFirst = chance(0.5);
       const [atk, def] = attackerFirst ? [cartel, other] : [other, cartel];
       const reachable = def.territories.filter((tId) => isAttackable(game, atk.id, tId));
-      if (!reachable.length) continue; // no shared border yet: the war stays cold this turn
+      if (!reachable.length) {
+        attemptWarWeariness(game, cartel, other);
+        continue; // no shared border yet: the war stays cold this turn
+      }
       resolveBattle(game, atk, def, game.territories[pick(reachable)]);
     }
   }
