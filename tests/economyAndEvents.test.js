@@ -359,6 +359,26 @@ test("the Proceso 8000 (1995) event pauses for a player choice when the player c
   assert.equal(npcGame.firedScriptedEvents.includes("proceso-8000-1995"), true);
 });
 
+test("the Posadas Ocampo (1993) event pauses for a player choice when the player controls Tijuana, and applies immediately for NPC-controlled Tijuana", () => {
+  const era = loadEra("mexico-rutas-1990-2006.json");
+
+  const playerGame = buildGameFromEra(era, { mode: "existing", cartelId: "tijuana", characterId: "benjamin_arellano" });
+  const playerResult = rollScriptedEvents(playerGame, () => {}, 1993);
+  assert.ok(playerResult.pendingChoice, "expected a pending choice when the player controls Tijuana");
+  assert.equal(playerResult.pendingChoice.eventId, "posadas-ocampo-1993");
+  assert.equal(playerGame.firedScriptedEvents.includes("posadas-ocampo-1993"), false, "should stay unfired until resolved");
+
+  resolveScriptedChoice(playerGame, "posadas-ocampo-1993", "deny");
+  assert.equal(playerGame.firedScriptedEvents.includes("posadas-ocampo-1993"), true);
+
+  const npcGame = buildGameFromEra(era, { mode: "existing", cartelId: "sinaloa", characterId: "chapo_guzman" });
+  const npcHeatBefore = npcGame.cartels.tijuana.resources.heat;
+  const npcResult = rollScriptedEvents(npcGame, () => {}, 1993);
+  assert.equal(npcResult.pendingChoice, null, "should auto-resolve when the player isn't Tijuana");
+  assert.ok(npcGame.cartels.tijuana.resources.heat > npcHeatBefore);
+  assert.equal(npcGame.firedScriptedEvents.includes("posadas-ocampo-1993"), true);
+});
+
 test("invest_production lets you target a specific owned territory and scales payout with its value", () => {
   const game = newGame("mexico-rutas-1990-2006.json", "sinaloa");
   game.cartels.sinaloa.resources.money = ACTION_COSTS.invest_production * 10;

@@ -148,6 +148,56 @@ export const SCRIPTED_EVENTS = {
   ],
   "mexico-rutas-1990-2006": [
     {
+      id: "posadas-ocampo-1993",
+      year: 1993,
+      interactive: true,
+      cartelId: "tijuana",
+      title: "El asesinato del Cardenal Posadas Ocampo",
+      description:
+        'Un comando de tus sicarios mata por error al Cardenal Juan Jesús Posadas Ocampo en un tiroteo en el aeropuerto de Guadalajara, confundido con un rival. El escándalo desata una crisis nacional y una cacería sin precedentes contra tu cártel. ¿Cómo respondes?',
+      options: [
+        { id: "scapegoat", label: "Entregar a los sicarios responsables" },
+        { id: "deny", label: "Negarlo todo y presionar con la corrupción" },
+        { id: "shelter", label: "Esconder a los responsables y reforzar la seguridad" },
+      ],
+      applyDefault(game, addLog) {
+        const c = game.cartels.tijuana;
+        if (!c || c.destroyed) return;
+        c.resources.heat = Math.min(100, c.resources.heat + 35);
+        c.resources.publicImage = Math.max(0, c.resources.publicImage - 15);
+        addLog(
+          "El asesinato por error del Cardenal Juan Jesús Posadas Ocampo en el aeropuerto de Guadalajara desata una crisis nacional y una ofensiva sin precedentes contra el Cártel de Tijuana.",
+          "event"
+        );
+      },
+      applyChoice(game, addLog, optionId) {
+        const c = game.cartels.tijuana;
+        if (!c || c.destroyed) return;
+        if (optionId === "scapegoat") {
+          c.resources.heat = Math.min(100, c.resources.heat + 15);
+          c.resources.publicImage = Math.max(0, c.resources.publicImage - 5);
+          const holder = game.characters[c.roles.sicariosChief];
+          if (holder && holder.alive && !holder.imprisoned) {
+            holder.imprisoned = { sinceTurn: game.turn, releaseTurn: null, lifeSentence: true };
+            addLog(`${holder.name} carga con la culpa del atentado y es entregado a las autoridades. La presión internacional se calma un poco.`, "event");
+          } else {
+            addLog("El cártel entrega a sicarios de bajo rango como responsables. La presión internacional se calma un poco.", "event");
+          }
+        } else if (optionId === "deny") {
+          c.resources.heat = Math.min(100, c.resources.heat + 25);
+          c.resources.corruptGov = Math.max(0, c.resources.corruptGov - 15);
+          c.resources.corruptPolice = Math.max(0, c.resources.corruptPolice - 10);
+          c.resources.publicImage = Math.max(0, c.resources.publicImage - 10);
+          addLog("El cártel lo niega todo y quema buena parte de su red de corrupción tratando de contener el escándalo.", "event");
+        } else {
+          c.resources.heat = Math.min(100, c.resources.heat + 40);
+          c.resources.armySize += randInt(10, 20);
+          c.resources.publicImage = Math.max(0, c.resources.publicImage - 25);
+          addLog("El cártel esconde a los responsables y refuerza su seguridad, a costa de una imagen pública devastada.", "death");
+        }
+      },
+    },
+    {
       id: "muerte-amado-1997",
       year: 1997,
       run(game, addLog) {
