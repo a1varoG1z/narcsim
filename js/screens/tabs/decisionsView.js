@@ -22,6 +22,7 @@ const INVESTMENTS = [
   { type: "invest_business", label: "Montar un negocio de fachada", desc: "Ingreso pasivo permanente y reduce el heat de inmediato: una tapadera legítima." },
   { type: "invest_weapons", label: "Armar y equipar a tu gente", desc: "Bonificación de combate permanente y acumulable (hasta un máximo), a cambio de heat." },
   { type: "invest_security", label: "Seguridad privada para el líder", desc: "Reduce de forma permanente y acumulable (hasta un máximo) la probabilidad de que un atentado contra tu líder tenga éxito. Sin coste de heat." },
+  { type: "invest_hideout", label: "Refugio con vías de escape", desc: "Mejora de forma permanente y acumulable (hasta un máximo) tus probabilidades personales de esquivar una redada policial y de fugarte con éxito de prisión. Sin coste de heat." },
 ];
 
 function describeDrugProfile(drug) {
@@ -67,6 +68,7 @@ export function render(container, app) {
       ${cartel.resources.businessIncome ? `<p class="small text-success">Ingreso pasivo por negocios: +${fmtMoney(cartel.resources.businessIncome)}/turno</p>` : ""}
       ${cartel.resources.weaponsBonus ? `<p class="small text-success">Bonificación de combate: +${Math.round(cartel.resources.weaponsBonus * 100)}%</p>` : ""}
       ${cartel.resources.securityBonus ? `<p class="small text-success">Seguridad del líder: -${Math.round(cartel.resources.securityBonus * 100)}% de probabilidad de atentado exitoso</p>` : ""}
+      ${cartel.resources.hideoutBonus ? `<p class="small text-success">Refugio con vías de escape: +${Math.round(cartel.resources.hideoutBonus * 100)}% en tus probabilidades de esquivar una redada o fugarte con éxito</p>` : ""}
       ${INVESTMENTS.map((a) => {
         const cost = ACTION_COSTS[a.type] || 0;
         return `

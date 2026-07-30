@@ -102,6 +102,7 @@ export const ACTION_COSTS = {
   invest_business: 500 * MONEY_SCALE,
   invest_weapons: 350 * MONEY_SCALE,
   invest_security: 400 * MONEY_SCALE,
+  invest_hideout: 350 * MONEY_SCALE,
   sell_art: 0,
 };
 
@@ -801,6 +802,14 @@ export function applyAction(game, cartelId, type, payload = {}) {
       log(`${cartel.name} refuerza la seguridad privada de su líder (reduce en ${Math.round(r.securityBonus * 100)}% la probabilidad de que un atentado contra él/ella tenga éxito).`, "good");
       return { ok: true, securityBonus: r.securityBonus };
     }
+    case "invest_hideout": {
+      const cost = ACTION_COSTS.invest_hideout;
+      if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
+      r.money -= cost;
+      r.hideoutBonus = clamp((r.hideoutBonus || 0) + 0.03, 0, 0.3);
+      log(`${cartel.name} habilita un refugio con vías de escape (mejora en ${Math.round(r.hideoutBonus * 100)}% tus probabilidades de esquivar una redada o de fugarte con éxito).`, "good");
+      return { ok: true, hideoutBonus: r.hideoutBonus };
+    }
     default:
       return { ok: false, message: "Acción desconocida." };
   }
@@ -1043,6 +1052,7 @@ function runAiCartels(game) {
     if (r.money >= ACTION_COSTS.invest_business) options.push({ item: "invest_business", weight: 1.5 });
     if (r.money >= ACTION_COSTS.invest_weapons && (r.weaponsBonus || 0) < 0.3) options.push({ item: "invest_weapons", weight: atWar ? 2 : 0.8 });
     if (r.money >= ACTION_COSTS.invest_security && (r.securityBonus || 0) < 0.3) options.push({ item: "invest_security", weight: atWar ? 1.2 : 0.6 });
+    if (r.money >= ACTION_COSTS.invest_hideout && (r.hideoutBonus || 0) < 0.3) options.push({ item: "invest_hideout", weight: r.heat > 50 ? 1.2 : 0.5 });
 
     let choice = weightedChoice(options);
     if (choice === "attack_territory") {
@@ -1829,9 +1839,16 @@ export function attemptEscape(game) {
   // Real max-security escapes (like El Chapo's 2001 and 2015 breakouts) are vanishingly rare but
   // not fictional, so a life sentence is now brutally hard rather than flatly impossible: the
   // chance is capped far lower, and a failed attempt draws a much harsher crackdown.
-  const successChance = lifeSentence
+  let successChance = lifeSentence
     ? clamp((original.stats.stealth * 0.4 + original.stats.intrigue * 0.35 + cartel.resources.corruptPolice * 0.25) / 100 - 0.35, 0.02, 0.15)
     : clamp((original.stats.stealth * 0.4 + original.stats.intrigue * 0.35 + cartel.resources.corruptPolice * 0.25) / 100 - 0.1, 0.05, 0.75);
+  // A refuge with real escape routes (invest_hideout) gives a fleeing prisoner somewhere to
+  // actually run to, on top of whatever their own stats and the cartel's corruption already give them.
+  if (cartel.resources.hideoutBonus) {
+    successChance = lifeSentence
+      ? clamp(successChance + cartel.resources.hideoutBonus, 0.02, 0.3)
+      : clamp(successChance + cartel.resources.hideoutBonus, 0.05, 0.9);
+  }
 
   if (chance(successChance)) {
     original.imprisoned = null;

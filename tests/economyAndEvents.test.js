@@ -4,7 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildGameFromEra } from "../js/state.js";
-import { applyAction, getWarsForCartel, resolveScriptedChoice, endTurn, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, getIncomeBreakdown, MONEY_SCALE, getDrugProfile, DRUG_PROFILES, resolveRaidTip, getSuccessionCandidates, resolveSuccession, resolveCoups, checkLandlessCollapse } from "../js/turnEngine.js";
+import { applyAction, getWarsForCartel, resolveScriptedChoice, endTurn, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, getIncomeBreakdown, MONEY_SCALE, getDrugProfile, DRUG_PROFILES, resolveRaidTip, getSuccessionCandidates, resolveSuccession, resolveCoups, checkLandlessCollapse, attemptEscape } from "../js/turnEngine.js";
 import { rollScriptedEvents } from "../js/scriptedEvents.js";
 import { rollLoyaltyEvents, getMemberBond, driftMemberBonds, rollSiblingRivalry, rollPoliceOperations, rollMortality } from "../js/events.js";
 
@@ -601,6 +601,86 @@ test("invest_security's bonus only protects the cartel's actual leader from assa
     attacker.resources.money = 100_000_000; // reset spend for the second attempt
     const underbossResult = applyAction(game, "cjng", "assassinate_rival", { targetCharacterId: underbossId });
     assert.equal(underbossResult.success, true, "the same roll should still succeed against a target the security detail doesn't cover");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("invest_hideout grants a capped, cumulative bonus, and refuses without enough money", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.cjng;
+
+  cartel.resources.money = 0;
+  const poorResult = applyAction(game, "cjng", "invest_hideout");
+  assert.equal(poorResult.ok, false);
+
+  cartel.resources.money = 100_000_000;
+  for (let i = 0; i < 20; i++) {
+    applyAction(game, "cjng", "invest_hideout");
+  }
+  assert.equal(cartel.resources.hideoutBonus, 0.3, "10 purchases of +3% each should hit the 30% cap");
+});
+
+test("invest_hideout's bonus only helps the player personally resist a police raid, not the cartel at large", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  cartel.resources.heat = 60;
+  cartel.resources.corruptPolice = 0;
+  cartel.resources.corruptGov = 0;
+  // Restrict arrest candidates to just the player-controlled leader, so pickArrestTarget can't
+  // land on some other NPC and make the test's outcome depend on who got picked.
+  cartel.roles = { leader: game.playerCharacterId };
+
+  // opChance = clamp((60-0)/500, 0, .5) = 0.12; tipOffChance = clamp((0-12)/140, .1, .65) = 0.1 (floor);
+  // resistChance without a hideout = clamp((0-18)/150, .05, .7) = 0.05 (floor); with a 0.3 hideout
+  // bonus, resistChance becomes clamp(0.05+0.3, .05, .9) = 0.35. A stub of 0.11 threads all of it:
+  // triggers the operation (< 0.12), skips the advance-warning tip-off (>= 0.1), fails to resist
+  // without a hideout (>= 0.05) but succeeds in resisting with one (< 0.35).
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.11;
+    const { arrests: withoutHideout } = rollPoliceOperations(game, () => {}, game.year);
+    assert.equal(withoutHideout.length, 1, "without a hideout, this exact roll should still result in an arrest");
+  } finally {
+    Math.random = originalRandom;
+  }
+
+  game.characters[game.playerCharacterId].imprisoned = null;
+  cartel.resources.heat = 60; // the first (arrest) call reduced this; reset so the math stays identical
+  cartel.resources.hideoutBonus = 0.3;
+  try {
+    Math.random = () => 0.11;
+    const { arrests: withHideout } = rollPoliceOperations(game, () => {}, game.year);
+    assert.equal(withHideout.length, 0, "the exact same roll should let the player's hideout help them dodge the raid entirely");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("invest_hideout's bonus also improves the player's prison escape odds", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  const player = game.characters[game.playerCharacterId];
+  player.stats.stealth = 10;
+  player.stats.intrigue = 10;
+  cartel.resources.corruptPolice = 0;
+  player.imprisoned = { sinceTurn: game.turn, releaseTurn: game.turn + 20, lifeSentence: false };
+  // successChance = clamp((10*.4 + 10*.35 + 0)/100 - .1, .05, .75) = clamp(-0.025, .05, .75) = 0.05 (floor).
+  // With a 0.3 hideout bonus: clamp(0.05 + 0.3, .05, .9) = 0.35.
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.2; // above the unaided floor (0.05) but below the hideout-boosted chance (0.35)
+    const withoutHideout = attemptEscape(game);
+    assert.equal(withoutHideout.success, false, "such poor stats should fail to escape without a hideout");
+  } finally {
+    Math.random = originalRandom;
+  }
+
+  cartel.resources.hideoutBonus = 0.3;
+  try {
+    Math.random = () => 0.2;
+    const withHideout = attemptEscape(game);
+    assert.equal(withHideout.success, true, "the same roll should succeed once the hideout's escape routes help");
   } finally {
     Math.random = originalRandom;
   }

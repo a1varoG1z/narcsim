@@ -230,7 +230,12 @@ export function rollPoliceOperations(game, addLog, year) {
         }
       }
       cartel.resources.armySize = Math.max(0, Math.round(cartel.resources.armySize * (1 - randInt(2, 12) / 100)));
-      const resistChance = clamp((cartel.resources.corruptPolice - heat * 0.3) / 150, 0.05, 0.7);
+      let resistChance = clamp((cartel.resources.corruptPolice - heat * 0.3) / 150, 0.05, 0.7);
+      // A refuge with real escape routes (invest_hideout) only helps the player slip away in
+      // person — it's their own bolthole, not a cartel-wide shield for every member raided.
+      if (target.id === game.playerCharacterId && cartel.resources.hideoutBonus) {
+        resistChance = clamp(resistChance + cartel.resources.hideoutBonus, 0.05, 0.9);
+      }
       if (chance(resistChance)) {
         addLog(`Un operativo contra ${target.name} fracasa gracias a la corrupción policial.`, "event");
         continue;
