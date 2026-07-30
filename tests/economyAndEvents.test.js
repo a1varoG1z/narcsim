@@ -4,7 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildGameFromEra } from "../js/state.js";
-import { applyAction, getWarsForCartel, resolveScriptedChoice, endTurn, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, getIncomeBreakdown, MONEY_SCALE, getDrugProfile, DRUG_PROFILES, resolveRaidTip, getSuccessionCandidates, resolveSuccession, resolveCoups } from "../js/turnEngine.js";
+import { applyAction, getWarsForCartel, resolveScriptedChoice, endTurn, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, getIncomeBreakdown, MONEY_SCALE, getDrugProfile, DRUG_PROFILES, resolveRaidTip, getSuccessionCandidates, resolveSuccession, resolveCoups, checkLandlessCollapse } from "../js/turnEngine.js";
 import { rollScriptedEvents } from "../js/scriptedEvents.js";
 import { rollLoyaltyEvents, getMemberBond, driftMemberBonds, rollSiblingRivalry, rollPoliceOperations, rollMortality } from "../js/events.js";
 
@@ -1168,4 +1168,57 @@ test("resolveCoups never rolls a survival check for an NPC leader, only for the 
   } finally {
     Math.random = originalRandom;
   }
+});
+
+test("checkLandlessCollapse dissolves a cartel after 4 turns straight with zero territories, but not before", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa"); // player is sinaloa; use golfo as the AI test subject
+  const golfo = game.cartels.golfo;
+  golfo.territories = [];
+
+  for (let i = 0; i < 3; i++) {
+    checkLandlessCollapse(game);
+    assert.equal(golfo.destroyed, false, `should not collapse before the grace period elapses (turn ${i + 1})`);
+    assert.equal(golfo.turnsWithoutTerritory, i + 1);
+  }
+  checkLandlessCollapse(game); // 4th consecutive landless turn
+  assert.equal(golfo.destroyed, true, "should collapse once the grace period is exhausted");
+});
+
+test("checkLandlessCollapse resets the counter the moment a cartel regains a territory", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const golfo = game.cartels.golfo;
+  const territoryId = golfo.territories[0];
+  golfo.territories = [];
+
+  checkLandlessCollapse(game);
+  checkLandlessCollapse(game);
+  assert.equal(golfo.turnsWithoutTerritory, 2);
+
+  golfo.territories = [territoryId]; // recovers a territory
+  checkLandlessCollapse(game);
+  assert.equal(golfo.turnsWithoutTerritory, 0, "regaining territory should reset the grace-period counter");
+  assert.equal(golfo.destroyed, false);
+});
+
+test("checkLandlessCollapse ends the game with reason 'no-territory' when it's the player's own cartel that dissolves", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  cartel.territories = [];
+
+  for (let i = 0; i < 4; i++) checkLandlessCollapse(game);
+
+  assert.equal(cartel.destroyed, true);
+  assert.equal(game.gameOver, true);
+  assert.equal(game.gameOverReason, "no-territory");
+});
+
+test("checkLandlessCollapse never sets gameOver when it's an AI cartel (not the player's) that dissolves", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const golfo = game.cartels.golfo;
+  golfo.territories = [];
+
+  for (let i = 0; i < 4; i++) checkLandlessCollapse(game);
+
+  assert.equal(golfo.destroyed, true);
+  assert.equal(game.gameOver, false, "the player's own game shouldn't end because a rival AI cartel collapsed");
 });

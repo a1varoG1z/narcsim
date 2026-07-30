@@ -1109,6 +1109,31 @@ function incomeTick(game) {
   }
 }
 
+const LANDLESS_COLLAPSE_TURNS = 4;
+
+/** A cartel that's held zero territories for several turns running dissolves instead of lingering
+ * forever as an inert "zombie" with residual money/army and nothing to actually run — the same
+ * pattern already used for a leaderless cartel with no eligible heir. Gives a grace period (a
+ * couple of years, depending on the era's turn length) to reconquer or occupy something first. */
+export function checkLandlessCollapse(game) {
+  for (const cartel of Object.values(game.cartels)) {
+    if (cartel.destroyed) continue;
+    if (cartel.territories.length === 0) {
+      cartel.turnsWithoutTerritory = (cartel.turnsWithoutTerritory || 0) + 1;
+      if (cartel.turnsWithoutTerritory >= LANDLESS_COLLAPSE_TURNS) {
+        cartel.destroyed = true;
+        addLog(game, `${cartel.name} se disuelve tras años sin territorio propio: sus miembros se dispersan o son absorbidos por otros grupos.`, "death");
+        if (cartel.id === game.playerCartelId) {
+          game.gameOver = true;
+          game.gameOverReason = "no-territory";
+        }
+      }
+    } else {
+      cartel.turnsWithoutTerritory = 0;
+    }
+  }
+}
+
 export function getSuccessionCandidates(game, cartelId, deceasedId) {
   const cartel = game.cartels[cartelId];
   const deceased = game.characters[deceasedId];
@@ -1254,6 +1279,7 @@ export function endTurn(game) {
   const policeResult = rollPoliceOperations(game, (t, ty) => addLog(game, t, ty), year);
   const arrests = policeResult.arrests;
   incomeTick(game);
+  checkLandlessCollapse(game);
   driftBonds(game);
   driftMemberBonds(game);
   decayInformants(game);
@@ -1322,7 +1348,7 @@ export function endTurn(game) {
   game.turn += 1;
   game.year = currentYear(game);
   game.actionsUsedThisTurn = 0;
-  if (game.year >= game.endYear && !pendingSuccession) {
+  if (game.year >= game.endYear && !pendingSuccession && !game.gameOver) {
     game.gameOver = true;
     game.gameOverReason = "era-end";
   }

@@ -324,9 +324,14 @@ const app = {
   },
 
   showGameOverModal() {
+    const isLandless = this.game.gameOverReason === "no-territory";
+    const heading = isLandless ? "El cártel se disuelve" : "Fin de la época";
+    const body = isLandless
+      ? "Llevas demasiado tiempo sin ningún territorio propio: sin base ni ingresos, el cártel termina disolviéndose. Tu legado permanece registrado en el log."
+      : "Esta etapa histórica ha llegado a su fin. Tu legado permanece registrado en el log del cártel.";
     showModal(`
-      <h2>Fin de la época</h2>
-      <p>Esta etapa histórica ha llegado a su fin. Tu legado permanece registrado en el log del cártel.</p>
+      <h2>${heading}</h2>
+      <p>${body}</p>
       <button class="primary block" id="modal-ok">Volver al menú</button>
     `, { dismissible: false });
     document.getElementById("modal-ok").addEventListener("click", () => {
