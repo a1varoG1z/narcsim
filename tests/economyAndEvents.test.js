@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import { buildGameFromEra } from "../js/state.js";
 import { applyAction, getWarsForCartel, resolveScriptedChoice, endTurn, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, getIncomeBreakdown, MONEY_SCALE } from "../js/turnEngine.js";
 import { rollScriptedEvents } from "../js/scriptedEvents.js";
-import { rollLoyaltyEvents, getMemberBond, driftMemberBonds } from "../js/events.js";
+import { rollLoyaltyEvents, getMemberBond, driftMemberBonds, rollSiblingRivalry } from "../js/events.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ERA_DIR = path.join(__dirname, "..", "data", "eras");
@@ -504,4 +504,77 @@ test("getMemberBond defaults to 50 for an unset pair and 100 for a character wit
   // should have drifted down by 2 (heat=10 here, below the 60 threshold for the extra penalty).
   assert.equal(getMemberBond(game, "leader", "underboss"), 48);
   assert.equal(getMemberBond(game, "sicarios", "military"), 48);
+});
+
+function siblingRivalryGame({ bond = 20, ageA = 30, ageB = 28 } = {}) {
+  const year = 2000;
+  const game = {
+    memberBonds: {},
+    characters: {
+      leader: { id: "leader", alive: true, imprisoned: null, childrenIds: ["siblingA", "siblingB"], stats: {} },
+      siblingA: { id: "siblingA", alive: true, imprisoned: null, birthYear: year - ageA, name: "Hijo A", role: null, stats: { charisma: 50, loyaltyInspiring: 50 } },
+      siblingB: { id: "siblingB", alive: true, imprisoned: null, birthYear: year - ageB, name: "Hijo B", role: null, stats: { charisma: 50, loyaltyInspiring: 50 } },
+    },
+    cartels: {
+      test: { id: "test", destroyed: false, roles: { leader: "leader" } },
+    },
+  };
+  game.memberBonds[["siblingA", "siblingB"].sort().join("|")] = bond;
+  return { game, year };
+}
+
+test("rollSiblingRivalry never fires when siblings get along (bond >= 35), regardless of the roll", () => {
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0; // would pass every chance() check if bond allowed it
+    const { game, year } = siblingRivalryGame({ bond: 60 });
+    const deaths = rollSiblingRivalry(game, () => {}, year);
+    assert.equal(deaths.length, 0);
+    assert.equal(game.characters.siblingA.stats.charisma, 50, "no reputational hit should occur without genuine rivalry");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("rollSiblingRivalry never fires between minors, even with a poor bond", () => {
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0;
+    const { game, year } = siblingRivalryGame({ bond: 10, ageA: 15, ageB: 16 });
+    const deaths = rollSiblingRivalry(game, () => {}, year);
+    assert.equal(deaths.length, 0);
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("rollSiblingRivalry with a real rivalry (bond < 35) escalates to reputational sabotage or, more rarely, violence", () => {
+  const originalRandom = Math.random;
+  try {
+    // call1 = the 0.02 chance the rivalry boils over at all this turn (needs a small value to pass)
+    // call2 = the 0.5 coin flip for who schemes against whom (irrelevant to the outcome, any value works)
+    // call3 = randInt(5,15) inside setMemberBond, consumed regardless of branch (value irrelevant)
+    // call4 = the 0.85 chance it's "just" reputational sabotage rather than violence
+    let sequence = [0.001, 0.9, 0.5, 0.5];
+    let i = 0;
+    Math.random = () => sequence[Math.min(i++, sequence.length - 1)];
+    const { game, year } = siblingRivalryGame({ bond: 20 });
+    const deaths = rollSiblingRivalry(game, () => {}, year);
+    assert.equal(deaths.length, 0, "the sabotage branch shouldn't kill anyone");
+    const targetStillAlive = game.characters.siblingA.alive && game.characters.siblingB.alive;
+    assert.ok(targetStillAlive);
+    const oneStatDropped = game.characters.siblingA.stats.charisma < 50 || game.characters.siblingB.stats.charisma < 50;
+    assert.ok(oneStatDropped, "the target of the intrigue should take a reputational hit");
+
+    i = 0;
+    sequence = [0.001, 0.9, 0.5, 0.99]; // same setup, but now the rare violent-escalation branch
+    const { game: violentGame, year: violentYear } = siblingRivalryGame({ bond: 20 });
+    const violentDeaths = rollSiblingRivalry(violentGame, () => {}, violentYear);
+    assert.equal(violentDeaths.length, 1, "the violent branch should register exactly one death");
+    const deceased = violentGame.characters[violentDeaths[0].characterId];
+    assert.equal(deceased.alive, false);
+    assert.equal(violentDeaths[0].wasLeader, false, "a sibling is never the leader in this scenario");
+  } finally {
+    Math.random = originalRandom;
+  }
 });

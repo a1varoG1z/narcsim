@@ -94,7 +94,10 @@ function setMemberBond(game, idA, idB, value) {
 }
 
 function leadershipCircle(game, cartel) {
-  const ids = ROLE_ORDER.map((r) => cartel.roles[r]).filter((id, i, arr) => id && arr.indexOf(id) === i);
+  const leader = game.characters[cartel.roles.leader];
+  const roleIds = ROLE_ORDER.map((r) => cartel.roles[r]);
+  const childIds = leader ? leader.childrenIds || [] : [];
+  const ids = [...roleIds, ...childIds].filter((id, i, arr) => id && arr.indexOf(id) === i);
   return ids.filter((id) => {
     const c = game.characters[id];
     return c && c.alive && !c.imprisoned;
@@ -152,6 +155,43 @@ export function rollLoyaltyEvents(game, addLog) {
     }
   }
   return coups;
+}
+
+/** Rivalry between a leader's own children over the succession. Only surfaces when two adult
+ * siblings already have a genuinely poor bond (< 35) — this doesn't invent conflict out of
+ * nowhere, it lets an existing rivalry occasionally boil over. Returns deaths in the same shape
+ * as rollMortality/rollScriptedEvents for the caller to feed into succession handling. */
+export function rollSiblingRivalry(game, addLog, year) {
+  const deaths = [];
+  for (const cartel of Object.values(game.cartels)) {
+    if (cartel.destroyed) continue;
+    const leader = game.characters[cartel.roles.leader];
+    if (!leader) continue;
+    const siblings = (leader.childrenIds || [])
+      .map((id) => game.characters[id])
+      .filter((c) => c && c.alive && !c.imprisoned && year - c.birthYear >= 18);
+    for (let i = 0; i < siblings.length; i++) {
+      for (let j = i + 1; j < siblings.length; j++) {
+        const a = siblings[i];
+        const b = siblings[j];
+        const bond = getMemberBond(game, a.id, b.id);
+        if (bond >= 35 || !chance(0.02)) continue;
+        const [schemer, target] = chance(0.5) ? [a, b] : [b, a];
+        setMemberBond(game, schemer.id, target.id, bond - randInt(5, 15));
+        if (chance(0.85)) {
+          target.stats.charisma = Math.max(0, target.stats.charisma - randInt(3, 8));
+          target.stats.loyaltyInspiring = Math.max(0, target.stats.loyaltyInspiring - randInt(3, 8));
+          addLog(`${schemer.name} intriga contra su hermano/a ${target.name} para ganar terreno en la sucesión, dañando su reputación dentro del cártel.`, "event");
+        } else {
+          target.alive = false;
+          target.deathYear = year;
+          addLog(`${schemer.name} orquesta un ataque contra su hermano/a ${target.name} por la sucesión del cártel.`, "death");
+          deaths.push({ characterId: target.id, cartelId: cartel.id, wasLeader: false, role: target.role });
+        }
+      }
+    }
+  }
+  return deaths;
 }
 
 /** Police / military operations against a cartel, scaled by heat and reduced by corruption. */

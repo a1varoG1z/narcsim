@@ -1,6 +1,6 @@
 import { chance, randInt, clamp, pick, uid } from "./utils/random.js";
 import { addLog, currentYear, getPlayerCartel, getPlayerCharacter } from "./state.js";
-import { rollMortality, rollFamilyEvents, rollLoyaltyEvents, rollPoliceOperations, driftMemberBonds } from "./events.js";
+import { rollMortality, rollFamilyEvents, rollLoyaltyEvents, rollPoliceOperations, driftMemberBonds, rollSiblingRivalry } from "./events.js";
 import { rollScriptedEvents, resolveScriptedChoice as applyScriptedChoice } from "./scriptedEvents.js";
 import { fillVacantRoles, generateNpc, randomName } from "./npcGenerator.js";
 import { ROLE_ORDER, STAT_ORDER, STATS, clampStat, makeCartel, makeCharacter } from "./model.js";
@@ -1059,6 +1059,7 @@ export function endTurn(game) {
   rollNewCartelSpawns(game, year);
   const deaths = rollMortality(game, (t, ty) => addLog(game, t, ty), year);
   rollFamilyEvents(game, (t, ty) => addLog(game, t, ty), year);
+  deaths.push(...rollSiblingRivalry(game, (t, ty) => addLog(game, t, ty), year));
   processPregnancies(game);
   const coups = rollLoyaltyEvents(game, (t, ty) => addLog(game, t, ty));
   for (const coup of coups) {
