@@ -1,6 +1,6 @@
 import { escapeHtml, portraitImg } from "../../ui/components.js";
 import { STATS, STAT_ORDER, ROLE_ORDER, ROLES } from "../../model.js";
-import { exportGameToFile, deleteSaveSlot, readImageAsDataURL } from "../../utils/storage.js";
+import { exportGameToFile, exportJSONFile, importGameFromFile, deleteSaveSlot, readImageAsDataURL } from "../../utils/storage.js";
 import { defaultConceptionDialogue, isValidDialogueTree } from "../../dialogues.js";
 
 const STATUS_LABEL = { war: "En guerra", alliance: "Aliados", neutral: "Neutral" };
@@ -45,6 +45,13 @@ export function render(container, app) {
         <button class="primary block mt-1" id="save-dialogue">Guardar JSON</button>
       </details>
       <button class="block ghost mt-1" id="reset-dialogue">Restaurar diálogo por defecto</button>
+      <h4 class="mt-2">Reutilizar este diálogo en otra partida</h4>
+      <p class="text-dim small">Guárdalo aparte del resto de la partida para no tener que reescribirlo cada vez.</p>
+      <div class="btn-row">
+        <button class="block" id="export-dialogue-btn">Exportar diálogo (.json)</button>
+        <button class="block" id="import-dialogue-btn">Importar diálogo (.json)</button>
+      </div>
+      <input type="file" id="import-dialogue-file" accept="application/json" class="hidden">
     </div>
     <div class="card">
       <h3>Partida</h3>
@@ -415,6 +422,32 @@ export function render(container, app) {
   container.querySelector("#reset-dialogue").addEventListener("click", () => {
     if (!confirm("¿Restaurar el diálogo de 'Formar una familia' a su versión por defecto?")) return;
     game.dialogueTrees = { conception: defaultConceptionDialogue() };
+    app.setGame(game);
+    app.render();
+  });
+
+  container.querySelector("#export-dialogue-btn").addEventListener("click", () => {
+    exportJSONFile({ conception: getConceptionTree() }, "narcosim-dialogo-formar-familia");
+  });
+
+  const importDialogueFile = container.querySelector("#import-dialogue-file");
+  container.querySelector("#import-dialogue-btn").addEventListener("click", () => importDialogueFile.click());
+  importDialogueFile.addEventListener("change", async () => {
+    const file = importDialogueFile.files[0];
+    if (!file) return;
+    let parsed;
+    try {
+      parsed = await importGameFromFile(file);
+    } catch (e) {
+      alert("El archivo no contiene JSON válido: " + e.message);
+      return;
+    }
+    if (!parsed.conception || !isValidDialogueTree(parsed.conception)) {
+      alert("El archivo necesita un nodo 'start' válido dentro de 'conception.nodes'.");
+      return;
+    }
+    game.dialogueTrees = { ...game.dialogueTrees, conception: parsed.conception };
+    importDialogueFile.value = "";
     app.setGame(game);
     app.render();
   });

@@ -89,17 +89,21 @@ export function saveSettings(settings) {
   localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
 }
 
-export function exportGameToFile(state) {
-  const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+export function exportJSONFile(data, filenamePrefix) {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   const dateStr = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
   a.href = url;
-  a.download = `narcosim-partida-${dateStr}.json`;
+  a.download = `${filenamePrefix}-${dateStr}.json`;
   document.body.appendChild(a);
   a.click();
   a.remove();
   URL.revokeObjectURL(url);
+}
+
+export function exportGameToFile(state) {
+  exportJSONFile(state, "narcosim-partida");
 }
 
 export function importGameFromFile(file) {
