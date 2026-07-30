@@ -1,6 +1,6 @@
 import { chance, randInt, clamp, pick, uid } from "./utils/random.js";
 import { addLog, currentYear, getPlayerCartel, getPlayerCharacter } from "./state.js";
-import { rollMortality, rollFamilyEvents, rollLoyaltyEvents, rollPoliceOperations } from "./events.js";
+import { rollMortality, rollFamilyEvents, rollLoyaltyEvents, rollPoliceOperations, driftMemberBonds } from "./events.js";
 import { rollScriptedEvents, resolveScriptedChoice as applyScriptedChoice } from "./scriptedEvents.js";
 import { fillVacantRoles, generateNpc, randomName } from "./npcGenerator.js";
 import { ROLE_ORDER, STAT_ORDER, STATS, clampStat, makeCartel, makeCharacter } from "./model.js";
@@ -1062,14 +1062,16 @@ export function endTurn(game) {
   processPregnancies(game);
   const coups = rollLoyaltyEvents(game, (t, ty) => addLog(game, t, ty));
   for (const coup of coups) {
+    const ally = coup.allyId ? game.characters[coup.allyId] : null;
+    const withAlly = ally ? ` con la ayuda de su aliado ${ally.name}` : "";
     if (chance(0.4)) {
       const leader = game.characters[coup.leaderId];
       leader.alive = false;
       leader.deathYear = year;
-      addLog(game, `${leader.name} muere en un intento de golpe interno liderado por ${game.characters[coup.plotterId].name}.`, "death");
+      addLog(game, `${leader.name} muere en un intento de golpe interno liderado por ${game.characters[coup.plotterId].name}${withAlly}.`, "death");
       deaths.push({ characterId: coup.leaderId, cartelId: coup.cartelId, wasLeader: true });
     } else {
-      addLog(game, `Se frustra un intento de traición contra el liderazgo de ${game.cartels[coup.cartelId].name}.`, "event");
+      addLog(game, `Se frustra un intento de traición contra el liderazgo de ${game.cartels[coup.cartelId].name}${withAlly}.`, "event");
     }
   }
   const scriptedResult = rollScriptedEvents(game, (t, ty) => addLog(game, t, ty), year);
@@ -1077,6 +1079,7 @@ export function endTurn(game) {
   const arrests = rollPoliceOperations(game, (t, ty) => addLog(game, t, ty), year);
   incomeTick(game);
   driftBonds(game);
+  driftMemberBonds(game);
 
   let pendingSuccession = null;
   let pendingRegentChoice = null;

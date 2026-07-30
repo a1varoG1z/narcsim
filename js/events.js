@@ -75,6 +75,48 @@ export function rollFamilyEvents(game, addLog, year) {
   }
 }
 
+function bondKey(idA, idB) {
+  return [idA, idB].sort().join("|");
+}
+
+/** Pairwise friendship/rivalry between two members of a cartel's leadership circle — separate
+ * from bondWithPlayer, which only tracks each member's relationship with the player. Two members
+ * who are genuinely close are more able to conspire together, feeding into coup risk below. */
+export function getMemberBond(game, idA, idB) {
+  if (idA === idB) return 100;
+  if (!game.memberBonds) return 50;
+  return game.memberBonds[bondKey(idA, idB)] ?? 50;
+}
+
+function setMemberBond(game, idA, idB, value) {
+  if (!game.memberBonds) game.memberBonds = {};
+  game.memberBonds[bondKey(idA, idB)] = clamp(value, 0, 100);
+}
+
+function leadershipCircle(game, cartel) {
+  const ids = ROLE_ORDER.map((r) => cartel.roles[r]).filter((id, i, arr) => id && arr.indexOf(id) === i);
+  return ids.filter((id) => {
+    const c = game.characters[id];
+    return c && c.alive && !c.imprisoned;
+  });
+}
+
+/** Slow random drift for every pair of living, free leadership-circle members of every cartel.
+ * High heat strains relationships across the board (shared pressure, not shared trust). */
+export function driftMemberBonds(game) {
+  for (const cartel of Object.values(game.cartels)) {
+    if (cartel.destroyed) continue;
+    const members = leadershipCircle(game, cartel);
+    for (let i = 0; i < members.length; i++) {
+      for (let j = i + 1; j < members.length; j++) {
+        let delta = randInt(-2, 2);
+        if (cartel.resources.heat > 60) delta -= 1;
+        setMemberBond(game, members[i], members[j], getMemberBond(game, members[i], members[j]) + delta);
+      }
+    }
+  }
+}
+
 /** Internal loyalty crises: minor sabotage or, rarely, a coup attempt against the leader. */
 export function rollLoyaltyEvents(game, addLog) {
   const coups = [];
@@ -91,8 +133,17 @@ export function rollLoyaltyEvents(game, addLog) {
       const bond = holder.bondWithPlayer ?? 50;
       const bondFactor = clamp(1 - (bond - 50) / 60, 0.4, 1.6);
       if (chance(disloyalty * 0.015 * bondFactor)) {
-        if (chance(0.15)) {
-          coups.push({ cartelId: cartel.id, plotterId: holder.id, leaderId: leader.id });
+        // A close ally among the other lieutenants makes a real coup (rather than lone embezzlement)
+        // more likely — real cartel coups are rarely a single person acting alone.
+        const allyId = ROLE_ORDER
+          .filter((r) => r !== "leader" && r !== role)
+          .map((r) => cartel.roles[r])
+          .find((id) => {
+            const c = game.characters[id];
+            return c && c.alive && !c.imprisoned && getMemberBond(game, holder.id, id) >= 75;
+          });
+        if (chance(allyId ? 0.3 : 0.15)) {
+          coups.push({ cartelId: cartel.id, plotterId: holder.id, leaderId: leader.id, allyId: allyId || null });
         } else {
           cartel.resources.money = Math.max(0, cartel.resources.money - randInt(20, 80));
           addLog(`${holder.name} ha desviado fondos del cártel por deslealtad.`, "event");

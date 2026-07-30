@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { buildGameFromEra } from "../js/state.js";
 import { applyAction, getWarsForCartel, resolveScriptedChoice, endTurn, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, getIncomeBreakdown, MONEY_SCALE } from "../js/turnEngine.js";
 import { rollScriptedEvents } from "../js/scriptedEvents.js";
+import { rollLoyaltyEvents, getMemberBond, driftMemberBonds } from "../js/events.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ERA_DIR = path.join(__dirname, "..", "data", "eras");
@@ -434,4 +435,73 @@ test("the Camarena 1985 event pauses for a player choice when the player control
   assert.equal(npcResult.pendingChoice, null, "should auto-resolve when the player isn't Guadalajara");
   assert.ok(npcGame.cartels.guadalajara.resources.heat > npcHeatBefore, "the historical default should still raise heat");
   assert.equal(npcGame.firedScriptedEvents.includes("camarena-1985"), true);
+});
+
+function minimalCoupGame({ sicariosBondWithPlayer = 0, allyBond = 50 } = {}) {
+  const game = {
+    turn: 0,
+    memberBonds: {},
+    characters: {
+      leader: { id: "leader", alive: true, imprisoned: null, stats: { loyaltyInspiring: 0 } },
+      underboss: { id: "underboss", alive: true, imprisoned: null, stats: { intrigue: 0 }, bondWithPlayer: 50 },
+      sicarios: { id: "sicarios", alive: true, imprisoned: null, stats: { intrigue: 100 }, bondWithPlayer: sicariosBondWithPlayer },
+      military: { id: "military", alive: true, imprisoned: null, stats: { intrigue: 0 }, bondWithPlayer: 50 },
+    },
+    cartels: {
+      test: {
+        id: "test",
+        destroyed: false,
+        resources: { money: 100000, heat: 10 },
+        roles: { leader: "leader", underboss: "underboss", sicariosChief: "sicarios", militaryChief: "military" },
+      },
+    },
+  };
+  game.memberBonds[["sicarios", "military"].sort().join("|")] = allyBond;
+  return game;
+}
+
+test("a plotter with a close ally among their peers is much more likely to escalate to a real coup than a lone plotter", () => {
+  const originalRandom = Math.random;
+  try {
+    // call1 = underboss's outer roll (p=0, always false regardless of value)
+    // call2 = sicarios' outer roll (p ~= 0.024 with these stats, needs a small value to pass)
+    // call3 = sicarios' ally-vs-embezzle roll (0.3 if allied, 0.15 otherwise) - 0.2 sits between them
+    // call4 = military's outer roll (p=0, always false regardless of value)
+    const sequence = [0.5, 0.001, 0.2, 0.5];
+    let i = 0;
+    Math.random = () => sequence[Math.min(i++, sequence.length - 1)];
+
+    const alliedGame = minimalCoupGame({ allyBond: 80 });
+    const alliedCoups = rollLoyaltyEvents(alliedGame, () => {});
+    assert.equal(alliedCoups.length, 1, "the same roll should escalate to a coup once a close ally is available");
+    assert.equal(alliedCoups[0].plotterId, "sicarios");
+    assert.equal(alliedCoups[0].allyId, "military");
+
+    i = 0;
+    const loneGame = minimalCoupGame({ allyBond: 40 });
+    const loneCoups = rollLoyaltyEvents(loneGame, () => {});
+    assert.equal(loneCoups.length, 0, "the exact same roll should fall back to mere embezzlement without a close ally");
+    assert.ok(loneGame.cartels.test.resources.money < 100000, "the failed-to-escalate plotter should still skim some money");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("getMemberBond defaults to 50 for an unset pair and 100 for a character with itself, and driftMemberBonds actually changes stored bonds", () => {
+  const game = minimalCoupGame();
+  assert.equal(getMemberBond(game, "leader", "leader"), 100);
+  assert.equal(getMemberBond(game, "underboss", "leader"), 50, "no explicit bond set for this pair yet");
+  assert.equal(getMemberBond(game, "sicarios", "military"), 50, "seeded value from minimalCoupGame's default allyBond");
+
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0; // pins randInt(-2,2) at its minimum, -2, for every pair
+    driftMemberBonds(game);
+  } finally {
+    Math.random = originalRandom;
+  }
+  // Every living, unimprisoned pair in the leadership circle (leader/underboss/sicarios/military)
+  // should have drifted down by 2 (heat=10 here, below the 60 threshold for the extra penalty).
+  assert.equal(getMemberBond(game, "leader", "underboss"), 48);
+  assert.equal(getMemberBond(game, "sicarios", "military"), 48);
 });

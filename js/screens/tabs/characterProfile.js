@@ -1,7 +1,8 @@
 import { showModal } from "../../ui/modal.js";
 import { portraitImg, statBar, escapeHtml, roleLabel } from "../../ui/components.js";
-import { STATS, STAT_ORDER, age } from "../../model.js";
+import { STATS, STAT_ORDER, ROLE_ORDER, age } from "../../model.js";
 import { currentYear, getPlayerCartel } from "../../state.js";
+import { getMemberBond } from "../../events.js";
 
 export function showCharacterProfile(app, characterId) {
   const game = app.game;
@@ -11,6 +12,15 @@ export function showCharacterProfile(app, characterId) {
   const playerCartel = getPlayerCartel(game);
   const showBond = c.id !== game.playerCharacterId && playerCartel && c.cartelId === playerCartel.id && c.bondWithPlayer !== undefined;
   const cartel = game.cartels[c.cartelId];
+  const memberBonds = c.role && cartel && c.alive && !c.imprisoned
+    ? ROLE_ORDER
+        .map((r) => cartel.roles[r])
+        .filter((id, i, arr) => id && id !== c.id && id !== game.playerCharacterId && arr.indexOf(id) === i)
+        .map((id) => game.characters[id])
+        .filter((other) => other && other.alive && !other.imprisoned)
+        .map((other) => ({ other, bond: getMemberBond(game, c.id, other.id) }))
+        .sort((a, b) => b.bond - a.bond)
+    : [];
   const parents = (c.parents || []).map((id) => game.characters[id]).filter(Boolean);
   const spouse = c.spouseId ? game.characters[c.spouseId] : null;
   const children = (c.childrenIds || []).map((id) => game.characters[id]).filter(Boolean);
@@ -32,6 +42,15 @@ export function showCharacterProfile(app, characterId) {
     <h3 class="mt-2">Atributos</h3>
     ${STAT_ORDER.map((k) => statBar(STATS[k], c.stats[k])).join("")}
     ${showBond ? `<h3 class="mt-2">Vínculo contigo</h3>${statBar("Vínculo", c.bondWithPlayer)}` : ""}
+    ${memberBonds.length ? `
+      <h3 class="mt-2">Vínculos con otros mandos</h3>
+      ${memberBonds.map((mb) => `
+        <div class="small" style="display:flex;justify-content:space-between;gap:.5rem">
+          <span>${escapeHtml(mb.other.name)}</span>
+          <span class="text-dim">${mb.bond}/100</span>
+        </div>
+      `).join("")}
+    ` : ""}
     <h3 class="mt-2">Familia</h3>
     <p class="small">
       ${parents.length ? "Padres: " + parents.map((p) => escapeHtml(p.name)).join(", ") + "<br>" : ""}
