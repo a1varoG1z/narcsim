@@ -100,6 +100,7 @@ export const ACTION_COSTS = {
   invest_art: 300 * MONEY_SCALE,
   invest_business: 500 * MONEY_SCALE,
   invest_weapons: 350 * MONEY_SCALE,
+  invest_security: 400 * MONEY_SCALE,
   sell_art: 0,
 };
 
@@ -496,6 +497,11 @@ export function applyAction(game, cartelId, type, payload = {}) {
       if (method === "accident") successChance = clamp(successChance - 0.15, 0.05, 0.6);
       else if (method === "public") successChance = clamp(successChance + 0.05, 0.1, 0.85);
       if (hasActiveInformant(cartel, targetCartel.id)) successChance = clamp(successChance + INFORMANT_SUCCESS_BONUS, 0.05, 0.9);
+      // A leader's own private security detail (invest_security) only protects them specifically —
+      // it doesn't help the rest of the cartel's roster.
+      if (targetCartel.roles.leader === target.id && targetCartel.resources.securityBonus) {
+        successChance = clamp(successChance - targetCartel.resources.securityBonus, 0.05, 0.9);
+      }
 
       const goToWar = () => {
         cartel.relations[targetCartel.id] = { status: "war", tension: 95 };
@@ -699,6 +705,14 @@ export function applyAction(game, cartelId, type, payload = {}) {
       r.heat = Math.min(100, r.heat + randInt(2, 5));
       log(`${cartel.name} arma y equipa mejor a su gente (bonificación de combate: +${Math.round(r.weaponsBonus * 100)}%).`, "good");
       return { ok: true, weaponsBonus: r.weaponsBonus };
+    }
+    case "invest_security": {
+      const cost = ACTION_COSTS.invest_security;
+      if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
+      r.money -= cost;
+      r.securityBonus = clamp((r.securityBonus || 0) + 0.03, 0, 0.3);
+      log(`${cartel.name} refuerza la seguridad privada de su líder (reduce en ${Math.round(r.securityBonus * 100)}% la probabilidad de que un atentado contra él/ella tenga éxito).`, "good");
+      return { ok: true, securityBonus: r.securityBonus };
     }
     default:
       return { ok: false, message: "Acción desconocida." };
@@ -931,6 +945,7 @@ function runAiCartels(game) {
     if (r.artValue > 0) options.push({ item: "sell_art", weight: r.money < ACTION_COSTS.recruit_army ? 3 : 0.5 });
     if (r.money >= ACTION_COSTS.invest_business) options.push({ item: "invest_business", weight: 1.5 });
     if (r.money >= ACTION_COSTS.invest_weapons && (r.weaponsBonus || 0) < 0.3) options.push({ item: "invest_weapons", weight: atWar ? 2 : 0.8 });
+    if (r.money >= ACTION_COSTS.invest_security && (r.securityBonus || 0) < 0.3) options.push({ item: "invest_security", weight: atWar ? 1.2 : 0.6 });
 
     let choice = weightedChoice(options);
     if (choice === "attack_territory") {

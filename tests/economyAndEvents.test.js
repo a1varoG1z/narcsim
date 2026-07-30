@@ -425,6 +425,54 @@ test("invest_weapons grants a capped, cumulative combat bonus", () => {
   assert.equal(cartel.resources.weaponsBonus, 0.3, "20 purchases of +2% each should hit the 30% cap");
 });
 
+test("invest_security grants a capped, cumulative reduction to assassination risk, and refuses without enough money", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.cjng;
+
+  cartel.resources.money = 0;
+  const poorResult = applyAction(game, "cjng", "invest_security");
+  assert.equal(poorResult.ok, false);
+
+  cartel.resources.money = 100_000_000;
+  for (let i = 0; i < 20; i++) {
+    applyAction(game, "cjng", "invest_security");
+  }
+  assert.equal(cartel.resources.securityBonus, 0.3, "10 purchases of +3% each should hit the 30% cap");
+});
+
+test("invest_security's bonus only protects the cartel's actual leader from assassination, not other role-holders", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  const attacker = game.cartels.cjng;
+  attacker.resources.money = 100_000_000;
+  cartel.resources.securityBonus = 0.3;
+  cartel.resources.corruptPolice = 0;
+  const hitman = game.characters[attacker.roles.sicariosChief];
+  hitman.stats.stealth = 100;
+  hitman.stats.violence = 100;
+  const leaderId = cartel.roles.leader;
+  const underbossId = cartel.roles.underboss;
+  // Pin both targets' stealth to the same value so the only real difference between the two
+  // attempts below is the leader's security bonus, not incidental differences in era-data stats.
+  game.characters[leaderId].stats.stealth = 50;
+  game.characters[underbossId].stats.stealth = 50;
+  // attackSkill = 100, defenseSkill = 50 (stealth) + 0 (corruptPolice/4) => base chance = clamp(0.35 + 50/150, .1, .75) = 0.683.
+  // Against the leader specifically, the 0.3 security bonus knocks that down to 0.383.
+
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.5; // under 0.683 (succeeds vs. an unprotected target), over 0.383 (fails vs. the secured leader)
+    const leaderResult = applyAction(game, "cjng", "assassinate_rival", { targetCharacterId: leaderId });
+    assert.equal(leaderResult.success, false, "the leader's security detail should be enough to foil this particular roll");
+
+    attacker.resources.money = 100_000_000; // reset spend for the second attempt
+    const underbossResult = applyAction(game, "cjng", "assassinate_rival", { targetCharacterId: underbossId });
+    assert.equal(underbossResult.success, true, "the same roll should still succeed against a target the security detail doesn't cover");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
 test("declaring war opens a war record and proposing (accepted) peace closes it", () => {
   const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
   applyAction(game, "sinaloa", "declare_war", { targetCartelId: "cdn" });
