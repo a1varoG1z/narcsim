@@ -16,7 +16,9 @@ function deathChanceForAge(age) {
   return 0.16;
 }
 
-/** Natural deaths, illness and accidents. Returns list of {characterId, cartelId, wasLeader} for succession handling. */
+/** Natural deaths, illness and accidents. Returns list of {characterId, cartelId, wasLeader} for succession handling.
+ * Same principle as the scripted historical events: a roll that would kill the character the
+ * player is currently controlling instead gives them a heavy (55%) chance to pull through. */
 export function rollMortality(game, addLog, year) {
   const results = [];
   for (const cartel of Object.values(game.cartels)) {
@@ -28,9 +30,13 @@ export function rollMortality(game, addLog, year) {
       let deathChance = deathChanceForAge(age);
       if (c.role === "traffickingChief" || c.role === "leader") deathChance += 0.002; // accidentes (avionetas, atentados)
       if (chance(deathChance)) {
+        const cause = age > 70 ? "causas naturales" : pick(["un accidente", "una enfermedad repentina", "un atentado"]);
+        if (charId === game.playerCharacterId && chance(0.55)) {
+          addLog(`${c.name} estuvo cerca de morir por ${cause}, pero logra salir adelante contra todo pronóstico.`, "good");
+          continue;
+        }
         c.alive = false;
         c.deathYear = year;
-        const cause = age > 70 ? "causas naturales" : pick(["un accidente", "una enfermedad repentina", "un atentado"]);
         addLog(`${c.name} ha muerto por ${cause}.`, "death");
         const wasLeader = cartel.roles.leader === c.id;
         results.push({ characterId: c.id, cartelId: cartel.id, wasLeader, role: c.role });

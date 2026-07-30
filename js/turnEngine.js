@@ -504,39 +504,49 @@ export function applyAction(game, cartelId, type, payload = {}) {
       };
 
       if (chance(successChance)) {
-        target.alive = false;
-        target.deathYear = currentYear(game);
-        if (target.id === game.playerCharacterId) {
-          // Defer to the same succession pipeline as any other player death (endTurn's own
-          // deaths loop) instead of silently reassigning leadership via autoSuccession — the
-          // player needs to be the one who picks their heir, not have it happen to them unseen.
-          game._pendingPlayerDeath = { characterId: target.id, cartelId: targetCartel.id, reason: "atentado" };
-        } else {
-          const wasLeader = targetCartel.roles.leader === target.id;
-          if (wasLeader) {
-            autoSuccession(game, targetCartel.id, target.id, "atentado");
-          } else if (target.role) {
-            vacateRole(game, targetCartel.id, target.id);
-            fillVacantRoles(targetCartel, game.characters, currentYear(game));
+        // Same principle as the scripted historical events: when the target is the character the
+        // player is currently controlling, a hit that "connects" becomes a heavy (55%) chance to
+        // survive it anyway instead of a certain death — everything else about the attempt (heat,
+        // going to war...) still plays out exactly as if it had killed them.
+        const isPlayerTarget = target.id === game.playerCharacterId;
+        const survives = isPlayerTarget && chance(0.55);
+        if (!survives) {
+          target.alive = false;
+          target.deathYear = currentYear(game);
+          if (isPlayerTarget) {
+            // Defer to the same succession pipeline as any other player death (endTurn's own
+            // deaths loop) instead of silently reassigning leadership via autoSuccession — the
+            // player needs to be the one who picks their heir, not have it happen to them unseen.
+            game._pendingPlayerDeath = { characterId: target.id, cartelId: targetCartel.id, reason: "atentado" };
+          } else {
+            const wasLeader = targetCartel.roles.leader === target.id;
+            if (wasLeader) {
+              autoSuccession(game, targetCartel.id, target.id, "atentado");
+            } else if (target.role) {
+              vacateRole(game, targetCartel.id, target.id);
+              fillVacantRoles(targetCartel, game.characters, currentYear(game));
+            }
           }
         }
+        const verb = survives ? "sobrevive por poco a" : "muere en";
+        const logType = survives ? "good" : "death";
         if (method === "accident") {
           targetCartel.resources.heat = Math.min(100, targetCartel.resources.heat + randInt(3, 8));
           r.heat = Math.min(100, r.heat + randInt(5, 12));
-          log(`${target.name} muere en un aparente accidente orquestado en secreto por ${cartel.name}. Nadie sospecha... por ahora.`, "death");
+          log(`${target.name} ${verb} un aparente accidente orquestado en secreto por ${cartel.name}. Nadie sospecha... por ahora.`, logType);
         } else if (method === "public") {
           targetCartel.resources.heat = Math.min(100, targetCartel.resources.heat + randInt(15, 25));
           targetCartel.resources.publicImage = Math.max(0, targetCartel.resources.publicImage - randInt(10, 20));
           r.heat = Math.min(100, r.heat + randInt(25, 40));
           goToWar();
-          log(`${target.name} muere en un ataque público y brutal ordenado por ${cartel.name}, pensado para sembrar el terror.`, "death");
+          log(`${target.name} ${verb} un ataque público y brutal ordenado por ${cartel.name}, pensado para sembrar el terror.`, logType);
         } else {
           targetCartel.resources.heat = Math.min(100, targetCartel.resources.heat + randInt(10, 20));
           r.heat = Math.min(100, r.heat + randInt(20, 35));
           goToWar();
-          log(`${target.name} muere en un atentado ordenado por ${cartel.name}.`, "death");
+          log(`${target.name} ${verb} un atentado ordenado por ${cartel.name}.`, logType);
         }
-        return { ok: true, success: true };
+        return { ok: true, success: true, survived: survives };
       }
       if (method === "accident") {
         r.heat = Math.min(100, r.heat + randInt(20, 32));
@@ -1194,6 +1204,32 @@ function autoSuccession(game, cartelId, deceasedId, reasonLabel) {
   return heirId;
 }
 
+/** Resolves each coup from rollLoyaltyEvents into either a leadership death or a foiled attempt.
+ * Same principle as the scripted historical events and rollMortality: escalation that would kill
+ * the player's own character instead gives them a heavy (55%) chance to survive it. Returns death
+ * entries in the same shape as rollMortality/rollScriptedEvents for endTurn's succession handling. */
+export function resolveCoups(game, coups, year) {
+  const deaths = [];
+  for (const coup of coups) {
+    const ally = coup.allyId ? game.characters[coup.allyId] : null;
+    const withAlly = ally ? ` con la ayuda de su aliado ${ally.name}` : "";
+    if (chance(0.4)) {
+      const leader = game.characters[coup.leaderId];
+      if (leader.id === game.playerCharacterId && chance(0.55)) {
+        addLog(game, `Sobrevives por poco al golpe interno liderado por ${game.characters[coup.plotterId].name}${withAlly}.`, "good");
+        continue;
+      }
+      leader.alive = false;
+      leader.deathYear = year;
+      addLog(game, `${leader.name} muere en un intento de golpe interno liderado por ${game.characters[coup.plotterId].name}${withAlly}.`, "death");
+      deaths.push({ characterId: coup.leaderId, cartelId: coup.cartelId, wasLeader: true });
+    } else {
+      addLog(game, `Se frustra un intento de traición contra el liderazgo de ${game.cartels[coup.cartelId].name}${withAlly}.`, "event");
+    }
+  }
+  return deaths;
+}
+
 export function endTurn(game) {
   if (game.gameOver) return { pendingSuccession: null, pendingRegentChoice: null, gameOver: true };
   const year = currentYear(game);
@@ -1212,19 +1248,7 @@ export function endTurn(game) {
   deaths.push(...rollSiblingRivalry(game, (t, ty) => addLog(game, t, ty), year));
   processPregnancies(game);
   const coups = rollLoyaltyEvents(game, (t, ty) => addLog(game, t, ty));
-  for (const coup of coups) {
-    const ally = coup.allyId ? game.characters[coup.allyId] : null;
-    const withAlly = ally ? ` con la ayuda de su aliado ${ally.name}` : "";
-    if (chance(0.4)) {
-      const leader = game.characters[coup.leaderId];
-      leader.alive = false;
-      leader.deathYear = year;
-      addLog(game, `${leader.name} muere en un intento de golpe interno liderado por ${game.characters[coup.plotterId].name}${withAlly}.`, "death");
-      deaths.push({ characterId: coup.leaderId, cartelId: coup.cartelId, wasLeader: true });
-    } else {
-      addLog(game, `Se frustra un intento de traición contra el liderazgo de ${game.cartels[coup.cartelId].name}${withAlly}.`, "event");
-    }
-  }
+  deaths.push(...resolveCoups(game, coups, year));
   const scriptedResult = rollScriptedEvents(game, (t, ty) => addLog(game, t, ty), year);
   deaths.push(...scriptedResult.deaths);
   const policeResult = rollPoliceOperations(game, (t, ty) => addLog(game, t, ty), year);

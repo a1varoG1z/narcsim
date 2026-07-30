@@ -4,9 +4,9 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildGameFromEra } from "../js/state.js";
-import { applyAction, getWarsForCartel, resolveScriptedChoice, endTurn, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, getIncomeBreakdown, MONEY_SCALE, getDrugProfile, DRUG_PROFILES, resolveRaidTip, getSuccessionCandidates, resolveSuccession } from "../js/turnEngine.js";
+import { applyAction, getWarsForCartel, resolveScriptedChoice, endTurn, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, getIncomeBreakdown, MONEY_SCALE, getDrugProfile, DRUG_PROFILES, resolveRaidTip, getSuccessionCandidates, resolveSuccession, resolveCoups } from "../js/turnEngine.js";
 import { rollScriptedEvents } from "../js/scriptedEvents.js";
-import { rollLoyaltyEvents, getMemberBond, driftMemberBonds, rollSiblingRivalry, rollPoliceOperations } from "../js/events.js";
+import { rollLoyaltyEvents, getMemberBond, driftMemberBonds, rollSiblingRivalry, rollPoliceOperations, rollMortality } from "../js/events.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ERA_DIR = path.join(__dirname, "..", "data", "eras");
@@ -219,8 +219,12 @@ test("assassinate_rival killing the player's own character defers to the success
 
   const originalRandom = Math.random;
   let result;
+  // 1: chance(successChance) -> true, the hit connects. 2: chance(0.55) survival roll for the
+  // player -> false (0.99 >= 0.55), so this test exercises the "doesn't survive" branch.
+  const sequence = [0, 0.99];
+  let i = 0;
   try {
-    Math.random = () => 0; // guarantees the assassination succeeds
+    Math.random = () => sequence[Math.min(i++, sequence.length - 1)];
     result = applyAction(game, "cjng", "assassinate_rival", { targetCharacterId: playerCharacterId });
   } finally {
     Math.random = originalRandom;
@@ -1058,6 +1062,109 @@ test("resolveRaidTip's 'risk' choice goes through the same resolution as a norma
     assert.equal(player.imprisoned.lifeSentence, true);
     assert.ok(outcome.pendingSuccession, "a life-sentence arrest of the player should surface a pendingSuccession, just like an unwarned arrest would");
     assert.equal(outcome.pendingRegentChoice, null);
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+function makeMortalityGame({ includeNpc = false } = {}) {
+  return {
+    playerCharacterId: "player1",
+    cartels: {
+      mine: {
+        id: "mine",
+        destroyed: false,
+        characters: includeNpc ? ["player1", "npc1"] : ["player1"],
+        roles: { leader: "player1" },
+      },
+    },
+    characters: {
+      // birthYear picked so age (year - birthYear) is 80: old enough that the death cause is
+      // "causas naturales" and skips the pick() call, keeping the random-call sequence short.
+      player1: { id: "player1", cartelId: "mine", alive: true, imprisoned: null, birthYear: 1940, role: "leader", name: "El Jefe" },
+      ...(includeNpc
+        ? { npc1: { id: "npc1", cartelId: "mine", alive: true, imprisoned: null, birthYear: 1940, role: null, name: "El Otro" } }
+        : {}),
+    },
+  };
+}
+
+test("rollMortality gives the player's own character a heavy chance to survive a roll that would otherwise kill them", () => {
+  const originalRandom = Math.random;
+  try {
+    const survivesGame = makeMortalityGame();
+    const sequence = [0, 0]; // 1: chance(deathChance) -> true. 2: chance(0.55) survival roll -> true (survives)
+    let i = 0;
+    Math.random = () => sequence[Math.min(i++, sequence.length - 1)];
+    const survivedResults = rollMortality(survivesGame, () => {}, 2020);
+    assert.equal(survivedResults.length, 0, "a successful survival roll should mean no death is recorded");
+    assert.equal(survivesGame.characters.player1.alive, true);
+
+    const diesGame = makeMortalityGame();
+    const sequence2 = [0, 0.99]; // 1: chance(deathChance) -> true. 2: chance(0.55) -> false (doesn't survive)
+    let j = 0;
+    Math.random = () => sequence2[Math.min(j++, sequence2.length - 1)];
+    const diedResults = rollMortality(diesGame, () => {}, 2020);
+    assert.equal(diedResults.length, 1, "a failed survival roll should let the death go through as usual");
+    assert.equal(diedResults[0].characterId, "player1");
+    assert.equal(diesGame.characters.player1.alive, false);
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("rollMortality never rolls a survival check for NPCs, only the player's own character", () => {
+  const game = makeMortalityGame({ includeNpc: true });
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0; // guarantees any chance() call succeeds; an NPC death needs only one call
+    const results = rollMortality(game, () => {}, 2020);
+    assert.ok(results.some((d) => d.characterId === "npc1"), "the NPC should die outright, with no extra survival roll consumed");
+    assert.equal(game.characters.npc1.alive, false);
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("a coup that would kill the player's own leadership instead gives them a heavy chance to survive it", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const playerId = game.playerCharacterId;
+  const plotterId = game.cartels.sinaloa.roles.underboss;
+  const coup = { cartelId: "sinaloa", plotterId, leaderId: playerId, allyId: null };
+  const originalRandom = Math.random;
+
+  try {
+    const sequence = [0, 0]; // 1: chance(0.4) coup-escalation roll -> true. 2: chance(0.55) survival roll -> true (survives)
+    let i = 0;
+    Math.random = () => sequence[Math.min(i++, sequence.length - 1)];
+    const survivedDeaths = resolveCoups(game, [coup], 2020);
+    assert.equal(survivedDeaths.length, 0, "surviving the escalation should record no death");
+    assert.equal(game.characters[playerId].alive, true);
+
+    const sequence2 = [0, 0.99]; // 1: chance(0.4) -> true. 2: chance(0.55) survival roll -> false (doesn't survive)
+    let j = 0;
+    Math.random = () => sequence2[Math.min(j++, sequence2.length - 1)];
+    const diedDeaths = resolveCoups(game, [coup], 2020);
+    assert.equal(diedDeaths.length, 1, "a failed survival roll should let the coup kill them as usual");
+    assert.equal(diedDeaths[0].characterId, playerId);
+    assert.equal(game.characters[playerId].alive, false);
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("resolveCoups never rolls a survival check for an NPC leader, only for the player's own character", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const npcCartel = game.cartels.cjng;
+  const npcLeaderId = npcCartel.roles.leader;
+  const coup = { cartelId: "cjng", plotterId: npcCartel.roles.underboss, leaderId: npcLeaderId, allyId: null };
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0; // guarantees any chance() call succeeds; an NPC's coup death needs only one call
+    const deaths = resolveCoups(game, [coup], 2020);
+    assert.equal(deaths.length, 1, "the NPC leader should die outright, with no extra survival roll consumed");
+    assert.equal(deaths[0].characterId, npcLeaderId);
+    assert.equal(game.characters[npcLeaderId].alive, false);
   } finally {
     Math.random = originalRandom;
   }
