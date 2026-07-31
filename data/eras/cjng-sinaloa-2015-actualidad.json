@@ -188,7 +188,21 @@
       "controllerId": null,
       "value": 13,
       "adj": [
-        "guerrero"
+        "guerrero",
+        "brasil"
+      ]
+    },
+    {
+      "id": "brasil",
+      "name": "Santos (Brasil)",
+      "x": 12,
+      "y": 100,
+      "w": 18,
+      "h": 12,
+      "controllerId": "pcc",
+      "value": 15,
+      "adj": [
+        "guatemala"
       ]
     }
   ],
@@ -321,6 +335,26 @@
         "leader": "gu_leader",
         "underboss": "gu_underboss",
         "sicariosChief": "gu_sicarios_chief"
+      }
+    },
+    {
+      "id": "pcc",
+      "name": "Primeiro Comando da Capital (PCC)",
+      "color": "#c9a227",
+      "aiControlled": true,
+      "historicalNote": "El PCC, fundado en 1993 en el sistema penitenciario de São Paulo, es hoy la organización criminal más grande y con mayor alcance internacional de Brasil, con rutas de cocaína documentadas hacia Europa a través de puertos como el de Santos. Marcos Willians Herbas Camacho, 'Marcola', es su histórico líder de referencia; en la vida real lleva encarcelado desde los años 90, con la salida más próxima estimada recién hacia mediados de este siglo. En el juego se representa activo, igual que el resto de figuras históricas de esta lista. Los cargos secundarios no documentados públicamente son ficticios.",
+      "resources": {
+        "money": 10000000,
+        "armySize": 600,
+        "corruptGov": 40,
+        "corruptPolice": 50,
+        "publicImage": 20,
+        "heat": 40,
+        "internationalReputation": 30
+      },
+      "roles": {
+        "leader": "marcola",
+        "underboss": "pcc_underboss"
       }
     }
   ],
@@ -1157,6 +1191,55 @@
         "intrigue": 45,
         "loyaltyInspiring": 48,
         "stealth": 50
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "marcola",
+      "name": "Marcos Willians Herbas Camacho \"Marcola\"",
+      "sex": "M",
+      "birthYear": 1968,
+      "alive": true,
+      "cartelId": "pcc",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 65,
+        "business": 78,
+        "charisma": 60,
+        "intrigue": 85,
+        "loyaltyInspiring": 75,
+        "stealth": 60
+      },
+      "traits": [
+        "fundador",
+        "calculador"
+      ],
+      "notes": "Líder histórico de referencia del PCC. En la vida real lleva encarcelado desde los años 90; en el juego se representa activo. Su destino en el juego depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pcc_underboss",
+      "name": "Anderson \"Cabeça Branca\" Nunes",
+      "sex": "M",
+      "birthYear": 1972,
+      "alive": true,
+      "cartelId": "pcc",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 60,
+        "business": 65,
+        "charisma": 50,
+        "intrigue": 62,
+        "loyaltyInspiring": 55,
+        "stealth": 58
       },
       "traits": [],
       "notes": "Personaje ficticio.",
