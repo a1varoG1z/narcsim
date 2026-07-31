@@ -74,7 +74,7 @@
       "y": 2,
       "w": 22,
       "h": 16,
-      "controllerId": null,
+      "controllerId": "pdf_panama",
       "value": 16,
       "adj": [
         "caribe_atlantico"
@@ -321,6 +321,25 @@
       "roles": {
         "leader": "vaticano",
         "underboss": "vaticano_underboss"
+      }
+    },
+    {
+      "id": "pdf_panama",
+      "name": "Fuerzas de Defensa de Panamá (bajo Noriega)",
+      "color": "#4a4a6b",
+      "aiControlled": true,
+      "historicalNote": "Bajo el mando real del general Manuel Antonio Noriega, hombre fuerte de Panamá durante buena parte de esta época, las Fuerzas de Defensa panameñas permitieron el tránsito y lavado de dinero del narcotráfico colombiano a cambio de sobornos — una relación documentada que llevó a su condena en EE.UU. en 1992 por narcotráfico y crimen organizado. Por tratarse de quien fuera jefe de Estado de facto de un país real y no solo de un capo criminal, el personaje al mando de esta facción es un oficial ficticio que representa a esa red de corrupción castrense, en vez de convertir a Noriega mismo en un personaje jugable con estadísticas propias.",
+      "resources": {
+        "money": 8000000,
+        "armySize": 450,
+        "corruptGov": 80,
+        "corruptPolice": 70,
+        "publicImage": 30,
+        "heat": 35
+      },
+      "roles": {
+        "leader": "pdf_leader",
+        "underboss": "pdf_underboss"
       }
     }
   ],
@@ -1282,6 +1301,52 @@
         "intrigue": 58,
         "loyaltyInspiring": 48,
         "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pdf_leader",
+      "name": "Coronel Roberto Díaz Chávez",
+      "sex": "M",
+      "birthYear": 1942,
+      "alive": true,
+      "cartelId": "pdf_panama",
+      "role": "leader",
+      "historical": false,
+      "stats": {
+        "violence": 55,
+        "business": 65,
+        "charisma": 55,
+        "intrigue": 70,
+        "loyaltyInspiring": 55,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los mandos de las Fuerzas de Defensa panameñas que permitían el tránsito y lavado de dinero del narcotráfico a cambio de sobornos, bajo el mando real del general Manuel Antonio Noriega.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pdf_underboss",
+      "name": "Mayor Ezequiel Ortega",
+      "sex": "M",
+      "birthYear": 1948,
+      "alive": true,
+      "cartelId": "pdf_panama",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 50,
+        "business": 55,
+        "charisma": 45,
+        "intrigue": 60,
+        "loyaltyInspiring": 48,
+        "stealth": 58
       },
       "traits": [],
       "notes": "Personaje ficticio.",
