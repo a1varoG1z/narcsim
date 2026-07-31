@@ -275,7 +275,8 @@
       "roles": {
         "leader": "carlos_castano",
         "underboss": "pepes_underboss",
-        "financeChief": "pepes_finance_chief"
+        "financeChief": "pepes_finance_chief",
+        "sicariosChief": "pepes_sicarios_chief"
       }
     },
     {
@@ -295,7 +296,8 @@
       "roles": {
         "leader": "ivan_urdinola",
         "underboss": "urdinola_underboss",
-        "financeChief": "urdinola_finance_chief"
+        "financeChief": "urdinola_finance_chief",
+        "sicariosChief": "urdinola_sicarios_chief"
       }
     },
     {
@@ -1909,6 +1911,52 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, encargada de lavar las ganancias de la red a través de negocios de importación y cambio de divisas en Maracaibo.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pepes_sicarios_chief",
+      "name": "Wilmer \"El Mono\" Zapata",
+      "sex": "M",
+      "birthYear": 1961,
+      "alive": true,
+      "cartelId": "los_pepes",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 75,
+        "business": 30,
+        "charisma": 40,
+        "intrigue": 55,
+        "loyaltyInspiring": 45,
+        "stealth": 60
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de los pistoleros que cazan a los hombres de Escobar y bombardean sus propiedades en la ofensiva de Los Pepes.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "urdinola_sicarios_chief",
+      "name": "Gustavo \"El Chino\" Palomino",
+      "sex": "M",
+      "birthYear": 1958,
+      "alive": true,
+      "cartelId": "urdinola",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 72,
+        "business": 32,
+        "charisma": 38,
+        "intrigue": 50,
+        "loyaltyInspiring": 48,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de los pistoleros de la organización en el norte del Valle del Cauca.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []
