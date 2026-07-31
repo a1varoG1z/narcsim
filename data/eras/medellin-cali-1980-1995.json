@@ -134,7 +134,21 @@
       "value": 10,
       "adj": [
         "valle_cauca",
-        "eje_cafetero"
+        "eje_cafetero",
+        "bolivia"
+      ]
+    },
+    {
+      "id": "bolivia",
+      "name": "Beni (Bolivia)",
+      "x": 60,
+      "y": 62,
+      "w": 24,
+      "h": 20,
+      "controllerId": "suarez",
+      "value": 11,
+      "adj": [
+        "narino_putumayo"
       ]
     },
     {
@@ -252,6 +266,26 @@
         "leader": "ivan_urdinola",
         "underboss": "urdinola_underboss",
         "financeChief": "urdinola_finance_chief"
+      }
+    },
+    {
+      "id": "suarez",
+      "name": "Organización de Roberto Suárez (Bolivia)",
+      "color": "#4f7a3a",
+      "aiControlled": true,
+      "historicalNote": "Roberto Suárez Gómez, apodado 'El Rey de la Cocaína', dominó la producción de pasta base de coca en el Beni boliviano desde finales de los 70, y su organización fue la principal proveedora de materia prima para los cárteles colombianos durante buena parte de esta época. Financió el golpe de Estado de García Meza en 1980 (el llamado 'Golpe de la Cocaína'), que colocó a su yerno Luis Arce Gómez como ministro del Interior. Fue arrestado en 1988; en el juego su destino depende de tus decisiones. Los cargos secundarios no documentados públicamente son ficticios.",
+      "resources": {
+        "money": 9000000,
+        "armySize": 380,
+        "corruptGov": 70,
+        "corruptPolice": 45,
+        "publicImage": 28,
+        "heat": 20
+      },
+      "roles": {
+        "leader": "roberto_suarez",
+        "corruptionGovChief": "luis_arce",
+        "underboss": "suarez_underboss"
       }
     }
   ],
@@ -1088,6 +1122,82 @@
         "intrigue": 58,
         "loyaltyInspiring": 40,
         "stealth": 48
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "roberto_suarez",
+      "name": "Roberto Suárez Gómez \"El Rey de la Cocaína\"",
+      "sex": "M",
+      "birthYear": 1932,
+      "alive": true,
+      "cartelId": "suarez",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 60,
+        "business": 88,
+        "charisma": 65,
+        "intrigue": 75,
+        "loyaltyInspiring": 60,
+        "stealth": 55
+      },
+      "traits": [
+        "empresario",
+        "fundador",
+        "hacendado"
+      ],
+      "notes": "Terrateniente ganadero convertido en el mayor productor de pasta base de coca de Bolivia; proveedor clave de los cárteles colombianos. En la vida real fue capturado en 1988; en el juego su destino depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "luis_arce",
+      "name": "Luis Arce Gómez",
+      "sex": "M",
+      "birthYear": 1936,
+      "alive": true,
+      "cartelId": "suarez",
+      "role": "corruptionGovChief",
+      "historical": true,
+      "stats": {
+        "violence": 70,
+        "business": 40,
+        "charisma": 50,
+        "intrigue": 70,
+        "loyaltyInspiring": 45,
+        "stealth": 50
+      },
+      "traits": [
+        "militar",
+        "implacable"
+      ],
+      "notes": "Yerno de Roberto Suárez y ministro del Interior boliviano en 1980-1981 bajo la dictadura de García Meza, tras el golpe que la organización de Suárez ayudó a financiar; apodado en su momento 'el Ministro de la Cocaína' por la prensa internacional.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "suarez_underboss",
+      "name": "Marcelo \"El Patrón del Beni\" Áñez",
+      "sex": "M",
+      "birthYear": 1940,
+      "alive": true,
+      "cartelId": "suarez",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 58,
+        "business": 60,
+        "charisma": 48,
+        "intrigue": 55,
+        "loyaltyInspiring": 50,
+        "stealth": 52
       },
       "traits": [],
       "notes": "Personaje ficticio.",
