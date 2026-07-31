@@ -344,7 +344,8 @@
       },
       "roles": {
         "leader": "lorenzana_padre",
-        "underboss": "lorenzana_hijo"
+        "underboss": "lorenzana_hijo",
+        "sicariosChief": "lorenzana_sicarios_chief"
       }
     }
   ],
@@ -1151,6 +1152,29 @@
       "parents": [
         "lorenzana_padre"
       ],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "lorenzana_sicarios_chief",
+      "name": "Byron \"El Zope\" Morales",
+      "sex": "M",
+      "birthYear": 1975,
+      "alive": true,
+      "cartelId": "lorenzana",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 70,
+        "business": 30,
+        "charisma": 35,
+        "intrigue": 50,
+        "loyaltyInspiring": 45,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de la seguridad armada de la organización en Zacapa frente al avance de Los Zetas.",
+      "parents": [],
       "spouseId": null,
       "childrenIds": []
     }

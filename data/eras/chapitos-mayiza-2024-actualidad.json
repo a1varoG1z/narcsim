@@ -268,7 +268,8 @@
       },
       "roles": {
         "leader": "fito_24",
-        "underboss": "choneros_underboss_24"
+        "underboss": "choneros_underboss_24",
+        "sicariosChief": "choneros_sicarios_chief_24"
       }
     }
   ],
@@ -628,6 +629,29 @@
       },
       "traits": [],
       "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "choneros_sicarios_chief_24",
+      "name": "Kevin \"El Titi\" Zambrano",
+      "sex": "M",
+      "birthYear": 1988,
+      "alive": true,
+      "cartelId": "choneros",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 72,
+        "business": 35,
+        "charisma": 42,
+        "intrigue": 55,
+        "loyaltyInspiring": 48,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo del brazo armado de la organización en medio del conflicto armado interno declarado en 2024.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

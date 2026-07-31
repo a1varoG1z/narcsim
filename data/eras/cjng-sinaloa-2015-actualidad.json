@@ -354,7 +354,8 @@
       },
       "roles": {
         "leader": "marcola",
-        "underboss": "pcc_underboss"
+        "underboss": "pcc_underboss",
+        "sicariosChief": "pcc_sicarios_chief"
       }
     }
   ],
@@ -1243,6 +1244,29 @@
       },
       "traits": [],
       "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pcc_sicarios_chief",
+      "name": "Ederson \"Cara de Fogo\" Alves",
+      "sex": "M",
+      "birthYear": 1980,
+      "alive": true,
+      "cartelId": "pcc",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 70,
+        "business": 35,
+        "charisma": 45,
+        "intrigue": 58,
+        "loyaltyInspiring": 55,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, encargado de la disciplina armada del PCC dentro y fuera del sistema penitenciario.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

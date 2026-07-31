@@ -307,7 +307,8 @@
       },
       "roles": {
         "leader": "devis_rivera",
-        "underboss": "javier_rivera"
+        "underboss": "javier_rivera",
+        "sicariosChief": "cachiros_sicarios_chief"
       }
     }
   ],
@@ -1352,6 +1353,29 @@
       },
       "traits": [],
       "notes": "Cofundador de Los Cachiros junto a su hermano Devis Leonel. También se entregó a la DEA en 2015 y colaboró como testigo en juicios posteriores.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cachiros_sicarios_chief",
+      "name": "Denis \"El Tigre\" Zelaya",
+      "sex": "M",
+      "birthYear": 1970,
+      "alive": true,
+      "cartelId": "cachiros",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 68,
+        "business": 30,
+        "charisma": 35,
+        "intrigue": 50,
+        "loyaltyInspiring": 45,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de la seguridad armada de la organización a lo largo de la costa caribeña hondureña.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

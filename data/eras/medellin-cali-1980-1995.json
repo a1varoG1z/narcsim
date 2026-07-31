@@ -301,7 +301,8 @@
       "roles": {
         "leader": "roberto_suarez",
         "corruptionGovChief": "luis_arce",
-        "underboss": "suarez_underboss"
+        "underboss": "suarez_underboss",
+        "sicariosChief": "suarez_sicarios_chief"
       }
     },
     {
@@ -320,7 +321,8 @@
       },
       "roles": {
         "leader": "vaticano",
-        "underboss": "vaticano_underboss"
+        "underboss": "vaticano_underboss",
+        "sicariosChief": "vaticano_sicarios_chief"
       }
     },
     {
@@ -339,7 +341,8 @@
       },
       "roles": {
         "leader": "pdf_leader",
-        "underboss": "pdf_underboss"
+        "underboss": "pdf_underboss",
+        "sicariosChief": "pdf_sicarios_chief"
       }
     }
   ],
@@ -1350,6 +1353,75 @@
       },
       "traits": [],
       "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "suarez_sicarios_chief",
+      "name": "Nazario \"El Cazador\" Vaca",
+      "sex": "M",
+      "birthYear": 1950,
+      "alive": true,
+      "cartelId": "suarez",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 72,
+        "business": 30,
+        "charisma": 35,
+        "intrigue": 50,
+        "loyaltyInspiring": 45,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, encargado de la seguridad armada de las pistas de aterrizaje clandestinas en el Beni.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "vaticano_sicarios_chief",
+      "name": "Percy \"El Zorro\" Ramírez",
+      "sex": "M",
+      "birthYear": 1955,
+      "alive": true,
+      "cartelId": "vaticano",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 70,
+        "business": 28,
+        "charisma": 38,
+        "intrigue": 55,
+        "loyaltyInspiring": 45,
+        "stealth": 58
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de la protección armada de los cargamentos en el Alto Huallaga.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pdf_sicarios_chief",
+      "name": "Capitán Ovidio Ríos",
+      "sex": "M",
+      "birthYear": 1950,
+      "alive": true,
+      "cartelId": "pdf_panama",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 65,
+        "business": 35,
+        "charisma": 40,
+        "intrigue": 55,
+        "loyaltyInspiring": 48,
+        "stealth": 50
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, oficial de las Fuerzas de Defensa a cargo de la seguridad de los envíos que transitan por el país.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []
