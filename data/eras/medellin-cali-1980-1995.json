@@ -48,7 +48,21 @@
       "controllerId": "medellin",
       "value": 12,
       "adj": [
-        "caribe_atlantico"
+        "caribe_atlantico",
+        "venezuela"
+      ]
+    },
+    {
+      "id": "venezuela",
+      "name": "Zulia (Venezuela)",
+      "x": 90,
+      "y": 4,
+      "w": 20,
+      "h": 14,
+      "controllerId": "soles",
+      "value": 14,
+      "adj": [
+        "la_guajira"
       ]
     },
     {
@@ -343,6 +357,26 @@
         "leader": "pdf_leader",
         "underboss": "pdf_underboss",
         "sicariosChief": "pdf_sicarios_chief"
+      }
+    },
+    {
+      "id": "soles",
+      "name": "Cartel de los Soles (Venezuela)",
+      "color": "#7a1f4a",
+      "aiControlled": true,
+      "historicalNote": "'Cartel de los Soles' es el término real, documentado desde principios de los 90, para la red de corrupción dentro de la Guardia Nacional y las fuerzas armadas venezolanas que facilita el narcotráfico a cambio de sobornos — el nombre viene de las insignias de sol que llevan los generales, tras un caso real de oficiales de alto rango sorprendidos traficando cocaína. Zulia, fronterizo con La Guajira colombiana, es una ruta de trasiego real y muy documentada. Por tratarse de una red difusa ligada a las fuerzas armadas de un país real, y no de un cártel con un único capo identificable con seguridad y sin controversia, el personaje al mando de esta facción es un oficial ficticio, igual que con las Fuerzas de Defensa de Panamá.",
+      "resources": {
+        "money": 7000000,
+        "armySize": 500,
+        "corruptGov": 75,
+        "corruptPolice": 65,
+        "publicImage": 25,
+        "heat": 30
+      },
+      "roles": {
+        "leader": "soles_leader",
+        "underboss": "soles_underboss",
+        "sicariosChief": "soles_sicarios_chief"
       }
     }
   ],
@@ -1422,6 +1456,75 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, oficial de las Fuerzas de Defensa a cargo de la seguridad de los envíos que transitan por el país.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_leader",
+      "name": "General Héctor Salazar Vargas",
+      "sex": "M",
+      "birthYear": 1938,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "leader",
+      "historical": false,
+      "stats": {
+        "violence": 55,
+        "business": 68,
+        "charisma": 58,
+        "intrigue": 72,
+        "loyaltyInspiring": 58,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los mandos de la Guardia Nacional venezolana que facilitaban el narcotráfico a cambio de sobornos, el fenómeno real conocido como 'Cartel de los Soles'.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_underboss",
+      "name": "Coronel Ramón Betancourt",
+      "sex": "M",
+      "birthYear": 1944,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 50,
+        "business": 55,
+        "charisma": 48,
+        "intrigue": 60,
+        "loyaltyInspiring": 50,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_sicarios_chief",
+      "name": "Mayor Argenis Piña",
+      "sex": "M",
+      "birthYear": 1950,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 65,
+        "business": 35,
+        "charisma": 42,
+        "intrigue": 58,
+        "loyaltyInspiring": 48,
+        "stealth": 52
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de la seguridad armada de los envíos que cruzan la frontera con La Guajira.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []
