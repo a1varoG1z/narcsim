@@ -92,6 +92,78 @@ test("extort_territory's approach changes the trade-off: 'brutal' pays more but 
   }
 });
 
+test("corrupt_gov and corrupt_police default to 'standard' behavior when no approach is passed, matching what AI cartels get", () => {
+  for (const type of ["corrupt_gov", "corrupt_police"]) {
+    const field = type === "corrupt_gov" ? "corruptGov" : "corruptPolice";
+    const withoutApproach = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    const withStandard = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    const originalRandom = Math.random;
+    try {
+      Math.random = () => 0.5;
+      const r1 = applyAction(withoutApproach, "sinaloa", type);
+      const r2 = applyAction(withStandard, "sinaloa", type, { approach: "standard" });
+      assert.equal(r1.approach, "standard");
+      assert.equal(withoutApproach.cartels.sinaloa.resources[field], withStandard.cartels.sinaloa.resources[field]);
+      assert.equal(withoutApproach.cartels.sinaloa.resources.heat, withStandard.cartels.sinaloa.resources.heat);
+      assert.equal(r2.approach, "standard");
+    } finally {
+      Math.random = originalRandom;
+    }
+  }
+});
+
+test("corrupt_gov and corrupt_police's approach changes the trade-off: 'quiet' trades a smaller gain for a bigger heat drop, 'aggressive' risks backfiring", () => {
+  for (const type of ["corrupt_gov", "corrupt_police"]) {
+    const field = type === "corrupt_gov" ? "corruptGov" : "corruptPolice";
+    const originalRandom = Math.random;
+    try {
+      Math.random = () => 0.5; // pins the gain/heat rolls identically across approaches; still < 0.8, so 'aggressive' succeeds here
+      const quietGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+      const quietBefore = { ...quietGame.cartels.sinaloa.resources };
+      applyAction(quietGame, "sinaloa", type, { approach: "quiet" });
+
+      const standardGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+      const standardBefore = { ...standardGame.cartels.sinaloa.resources };
+      applyAction(standardGame, "sinaloa", type, { approach: "standard" });
+
+      const aggressiveGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+      const aggressiveBefore = { ...aggressiveGame.cartels.sinaloa.resources };
+      const aggressiveResult = applyAction(aggressiveGame, "sinaloa", type, { approach: "aggressive" });
+
+      const quietGain = quietGame.cartels.sinaloa.resources[field] - quietBefore[field];
+      const standardGain = standardGame.cartels.sinaloa.resources[field] - standardBefore[field];
+      const aggressiveGain = aggressiveGame.cartels.sinaloa.resources[field] - aggressiveBefore[field];
+      assert.ok(aggressiveGain > standardGain, `${type}: aggressive should gain more than standard`);
+      assert.ok(standardGain > quietGain, `${type}: standard should gain more than quiet`);
+      assert.ok(quietGame.cartels.sinaloa.resources.heat < standardGame.cartels.sinaloa.resources.heat, `${type}: quiet should cost less heat than standard`);
+      assert.ok(aggressiveGame.cartels.sinaloa.resources.heat > standardGame.cartels.sinaloa.resources.heat, `${type}: aggressive should raise heat instead of lowering it`);
+      assert.equal(aggressiveResult.backfired, false);
+    } finally {
+      Math.random = originalRandom;
+    }
+  }
+});
+
+test("corrupt_gov and corrupt_police's 'aggressive' approach can backfire, dropping the corruption stat and spiking heat hard", () => {
+  for (const type of ["corrupt_gov", "corrupt_police"]) {
+    const field = type === "corrupt_gov" ? "corruptGov" : "corruptPolice";
+    const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    game.cartels.sinaloa.resources[field] = 50;
+    const before = { ...game.cartels.sinaloa.resources };
+    const originalRandom = Math.random;
+    try {
+      Math.random = () => 0.99; // guarantees the 20% backfire chance triggers
+      const result = applyAction(game, "sinaloa", type, { approach: "aggressive" });
+      assert.equal(result.ok, true);
+      assert.equal(result.backfired, true);
+      assert.ok(game.cartels.sinaloa.resources[field] < before[field], `${type}: a backfired attempt should reduce the corruption stat, not raise it`);
+      assert.ok(game.cartels.sinaloa.resources.heat - before.heat >= 15, `${type}: a backfire should spike heat hard`);
+    } finally {
+      Math.random = originalRandom;
+    }
+  }
+});
+
 test("develop_territory permanently raises a territory's value when affordable, and refuses once maxed out", () => {
   const game = newGame("mexico-rutas-1990-2006.json", "sinaloa");
   const cartel = game.cartels.sinaloa;

@@ -108,6 +108,10 @@ export function render(container, app) {
         showExtortModal(app, game, cartel);
         return;
       }
+      if (btn.dataset.action === "corrupt_gov" || btn.dataset.action === "corrupt_police") {
+        showCorruptApproachModal(app, game, cartel, btn.dataset.action);
+        return;
+      }
       applyAction(game, cartel.id, btn.dataset.action);
       app.setGame(game);
       app.render();
@@ -182,6 +186,42 @@ function showExtortApproachModal(app, game, cartel, territoryId) {
     <button class="danger block" data-approach="brutal">
       Amenazas abiertas y violencia visible
       <div class="small text-dim">Mucho más dinero, pero el heat y el golpe a tu imagen son severos, y el negocio local puede resentirse más.</div>
+    </button>
+    <button class="ghost block mt-1" id="close-btn">Cancelar</button>
+  `);
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.querySelectorAll("[data-approach]").forEach((btn) => {
+    btn.addEventListener("click", () => apply(btn.dataset.approach));
+  });
+}
+
+function showCorruptApproachModal(app, game, cartel, actionType) {
+  const isGov = actionType === "corrupt_gov";
+  const noun = isGov ? "funcionarios del gobierno" : "mandos policiales";
+
+  const apply = (approach) => {
+    const result = applyAction(game, cartel.id, actionType, { approach });
+    app.setGame(game);
+    closeModal();
+    if (!result.ok) alert(result.message);
+    else if (result.backfired) alert(`La presión se filtra: la maniobra se vuelve en tu contra.`);
+    app.render();
+  };
+
+  showModal(`
+    <h2>¿Cómo sobornas a ${escapeHtml(noun)}?</h2>
+    <p class="small text-dim">El método cambia cuánta corrupción ganas y cuánto te cuesta en heat.</p>
+    <button class="block" data-approach="quiet">
+      Red silenciosa y constante
+      <div class="small text-dim">Menos corrupción ganada, pero el heat baja mucho más: construyes la red sin llamar la atención.</div>
+    </button>
+    <button class="block" data-approach="standard">
+      Soborno directo
+      <div class="small text-dim">El equilibrio de siempre entre corrupción ganada y heat reducido.</div>
+    </button>
+    <button class="danger block" data-approach="aggressive">
+      Presión y amenazas veladas
+      <div class="small text-dim">Mucha más corrupción ganada de golpe, pero sube el heat en vez de bajarlo — y hay riesgo real de que se filtre y la maniobra se vuelva en tu contra.</div>
     </button>
     <button class="ghost block mt-1" id="close-btn">Cancelar</button>
   `);

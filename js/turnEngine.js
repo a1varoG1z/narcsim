@@ -214,19 +214,57 @@ export function applyAction(game, cartelId, type, payload = {}) {
       const cost = ACTION_COSTS.corrupt_gov;
       if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
       r.money -= cost;
+      const approach = payload.approach || "standard";
+      if (approach === "quiet") {
+        r.corruptGov = Math.min(100, r.corruptGov + randInt(3, 6));
+        r.heat = Math.max(0, r.heat - randInt(5, 10));
+        log(`${cartel.name} construye discretamente una red de contactos políticos, sin llamar la atención.`, "good");
+        return { ok: true, approach };
+      }
+      if (approach === "aggressive") {
+        if (chance(0.8)) {
+          r.corruptGov = Math.min(100, r.corruptGov + randInt(8, 15));
+          r.heat = Math.min(100, r.heat + randInt(3, 8));
+          log(`${cartel.name} presiona con dinero y amenazas veladas a funcionarios reacios, ampliando su red de corrupción de golpe.`, "good");
+          return { ok: true, approach, backfired: false };
+        }
+        r.corruptGov = Math.max(0, r.corruptGov - randInt(5, 10));
+        r.heat = Math.min(100, r.heat + randInt(15, 25));
+        log(`La presión de ${cartel.name} se filtra: un funcionario denuncia el intento y la red de corrupción se resiente.`, "event");
+        return { ok: true, approach, backfired: true };
+      }
       r.corruptGov = Math.min(100, r.corruptGov + randInt(4, 9));
       r.heat = Math.max(0, r.heat - randInt(2, 5));
       log(`${cartel.name} soborna a funcionarios del gobierno.`, "good");
-      return { ok: true };
+      return { ok: true, approach };
     }
     case "corrupt_police": {
       const cost = ACTION_COSTS.corrupt_police;
       if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
       r.money -= cost;
+      const approach = payload.approach || "standard";
+      if (approach === "quiet") {
+        r.corruptPolice = Math.min(100, r.corruptPolice + randInt(3, 6));
+        r.heat = Math.max(0, r.heat - randInt(5, 10));
+        log(`${cartel.name} construye discretamente una red de contactos policiales, sin llamar la atención.`, "good");
+        return { ok: true, approach };
+      }
+      if (approach === "aggressive") {
+        if (chance(0.8)) {
+          r.corruptPolice = Math.min(100, r.corruptPolice + randInt(8, 15));
+          r.heat = Math.min(100, r.heat + randInt(3, 8));
+          log(`${cartel.name} presiona con dinero y amenazas veladas a mandos policiales reacios, ampliando su red de corrupción de golpe.`, "good");
+          return { ok: true, approach, backfired: false };
+        }
+        r.corruptPolice = Math.max(0, r.corruptPolice - randInt(5, 10));
+        r.heat = Math.min(100, r.heat + randInt(15, 25));
+        log(`La presión de ${cartel.name} se filtra: un mando policial denuncia el intento y la red de corrupción se resiente.`, "event");
+        return { ok: true, approach, backfired: true };
+      }
       r.corruptPolice = Math.min(100, r.corruptPolice + randInt(4, 9));
       r.heat = Math.max(0, r.heat - randInt(2, 5));
       log(`${cartel.name} soborna a mandos policiales.`, "good");
-      return { ok: true };
+      return { ok: true, approach };
     }
     case "recruit_army": {
       const cost = ACTION_COSTS.recruit_army;
