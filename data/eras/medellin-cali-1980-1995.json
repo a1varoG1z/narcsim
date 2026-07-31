@@ -317,7 +317,8 @@
         "corruptionGovChief": "luis_arce",
         "underboss": "suarez_underboss",
         "sicariosChief": "suarez_sicarios_chief",
-        "intelChief": "suarez_intel_chief"
+        "intelChief": "suarez_intel_chief",
+        "militaryChief": "suarez_military_chief"
       }
     },
     {
@@ -338,7 +339,8 @@
         "leader": "vaticano",
         "underboss": "vaticano_underboss",
         "sicariosChief": "vaticano_sicarios_chief",
-        "intelChief": "vaticano_intel_chief"
+        "intelChief": "vaticano_intel_chief",
+        "militaryChief": "vaticano_military_chief"
       }
     },
     {
@@ -359,7 +361,8 @@
         "leader": "pdf_leader",
         "underboss": "pdf_underboss",
         "sicariosChief": "pdf_sicarios_chief",
-        "intelChief": "pdf_intel_chief"
+        "intelChief": "pdf_intel_chief",
+        "militaryChief": "pdf_military_chief"
       }
     },
     {
@@ -380,7 +383,8 @@
         "leader": "soles_leader",
         "underboss": "soles_underboss",
         "sicariosChief": "soles_sicarios_chief",
-        "intelChief": "soles_intel_chief"
+        "intelChief": "soles_intel_chief",
+        "militaryChief": "soles_military_chief"
       }
     }
   ],
@@ -1621,6 +1625,98 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, oficial de inteligencia militar a cargo de vigilar tanto a rivales como a posibles informantes dentro de la propia red.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "suarez_military_chief",
+      "name": "Coronel Hugo Ferreira Salas",
+      "sex": "M",
+      "birthYear": 1944,
+      "alive": true,
+      "cartelId": "suarez",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 72,
+        "business": 35,
+        "charisma": 48,
+        "intrigue": 50,
+        "loyaltyInspiring": 55,
+        "stealth": 40
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, exmilitar que entrena y comanda las milicias armadas que protegen los cultivos y pistas de aterrizaje en el Beni.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "vaticano_military_chief",
+      "name": "Comandante Raúl Ipanaqué Soto",
+      "sex": "M",
+      "birthYear": 1950,
+      "alive": true,
+      "cartelId": "vaticano",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 70,
+        "business": 32,
+        "charisma": 45,
+        "intrigue": 52,
+        "loyaltyInspiring": 50,
+        "stealth": 42
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de la seguridad armada de las pistas clandestinas del Alto Huallaga y de escoltar los vuelos cargados de pasta base.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pdf_military_chief",
+      "name": "Teniente Coronel Édgar Bethancourt",
+      "sex": "M",
+      "birthYear": 1948,
+      "alive": true,
+      "cartelId": "pdf_panama",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 68,
+        "business": 38,
+        "charisma": 55,
+        "intrigue": 48,
+        "loyaltyInspiring": 58,
+        "stealth": 35
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, oficial de tropa de las Fuerzas de Defensa a cargo de las unidades que garantizan el tránsito seguro de los cargamentos.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_military_chief",
+      "name": "Comandante Freddy Uzcátegui",
+      "sex": "M",
+      "birthYear": 1952,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 70,
+        "business": 36,
+        "charisma": 50,
+        "intrigue": 50,
+        "loyaltyInspiring": 52,
+        "stealth": 38
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, oficial de la Guardia Nacional a cargo de las tropas que custodian la ruta de trasiego por la frontera con La Guajira.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

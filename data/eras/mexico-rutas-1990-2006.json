@@ -309,7 +309,8 @@
         "leader": "devis_rivera",
         "underboss": "javier_rivera",
         "sicariosChief": "cachiros_sicarios_chief",
-        "intelChief": "cachiros_intel_chief"
+        "intelChief": "cachiros_intel_chief",
+        "militaryChief": "cachiros_military_chief"
       }
     }
   ],
@@ -1400,6 +1401,29 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, a cargo de la red de contactos e informantes de la organización en Colón.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cachiros_military_chief",
+      "name": "Óscar Applewhite Bodden",
+      "sex": "M",
+      "birthYear": 1968,
+      "alive": true,
+      "cartelId": "cachiros",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 70,
+        "business": 40,
+        "charisma": 50,
+        "intrigue": 48,
+        "loyaltyInspiring": 55,
+        "stealth": 38
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de las cuadrillas armadas que protegen las fincas ganaderas y pistas clandestinas de la organización en Colón.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

@@ -356,7 +356,8 @@
         "leader": "marcola",
         "underboss": "pcc_underboss",
         "sicariosChief": "pcc_sicarios_chief",
-        "intelChief": "pcc_intel_chief"
+        "intelChief": "pcc_intel_chief",
+        "militaryChief": "pcc_military_chief"
       }
     }
   ],
@@ -1291,6 +1292,29 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, a cargo de la red de contactos e informantes del PCC dentro y fuera del sistema penitenciario.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pcc_military_chief",
+      "name": "Anderson Feitosa Lima",
+      "sex": "M",
+      "birthYear": 1980,
+      "alive": true,
+      "cartelId": "pcc",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 72,
+        "business": 40,
+        "charisma": 50,
+        "intrigue": 48,
+        "loyaltyInspiring": 58,
+        "stealth": 38
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de las células armadas del PCC que operan tanto dentro como fuera de las prisiones brasileñas.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

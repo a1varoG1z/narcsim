@@ -270,7 +270,8 @@
         "leader": "fito_24",
         "underboss": "choneros_underboss_24",
         "sicariosChief": "choneros_sicarios_chief_24",
-        "intelChief": "choneros_intel_chief_24"
+        "intelChief": "choneros_intel_chief_24",
+        "militaryChief": "choneros_military_chief_24"
       }
     }
   ],
@@ -676,6 +677,29 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, a cargo de la red de contactos e informantes de la organización en medio del conflicto armado interno declarado en 2024.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "choneros_military_chief_24",
+      "name": "Wellington Zambrano Cedeño",
+      "sex": "M",
+      "birthYear": 1988,
+      "alive": true,
+      "cartelId": "choneros",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 74,
+        "business": 38,
+        "charisma": 48,
+        "intrigue": 46,
+        "loyaltyInspiring": 55,
+        "stealth": 36
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de las células armadas de la organización en las cárceles y puertos de Guayas durante el conflicto armado interno declarado en 2024.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []
