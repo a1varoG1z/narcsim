@@ -110,12 +110,12 @@
     },
     {
       "id": "guatemala",
-      "name": "Guatemala (avance de Los Zetas)",
+      "name": "Zacapa (Guatemala)",
       "x": 56,
       "y": 64,
       "w": 20,
       "h": 16,
-      "controllerId": null,
+      "controllerId": "lorenzana",
       "value": 14,
       "adj": [
         "veracruz"
@@ -326,6 +326,25 @@
         "underboss": "juarez06_underboss",
         "sicariosChief": "juarez06_sicarios_chief",
         "financeChief": "juarez06_finance_chief"
+      }
+    },
+    {
+      "id": "lorenzana",
+      "name": "Organización Lorenzana (Guatemala)",
+      "color": "#a0662d",
+      "aiControlled": true,
+      "historicalNote": "Organización real guatemalteca con base en Zacapa, encabezada por Waldemar Lorenzana Lima, 'El Patriarca', con vínculos reales documentados con el Cártel de Sinaloa. La expansión de Los Zetas hacia Guatemala desde 2008 generó fricciones y violencia real con las redes locales de trasiego como esta. Waldemar Lorenzana Lima fue extraditado a EE.UU. en 2014 y se declaró culpable en 2016; su hijo Waldemar Lorenzana Cordón corrió la misma suerte. En el juego ambos se representan activos al frente de la organización. Los cargos secundarios no documentados públicamente son ficticios.",
+      "resources": {
+        "money": 6000000,
+        "armySize": 550,
+        "corruptGov": 35,
+        "corruptPolice": 40,
+        "publicImage": 20,
+        "heat": 45
+      },
+      "roles": {
+        "leader": "lorenzana_padre",
+        "underboss": "lorenzana_hijo"
       }
     }
   ],
@@ -1079,6 +1098,59 @@
       "traits": [],
       "notes": "Personaje ficticio.",
       "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "lorenzana_padre",
+      "name": "Waldemar Lorenzana Lima \"El Patriarca\"",
+      "sex": "M",
+      "birthYear": 1938,
+      "alive": true,
+      "cartelId": "lorenzana",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 45,
+        "business": 75,
+        "charisma": 55,
+        "intrigue": 65,
+        "loyaltyInspiring": 60,
+        "stealth": 50
+      },
+      "traits": [
+        "fundador",
+        "hacendado"
+      ],
+      "notes": "Terrateniente ganadero de Zacapa reconvertido en cabeza de una red real de trasiego de cocaína, con vínculos documentados con el Cártel de Sinaloa. En la vida real fue extraditado a EE.UU. en 2014 y se declaró culpable en 2016. En el juego su destino depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": [
+        "lorenzana_hijo"
+      ]
+    },
+    {
+      "id": "lorenzana_hijo",
+      "name": "Waldemar Lorenzana Cordón",
+      "sex": "M",
+      "birthYear": 1968,
+      "alive": true,
+      "cartelId": "lorenzana",
+      "role": "underboss",
+      "historical": true,
+      "stats": {
+        "violence": 50,
+        "business": 62,
+        "charisma": 48,
+        "intrigue": 55,
+        "loyaltyInspiring": 48,
+        "stealth": 52
+      },
+      "traits": [],
+      "notes": "Hijo de Waldemar Lorenzana Lima, también extraditado a EE.UU. y condenado por narcotráfico.",
+      "parents": [
+        "lorenzana_padre"
+      ],
       "spouseId": null,
       "childrenIds": []
     }
