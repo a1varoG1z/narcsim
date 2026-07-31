@@ -319,7 +319,8 @@
         "sicariosChief": "suarez_sicarios_chief",
         "intelChief": "suarez_intel_chief",
         "militaryChief": "suarez_military_chief",
-        "diplomatChief": "suarez_diplomat_chief"
+        "diplomatChief": "suarez_diplomat_chief",
+        "financeChief": "suarez_finance_chief"
       }
     },
     {
@@ -342,7 +343,8 @@
         "sicariosChief": "vaticano_sicarios_chief",
         "intelChief": "vaticano_intel_chief",
         "militaryChief": "vaticano_military_chief",
-        "diplomatChief": "vaticano_diplomat_chief"
+        "diplomatChief": "vaticano_diplomat_chief",
+        "financeChief": "vaticano_finance_chief"
       }
     },
     {
@@ -365,7 +367,8 @@
         "sicariosChief": "pdf_sicarios_chief",
         "intelChief": "pdf_intel_chief",
         "militaryChief": "pdf_military_chief",
-        "diplomatChief": "pdf_diplomat_chief"
+        "diplomatChief": "pdf_diplomat_chief",
+        "financeChief": "pdf_finance_chief"
       }
     },
     {
@@ -388,7 +391,8 @@
         "sicariosChief": "soles_sicarios_chief",
         "intelChief": "soles_intel_chief",
         "militaryChief": "soles_military_chief",
-        "diplomatChief": "soles_diplomat_chief"
+        "diplomatChief": "soles_diplomat_chief",
+        "financeChief": "soles_finance_chief"
       }
     }
   ],
@@ -1813,6 +1817,98 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, oficial de enlace a cargo de las negociaciones con los cárteles colombianos que trasiegan por la frontera con La Guajira.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "suarez_finance_chief",
+      "name": "Wilma Áñez Terrazas",
+      "sex": "F",
+      "birthYear": 1950,
+      "alive": true,
+      "cartelId": "suarez",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 70,
+        "charisma": 45,
+        "intrigue": 40,
+        "loyaltyInspiring": 42,
+        "stealth": 45
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, encargada de lavar las ganancias de la organización a través de negocios ganaderos y de bienes raíces en Santa Cruz.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "vaticano_finance_chief",
+      "name": "Rosa Elvira Panduro",
+      "sex": "F",
+      "birthYear": 1956,
+      "alive": true,
+      "cartelId": "vaticano",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 12,
+        "business": 68,
+        "charisma": 42,
+        "intrigue": 38,
+        "loyaltyInspiring": 40,
+        "stealth": 42
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, encargada de lavar las ganancias de la organización a través de comercios y transporte en Tingo María.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pdf_finance_chief",
+      "name": "Esperanza Molinar Ríos",
+      "sex": "F",
+      "birthYear": 1948,
+      "alive": true,
+      "cartelId": "pdf_panama",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 10,
+        "business": 75,
+        "charisma": 50,
+        "intrigue": 45,
+        "loyaltyInspiring": 45,
+        "stealth": 48
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, encargada de canalizar el dinero del narcotráfico a través de la banca panameña, aprovechando el secreto bancario del país.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_finance_chief",
+      "name": "Yolimar Peraza Ochoa",
+      "sex": "F",
+      "birthYear": 1958,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 12,
+        "business": 70,
+        "charisma": 46,
+        "intrigue": 42,
+        "loyaltyInspiring": 42,
+        "stealth": 45
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, encargada de lavar las ganancias de la red a través de negocios de importación y cambio de divisas en Maracaibo.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

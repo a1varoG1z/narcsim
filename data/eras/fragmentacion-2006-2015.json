@@ -348,7 +348,8 @@
         "sicariosChief": "lorenzana_sicarios_chief",
         "intelChief": "lorenzana_intel_chief",
         "militaryChief": "lorenzana_military_chief",
-        "diplomatChief": "lorenzana_diplomat_chief"
+        "diplomatChief": "lorenzana_diplomat_chief",
+        "financeChief": "lorenzana_finance_chief"
       }
     }
   ],
@@ -1246,6 +1247,29 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, a cargo de las negociaciones con el Cártel de Sinaloa y otros socios mexicanos que usan Zacapa como corredor.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "lorenzana_finance_chief",
+      "name": "Alba Cordón Recinos",
+      "sex": "F",
+      "birthYear": 1958,
+      "alive": true,
+      "cartelId": "lorenzana",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 12,
+        "business": 72,
+        "charisma": 44,
+        "intrigue": 40,
+        "loyaltyInspiring": 45,
+        "stealth": 45
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, encargada de lavar las ganancias de la organización a través de fincas agrícolas y ganaderas en Zacapa.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

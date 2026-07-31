@@ -358,7 +358,8 @@
         "sicariosChief": "pcc_sicarios_chief",
         "intelChief": "pcc_intel_chief",
         "militaryChief": "pcc_military_chief",
-        "diplomatChief": "pcc_diplomat_chief"
+        "diplomatChief": "pcc_diplomat_chief",
+        "financeChief": "pcc_finance_chief"
       }
     }
   ],
@@ -1339,6 +1340,29 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, a cargo de las negociaciones del PCC con proveedores y socios mexicanos para las rutas de exportación vía Santos.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pcc_finance_chief",
+      "name": "Rosana Guedes Farias",
+      "sex": "F",
+      "birthYear": 1978,
+      "alive": true,
+      "cartelId": "pcc",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 72,
+        "charisma": 48,
+        "intrigue": 45,
+        "loyaltyInspiring": 45,
+        "stealth": 48
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, encargada de lavar las ganancias del PCC a través de empresas de fachada y el llamado 'fundo de pensão' de la organización.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

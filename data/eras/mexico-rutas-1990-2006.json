@@ -311,7 +311,8 @@
         "sicariosChief": "cachiros_sicarios_chief",
         "intelChief": "cachiros_intel_chief",
         "militaryChief": "cachiros_military_chief",
-        "diplomatChief": "cachiros_diplomat_chief"
+        "diplomatChief": "cachiros_diplomat_chief",
+        "financeChief": "cachiros_finance_chief"
       }
     }
   ],
@@ -1448,6 +1449,29 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, a cargo de las negociaciones con los cárteles mexicanos compradores y con contactos políticos y policiales locales.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cachiros_finance_chief",
+      "name": "Ondina Matute Zelaya",
+      "sex": "F",
+      "birthYear": 1966,
+      "alive": true,
+      "cartelId": "cachiros",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 70,
+        "charisma": 45,
+        "intrigue": 40,
+        "loyaltyInspiring": 42,
+        "stealth": 45
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, encargada de lavar las ganancias de la organización a través de negocios ganaderos, hoteles y bienes raíces en Colón.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

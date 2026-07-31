@@ -272,7 +272,8 @@
         "sicariosChief": "choneros_sicarios_chief_24",
         "intelChief": "choneros_intel_chief_24",
         "militaryChief": "choneros_military_chief_24",
-        "diplomatChief": "choneros_diplomat_chief_24"
+        "diplomatChief": "choneros_diplomat_chief_24",
+        "financeChief": "choneros_finance_chief_24"
       }
     }
   ],
@@ -724,6 +725,29 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, a cargo de las negociaciones con socios mexicanos para la exportación de cocaína vía el puerto de Guayaquil.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "choneros_finance_chief_24",
+      "name": "Karina Vera Zambrano",
+      "sex": "F",
+      "birthYear": 1987,
+      "alive": true,
+      "cartelId": "choneros",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 70,
+        "charisma": 46,
+        "intrigue": 42,
+        "loyaltyInspiring": 42,
+        "stealth": 45
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, encargada de lavar las ganancias de la organización a través de negocios de importación y bienes raíces en Guayaquil.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []
