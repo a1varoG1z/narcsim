@@ -276,7 +276,10 @@
         "leader": "carlos_castano",
         "underboss": "pepes_underboss",
         "financeChief": "pepes_finance_chief",
-        "sicariosChief": "pepes_sicarios_chief"
+        "sicariosChief": "pepes_sicarios_chief",
+        "intelChief": "pepes_intel_chief",
+        "militaryChief": "pepes_military_chief",
+        "diplomatChief": "pepes_diplomat_chief"
       }
     },
     {
@@ -297,7 +300,10 @@
         "leader": "ivan_urdinola",
         "underboss": "urdinola_underboss",
         "financeChief": "urdinola_finance_chief",
-        "sicariosChief": "urdinola_sicarios_chief"
+        "sicariosChief": "urdinola_sicarios_chief",
+        "intelChief": "urdinola_intel_chief",
+        "militaryChief": "urdinola_military_chief",
+        "diplomatChief": "urdinola_diplomat_chief"
       }
     },
     {
@@ -1957,6 +1963,144 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, a cargo de los pistoleros de la organización en el norte del Valle del Cauca.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pepes_intel_chief",
+      "name": "Beatriz Uribe Correa",
+      "sex": "F",
+      "birthYear": 1955,
+      "alive": true,
+      "cartelId": "los_pepes",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 30,
+        "business": 45,
+        "charisma": 48,
+        "intrigue": 76,
+        "loyaltyInspiring": 42,
+        "stealth": 65
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de la red de informantes que localiza a los hombres y propiedades de Escobar para la ofensiva de Los Pepes.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pepes_military_chief",
+      "name": "Coronel (r) Jairo Vanegas",
+      "sex": "M",
+      "birthYear": 1950,
+      "alive": true,
+      "cartelId": "los_pepes",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 70,
+        "business": 35,
+        "charisma": 50,
+        "intrigue": 55,
+        "loyaltyInspiring": 55,
+        "stealth": 40
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, exmilitar a cargo de coordinar los golpes armados de Los Pepes junto a policías y paramilitares aliados.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pepes_diplomat_chief",
+      "name": "Consuelo Restrepo Duque",
+      "sex": "F",
+      "birthYear": 1958,
+      "alive": true,
+      "cartelId": "los_pepes",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 50,
+        "charisma": 65,
+        "intrigue": 48,
+        "loyaltyInspiring": 48,
+        "stealth": 32
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de coordinar la coalición de enemigos de Escobar que conforman Los Pepes.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "urdinola_intel_chief",
+      "name": "Marlene Grajales Soto",
+      "sex": "F",
+      "birthYear": 1954,
+      "alive": true,
+      "cartelId": "urdinola",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 28,
+        "business": 50,
+        "charisma": 46,
+        "intrigue": 74,
+        "loyaltyInspiring": 42,
+        "stealth": 64
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, encargada de vigilar a rivales e informantes de la organización en el norte del Valle del Cauca.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "urdinola_military_chief",
+      "name": "Norberto \"El Boyaco\" Ariza",
+      "sex": "M",
+      "birthYear": 1952,
+      "alive": true,
+      "cartelId": "urdinola",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 68,
+        "business": 38,
+        "charisma": 45,
+        "intrigue": 48,
+        "loyaltyInspiring": 52,
+        "stealth": 38
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de las cuadrillas armadas que protegen los laboratorios y rutas de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "urdinola_diplomat_chief",
+      "name": "Lucía Ossa Bermúdez",
+      "sex": "F",
+      "birthYear": 1956,
+      "alive": true,
+      "cartelId": "urdinola",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 18,
+        "business": 52,
+        "charisma": 64,
+        "intrigue": 46,
+        "loyaltyInspiring": 48,
+        "stealth": 30
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de las negociaciones con el Cártel de Cali y otros socios de la organización.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []
