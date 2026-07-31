@@ -148,7 +148,21 @@
       "controllerId": null,
       "value": 13,
       "adj": [
-        "guerrero"
+        "guerrero",
+        "ecuador"
+      ]
+    },
+    {
+      "id": "ecuador",
+      "name": "Guayas (Ecuador)",
+      "x": 13,
+      "y": 104,
+      "w": 17,
+      "h": 10,
+      "controllerId": "choneros",
+      "value": 14,
+      "adj": [
+        "guatemala"
       ]
     }
   ],
@@ -234,6 +248,27 @@
       "roles": {
         "leader": "gu_leader_24",
         "underboss": "gu_underboss_24"
+      }
+    },
+    {
+      "id": "choneros",
+      "name": "Los Choneros (Ecuador)",
+      "color": "#1f7a7a",
+      "aiControlled": true,
+      "historicalNote": "Los Choneros son la organización criminal más grande y antigua de Ecuador, con fuertes vínculos históricos de exportación de cocaína hacia México a través del puerto de Guayaquil, incluida una relación real documentada con el Cártel de Sinaloa. Su líder real, José Adolfo Macías Villamar 'Fito', llevaba años dirigiendo la organización desde prisión cuando se fugó en enero de 2024, justo antes de un traslado; su fuga desencadenó la declaración de un 'conflicto armado interno' por el gobierno ecuatoriano y una ola de violencia sin precedentes. Aquí se representa activo y libre al inicio de la partida, reflejando su situación real justo tras la fuga. Los cargos secundarios no documentados públicamente son ficticios.",
+      "resources": {
+        "money": 6000000,
+        "armySize": 550,
+        "corruptGov": 35,
+        "corruptPolice": 60,
+        "publicImage": 15,
+        "heat": 45,
+        "internationalReputation": 20,
+        "launderedMoney": 0
+      },
+      "roles": {
+        "leader": "fito_24",
+        "underboss": "choneros_underboss_24"
       }
     }
   ],
@@ -541,6 +576,55 @@
         "intrigue": 48,
         "loyaltyInspiring": 45,
         "stealth": 50
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "fito_24",
+      "name": "José Adolfo Macías Villamar \"Fito\"",
+      "sex": "M",
+      "birthYear": 1980,
+      "alive": true,
+      "cartelId": "choneros",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 68,
+        "business": 70,
+        "charisma": 60,
+        "intrigue": 78,
+        "loyaltyInspiring": 60,
+        "stealth": 62
+      },
+      "traits": [
+        "fundador",
+        "fugitivo"
+      ],
+      "notes": "Líder de Los Choneros, la mayor organización criminal de Ecuador. En la vida real llevaba años dirigiéndola desde prisión hasta su fuga en enero de 2024, poco antes de un traslado programado; su fuga desencadenó la declaración de un conflicto armado interno en Ecuador. En el juego su destino depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "choneros_underboss_24",
+      "name": "Bryan \"El Patrón\" Vera",
+      "sex": "M",
+      "birthYear": 1985,
+      "alive": true,
+      "cartelId": "choneros",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 62,
+        "business": 50,
+        "charisma": 45,
+        "intrigue": 55,
+        "loyaltyInspiring": 48,
+        "stealth": 55
       },
       "traits": [],
       "notes": "Personaje ficticio.",
