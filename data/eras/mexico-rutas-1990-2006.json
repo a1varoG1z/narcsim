@@ -310,7 +310,8 @@
         "underboss": "javier_rivera",
         "sicariosChief": "cachiros_sicarios_chief",
         "intelChief": "cachiros_intel_chief",
-        "militaryChief": "cachiros_military_chief"
+        "militaryChief": "cachiros_military_chief",
+        "diplomatChief": "cachiros_diplomat_chief"
       }
     }
   ],
@@ -1424,6 +1425,29 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, a cargo de las cuadrillas armadas que protegen las fincas ganaderas y pistas clandestinas de la organización en Colón.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cachiros_diplomat_chief",
+      "name": "Norma Elizabeth Bonilla",
+      "sex": "F",
+      "birthYear": 1971,
+      "alive": true,
+      "cartelId": "cachiros",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 55,
+        "charisma": 65,
+        "intrigue": 45,
+        "loyaltyInspiring": 48,
+        "stealth": 30
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de las negociaciones con los cárteles mexicanos compradores y con contactos políticos y policiales locales.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

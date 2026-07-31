@@ -357,7 +357,8 @@
         "underboss": "pcc_underboss",
         "sicariosChief": "pcc_sicarios_chief",
         "intelChief": "pcc_intel_chief",
-        "militaryChief": "pcc_military_chief"
+        "militaryChief": "pcc_military_chief",
+        "diplomatChief": "pcc_diplomat_chief"
       }
     }
   ],
@@ -1315,6 +1316,29 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, a cargo de las células armadas del PCC que operan tanto dentro como fuera de las prisiones brasileñas.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pcc_diplomat_chief",
+      "name": "Cristiane Bezerra Motta",
+      "sex": "F",
+      "birthYear": 1982,
+      "alive": true,
+      "cartelId": "pcc",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 22,
+        "business": 55,
+        "charisma": 62,
+        "intrigue": 50,
+        "loyaltyInspiring": 52,
+        "stealth": 32
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de las negociaciones del PCC con proveedores y socios mexicanos para las rutas de exportación vía Santos.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

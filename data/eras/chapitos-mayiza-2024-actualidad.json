@@ -271,7 +271,8 @@
         "underboss": "choneros_underboss_24",
         "sicariosChief": "choneros_sicarios_chief_24",
         "intelChief": "choneros_intel_chief_24",
-        "militaryChief": "choneros_military_chief_24"
+        "militaryChief": "choneros_military_chief_24",
+        "diplomatChief": "choneros_diplomat_chief_24"
       }
     }
   ],
@@ -700,6 +701,29 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, a cargo de las células armadas de la organización en las cárceles y puertos de Guayas durante el conflicto armado interno declarado en 2024.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "choneros_diplomat_chief_24",
+      "name": "Ximena Alcívar Loor",
+      "sex": "F",
+      "birthYear": 1990,
+      "alive": true,
+      "cartelId": "choneros",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 55,
+        "charisma": 62,
+        "intrigue": 48,
+        "loyaltyInspiring": 50,
+        "stealth": 32
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de las negociaciones con socios mexicanos para la exportación de cocaína vía el puerto de Guayaquil.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

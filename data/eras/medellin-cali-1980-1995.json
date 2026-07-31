@@ -318,7 +318,8 @@
         "underboss": "suarez_underboss",
         "sicariosChief": "suarez_sicarios_chief",
         "intelChief": "suarez_intel_chief",
-        "militaryChief": "suarez_military_chief"
+        "militaryChief": "suarez_military_chief",
+        "diplomatChief": "suarez_diplomat_chief"
       }
     },
     {
@@ -340,7 +341,8 @@
         "underboss": "vaticano_underboss",
         "sicariosChief": "vaticano_sicarios_chief",
         "intelChief": "vaticano_intel_chief",
-        "militaryChief": "vaticano_military_chief"
+        "militaryChief": "vaticano_military_chief",
+        "diplomatChief": "vaticano_diplomat_chief"
       }
     },
     {
@@ -362,7 +364,8 @@
         "underboss": "pdf_underboss",
         "sicariosChief": "pdf_sicarios_chief",
         "intelChief": "pdf_intel_chief",
-        "militaryChief": "pdf_military_chief"
+        "militaryChief": "pdf_military_chief",
+        "diplomatChief": "pdf_diplomat_chief"
       }
     },
     {
@@ -384,7 +387,8 @@
         "underboss": "soles_underboss",
         "sicariosChief": "soles_sicarios_chief",
         "intelChief": "soles_intel_chief",
-        "militaryChief": "soles_military_chief"
+        "militaryChief": "soles_military_chief",
+        "diplomatChief": "soles_diplomat_chief"
       }
     }
   ],
@@ -1717,6 +1721,98 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, oficial de la Guardia Nacional a cargo de las tropas que custodian la ruta de trasiego por la frontera con La Guajira.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "suarez_diplomat_chief",
+      "name": "Teodora Añez Roca",
+      "sex": "F",
+      "birthYear": 1946,
+      "alive": true,
+      "cartelId": "suarez",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 55,
+        "charisma": 68,
+        "intrigue": 45,
+        "loyaltyInspiring": 50,
+        "stealth": 30
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, encargada de negociar acuerdos de tránsito con los cárteles colombianos compradores de la pasta base.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "vaticano_diplomat_chief",
+      "name": "Herminia Rengifo Casós",
+      "sex": "F",
+      "birthYear": 1954,
+      "alive": true,
+      "cartelId": "vaticano",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 18,
+        "business": 52,
+        "charisma": 65,
+        "intrigue": 48,
+        "loyaltyInspiring": 48,
+        "stealth": 32
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, encargada de las negociaciones con los compradores colombianos y con intermediarios militares del Alto Huallaga.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pdf_diplomat_chief",
+      "name": "Coronel Ricardo Solanilla",
+      "sex": "M",
+      "birthYear": 1943,
+      "alive": true,
+      "cartelId": "pdf_panama",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 22,
+        "business": 50,
+        "charisma": 70,
+        "intrigue": 50,
+        "loyaltyInspiring": 55,
+        "stealth": 30
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, oficial de enlace a cargo de las negociaciones con los cárteles colombianos que usan Panamá para el tránsito y lavado de dinero.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_diplomat_chief",
+      "name": "Coronela Marisol Trejo Bastidas",
+      "sex": "F",
+      "birthYear": 1955,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 52,
+        "charisma": 68,
+        "intrigue": 48,
+        "loyaltyInspiring": 50,
+        "stealth": 32
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, oficial de enlace a cargo de las negociaciones con los cárteles colombianos que trasiegan por la frontera con La Guajira.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

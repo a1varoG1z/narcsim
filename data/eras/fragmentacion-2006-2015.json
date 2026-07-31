@@ -347,7 +347,8 @@
         "underboss": "lorenzana_hijo",
         "sicariosChief": "lorenzana_sicarios_chief",
         "intelChief": "lorenzana_intel_chief",
-        "militaryChief": "lorenzana_military_chief"
+        "militaryChief": "lorenzana_military_chief",
+        "diplomatChief": "lorenzana_diplomat_chief"
       }
     }
   ],
@@ -1222,6 +1223,29 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, a cargo de las cuadrillas armadas que custodian las fincas y bodegas de la organización en Zacapa.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "lorenzana_diplomat_chief",
+      "name": "Consuelo Barrientos Mejía",
+      "sex": "F",
+      "birthYear": 1960,
+      "alive": true,
+      "cartelId": "lorenzana",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 18,
+        "business": 55,
+        "charisma": 65,
+        "intrigue": 48,
+        "loyaltyInspiring": 50,
+        "stealth": 30
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de las negociaciones con el Cártel de Sinaloa y otros socios mexicanos que usan Zacapa como corredor.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []
