@@ -18,6 +18,20 @@ function hasActiveInformant(cartel, targetCartelId) {
 
 const INFORMANT_SUCCESS_BONUS = 0.12;
 
+const WAR_FOCUS_DURATION = 4;
+const WAR_FOCUS_BONUS = 1.25;
+const WAR_FOCUS_PENALTY = 0.85;
+
+/** Combat power multiplier from set_war_focus: boosts a cartel's power against the one enemy it's
+ * currently concentrating forces on, at the cost of fighting weaker against every other enemy it's
+ * simultaneously at war with. Absent any active focus (the default for every AI cartel and any
+ * player who never touches the feature), this is always 1 — no balance change unless opted into. */
+function warFocusMultiplier(cartel, opponentId) {
+  const focus = cartel.warFocus;
+  if (!focus || focus.turnsRemaining <= 0) return 1;
+  return focus.targetCartelId === opponentId ? WAR_FOCUS_BONUS : WAR_FOCUS_PENALTY;
+}
+
 function openWar(game, aId, bId) {
   if (!game.warHistory) game.warHistory = [];
   const key = warKey(aId, bId);
@@ -294,6 +308,25 @@ export function applyAction(game, cartelId, type, payload = {}) {
       }
       log(`${target.name} rechaza la propuesta de paz de ${cartel.name}.`, "event");
       return { ok: true, accepted: false };
+    }
+    case "set_war_focus": {
+      // Concentrating forces on one front is a real recurring tactical decision, not just
+      // "declare war and forget it": while active, this cartel fights harder against the chosen
+      // enemy (WAR_FOCUS_BONUS) but noticeably weaker against every other enemy it's also at war
+      // with (WAR_FOCUS_PENALTY) — a genuine trade-off, not a free buff. Doesn't touch the
+      // per-turn action budget, matching declare_war/propose_peace/propose_alliance.
+      if (!payload.targetCartelId) {
+        cartel.warFocus = null;
+        log(`${cartel.name} deja de concentrar sus fuerzas en un frente concreto.`, "event");
+        return { ok: true, cleared: true };
+      }
+      const target = game.cartels[payload.targetCartelId];
+      if (!target || cartel.relations[target.id]?.status !== "war") {
+        return { ok: false, message: "Solo puedes concentrar fuerzas contra un cártel con el que estés en guerra." };
+      }
+      cartel.warFocus = { targetCartelId: target.id, turnsRemaining: WAR_FOCUS_DURATION };
+      log(`${cartel.name} concentra sus fuerzas en el frente contra ${target.name}, debilitando su posición en cualquier otro frente abierto.`, "event");
+      return { ok: true, targetCartelId: target.id };
     }
     case "propose_alliance": {
       const target = game.cartels[payload.targetCartelId];
@@ -896,8 +929,8 @@ function resolveBattle(game, attacker, defender, territory) {
   // A well-developed territory (high value) is harder to take than a rundown one, regardless of
   // the overall balance of forces — local infrastructure/entrenchment adds real defense.
   const fortBonus = 1 + territory.value / 150;
-  const atkPower = attacker.resources.armySize * commanderMultiplier(game, attacker) * (0.85 + Math.random() * 0.3) * (hasSurpriseBonus ? 1.25 : 1);
-  const defPower = defender.resources.armySize * commanderMultiplier(game, defender) * (1.0 + Math.random() * 0.3) * fortBonus;
+  const atkPower = attacker.resources.armySize * commanderMultiplier(game, attacker) * (0.85 + Math.random() * 0.3) * (hasSurpriseBonus ? 1.25 : 1) * warFocusMultiplier(attacker, defender.id);
+  const defPower = defender.resources.armySize * commanderMultiplier(game, defender) * (1.0 + Math.random() * 0.3) * fortBonus * warFocusMultiplier(defender, attacker.id);
   const attackerWins = atkPower > defPower;
   const casualtiesAtk = Math.round(attacker.resources.armySize * randInt(3, 15) / 100 * (1 + territory.value / 300));
   const casualtiesDef = Math.round(defender.resources.armySize * randInt(3, 15) / 100);
@@ -1235,6 +1268,14 @@ function decayInformants(game) {
   }
 }
 
+function decayWarFocus(game) {
+  for (const cartel of Object.values(game.cartels)) {
+    if (!cartel.warFocus) continue;
+    cartel.warFocus.turnsRemaining -= 1;
+    if (cartel.warFocus.turnsRemaining <= 0) cartel.warFocus = null;
+  }
+}
+
 export function strengthenBond(game, characterId) {
   const c = game.characters[characterId];
   if (!c) return { ok: false };
@@ -1470,6 +1511,7 @@ export function endTurn(game) {
   driftBonds(game);
   driftMemberBonds(game);
   decayInformants(game);
+  decayWarFocus(game);
 
   let pendingSuccession = null;
   let pendingRegentChoice = null;

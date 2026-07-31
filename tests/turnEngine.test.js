@@ -121,6 +121,67 @@ test("declaring war with a surprise pretext grants a one-time attack bonus again
   }
 });
 
+test("set_war_focus refuses a target you're not at war with, and clears with a null target", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+
+  const notAtWarResult = applyAction(game, "sinaloa", "set_war_focus", { targetCartelId: "golfo" });
+  assert.equal(notAtWarResult.ok, false);
+  assert.equal(cartel.warFocus, undefined);
+
+  applyAction(game, "sinaloa", "declare_war", { targetCartelId: "golfo" });
+  const result = applyAction(game, "sinaloa", "set_war_focus", { targetCartelId: "golfo" });
+  assert.equal(result.ok, true);
+  assert.deepEqual(cartel.warFocus, { targetCartelId: "golfo", turnsRemaining: 4 });
+
+  const clearResult = applyAction(game, "sinaloa", "set_war_focus", { targetCartelId: null });
+  assert.equal(clearResult.ok, true);
+  assert.equal(cartel.warFocus, null);
+});
+
+test("set_war_focus gives a genuine combat edge against the chosen front, flipping an otherwise-lost evenly-matched fight", () => {
+  const originalRandom = Math.random;
+  try {
+    // Same evenly-matched baseline as the surprise-pretext test above: Math.random = 0 pins the
+    // attacker's roll at its floor and the defender's at its floor, so with no bonus the defender
+    // wins. Concentrating forces on this exact front should be enough to flip it, same as the
+    // one-time surprise-strike bonus does.
+    Math.random = () => 0;
+
+    const plain = setupEqualFight("cjng-sinaloa-2015-actualidad.json", "sinaloa", "cdn", "coahuila", 4);
+    const plainResult = applyAction(plain.game, "sinaloa", "attack_territory", { territoryId: "coahuila" });
+    assert.equal(plainResult.attackerWins, false, "an evenly-matched fight with no focus should go to the defender given the stubbed rolls");
+
+    const focused = setupEqualFight("cjng-sinaloa-2015-actualidad.json", "sinaloa", "cdn", "coahuila", 4);
+    applyAction(focused.game, "sinaloa", "declare_war", { targetCartelId: "cdn" });
+    applyAction(focused.game, "sinaloa", "set_war_focus", { targetCartelId: "cdn" });
+    const focusedResult = applyAction(focused.game, "sinaloa", "attack_territory", { territoryId: "coahuila" });
+    assert.equal(focusedResult.attackerWins, true, "concentrating forces on this exact front should flip the same evenly-matched fight");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("set_war_focus on a different front weakens you here: an otherwise-winning army-size edge gets undone", () => {
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0;
+    const armySizes = { attacker: 1300, defender: 1000 };
+
+    const plain = setupEqualFight("cjng-sinaloa-2015-actualidad.json", "sinaloa", "cdn", "coahuila", 4, armySizes);
+    const plainResult = applyAction(plain.game, "sinaloa", "attack_territory", { territoryId: "coahuila" });
+    assert.equal(plainResult.attackerWins, true, "a real army-size edge with no focus penalty should win this fight");
+
+    const distracted = setupEqualFight("cjng-sinaloa-2015-actualidad.json", "sinaloa", "cdn", "coahuila", 4, armySizes);
+    applyAction(distracted.game, "sinaloa", "declare_war", { targetCartelId: "golfo" });
+    applyAction(distracted.game, "sinaloa", "set_war_focus", { targetCartelId: "golfo" });
+    const distractedResult = applyAction(distracted.game, "sinaloa", "attack_territory", { territoryId: "coahuila" });
+    assert.equal(distractedResult.attackerWins, false, "concentrating forces on an unrelated front (golfo) should weaken this fight enough to undo the same army-size edge");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
 test("a well-developed (high-value) territory is genuinely harder to conquer than a rundown one, same armies both times", () => {
   const originalRandom = Math.random;
   try {

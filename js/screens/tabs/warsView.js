@@ -24,7 +24,7 @@ export function render(container, app) {
   container.innerHTML = `
     <div class="card">
       <h2>Relaciones exteriores</h2>
-      <p class="text-dim small">Declarar guerra, atacar, ocupar y proponer paz/alianza no gastan acciones. Ordenar un atentado, sabotear, hacer una redada, reclutar informantes, reclutar a un miembro rival e interceptar un cargamento sí (te quedan ${getActionsRemaining(game)}).</p>
+      <p class="text-dim small">Declarar guerra, atacar, ocupar, proponer paz/alianza y concentrar fuerzas en un frente no gastan acciones. Ordenar un atentado, sabotear, hacer una redada, reclutar informantes, reclutar a un miembro rival e interceptar un cargamento sí (te quedan ${getActionsRemaining(game)}).</p>
       ${others.map((o) => {
         const rel = cartel.relations[o.id] || { status: "neutral", tension: 0 };
         return `
@@ -35,9 +35,13 @@ export function render(container, app) {
           </div>
           <p class="small text-dim">Tensión: ${rel.tension}/100 · Ejército: ${o.resources.armySize} · Territorios: ${o.territories.length}</p>
           ${hasActiveInformant(cartel, o.id) ? `<p class="small text-dim">🕵️ Tienes un informante infiltrado aquí (${cartel.informants[o.id].turnsRemaining} turnos más): mejores probabilidades en atentados y sabotajes.</p>` : ""}
+          ${rel.status === "war" && cartel.warFocus?.targetCartelId === o.id ? `<p class="small text-success">🎯 Fuerzas concentradas en este frente (${cartel.warFocus.turnsRemaining} turnos más): más poder de combate aquí, menos en tus otros frentes abiertos.</p>` : ""}
           <div class="btn-row">
             ${rel.status !== "war" ? `<button class="danger" data-war="${o.id}">Declarar guerra</button>` : `<button data-peace="${o.id}">Proponer paz</button>`}
             ${rel.status === "neutral" ? `<button data-alliance="${o.id}">Proponer alianza</button>` : ""}
+            ${rel.status === "war" ? (cartel.warFocus?.targetCartelId === o.id
+              ? `<button data-clear-focus="${o.id}">Quitar foco</button>`
+              : `<button data-focus="${o.id}">Concentrar fuerzas aquí</button>`) : ""}
             <button class="danger" data-assassinate="${o.id}" ${cartel.resources.money < ACTION_COSTS.assassinate_rival || noActionsLeft ? "disabled" : ""}>Ordenar un atentado</button>
             <button class="danger" data-sabotage="${o.id}" ${cartel.resources.money < ACTION_COSTS.sabotage_rival || noActionsLeft ? "disabled" : ""}>Sabotear</button>
             <button class="danger" data-intercept="${o.id}" ${cartel.resources.money < ACTION_COSTS.intercept_shipment || noActionsLeft ? "disabled" : ""}>Interceptar un cargamento</button>
@@ -75,6 +79,16 @@ export function render(container, app) {
   }));
   container.querySelectorAll("[data-alliance]").forEach((btn) => btn.addEventListener("click", () => {
     showAllianceModal(app, game, cartel, btn.dataset.alliance);
+  }));
+  container.querySelectorAll("[data-focus]").forEach((btn) => btn.addEventListener("click", () => {
+    applyAction(game, cartel.id, "set_war_focus", { targetCartelId: btn.dataset.focus });
+    app.setGame(game);
+    app.render();
+  }));
+  container.querySelectorAll("[data-clear-focus]").forEach((btn) => btn.addEventListener("click", () => {
+    applyAction(game, cartel.id, "set_war_focus", { targetCartelId: null });
+    app.setGame(game);
+    app.render();
   }));
   container.querySelectorAll("[data-view-cartel]").forEach((el) => el.addEventListener("click", () => {
     showCartelProfile(app, el.dataset.viewCartel);
