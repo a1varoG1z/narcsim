@@ -135,7 +135,8 @@
       "adj": [
         "valle_cauca",
         "eje_cafetero",
-        "bolivia"
+        "bolivia",
+        "peru"
       ]
     },
     {
@@ -148,7 +149,22 @@
       "controllerId": "suarez",
       "value": 11,
       "adj": [
-        "narino_putumayo"
+        "narino_putumayo",
+        "peru"
+      ]
+    },
+    {
+      "id": "peru",
+      "name": "Alto Huallaga (Perú)",
+      "x": 34,
+      "y": 84,
+      "w": 24,
+      "h": 16,
+      "controllerId": "vaticano",
+      "value": 13,
+      "adj": [
+        "narino_putumayo",
+        "bolivia"
       ]
     },
     {
@@ -286,6 +302,25 @@
         "leader": "roberto_suarez",
         "corruptionGovChief": "luis_arce",
         "underboss": "suarez_underboss"
+      }
+    },
+    {
+      "id": "vaticano",
+      "name": "Organización de Demetrio Chávez \"Vaticano\" (Perú)",
+      "color": "#c2703d",
+      "aiControlled": true,
+      "historicalNote": "Demetrio Limonier Chávez Peñaherrera, alias 'Vaticano', dominó el tráfico de pasta base de coca del valle del Alto Huallaga peruano a mediados-finales de los 80 y principios de los 90, proveyendo a los cárteles colombianos. Su operación dependió de sobornar a mandos militares peruanos para permitir vuelos de droga (el escándalo real de los 'narcovuelos'), red de corrupción que salió a la luz años después vinculada al asesor presidencial Vladimiro Montesinos. Capturado en 1994; en la vida real terminó colaborando como testigo contra esa red de corrupción. En el juego su destino depende de tus decisiones. Los cargos secundarios no documentados públicamente son ficticios.",
+      "resources": {
+        "money": 6000000,
+        "armySize": 320,
+        "corruptGov": 50,
+        "corruptPolice": 60,
+        "publicImage": 22,
+        "heat": 22
+      },
+      "roles": {
+        "leader": "vaticano",
+        "underboss": "vaticano_underboss"
       }
     }
   ],
@@ -1198,6 +1233,55 @@
         "intrigue": 55,
         "loyaltyInspiring": 50,
         "stealth": 52
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "vaticano",
+      "name": "Demetrio Chávez Peñaherrera \"Vaticano\"",
+      "sex": "M",
+      "birthYear": 1949,
+      "alive": true,
+      "cartelId": "vaticano",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 55,
+        "business": 75,
+        "charisma": 55,
+        "intrigue": 70,
+        "loyaltyInspiring": 50,
+        "stealth": 60
+      },
+      "traits": [
+        "fundador",
+        "corruptor"
+      ],
+      "notes": "Dominó el tráfico de pasta base de coca del Alto Huallaga peruano, sobornando a mandos militares para permitir vuelos de droga. En la vida real fue capturado en 1994; en el juego su destino depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "vaticano_underboss",
+      "name": "Wilmer \"El Cura\" Salinas",
+      "sex": "M",
+      "birthYear": 1953,
+      "alive": true,
+      "cartelId": "vaticano",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 60,
+        "business": 55,
+        "charisma": 45,
+        "intrigue": 58,
+        "loyaltyInspiring": 48,
+        "stealth": 55
       },
       "traits": [],
       "notes": "Personaje ficticio.",
