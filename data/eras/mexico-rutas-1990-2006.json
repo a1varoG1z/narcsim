@@ -308,7 +308,8 @@
       "roles": {
         "leader": "devis_rivera",
         "underboss": "javier_rivera",
-        "sicariosChief": "cachiros_sicarios_chief"
+        "sicariosChief": "cachiros_sicarios_chief",
+        "intelChief": "cachiros_intel_chief"
       }
     }
   ],
@@ -1376,6 +1377,29 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, a cargo de la seguridad armada de la organización a lo largo de la costa caribeña hondureña.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cachiros_intel_chief",
+      "name": "Marlen Discua",
+      "sex": "F",
+      "birthYear": 1972,
+      "alive": true,
+      "cartelId": "cachiros",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 28,
+        "business": 55,
+        "charisma": 48,
+        "intrigue": 75,
+        "loyaltyInspiring": 45,
+        "stealth": 65
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de la red de contactos e informantes de la organización en Colón.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

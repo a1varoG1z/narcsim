@@ -345,7 +345,8 @@
       "roles": {
         "leader": "lorenzana_padre",
         "underboss": "lorenzana_hijo",
-        "sicariosChief": "lorenzana_sicarios_chief"
+        "sicariosChief": "lorenzana_sicarios_chief",
+        "intelChief": "lorenzana_intel_chief"
       }
     }
   ],
@@ -1174,6 +1175,29 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, a cargo de la seguridad armada de la organización en Zacapa frente al avance de Los Zetas.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "lorenzana_intel_chief",
+      "name": "Estela Reyes Barrios",
+      "sex": "F",
+      "birthYear": 1965,
+      "alive": true,
+      "cartelId": "lorenzana",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 25,
+        "business": 55,
+        "charisma": 50,
+        "intrigue": 72,
+        "loyaltyInspiring": 45,
+        "stealth": 62
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de la red de contactos e informantes de la organización en Zacapa.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

@@ -269,7 +269,8 @@
       "roles": {
         "leader": "fito_24",
         "underboss": "choneros_underboss_24",
-        "sicariosChief": "choneros_sicarios_chief_24"
+        "sicariosChief": "choneros_sicarios_chief_24",
+        "intelChief": "choneros_intel_chief_24"
       }
     }
   ],
@@ -652,6 +653,29 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, a cargo del brazo armado de la organización en medio del conflicto armado interno declarado en 2024.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "choneros_intel_chief_24",
+      "name": "Gabriela Intriago",
+      "sex": "F",
+      "birthYear": 1985,
+      "alive": true,
+      "cartelId": "choneros",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 30,
+        "business": 55,
+        "charisma": 50,
+        "intrigue": 75,
+        "loyaltyInspiring": 48,
+        "stealth": 62
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de la red de contactos e informantes de la organización en medio del conflicto armado interno declarado en 2024.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

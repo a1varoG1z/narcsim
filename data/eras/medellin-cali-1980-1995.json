@@ -316,7 +316,8 @@
         "leader": "roberto_suarez",
         "corruptionGovChief": "luis_arce",
         "underboss": "suarez_underboss",
-        "sicariosChief": "suarez_sicarios_chief"
+        "sicariosChief": "suarez_sicarios_chief",
+        "intelChief": "suarez_intel_chief"
       }
     },
     {
@@ -336,7 +337,8 @@
       "roles": {
         "leader": "vaticano",
         "underboss": "vaticano_underboss",
-        "sicariosChief": "vaticano_sicarios_chief"
+        "sicariosChief": "vaticano_sicarios_chief",
+        "intelChief": "vaticano_intel_chief"
       }
     },
     {
@@ -356,7 +358,8 @@
       "roles": {
         "leader": "pdf_leader",
         "underboss": "pdf_underboss",
-        "sicariosChief": "pdf_sicarios_chief"
+        "sicariosChief": "pdf_sicarios_chief",
+        "intelChief": "pdf_intel_chief"
       }
     },
     {
@@ -376,7 +379,8 @@
       "roles": {
         "leader": "soles_leader",
         "underboss": "soles_underboss",
-        "sicariosChief": "soles_sicarios_chief"
+        "sicariosChief": "soles_sicarios_chief",
+        "intelChief": "soles_intel_chief"
       }
     }
   ],
@@ -1525,6 +1529,98 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, a cargo de la seguridad armada de los envíos que cruzan la frontera con La Guajira.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "suarez_intel_chief",
+      "name": "Yolanda Peña Zurita",
+      "sex": "F",
+      "birthYear": 1948,
+      "alive": true,
+      "cartelId": "suarez",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 30,
+        "business": 55,
+        "charisma": 50,
+        "intrigue": 78,
+        "loyaltyInspiring": 45,
+        "stealth": 68
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, encargada de vigilar a informantes y competidores dentro del negocio boliviano de pasta base.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "vaticano_intel_chief",
+      "name": "Mirtha Salazar Cook",
+      "sex": "F",
+      "birthYear": 1952,
+      "alive": true,
+      "cartelId": "vaticano",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 28,
+        "business": 52,
+        "charisma": 48,
+        "intrigue": 75,
+        "loyaltyInspiring": 42,
+        "stealth": 65
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de la red de contactos e informantes de la organización en el Alto Huallaga.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pdf_intel_chief",
+      "name": "Mayor Aurelio Quintero",
+      "sex": "M",
+      "birthYear": 1946,
+      "alive": true,
+      "cartelId": "pdf_panama",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 35,
+        "business": 50,
+        "charisma": 52,
+        "intrigue": 80,
+        "loyaltyInspiring": 48,
+        "stealth": 70
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, oficial de inteligencia de las Fuerzas de Defensa a cargo de vigilar a rivales y disidentes.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_intel_chief",
+      "name": "Capitán Ligia Márquez",
+      "sex": "F",
+      "birthYear": 1950,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 32,
+        "business": 50,
+        "charisma": 50,
+        "intrigue": 78,
+        "loyaltyInspiring": 45,
+        "stealth": 68
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, oficial de inteligencia militar a cargo de vigilar tanto a rivales como a posibles informantes dentro de la propia red.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

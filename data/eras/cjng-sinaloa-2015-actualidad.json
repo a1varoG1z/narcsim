@@ -355,7 +355,8 @@
       "roles": {
         "leader": "marcola",
         "underboss": "pcc_underboss",
-        "sicariosChief": "pcc_sicarios_chief"
+        "sicariosChief": "pcc_sicarios_chief",
+        "intelChief": "pcc_intel_chief"
       }
     }
   ],
@@ -1267,6 +1268,29 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, encargado de la disciplina armada del PCC dentro y fuera del sistema penitenciario.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pcc_intel_chief",
+      "name": "Fernanda Lins",
+      "sex": "F",
+      "birthYear": 1975,
+      "alive": true,
+      "cartelId": "pcc",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 25,
+        "business": 58,
+        "charisma": 52,
+        "intrigue": 78,
+        "loyaltyInspiring": 55,
+        "stealth": 62
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de la red de contactos e informantes del PCC dentro y fuera del sistema penitenciario.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []
