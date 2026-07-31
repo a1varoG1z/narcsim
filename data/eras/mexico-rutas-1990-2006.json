@@ -161,7 +161,7 @@
       "y": 70,
       "w": 20,
       "h": 16,
-      "controllerId": null,
+      "controllerId": "cachiros",
       "value": 13,
       "adj": [
         "michoacan"
@@ -289,6 +289,25 @@
         "leader": "armando_valencia",
         "underboss": "milenio_underboss",
         "financeChief": "milenio_finance_chief"
+      }
+    },
+    {
+      "id": "cachiros",
+      "name": "Los Cachiros (Honduras)",
+      "color": "#8a3a5a",
+      "aiControlled": true,
+      "historicalNote": "Organización real hondureña fundada por los hermanos Rivera Maradiaga en el departamento de Colón a comienzos de los 90, dedicada al trasiego de cocaína a lo largo de la costa caribeña hondureña, con vínculos reales documentados con el tráfico aéreo mexicano de la época. Ambos hermanos se entregaron a la DEA en 2015 y se convirtieron en testigos colaboradores clave en varios juicios de alto perfil en EE.UU., incluido el del expresidente hondureño Juan Orlando Hernández. En el juego se representan activos al frente de la organización. Los cargos secundarios no documentados públicamente son ficticios.",
+      "resources": {
+        "money": 4000000,
+        "armySize": 280,
+        "corruptGov": 35,
+        "corruptPolice": 40,
+        "publicImage": 25,
+        "heat": 28
+      },
+      "roles": {
+        "leader": "devis_rivera",
+        "underboss": "javier_rivera"
       }
     }
   ],
@@ -1285,6 +1304,54 @@
       },
       "traits": [],
       "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "devis_rivera",
+      "name": "Devis Leonel Rivera Maradiaga",
+      "sex": "M",
+      "birthYear": 1971,
+      "alive": true,
+      "cartelId": "cachiros",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 55,
+        "business": 72,
+        "charisma": 55,
+        "intrigue": 68,
+        "loyaltyInspiring": 58,
+        "stealth": 55
+      },
+      "traits": [
+        "fundador"
+      ],
+      "notes": "Cofundador de Los Cachiros junto a su hermano Javier. En la vida real se entregó a la DEA en 2015 y se convirtió en testigo colaborador clave en varios juicios de alto perfil en EE.UU. En el juego su destino depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "javier_rivera",
+      "name": "Javier Eriberto Rivera Maradiaga",
+      "sex": "M",
+      "birthYear": 1973,
+      "alive": true,
+      "cartelId": "cachiros",
+      "role": "underboss",
+      "historical": true,
+      "stats": {
+        "violence": 58,
+        "business": 60,
+        "charisma": 48,
+        "intrigue": 60,
+        "loyaltyInspiring": 52,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Cofundador de Los Cachiros junto a su hermano Devis Leonel. También se entregó a la DEA en 2015 y colaboró como testigo en juicios posteriores.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []
