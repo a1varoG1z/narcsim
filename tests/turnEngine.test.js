@@ -541,6 +541,86 @@ test("sabotage_rival records a 'sabotaged' reactive event when the player is the
   }
 });
 
+test("assassinate_rival records an 'assassinationAttempted' reactive event when the player's cartel is the target, covering success, survival, and failure", () => {
+  const originalRandom = Math.random;
+  try {
+    // Success against a non-player-controlled member of the player's cartel: the hit connects
+    // and the target dies (isPlayerTarget is false, so the 55% survival roll never applies).
+    const gameKilled = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    gameKilled.cartels.cjng.resources.money = ACTION_COSTS.assassinate_rival * 10;
+    gameKilled._reactiveEvents = [];
+    const underbossId = gameKilled.cartels.sinaloa.roles.underboss;
+    Math.random = () => 0; // guarantees chance() succeeds
+    const killedResult = applyAction(gameKilled, "cjng", "assassinate_rival", { targetCharacterId: underbossId });
+    assert.equal(killedResult.success, true);
+    assert.equal(gameKilled._reactiveEvents.length, 1);
+    assert.deepEqual(gameKilled._reactiveEvents[0], {
+      type: "assassinationAttempted",
+      byCartelId: "cjng",
+      byCartelName: gameKilled.cartels.cjng.name,
+      characterName: gameKilled.characters[underbossId].name,
+      success: true,
+      survived: false,
+    });
+
+    // Success against the player's own controlled character: the 55% survival roll also passes.
+    const gameSurvived = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    gameSurvived.cartels.cjng.resources.money = ACTION_COSTS.assassinate_rival * 10;
+    gameSurvived._reactiveEvents = [];
+    const playerCharacterId = gameSurvived.playerCharacterId;
+    const sequence = [0, 0.01]; // 1: hit connects. 2: chance(0.55) survival roll also succeeds.
+    let i = 0;
+    Math.random = () => sequence[Math.min(i++, sequence.length - 1)];
+    const survivedResult = applyAction(gameSurvived, "cjng", "assassinate_rival", { targetCharacterId: playerCharacterId });
+    assert.equal(survivedResult.success, true);
+    assert.equal(survivedResult.survived, true);
+    assert.equal(gameSurvived._reactiveEvents.length, 1);
+    assert.deepEqual(gameSurvived._reactiveEvents[0], {
+      type: "assassinationAttempted",
+      byCartelId: "cjng",
+      byCartelName: gameSurvived.cartels.cjng.name,
+      characterName: gameSurvived.characters[playerCharacterId].name,
+      success: true,
+      survived: true,
+    });
+
+    // Failure: no 'survived' key at all, matching sabotage_rival's failure shape.
+    const gameFail = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    gameFail.cartels.cjng.resources.money = ACTION_COSTS.assassinate_rival * 10;
+    gameFail._reactiveEvents = [];
+    const underbossId2 = gameFail.cartels.sinaloa.roles.underboss;
+    Math.random = () => 0.99; // guarantees chance() fails
+    const failResult = applyAction(gameFail, "cjng", "assassinate_rival", { targetCharacterId: underbossId2 });
+    assert.equal(failResult.success, false);
+    assert.equal(gameFail._reactiveEvents.length, 1);
+    assert.deepEqual(gameFail._reactiveEvents[0], {
+      type: "assassinationAttempted",
+      byCartelId: "cjng",
+      byCartelName: gameFail.cartels.cjng.name,
+      characterName: gameFail.characters[underbossId2].name,
+      success: false,
+    });
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("assassinate_rival does NOT record a reactive event for an internal purge, even though the target cartel is the player's own", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  cartel.resources.money = ACTION_COSTS.assassinate_rival * 10;
+  game._reactiveEvents = [];
+  const underbossId = cartel.roles.underboss;
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0;
+    applyAction(game, "sinaloa", "assassinate_rival", { targetCharacterId: underbossId });
+  } finally {
+    Math.random = originalRandom;
+  }
+  assert.equal(game._reactiveEvents.length, 0, "an internal purge has no external attacker to react against");
+});
+
 test("endTurn returns reactiveEvents (empty by default) and never leaks the transient _reactiveEvents field into game state", () => {
   const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
   const result = endTurn(game);

@@ -125,13 +125,14 @@ const app = {
     const sabotages = (reactiveEvents || []).filter((e) => e.type === "sabotaged");
     const poachings = (reactiveEvents || []).filter((e) => e.type === "poached");
     const interceptions = (reactiveEvents || []).filter((e) => e.type === "shipmentIntercepted");
+    const hits = (reactiveEvents || []).filter((e) => e.type === "assassinationAttempted");
     showModal(`
       <h2>Resumen del turno</h2>
       <p>Esto ha pasado mientras avanzabas el tiempo:</p>
       <div class="log" style="margin-bottom:1rem">
         ${events.map((e) => `<div class="entry ${e.type}">${icon(e.type)} ${escapeHtml(e.text)}</div>`).join("")}
       </div>
-      ${territoryLosses.length || sabotages.length || interceptions.length ? `<h3>¿Reaccionas ahora?</h3>` : ""}
+      ${territoryLosses.length || sabotages.length || interceptions.length || hits.length ? `<h3>¿Reaccionas ahora?</h3>` : ""}
       ${poachings.map((e) => `
         <div class="card tight mt-1">
           <p class="small">${e.success ? `${escapeHtml(e.byCartelName)} se ha llevado a <strong>${escapeHtml(e.characterName)}</strong> a sus filas.` : `${escapeHtml(e.byCartelName)} ha intentado reclutar a ${escapeHtml(e.characterName)} (el intento fracasó).`}</p>
@@ -153,6 +154,16 @@ const app = {
         <div class="card tight mt-1" data-reactive-row="intercept-${i}">
           <p class="small">${escapeHtml(e.byCartelName)} te ha interceptado un cargamento en tránsito, con pérdidas por ${fmtMoney(e.amount)}.</p>
           <button class="danger block" data-retaliate-intercept="intercept-${i}" data-target="${e.byCartelId}">Represalia: interceptarles un cargamento (${fmtMoney(ACTION_COSTS.intercept_shipment)})</button>
+        </div>
+      `).join("")}
+      ${hits.map((e, i) => `
+        <div class="card tight mt-1" data-reactive-row="hit-${i}">
+          <p class="small">${escapeHtml(e.byCartelName)} ${
+            e.success && !e.survived ? `ha asesinado a <strong>${escapeHtml(e.characterName)}</strong> en un atentado.`
+            : e.success && e.survived ? `ha intentado asesinar a <strong>${escapeHtml(e.characterName)}</strong>, que sobrevive por poco.`
+            : `ha intentado asesinar a ${escapeHtml(e.characterName)} (el intento fracasó).`
+          }</p>
+          <button class="danger block" data-retaliate-hit="hit-${i}" data-target="${e.byCartelId}">Represalia: ordenar un atentado contra su líder (${fmtMoney(ACTION_COSTS.assassinate_rival)})</button>
         </div>
       `).join("")}
       <button class="primary block mt-1" id="turn-summary-ok">Continuar</button>
@@ -204,6 +215,30 @@ const app = {
           : result.success
             ? `Interceptas su cargamento: ${fmtMoney(result.seized)} en pérdidas para ellos, ${fmtMoney(result.gained)} para ti.`
             : "Tu represalia termina en un tiroteo y fracasa.";
+        row.appendChild(msg);
+        btn.disabled = true;
+      });
+    });
+    document.querySelectorAll("[data-retaliate-hit]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const cartel = getPlayerCartel(this.game);
+        const targetCartel = this.game.cartels[btn.dataset.target];
+        const leaderId = targetCartel?.roles.leader;
+        const leader = leaderId ? this.game.characters[leaderId] : null;
+        const row = btn.closest("[data-reactive-row]");
+        const msg = document.createElement("p");
+        msg.className = "small";
+        if (!leader || !leader.alive) {
+          msg.textContent = "No hay un líder disponible al que atacar.";
+        } else {
+          const result = applyAction(this.game, cartel.id, "assassinate_rival", { targetCharacterId: leader.id });
+          persist(this.game);
+          msg.textContent = !result.ok
+            ? result.message
+            : result.success
+              ? `El atentado contra ${leader.name} tiene éxito.`
+              : "Tu represalia fracasa y expone tu autoría.";
+        }
         row.appendChild(msg);
         btn.disabled = true;
       });

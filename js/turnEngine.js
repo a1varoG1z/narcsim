@@ -622,6 +622,9 @@ export function applyAction(game, cartelId, type, payload = {}) {
           goToWar();
           log(`${target.name} ${verb} un atentado ordenado por ${cartel.name}.`, logType);
         }
+        if (!isInternal && game._reactiveEvents && targetCartel.id === game.playerCartelId) {
+          game._reactiveEvents.push({ type: "assassinationAttempted", byCartelId: cartel.id, byCartelName: cartel.name, characterName: target.name, success: true, survived: survives });
+        }
         return { ok: true, success: true, survived: survives };
       }
       if (isInternal) {
@@ -636,6 +639,9 @@ export function applyAction(game, cartelId, type, payload = {}) {
         r.heat = Math.min(100, r.heat + randInt(25, 40));
         goToWar();
         log(`El atentado de ${cartel.name} contra ${target.name} fracasa y expone su autoría.`, "event");
+      }
+      if (!isInternal && game._reactiveEvents && targetCartel.id === game.playerCartelId) {
+        game._reactiveEvents.push({ type: "assassinationAttempted", byCartelId: cartel.id, byCartelName: cartel.name, characterName: target.name, success: false });
       }
       return { ok: true, success: false };
     }
