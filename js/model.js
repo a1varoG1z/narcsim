@@ -41,7 +41,7 @@ export function clampStat(v) {
 }
 
 export function makeCharacter({
-  id, name, sex = "M", birthYear, deathYear = null, alive = true,
+  id, name, sex = "M", birthYear, deathYear = null, deathCause = null, alive = true,
   cartelId = null, role = null, stats = null, traits = [],
   portrait = null, parents = [], spouseId = null, childrenIds = [],
   historical = false, notes = "", imprisoned = null,
@@ -52,6 +52,7 @@ export function makeCharacter({
     sex,
     birthYear,
     deathYear,
+    deathCause,
     alive,
     cartelId,
     role,

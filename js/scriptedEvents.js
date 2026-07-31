@@ -18,6 +18,7 @@ function killScriptedCharacter(game, characterId, addLog, causeText) {
   }
   c.alive = false;
   c.deathYear = game.year;
+  c.deathCause = causeText;
   addLog(`${c.name} muere en ${causeText}.`, "death");
   const cartel = game.cartels[c.cartelId];
   const wasLeader = !!cartel && cartel.roles.leader === c.id;

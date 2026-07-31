@@ -136,6 +136,7 @@ test("assassinate_rival kills the target on success, triggers succession if they
   assert.equal(result.ok, true);
   assert.equal(result.success, true);
   assert.equal(game.characters[targetLeaderId].alive, false);
+  assert.equal(game.characters[targetLeaderId].deathCause, "un atentado");
   assert.notEqual(targetCartel.roles.leader, targetLeaderId, "the rival cartel should have a new leader after losing theirs");
   assert.equal(cartel.relations.cjng.status, "war");
   const wars = getWarsForCartel(game, "sinaloa").filter((w) => w.cartelA === "cjng" || w.cartelB === "cjng");
@@ -153,6 +154,7 @@ test("assassinate_rival's 'accident' method avoids a war on success but still ex
     assert.equal(successResult.ok, true);
     assert.equal(successResult.success, true);
     assert.equal(successGame.characters[successTargetId].alive, false);
+    assert.equal(successGame.characters[successTargetId].deathCause, "un atentado disfrazado de accidente");
     assert.equal(successGame.cartels.sinaloa.relations.cjng?.status ?? "neutral", "neutral", "a successful staged accident shouldn't be attributed to you, so no war");
     assert.equal(getWarsForCartel(successGame, "sinaloa").filter((w) => w.cartelA === "cjng" || w.cartelB === "cjng").length, 0);
 
@@ -232,6 +234,7 @@ test("assassinate_rival can target a member of your own cartel (e.g. a discovere
     Math.random = originalRandom;
   }
   assert.equal(game.characters[underbossId].alive, false);
+  assert.equal(game.characters[underbossId].deathCause, "una purga interna");
   assert.notEqual(cartel.roles.underboss, underbossId, "the role should have been vacated (and refilled by fillVacantRoles) rather than still pointing at the dead character");
   // No rival cartel was involved, so there's nothing to go to war over.
   assert.equal(Object.values(cartel.relations).some((rel) => rel.status === "war"), false);
@@ -1434,6 +1437,7 @@ test("rollMortality gives the player's own character a heavy chance to survive a
     assert.equal(diedResults.length, 1, "a failed survival roll should let the death go through as usual");
     assert.equal(diedResults[0].characterId, "player1");
     assert.equal(diesGame.characters.player1.alive, false);
+    assert.equal(diesGame.characters.player1.deathCause, "causas naturales", "deathCause should be set to the same cause string used in the log message (age 80 always resolves to this one deterministically)");
   } finally {
     Math.random = originalRandom;
   }
@@ -1474,6 +1478,7 @@ test("a coup that would kill the player's own leadership instead gives them a he
     assert.equal(diedDeaths.length, 1, "a failed survival roll should let the coup kill them as usual");
     assert.equal(diedDeaths[0].characterId, playerId);
     assert.equal(game.characters[playerId].alive, false);
+    assert.equal(game.characters[playerId].deathCause, `un golpe interno liderado por ${game.characters[plotterId].name}`);
   } finally {
     Math.random = originalRandom;
   }

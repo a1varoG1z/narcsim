@@ -37,6 +37,7 @@ export function rollMortality(game, addLog, year) {
         }
         c.alive = false;
         c.deathYear = year;
+        c.deathCause = cause;
         addLog(`${c.name} ha muerto por ${cause}.`, "death");
         const wasLeader = cartel.roles.leader === c.id;
         results.push({ characterId: c.id, cartelId: cartel.id, wasLeader, role: c.role });
@@ -191,6 +192,7 @@ export function rollSiblingRivalry(game, addLog, year) {
         } else {
           target.alive = false;
           target.deathYear = year;
+          target.deathCause = `un ataque ordenado por su hermano/a ${schemer.name} por la sucesión del cártel`;
           addLog(`${schemer.name} orquesta un ataque contra su hermano/a ${target.name} por la sucesión del cártel.`, "death");
           deaths.push({ characterId: target.id, cartelId: cartel.id, wasLeader: false, role: target.role });
         }

@@ -574,6 +574,9 @@ export function applyAction(game, cartelId, type, payload = {}) {
         if (!survives) {
           target.alive = false;
           target.deathYear = currentYear(game);
+          target.deathCause = isInternal
+            ? (method === "accident" ? "un accidente orquestado por su propio cártel (purga interna)" : method === "public" ? "una ejecución pública por traición (purga interna)" : "una purga interna")
+            : (method === "accident" ? "un atentado disfrazado de accidente" : method === "public" ? "un atentado público" : "un atentado");
           if (isPlayerTarget) {
             // Defer to the same succession pipeline as any other player death (endTurn's own
             // deaths loop) instead of silently reassigning leadership via autoSuccession — the
@@ -974,6 +977,7 @@ function resolveBattle(game, attacker, defender, territory) {
       if (holder && holder.alive && chance(0.04)) {
         holder.alive = false;
         holder.deathYear = currentYear(game);
+        holder.deathCause = `un enfrentamiento armado por ${territory.name}`;
         log(`${holder.name} muere en el enfrentamiento por ${territory.name}.`, "death");
       }
     }
@@ -1480,6 +1484,7 @@ export function resolveCoups(game, coups, year) {
       }
       leader.alive = false;
       leader.deathYear = year;
+      leader.deathCause = `un golpe interno liderado por ${game.characters[coup.plotterId].name}`;
       addLog(game, `${leader.name} muere en un intento de golpe interno liderado por ${game.characters[coup.plotterId].name}${withAlly}.`, "death");
       deaths.push({ characterId: coup.leaderId, cartelId: coup.cartelId, wasLeader: true });
     } else {

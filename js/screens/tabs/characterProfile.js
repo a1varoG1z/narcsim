@@ -28,7 +28,7 @@ export function showCharacterProfile(app, characterId) {
   const spouse = c.spouseId ? game.characters[c.spouseId] : null;
   const children = (c.childrenIds || []).map((id) => game.characters[id]).filter(Boolean);
   const status = !c.alive
-    ? `Falleció en ${c.deathYear}.`
+    ? `Falleció en ${c.deathYear}${c.deathCause ? ` por ${escapeHtml(c.deathCause)}` : ""}.`
     : c.imprisoned
     ? (c.imprisoned.lifeSentence ? "Cumple cadena perpetua." : `Preso, posible salida en el turno ${c.imprisoned.releaseTurn}.`)
     : "Activo.";
