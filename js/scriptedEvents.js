@@ -538,6 +538,73 @@ export const SCRIPTED_EVENTS = {
       },
     },
     {
+      id: "arresto-ovidio-2023",
+      year: 2023,
+      interactive: true,
+      cartelId: "sinaloa",
+      title: "La captura de Ovidio Guzmán",
+      description:
+        'El Ejército captura a tu hermano Ovidio Guzmán López en Culiacán. La ciudad puede estallar en un caos total como en 2019, cuando la presión forzó su liberación. ¿Cómo respondes?',
+      options: [
+        { id: "siege", label: "Desatar el caos total en Culiacán para forzar su liberación" },
+        { id: "negotiate", label: "Negociar en silencio con las autoridades" },
+        { id: "abandon", label: "Dejarlo a su suerte para evitar más atención" },
+      ],
+      applyDefault(game, addLog) {
+        const c = game.cartels.sinaloa;
+        const ovidio = game.characters.chapito_3;
+        if (!c || c.destroyed) return;
+        c.resources.heat = Math.min(100, c.resources.heat + randInt(45, 60));
+        c.resources.armySize = Math.max(0, Math.round(c.resources.armySize * (1 - randInt(10, 20) / 100)));
+        if (ovidio && ovidio.alive && !ovidio.imprisoned) {
+          ovidio.imprisoned = { sinceTurn: game.turn, releaseTurn: null, lifeSentence: true };
+        }
+        addLog(
+          "La captura de Ovidio Guzmán desata un caos total en Culiacán — convoyes militares emboscados, el aeropuerto cerrado, la ciudad paralizada —, pero a diferencia de 2019, esta vez el gobierno no cede: Ovidio queda preso y acabará extraditado.",
+          "death"
+        );
+      },
+      applyChoice(game, addLog, optionId) {
+        const c = game.cartels.sinaloa;
+        const ovidio = game.characters.chapito_3;
+        if (!c || c.destroyed) return;
+        const imprisonOvidio = () => {
+          if (ovidio && ovidio.alive && !ovidio.imprisoned) {
+            ovidio.imprisoned = { sinceTurn: game.turn, releaseTurn: null, lifeSentence: true };
+          }
+        };
+        if (optionId === "siege") {
+          c.resources.heat = Math.min(100, c.resources.heat + randInt(50, 65));
+          c.resources.armySize = Math.max(0, Math.round(c.resources.armySize * (1 - randInt(15, 25) / 100)));
+          if (chance(0.3)) {
+            if (ovidio) ovidio.imprisoned = null;
+            c.resources.publicImage = Math.min(100, c.resources.publicImage + randInt(10, 20));
+            addLog(
+              "El caos desatado en Culiacán funciona: ante el riesgo de una masacre civil, el gobierno cede y libera a Ovidio, igual que en 2019. Tu poder de fuego queda demostrado ante el mundo.",
+              "good"
+            );
+          } else {
+            imprisonOvidio();
+            c.resources.publicImage = Math.max(0, c.resources.publicImage - randInt(10, 20));
+            addLog(
+              "El caos desatado en Culiacán no basta esta vez: el gobierno resiste la presión y Ovidio queda preso, mientras la ciudad paga el precio de una ofensiva que no logró su objetivo.",
+              "death"
+            );
+          }
+        } else if (optionId === "negotiate") {
+          c.resources.heat = Math.min(100, c.resources.heat + randInt(20, 30));
+          c.resources.corruptGov = Math.max(0, c.resources.corruptGov - randInt(10, 15));
+          imprisonOvidio();
+          addLog("Intentas negociar en silencio con las autoridades, pero no consigues evitar que Ovidio quede preso.", "event");
+        } else {
+          c.resources.heat = Math.min(100, c.resources.heat + randInt(10, 15));
+          c.resources.publicImage = Math.max(0, c.resources.publicImage - randInt(15, 25));
+          imprisonOvidio();
+          addLog("Decides no arriesgar nada por Ovidio. Queda preso sin que muevas un dedo por él, y dentro de la familia eso no pasa desapercibido.", "event");
+        }
+      },
+    },
+    {
       id: "guerra-chapitos-mayiza-2024",
       year: 2024,
       run(game, addLog) {

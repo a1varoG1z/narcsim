@@ -1313,6 +1313,74 @@ test("the Viernes Negro event's 'bribe' choice can either quietly redirect the o
   }
 });
 
+test("Ovidio Guzmán's 2023 capture pauses for a player choice when the player controls Sinaloa, and imprisons him for life by default when NPC-controlled", () => {
+  const era = loadEra("cjng-sinaloa-2015-actualidad.json");
+
+  const playerGame = buildGameFromEra(era, { mode: "existing", cartelId: "sinaloa", characterId: "ivan_archivaldo" });
+  const playerResult = rollScriptedEvents(playerGame, () => {}, 2023);
+  assert.ok(playerResult.pendingChoice, "expected a pending choice when the player controls Sinaloa");
+  assert.equal(playerResult.pendingChoice.eventId, "arresto-ovidio-2023");
+  assert.equal(playerGame.firedScriptedEvents.includes("arresto-ovidio-2023"), false, "should stay unfired until resolved");
+
+  resolveScriptedChoice(playerGame, "arresto-ovidio-2023", "negotiate");
+  assert.equal(playerGame.firedScriptedEvents.includes("arresto-ovidio-2023"), true);
+
+  const npcGame = buildGameFromEra(era, { mode: "existing", cartelId: "cjng", characterId: "el_mencho" });
+  npcGame.firedScriptedEvents = ["viernes-negro-2015"]; // same era, targets CJNG (the player here), already resolved by 2023
+  const npcHeatBefore = npcGame.cartels.sinaloa.resources.heat;
+  const npcResult = rollScriptedEvents(npcGame, () => {}, 2023);
+  assert.equal(npcResult.pendingChoice, null, "should auto-resolve when the player isn't Sinaloa");
+  assert.ok(npcGame.cartels.sinaloa.resources.heat > npcHeatBefore, "the historical default (Culiacanazo 2.0) always raises heat a lot");
+  assert.equal(npcGame.characters.chapito_3.imprisoned.lifeSentence, true, "unlike 2019, the real 2023 outcome is that Ovidio stays captured");
+  assert.equal(npcGame.firedScriptedEvents.includes("arresto-ovidio-2023"), true);
+});
+
+test("Ovidio Guzmán event's 'negotiate' and 'abandon' choices both leave him captured, with 'abandon' costing public image instead of heat", () => {
+  const era = loadEra("cjng-sinaloa-2015-actualidad.json");
+
+  const negotiateGame = buildGameFromEra(era, { mode: "existing", cartelId: "sinaloa", characterId: "ivan_archivaldo" });
+  const negotiateHeatBefore = negotiateGame.cartels.sinaloa.resources.heat;
+  rollScriptedEvents(negotiateGame, () => {}, 2023);
+  resolveScriptedChoice(negotiateGame, "arresto-ovidio-2023", "negotiate");
+  assert.equal(negotiateGame.characters.chapito_3.imprisoned.lifeSentence, true);
+  const negotiateHeatDelta = negotiateGame.cartels.sinaloa.resources.heat - negotiateHeatBefore;
+
+  const abandonGame = buildGameFromEra(era, { mode: "existing", cartelId: "sinaloa", characterId: "ivan_archivaldo" });
+  const abandonHeatBefore = abandonGame.cartels.sinaloa.resources.heat;
+  const abandonImageBefore = abandonGame.cartels.sinaloa.resources.publicImage;
+  rollScriptedEvents(abandonGame, () => {}, 2023);
+  resolveScriptedChoice(abandonGame, "arresto-ovidio-2023", "abandon");
+  assert.equal(abandonGame.characters.chapito_3.imprisoned.lifeSentence, true);
+  const abandonHeatDelta = abandonGame.cartels.sinaloa.resources.heat - abandonHeatBefore;
+
+  assert.ok(abandonHeatDelta < negotiateHeatDelta, "abandoning him should cost far less heat than negotiating");
+  assert.ok(abandonGame.cartels.sinaloa.resources.publicImage < abandonImageBefore, "abandoning family should hurt public image");
+});
+
+test("Ovidio Guzmán event's 'siege' choice can either free him (low roll, mirroring 2019) or leave him captured with worse fallout (high roll, the real 2023 outcome)", () => {
+  const era = loadEra("cjng-sinaloa-2015-actualidad.json");
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.1; // under the 0.3 success threshold
+    const luckyGame = buildGameFromEra(era, { mode: "existing", cartelId: "sinaloa", characterId: "ivan_archivaldo" });
+    const luckyImageBefore = luckyGame.cartels.sinaloa.resources.publicImage;
+    rollScriptedEvents(luckyGame, () => {}, 2023);
+    resolveScriptedChoice(luckyGame, "arresto-ovidio-2023", "siege");
+    assert.equal(luckyGame.characters.chapito_3.imprisoned, null, "a successful siege should free him, unlike the real 2023 outcome");
+    assert.ok(luckyGame.cartels.sinaloa.resources.publicImage > luckyImageBefore, "successfully forcing a release should improve public image");
+
+    Math.random = () => 0.9; // over the 0.3 success threshold
+    const unluckyGame = buildGameFromEra(era, { mode: "existing", cartelId: "sinaloa", characterId: "ivan_archivaldo" });
+    const unluckyImageBefore = unluckyGame.cartels.sinaloa.resources.publicImage;
+    rollScriptedEvents(unluckyGame, () => {}, 2023);
+    resolveScriptedChoice(unluckyGame, "arresto-ovidio-2023", "siege");
+    assert.equal(unluckyGame.characters.chapito_3.imprisoned.lifeSentence, true, "a failed siege should still leave him captured");
+    assert.ok(unluckyGame.cartels.sinaloa.resources.publicImage < unluckyImageBefore, "a failed siege should hurt public image instead");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
 test("the El Mochomo arrest (2008) event pauses for a player choice when the player controls Beltrán Leyva, and applies immediately for NPC-controlled Beltrán Leyva", () => {
   const era = loadEra("fragmentacion-2006-2015.json");
 
