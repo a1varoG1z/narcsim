@@ -443,6 +443,36 @@ export const SCRIPTED_EVENTS = {
         return killScriptedCharacter(game, "lazcano_06", addLog, "un enfrentamiento con la Marina mexicana");
       },
     },
+    {
+      id: "arresto-z40-2013",
+      year: 2013,
+      run(game, addLog) {
+        // pickHeir already prioritizes the underboss, so z40_trevino should already be Zetas'
+        // leader by now via autoSuccession after Lazcano's 2012 death — this is his own real fall.
+        const arrests = imprisonScriptedCharacter(
+          game,
+          "z40_trevino",
+          addLog,
+          "una captura de la Marina de madrugada cerca de Nuevo Laredo, en una camioneta cargada de dinero y armas"
+        );
+        return { deaths: [], arrests };
+      },
+    },
+    {
+      id: "arresto-z42-2015",
+      year: 2015,
+      run(game, addLog) {
+        // Completes the full Zetas leadership collapse across this era: Lazcano (2012) → Z-40
+        // (2013) → Z-42, his brother and successor, right at the era's own endYear.
+        const arrests = imprisonScriptedCharacter(
+          game,
+          "z42_trevino",
+          addLog,
+          "una captura sin un solo disparo en San Pedro Garza García, Nuevo León"
+        );
+        return { deaths: [], arrests };
+      },
+    },
   ],
   "cjng-sinaloa-2015-actualidad": [
     {

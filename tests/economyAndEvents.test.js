@@ -1377,6 +1377,61 @@ test("the El Mochomo event's 'reconcile' choice can either end the ongoing war (
   }
 });
 
+test("Z-40's 2013 capture imprisons him for life when he's not the player", () => {
+  const era = loadEra("fragmentacion-2006-2015.json");
+  const npcGame = buildGameFromEra(era, { mode: "existing", cartelId: "sinaloa", characterId: "chapo_guzman_06" });
+  npcGame.firedScriptedEvents = ["arresto-mochomo-2008", "muerte-arturo-beltran-2009", "muerte-nazario-2010", "muerte-lazcano-2012"];
+
+  const result = rollScriptedEvents(npcGame, () => {}, 2013);
+  assert.equal(result.arrests.length, 1);
+  assert.equal(result.arrests[0].characterId, "z40_trevino");
+  assert.equal(result.arrests[0].lifeSentence, true);
+  assert.equal(npcGame.characters.z40_trevino.imprisoned.lifeSentence, true);
+  assert.equal(npcGame.firedScriptedEvents.includes("arresto-z40-2013"), true);
+});
+
+test("Z-42's 2015 capture imprisons him for life when he's not the player, completing the Zetas leadership collapse", () => {
+  const era = loadEra("fragmentacion-2006-2015.json");
+  const npcGame = buildGameFromEra(era, { mode: "existing", cartelId: "sinaloa", characterId: "chapo_guzman_06" });
+  npcGame.firedScriptedEvents = ["arresto-mochomo-2008", "muerte-arturo-beltran-2009", "muerte-nazario-2010", "muerte-lazcano-2012", "arresto-z40-2013"];
+
+  const result = rollScriptedEvents(npcGame, () => {}, 2015);
+  assert.equal(result.arrests.length, 1);
+  assert.equal(result.arrests[0].characterId, "z42_trevino");
+  assert.equal(result.arrests[0].lifeSentence, true);
+  assert.equal(npcGame.characters.z42_trevino.imprisoned.lifeSentence, true);
+  assert.equal(npcGame.firedScriptedEvents.includes("arresto-z42-2015"), true);
+});
+
+test("Z-40 and Z-42's captures give the player a 55% chance to evade when controlling either directly", () => {
+  const era = loadEra("fragmentacion-2006-2015.json");
+  const originalRandom = Math.random;
+  try {
+    const z40Evades = buildGameFromEra(era, { mode: "existing", cartelId: "zetas", characterId: "z40_trevino" });
+    z40Evades.firedScriptedEvents = ["arresto-mochomo-2008", "muerte-arturo-beltran-2009", "muerte-nazario-2010", "muerte-lazcano-2012"];
+    Math.random = () => 0.99; // >= 0.55, so the evasion roll succeeds
+    const z40EvadedResult = rollScriptedEvents(z40Evades, () => {}, 2013);
+    assert.equal(z40EvadedResult.arrests.length, 0, "Z-40 should evade capture when the roll favors the player");
+    assert.equal(z40Evades.characters.z40_trevino.imprisoned, null);
+
+    const z40Captured = buildGameFromEra(era, { mode: "existing", cartelId: "zetas", characterId: "z40_trevino" });
+    z40Captured.firedScriptedEvents = ["arresto-mochomo-2008", "muerte-arturo-beltran-2009", "muerte-nazario-2010", "muerte-lazcano-2012"];
+    Math.random = () => 0; // < 0.55, so the historical arrest goes through
+    const z40CapturedResult = rollScriptedEvents(z40Captured, () => {}, 2013);
+    assert.equal(z40CapturedResult.arrests.length, 1);
+    assert.equal(z40Captured.characters.z40_trevino.imprisoned.lifeSentence, true);
+
+    const z42Evades = buildGameFromEra(era, { mode: "existing", cartelId: "zetas", characterId: "z42_trevino" });
+    z42Evades.firedScriptedEvents = ["arresto-mochomo-2008", "muerte-arturo-beltran-2009", "muerte-nazario-2010", "muerte-lazcano-2012", "arresto-z40-2013"];
+    Math.random = () => 0.99;
+    const z42EvadedResult = rollScriptedEvents(z42Evades, () => {}, 2015);
+    assert.equal(z42EvadedResult.arrests.length, 0, "Z-42 should evade capture when the roll favors the player");
+    assert.equal(z42Evades.characters.z42_trevino.imprisoned, null);
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
 test("invest_production lets you target a specific owned territory and scales payout with its value", () => {
   const game = newGame("mexico-rutas-1990-2006.json", "sinaloa");
   game.cartels.sinaloa.resources.money = ACTION_COSTS.invest_production * 10;
