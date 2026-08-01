@@ -18,6 +18,21 @@ function hasActiveInformant(cartel, targetCartelId) {
 
 const INFORMANT_SUCCESS_BONUS = 0.12;
 
+/** corruptionGovChief/corruptionPoliceChief scale how much ground corrupt_gov/corrupt_police
+ * actually gains (or, on a backfired aggressive attempt, loses) and how safe the aggressive
+ * approach is. Both are modest and centered on an average (skill 50) chief — a randomly generated
+ * placeholder holder changes almost nothing, so this only really matters once you've actually
+ * invested in who holds the role. */
+function corruptionChiefSkill(chief) {
+  return chief ? (chief.stats.charisma + chief.stats.intrigue) / 2 : 40;
+}
+function corruptionChiefBonus(chief) {
+  return clamp(Math.round((corruptionChiefSkill(chief) - 50) / 8), -6, 6);
+}
+function corruptionAggressiveChance(chief) {
+  return clamp(0.8 + (corruptionChiefSkill(chief) - 50) / 250, 0.5, 0.95);
+}
+
 const VENDETTA_BONUS = 0.12;
 const VENDETTA_EXPIRY_TURNS = 16;
 const VENDETTA_CHANCE = 0.5;
@@ -237,25 +252,27 @@ export function applyAction(game, cartelId, type, payload = {}) {
       if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
       r.money -= cost;
       const approach = payload.approach || "standard";
+      const govChief = game.characters[cartel.roles.corruptionGovChief];
+      const govBonus = corruptionChiefBonus(govChief);
       if (approach === "quiet") {
-        r.corruptGov = Math.min(100, r.corruptGov + randInt(3, 6));
+        r.corruptGov = clamp(r.corruptGov + randInt(3, 6) + govBonus, 0, 100);
         r.heat = Math.max(0, r.heat - randInt(5, 10));
         log(`${cartel.name} construye discretamente una red de contactos políticos, sin llamar la atención.`, "good");
         return { ok: true, approach };
       }
       if (approach === "aggressive") {
-        if (chance(0.8)) {
-          r.corruptGov = Math.min(100, r.corruptGov + randInt(8, 15));
+        if (chance(corruptionAggressiveChance(govChief))) {
+          r.corruptGov = clamp(r.corruptGov + randInt(8, 15) + govBonus, 0, 100);
           r.heat = Math.min(100, r.heat + randInt(3, 8));
           log(`${cartel.name} presiona con dinero y amenazas veladas a funcionarios reacios, ampliando su red de corrupción de golpe.`, "good");
           return { ok: true, approach, backfired: false };
         }
-        r.corruptGov = Math.max(0, r.corruptGov - randInt(5, 10));
+        r.corruptGov = clamp(r.corruptGov - randInt(5, 10) + govBonus, 0, 100);
         r.heat = Math.min(100, r.heat + randInt(15, 25));
         log(`La presión de ${cartel.name} se filtra: un funcionario denuncia el intento y la red de corrupción se resiente.`, "event");
         return { ok: true, approach, backfired: true };
       }
-      r.corruptGov = Math.min(100, r.corruptGov + randInt(4, 9));
+      r.corruptGov = clamp(r.corruptGov + randInt(4, 9) + govBonus, 0, 100);
       r.heat = Math.max(0, r.heat - randInt(2, 5));
       log(`${cartel.name} soborna a funcionarios del gobierno.`, "good");
       return { ok: true, approach };
@@ -265,25 +282,27 @@ export function applyAction(game, cartelId, type, payload = {}) {
       if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
       r.money -= cost;
       const approach = payload.approach || "standard";
+      const policeChief = game.characters[cartel.roles.corruptionPoliceChief];
+      const policeBonus = corruptionChiefBonus(policeChief);
       if (approach === "quiet") {
-        r.corruptPolice = Math.min(100, r.corruptPolice + randInt(3, 6));
+        r.corruptPolice = clamp(r.corruptPolice + randInt(3, 6) + policeBonus, 0, 100);
         r.heat = Math.max(0, r.heat - randInt(5, 10));
         log(`${cartel.name} construye discretamente una red de contactos policiales, sin llamar la atención.`, "good");
         return { ok: true, approach };
       }
       if (approach === "aggressive") {
-        if (chance(0.8)) {
-          r.corruptPolice = Math.min(100, r.corruptPolice + randInt(8, 15));
+        if (chance(corruptionAggressiveChance(policeChief))) {
+          r.corruptPolice = clamp(r.corruptPolice + randInt(8, 15) + policeBonus, 0, 100);
           r.heat = Math.min(100, r.heat + randInt(3, 8));
           log(`${cartel.name} presiona con dinero y amenazas veladas a mandos policiales reacios, ampliando su red de corrupción de golpe.`, "good");
           return { ok: true, approach, backfired: false };
         }
-        r.corruptPolice = Math.max(0, r.corruptPolice - randInt(5, 10));
+        r.corruptPolice = clamp(r.corruptPolice - randInt(5, 10) + policeBonus, 0, 100);
         r.heat = Math.min(100, r.heat + randInt(15, 25));
         log(`La presión de ${cartel.name} se filtra: un mando policial denuncia el intento y la red de corrupción se resiente.`, "event");
         return { ok: true, approach, backfired: true };
       }
-      r.corruptPolice = Math.min(100, r.corruptPolice + randInt(4, 9));
+      r.corruptPolice = clamp(r.corruptPolice + randInt(4, 9) + policeBonus, 0, 100);
       r.heat = Math.max(0, r.heat - randInt(2, 5));
       log(`${cartel.name} soborna a mandos policiales.`, "good");
       return { ok: true, approach };

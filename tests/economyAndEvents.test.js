@@ -164,6 +164,70 @@ test("corrupt_gov and corrupt_police's 'aggressive' approach can backfire, dropp
   }
 });
 
+test("a skilled corruptionGovChief/corruptionPoliceChief genuinely gains more ground (and a weak one less) than an average chief in the same seat", () => {
+  for (const { type, field, role } of [
+    { type: "corrupt_gov", field: "corruptGov", role: "corruptionGovChief" },
+    { type: "corrupt_police", field: "corruptPolice", role: "corruptionPoliceChief" },
+  ]) {
+    const skilledGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    const skilledChief = skilledGame.characters[skilledGame.cartels.sinaloa.roles[role]];
+    skilledChief.stats.charisma = 100;
+    skilledChief.stats.intrigue = 100;
+
+    const weakGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    const weakChief = weakGame.characters[weakGame.cartels.sinaloa.roles[role]];
+    weakChief.stats.charisma = 1;
+    weakChief.stats.intrigue = 1;
+
+    const originalRandom = Math.random;
+    try {
+      Math.random = () => 0.5; // pins the base randInt roll identically in both games
+      const skilledBefore = skilledGame.cartels.sinaloa.resources[field];
+      applyAction(skilledGame, "sinaloa", type, { approach: "standard" });
+      const skilledGain = skilledGame.cartels.sinaloa.resources[field] - skilledBefore;
+
+      const weakBefore = weakGame.cartels.sinaloa.resources[field];
+      applyAction(weakGame, "sinaloa", type, { approach: "standard" });
+      const weakGain = weakGame.cartels.sinaloa.resources[field] - weakBefore;
+
+      assert.ok(skilledGain > weakGain, `${type}: a charismatic, cunning chief (skill 100) should out-perform a weak one (skill 1) at the identical base roll`);
+    } finally {
+      Math.random = originalRandom;
+    }
+  }
+});
+
+test("a highly skilled corruption chief makes the 'aggressive' approach meaningfully safer than a weak one", () => {
+  for (const { type, role } of [
+    { type: "corrupt_gov", role: "corruptionGovChief" },
+    { type: "corrupt_police", role: "corruptionPoliceChief" },
+  ]) {
+    const skilledGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    const skilledChief = skilledGame.characters[skilledGame.cartels.sinaloa.roles[role]];
+    skilledChief.stats.charisma = 100;
+    skilledChief.stats.intrigue = 100;
+    // skill 100 -> chance = clamp(0.8 + 50/250, 0.5, 0.95) = 0.95
+
+    const weakGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    const weakChief = weakGame.characters[weakGame.cartels.sinaloa.roles[role]];
+    weakChief.stats.charisma = 1;
+    weakChief.stats.intrigue = 1;
+    // skill ~1 -> chance = clamp(0.8 - 49/250, 0.5, 0.95) = 0.604
+
+    const originalRandom = Math.random;
+    try {
+      Math.random = () => 0.7; // between the weak chief's ~0.6 chance (fails) and the skilled chief's 0.95 (succeeds)
+      const weakResult = applyAction(weakGame, "sinaloa", type, { approach: "aggressive" });
+      assert.equal(weakResult.backfired, true, `${type}: a weak chief's aggressive push should backfire at this roll`);
+
+      const skilledResult = applyAction(skilledGame, "sinaloa", type, { approach: "aggressive" });
+      assert.equal(skilledResult.backfired, false, `${type}: the same roll should succeed for a highly skilled chief`);
+    } finally {
+      Math.random = originalRandom;
+    }
+  }
+});
+
 test("develop_territory permanently raises a territory's value when affordable, and refuses once maxed out", () => {
   const game = newGame("mexico-rutas-1990-2006.json", "sinaloa");
   const cartel = game.cartels.sinaloa;
