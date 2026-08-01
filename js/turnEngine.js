@@ -1610,7 +1610,7 @@ export function endTurn(game) {
   const scriptedResult = rollScriptedEvents(game, (t, ty) => addLog(game, t, ty), year);
   deaths.push(...scriptedResult.deaths);
   const policeResult = rollPoliceOperations(game, (t, ty) => addLog(game, t, ty), year);
-  const arrests = policeResult.arrests;
+  const arrests = [...policeResult.arrests, ...scriptedResult.arrests];
   incomeTick(game);
   checkLandlessCollapse(game);
   driftBonds(game);

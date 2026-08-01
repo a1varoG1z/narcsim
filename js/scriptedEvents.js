@@ -25,6 +25,25 @@ function killScriptedCharacter(game, characterId, addLog, causeText) {
   return [{ characterId: c.id, cartelId: c.cartelId, wasLeader, role: c.role }];
 }
 
+/** Same principle as killScriptedCharacter, for a scripted arrest instead of a death: an NPC's
+ * historical capture plays out as a life sentence, but the player gets the same 55% chance to
+ * defy the historical record and evade it. Returns an entry in the `arrests` shape that endTurn's
+ * own arrests loop already knows how to process (see rollPoliceOperations), so a life-sentence
+ * arrest here correctly triggers a succession choice if it lands on the player's own character. */
+function imprisonScriptedCharacter(game, characterId, addLog, causeText) {
+  const c = game.characters[characterId];
+  if (!c || !c.alive || c.imprisoned) return [];
+  if (characterId === game.playerCharacterId && !chance(0.55)) {
+    addLog(`Desafías al destino: evitas la captura que en la vida real terminó con ${c.name} preso (${causeText}).`, "good");
+    return [];
+  }
+  c.imprisoned = { sinceTurn: game.turn, releaseTurn: null, lifeSentence: true };
+  addLog(`${c.name} es detenido/a en ${causeText}. Enfrenta cadena perpetua.`, "death");
+  const cartel = game.cartels[c.cartelId];
+  const wasLeader = !!cartel && cartel.roles.leader === c.id;
+  return [{ characterId: c.id, cartelId: c.cartelId, wasLeader, lifeSentence: true }];
+}
+
 function openWarEntry(game, aId, bId) {
   if (!game.warHistory) game.warHistory = [];
   const key = [aId, bId].sort().join("|");
@@ -258,6 +277,18 @@ export const SCRIPTED_EVENTS = {
         return [];
       },
     },
+    {
+      id: "caida-arellano-felix-2002",
+      year: 2002,
+      run(game, addLog) {
+        // The real 2002 collapse of the Tijuana leadership, weeks apart: Ramón dies in a shootout
+        // with local police (an unglamorous death — he ran a red light and was recognized), then
+        // Benjamín is captured shortly after. Modeled as one beat since both land the same year.
+        const deaths = killScriptedCharacter(game, "ramon_arellano", addLog, "un tiroteo con la policía en Mazatlán, tras ser reconocido en un control de tráfico");
+        const arrests = imprisonScriptedCharacter(game, "benjamin_arellano", addLog, "una redada del Ejército en Puebla, semanas después de la muerte de su hermano Ramón");
+        return { deaths, arrests };
+      },
+    },
   ],
   "fragmentacion-2006-2015": [
     {
@@ -441,14 +472,18 @@ export const SCRIPTED_EVENTS = {
   ],
 };
 
-/** Returns { deaths, pendingChoice }. Interactive events pause for a player decision instead of
- * auto-resolving when the player controls the affected cartel; they stay unfired until resolved
- * via resolveScriptedChoice, so they're offered again next turn if a modal collision defers them.
- * When an NPC/AI cartel is affected instead, the event just plays out as it did historically. */
+/** Returns { deaths, arrests, pendingChoice }. Interactive events pause for a player decision
+ * instead of auto-resolving when the player controls the affected cartel; they stay unfired until
+ * resolved via resolveScriptedChoice, so they're offered again next turn if a modal collision
+ * defers them. When an NPC/AI cartel is affected instead, the event just plays out as it did
+ * historically. A non-interactive event's run() can return either a plain array (treated as
+ * deaths, the original/default shape) or a { deaths, arrests } object for events that also need
+ * to feed an arrest into endTurn's own arrests-processing loop (see imprisonScriptedCharacter). */
 export function rollScriptedEvents(game, addLog, year) {
   if (!game.firedScriptedEvents) game.firedScriptedEvents = [];
   const events = SCRIPTED_EVENTS[game.eraId] || [];
   const deaths = [];
+  const arrests = [];
   let pendingChoice = null;
   for (const ev of events) {
     if (game.firedScriptedEvents.includes(ev.id)) continue;
@@ -462,11 +497,16 @@ export function rollScriptedEvents(game, addLog, year) {
       }
       continue;
     }
-    const evDeaths = ev.run(game, addLog) || [];
-    deaths.push(...evDeaths);
+    const evResult = ev.run(game, addLog) || [];
+    if (Array.isArray(evResult)) {
+      deaths.push(...evResult);
+    } else {
+      deaths.push(...(evResult.deaths || []));
+      arrests.push(...(evResult.arrests || []));
+    }
     game.firedScriptedEvents.push(ev.id);
   }
-  return { deaths, pendingChoice };
+  return { deaths, arrests, pendingChoice };
 }
 
 export function resolveScriptedChoice(game, addLog, eventId, optionId) {

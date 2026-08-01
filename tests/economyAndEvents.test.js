@@ -1043,6 +1043,85 @@ test("the Proceso 8000 (1995) event pauses for a player choice when the player c
   assert.equal(npcGame.firedScriptedEvents.includes("proceso-8000-1995"), true);
 });
 
+test("the 2002 fall of the Arellano Félix brothers kills Ramón and imprisons Benjamín for life when neither is the player, handing Tijuana a new leader", () => {
+  const era = loadEra("mexico-rutas-1990-2006.json");
+  const npcGame = buildGameFromEra(era, { mode: "existing", cartelId: "sinaloa", characterId: "chapo_guzman" });
+  // Jumping straight to 2002 (rather than simulating turn-by-turn) means this era's earlier,
+  // unrelated scripted events (1997, 2001) would also be "due" and fire alongside this one —
+  // mark them as already resolved, exactly as real turn-by-turn play would have by this point.
+  npcGame.firedScriptedEvents = ["muerte-amado-1997", "fuga-chapo-2001"];
+
+  const result = rollScriptedEvents(npcGame, () => {}, 2002);
+  assert.equal(result.deaths.length, 1);
+  assert.equal(result.deaths[0].characterId, "ramon_arellano");
+  assert.equal(result.arrests.length, 1);
+  assert.equal(result.arrests[0].characterId, "benjamin_arellano");
+  assert.equal(result.arrests[0].lifeSentence, true);
+  assert.equal(result.arrests[0].wasLeader, true, "Benjamín was Tijuana's leader at the time");
+
+  assert.equal(npcGame.characters.ramon_arellano.alive, false);
+  assert.equal(npcGame.characters.ramon_arellano.deathCause, "un tiroteo con la policía en Mazatlán, tras ser reconocido en un control de tráfico");
+  assert.equal(npcGame.characters.benjamin_arellano.imprisoned.lifeSentence, true);
+  assert.equal(npcGame.firedScriptedEvents.includes("caida-arellano-felix-2002"), true);
+});
+
+test("the 2002 fall of the Arellano Félix brothers gives the player a 55% chance to defy fate when controlling either Ramón or Benjamín directly", () => {
+  const era = loadEra("mexico-rutas-1990-2006.json");
+  const originalRandom = Math.random;
+  try {
+    const ramonSurvives = buildGameFromEra(era, { mode: "existing", cartelId: "tijuana", characterId: "ramon_arellano" });
+    ramonSurvives.firedScriptedEvents = ["muerte-amado-1997", "fuga-chapo-2001"];
+    Math.random = () => 0.99; // >= 0.55, so the survival chance() call fails and he lives
+    const survivedResult = rollScriptedEvents(ramonSurvives, () => {}, 2002);
+    assert.equal(survivedResult.deaths.length, 0, "Ramón should survive when the roll favors the player");
+    assert.equal(ramonSurvives.characters.ramon_arellano.alive, true);
+    // Benjamín's arrest still happens independently in the same event beat.
+    assert.equal(survivedResult.arrests.length, 1);
+    assert.equal(survivedResult.arrests[0].characterId, "benjamin_arellano");
+
+    const ramonDies = buildGameFromEra(era, { mode: "existing", cartelId: "tijuana", characterId: "ramon_arellano" });
+    ramonDies.firedScriptedEvents = ["muerte-amado-1997", "fuga-chapo-2001"];
+    Math.random = () => 0; // < 0.55, so the roll succeeds and the historical death goes through
+    const diedResult = rollScriptedEvents(ramonDies, () => {}, 2002);
+    assert.equal(diedResult.deaths.length, 1);
+    assert.equal(ramonDies.characters.ramon_arellano.alive, false);
+
+    const benjaminEvades = buildGameFromEra(era, { mode: "existing", cartelId: "tijuana", characterId: "benjamin_arellano" });
+    benjaminEvades.firedScriptedEvents = ["muerte-amado-1997", "fuga-chapo-2001"];
+    Math.random = () => 0.99;
+    const evadedResult = rollScriptedEvents(benjaminEvades, () => {}, 2002);
+    assert.equal(evadedResult.arrests.length, 0, "Benjamín should evade capture when the roll favors the player");
+    assert.equal(benjaminEvades.characters.benjamin_arellano.imprisoned, null);
+    // Ramón's death still happens independently.
+    assert.equal(evadedResult.deaths.length, 1);
+
+    const benjaminCaptured = buildGameFromEra(era, { mode: "existing", cartelId: "tijuana", characterId: "benjamin_arellano" });
+    benjaminCaptured.firedScriptedEvents = ["muerte-amado-1997", "fuga-chapo-2001"];
+    Math.random = () => 0;
+    const capturedResult = rollScriptedEvents(benjaminCaptured, () => {}, 2002);
+    assert.equal(capturedResult.arrests.length, 1);
+    assert.equal(benjaminCaptured.characters.benjamin_arellano.imprisoned.lifeSentence, true);
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("a scripted arrest correctly flows through endTurn's own arrests-processing loop and surfaces a pendingSuccession when it lands on the player", () => {
+  const era = loadEra("mexico-rutas-1990-2006.json");
+  const game = buildGameFromEra(era, { mode: "existing", cartelId: "tijuana", characterId: "benjamin_arellano" });
+  game.turn = 24; // land squarely on 2002 given this era's start year/turn length
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0; // guarantees the historical arrest goes through
+    const result = endTurn(game);
+    assert.ok(result.pendingSuccession, "a life-sentence arrest of the player's own character should surface a succession choice");
+    assert.equal(result.pendingSuccession.deceasedId, "benjamin_arellano");
+    assert.equal(result.pendingSuccession.reason, "arrest-life");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
 test("the Posadas Ocampo (1993) event pauses for a player choice when the player controls Tijuana, and applies immediately for NPC-controlled Tijuana", () => {
   const era = loadEra("mexico-rutas-1990-2006.json");
 
