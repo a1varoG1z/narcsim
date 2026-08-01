@@ -639,6 +639,87 @@ test("raid_territory only works on an adjacent enemy-owned territory, causing ca
   assert.equal(game.territories[adjacentEnemyTerritory].controllerId, defender.id, "a raid should never transfer ownership");
 });
 
+test("intimidate_territory only works on an adjacent enemy-owned territory, and unlike raid_territory never causes casualties", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  cartel.resources.money = 100_000_000;
+
+  const notAdjacent = applyAction(game, "sinaloa", "intimidate_territory", { territoryId: "tamaulipas" }); // owned by golfo, not adjacent to sinaloa
+  assert.equal(notAdjacent.ok, false);
+
+  const ownTerritory = applyAction(game, "sinaloa", "intimidate_territory", { territoryId: cartel.territories[0] });
+  assert.equal(ownTerritory.ok, false);
+
+  const adjacentEnemyTerritory = "jalisco"; // owned by cjng, adjacent to sinaloa's chihuahua in this era
+  const defender = game.cartels[game.territories[adjacentEnemyTerritory].controllerId];
+  const armyBefore = defender.resources.armySize;
+
+  const result = applyAction(game, "sinaloa", "intimidate_territory", { territoryId: adjacentEnemyTerritory });
+  assert.equal(result.ok, true);
+  assert.equal(defender.resources.armySize, armyBefore, "intimidation should never cause casualties, unlike a raid");
+  assert.equal(game.territories[adjacentEnemyTerritory].controllerId, defender.id, "intimidation should never transfer ownership");
+});
+
+test("intimidate_territory's success damages the defender's public image and the territory's value with no bloodshed; failure costs more heat instead", () => {
+  const originalRandom = Math.random;
+  try {
+    const successGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    successGame.cartels.sinaloa.resources.money = 100_000_000;
+    const target = "jalisco"; // owned by cjng
+    const defender = successGame.cartels[successGame.territories[target].controllerId];
+    const imageBefore = defender.resources.publicImage;
+    const valueBefore = successGame.territories[target].value;
+    const heatBefore = successGame.cartels.sinaloa.resources.heat;
+    Math.random = () => 0; // guarantees chance() succeeds
+    const successResult = applyAction(successGame, "sinaloa", "intimidate_territory", { territoryId: target });
+    assert.equal(successResult.ok, true);
+    assert.equal(successResult.success, true);
+    assert.ok(defender.resources.publicImage < imageBefore, "a successful intimidation should damage the defender's public image");
+    assert.ok(successGame.territories[target].value < valueBefore);
+    assert.ok(successGame.cartels.sinaloa.resources.heat > heatBefore, "even a success is loud enough to raise the attacker's own heat");
+
+    const failGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    failGame.cartels.sinaloa.resources.money = 100_000_000;
+    const failDefender = failGame.cartels[failGame.territories[target].controllerId];
+    const failImageBefore = failDefender.resources.publicImage;
+    const failHeatBefore = failGame.cartels.sinaloa.resources.heat;
+    Math.random = () => 0.99; // guarantees chance() fails
+    const failResult = applyAction(failGame, "sinaloa", "intimidate_territory", { territoryId: target });
+    assert.equal(failResult.ok, true);
+    assert.equal(failResult.success, false);
+    assert.equal(failDefender.resources.publicImage, failImageBefore, "a failed attempt shouldn't damage the defender at all");
+    const failHeatGain = failGame.cartels.sinaloa.resources.heat - failHeatBefore;
+    const successHeatGain = successGame.cartels.sinaloa.resources.heat - heatBefore;
+    assert.ok(failHeatGain > successHeatGain, "getting exposed while failing should cost more heat than a clean success");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("intimidate_territory records an 'intimidated' reactive event when the player's cartel is the target", () => {
+  const originalRandom = Math.random;
+  try {
+    const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    game.cartels.cjng.resources.money = ACTION_COSTS.intimidate_territory * 10;
+    game._reactiveEvents = [];
+    Math.random = () => 0;
+    const target = "sinaloa_t"; // owned by sinaloa, adjacent to cjng's jalisco in this era
+    const result = applyAction(game, "cjng", "intimidate_territory", { territoryId: target });
+    assert.equal(result.ok, true);
+    assert.equal(result.success, true);
+    assert.equal(game._reactiveEvents.length, 1);
+    assert.deepEqual(game._reactiveEvents[0], {
+      type: "intimidated",
+      byCartelId: "cjng",
+      byCartelName: game.cartels.cjng.name,
+      territoryName: game.territories[target].name,
+      success: true,
+    });
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
 test("invest_property and invest_business grant permanent passive income that shows up in getIncomeBreakdown", () => {
   const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
   const cartel = game.cartels.sinaloa;

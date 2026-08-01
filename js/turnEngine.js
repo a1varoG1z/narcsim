@@ -112,6 +112,7 @@ export const ACTION_COSTS = {
   recruit_informant: 150 * MONEY_SCALE,
   poach_member: 350 * MONEY_SCALE,
   raid_territory: 150 * MONEY_SCALE,
+  intimidate_territory: 70 * MONEY_SCALE,
   invest_property: 400 * MONEY_SCALE,
   invest_art: 300 * MONEY_SCALE,
   invest_business: 500 * MONEY_SCALE,
@@ -861,6 +862,50 @@ export function applyAction(game, cartelId, type, payload = {}) {
       log(`${cartel.name} realiza una redada contra instalaciones de ${defender.name} en ${territory.name}, dejando ${casualties} bajas y dañando la zona.`, "event");
       return { ok: true, casualties, newValue: territory.value };
     }
+    case "intimidate_territory": {
+      // Deliberately distinct from raid_territory: a loud, public show of force with no armed
+      // clash and no casualties on either side — think burned trucks, threatening messages, a
+      // convoy parading through the plaza — that scares local business away and damages the
+      // rival's standing there, instead of physically destroying anything.
+      const cost = ACTION_COSTS.intimidate_territory;
+      const territory = game.territories[payload.territoryId];
+      if (!territory || !territory.controllerId || territory.controllerId === cartelId) {
+        return { ok: false, message: "Objetivo no válido." };
+      }
+      if (!isAttackable(game, cartelId, territory.id)) {
+        return { ok: false, message: "Ese territorio no linda con ninguno de tus dominios." };
+      }
+      if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
+      const defender = game.cartels[territory.controllerId];
+      r.money -= cost;
+      const enforcer = game.characters[cartel.roles.sicariosChief];
+      const threatSkill = (enforcer ? enforcer.stats.violence : 40) + (r.armySize - defender.resources.armySize) / 40;
+      const successChance = clamp(0.5 + (threatSkill - 50) / 250 - defender.resources.corruptPolice / 300, 0.2, 0.85);
+      const status = cartel.relations[defender.id]?.status || "neutral";
+      if (chance(successChance)) {
+        defender.resources.publicImage = Math.max(0, defender.resources.publicImage - randInt(8, 15));
+        territory.value = Math.max(1, territory.value - randInt(1, 2));
+        defender.resources.heat = Math.min(100, defender.resources.heat + randInt(2, 5));
+        r.heat = Math.min(100, r.heat + randInt(6, 12));
+        const tension = clamp((cartel.relations[defender.id]?.tension || 30) + randInt(6, 14), 0, 100);
+        cartel.relations[defender.id] = { status, tension };
+        defender.relations[cartelId] = { status, tension };
+        log(`${cartel.name} intimida abiertamente a ${defender.name} en ${territory.name}, dañando su reputación local sin derramar sangre.`, "event");
+        if (game._reactiveEvents && defender.id === game.playerCartelId) {
+          game._reactiveEvents.push({ type: "intimidated", byCartelId: cartel.id, byCartelName: cartel.name, territoryName: territory.name, success: true });
+        }
+        return { ok: true, success: true, newValue: territory.value };
+      }
+      r.heat = Math.min(100, r.heat + randInt(12, 20));
+      const tension = clamp((cartel.relations[defender.id]?.tension || 30) + randInt(10, 20), 0, 100);
+      cartel.relations[defender.id] = { status, tension };
+      defender.relations[cartelId] = { status, tension };
+      log(`El intento de ${cartel.name} de intimidar a ${defender.name} en ${territory.name} fracasa y expone la amenaza.`, "event");
+      if (game._reactiveEvents && defender.id === game.playerCartelId) {
+        game._reactiveEvents.push({ type: "intimidated", byCartelId: cartel.id, byCartelName: cartel.name, territoryName: territory.name, success: false });
+      }
+      return { ok: true, success: false };
+    }
     case "invest_property": {
       const cost = ACTION_COSTS.invest_property;
       if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
@@ -1174,6 +1219,9 @@ function runAiCartels(game) {
     if (raidable.length && r.money >= ACTION_COSTS.raid_territory) {
       options.push({ item: "raid_territory", weight: atWar ? 2 : 0.8 });
     }
+    if (raidable.length && r.money >= ACTION_COSTS.intimidate_territory) {
+      options.push({ item: "intimidate_territory", weight: atWar ? 1 : 1.2 });
+    }
     if (r.money >= ACTION_COSTS.invest_property) options.push({ item: "invest_property", weight: 1.5 });
     if (r.money >= ACTION_COSTS.invest_art) options.push({ item: "invest_art", weight: 1 });
     if (r.artValue > 0) options.push({ item: "sell_art", weight: r.money < ACTION_COSTS.recruit_army ? 3 : 0.5 });
@@ -1259,6 +1307,14 @@ function runAiCartels(game) {
     if (choice === "raid_territory") {
       if (raidable.length) {
         applyAction(game, cartel.id, "raid_territory", { territoryId: pick(raidable) });
+        continue;
+      }
+      choice = "recruit_army";
+      if (!canAfford(cartel, choice)) continue;
+    }
+    if (choice === "intimidate_territory") {
+      if (raidable.length) {
+        applyAction(game, cartel.id, "intimidate_territory", { territoryId: pick(raidable) });
         continue;
       }
       choice = "recruit_army";

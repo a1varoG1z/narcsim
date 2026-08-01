@@ -1,5 +1,5 @@
 import { buildGameFromEra, restoreSlot, persist, getPlayerCartel } from "./state.js";
-import { endTurn, resolveSuccession, resolveRegentChoice, getSuccessionCandidates, checkRelease, attemptEscape, resolveMarriageEvent, resolveScriptedChoice, resolveRaidTip, applyAction, ACTION_COSTS, MONEY_SCALE } from "./turnEngine.js";
+import { endTurn, resolveSuccession, resolveRegentChoice, getSuccessionCandidates, checkRelease, attemptEscape, resolveMarriageEvent, resolveScriptedChoice, resolveRaidTip, applyAction, ACTION_COSTS, MONEY_SCALE, isAttackable } from "./turnEngine.js";
 import { showModal, closeModal } from "./ui/modal.js";
 import { portraitImg, escapeHtml } from "./ui/components.js";
 import { deleteSaveSlot } from "./utils/storage.js";
@@ -126,13 +126,14 @@ const app = {
     const poachings = (reactiveEvents || []).filter((e) => e.type === "poached");
     const interceptions = (reactiveEvents || []).filter((e) => e.type === "shipmentIntercepted");
     const hits = (reactiveEvents || []).filter((e) => e.type === "assassinationAttempted");
+    const intimidations = (reactiveEvents || []).filter((e) => e.type === "intimidated");
     showModal(`
       <h2>Resumen del turno</h2>
       <p>Esto ha pasado mientras avanzabas el tiempo:</p>
       <div class="log" style="margin-bottom:1rem">
         ${events.map((e) => `<div class="entry ${e.type}">${icon(e.type)} ${escapeHtml(e.text)}</div>`).join("")}
       </div>
-      ${territoryLosses.length || sabotages.length || interceptions.length || hits.length ? `<h3>¿Reaccionas ahora?</h3>` : ""}
+      ${territoryLosses.length || sabotages.length || interceptions.length || hits.length || intimidations.length ? `<h3>¿Reaccionas ahora?</h3>` : ""}
       ${poachings.map((e) => `
         <div class="card tight mt-1">
           <p class="small">${e.success ? `${escapeHtml(e.byCartelName)} se ha llevado a <strong>${escapeHtml(e.characterName)}</strong> a sus filas.` : `${escapeHtml(e.byCartelName)} ha intentado reclutar a ${escapeHtml(e.characterName)} (el intento fracasó).`}</p>
@@ -164,6 +165,12 @@ const app = {
             : `ha intentado asesinar a ${escapeHtml(e.characterName)} (el intento fracasó).`
           }</p>
           <button class="danger block" data-retaliate-hit="hit-${i}" data-target="${e.byCartelId}">Represalia: ordenar un atentado contra su líder (${fmtMoney(ACTION_COSTS.assassinate_rival)})</button>
+        </div>
+      `).join("")}
+      ${intimidations.map((e, i) => `
+        <div class="card tight mt-1" data-reactive-row="intimidate-${i}">
+          <p class="small">${escapeHtml(e.byCartelName)} ${e.success ? `te ha intimidado en <strong>${escapeHtml(e.territoryName)}</strong>, dañando tu reputación local` : `ha intentado intimidarte en ${escapeHtml(e.territoryName)} (el intento fracasó)`}.</p>
+          <button class="danger block" data-retaliate-intimidate="intimidate-${i}" data-target="${e.byCartelId}">Represalia: intimidarles de vuelta (${fmtMoney(ACTION_COSTS.intimidate_territory)})</button>
         </div>
       `).join("")}
       <button class="primary block mt-1" id="turn-summary-ok">Continuar</button>
@@ -238,6 +245,29 @@ const app = {
             : result.success
               ? `El atentado contra ${leader.name} tiene éxito.`
               : "Tu represalia fracasa y expone tu autoría.";
+        }
+        row.appendChild(msg);
+        btn.disabled = true;
+      });
+    });
+    document.querySelectorAll("[data-retaliate-intimidate]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const cartel = getPlayerCartel(this.game);
+        const targetCartel = this.game.cartels[btn.dataset.target];
+        const reachable = targetCartel ? targetCartel.territories.find((tId) => isAttackable(this.game, cartel.id, tId)) : null;
+        const row = btn.closest("[data-reactive-row]");
+        const msg = document.createElement("p");
+        msg.className = "small";
+        if (!reachable) {
+          msg.textContent = "No tienes ningún territorio suyo colindante con el tuyo al que intimidar.";
+        } else {
+          const result = applyAction(this.game, cartel.id, "intimidate_territory", { territoryId: reachable });
+          persist(this.game);
+          msg.textContent = !result.ok
+            ? result.message
+            : result.success
+              ? "La intimidación funciona: dañas su reputación local sin derramar sangre."
+              : "Tu represalia fracasa y expone la amenaza.";
         }
         row.appendChild(msg);
         btn.disabled = true;

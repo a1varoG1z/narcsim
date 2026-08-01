@@ -24,7 +24,7 @@ export function render(container, app) {
   container.innerHTML = `
     <div class="card">
       <h2>Relaciones exteriores</h2>
-      <p class="text-dim small">Declarar guerra, atacar, ocupar, proponer paz/alianza y concentrar fuerzas en un frente no gastan acciones. Ordenar un atentado, sabotear, hacer una redada, reclutar informantes, reclutar a un miembro rival e interceptar un cargamento sí (te quedan ${getActionsRemaining(game)}).</p>
+      <p class="text-dim small">Declarar guerra, atacar, ocupar, proponer paz/alianza y concentrar fuerzas en un frente no gastan acciones. Ordenar un atentado, sabotear, hacer una redada, intimidar, reclutar informantes, reclutar a un miembro rival e interceptar un cargamento sí (te quedan ${getActionsRemaining(game)}).</p>
       ${others.map((o) => {
         const rel = cartel.relations[o.id] || { status: "neutral", tension: 0 };
         return `
@@ -46,6 +46,7 @@ export function render(container, app) {
             <button class="danger" data-sabotage="${o.id}" ${cartel.resources.money < ACTION_COSTS.sabotage_rival || noActionsLeft ? "disabled" : ""}>Sabotear</button>
             <button class="danger" data-intercept="${o.id}" ${cartel.resources.money < ACTION_COSTS.intercept_shipment || noActionsLeft ? "disabled" : ""}>Interceptar un cargamento</button>
             <button class="danger" data-raid="${o.id}" ${cartel.resources.money < ACTION_COSTS.raid_territory || noActionsLeft ? "disabled" : ""}>Redada</button>
+            <button class="danger" data-intimidate="${o.id}" ${cartel.resources.money < ACTION_COSTS.intimidate_territory || noActionsLeft ? "disabled" : ""}>Intimidar</button>
             <button data-informant="${o.id}" ${cartel.resources.money < ACTION_COSTS.recruit_informant || noActionsLeft || hasActiveInformant(cartel, o.id) ? "disabled" : ""}>Reclutar informante</button>
             <button data-poach="${o.id}" ${cartel.resources.money < ACTION_COSTS.poach_member || noActionsLeft ? "disabled" : ""}>Reclutar a un miembro</button>
           </div>
@@ -118,6 +119,9 @@ export function render(container, app) {
   container.querySelectorAll("[data-raid]").forEach((btn) => btn.addEventListener("click", () => {
     showRaidModal(app, game, cartel, btn.dataset.raid);
   }));
+  container.querySelectorAll("[data-intimidate]").forEach((btn) => btn.addEventListener("click", () => {
+    showIntimidateModal(app, game, cartel, btn.dataset.intimidate);
+  }));
   container.querySelectorAll("[data-informant]").forEach((btn) => btn.addEventListener("click", () => {
     if (!confirm(`¿Reclutar un informante dentro de ${game.cartels[btn.dataset.informant].name} por ${fmtMoney(ACTION_COSTS.recruit_informant)}?`)) return;
     const result = applyAction(game, cartel.id, "recruit_informant", { targetCartelId: btn.dataset.informant });
@@ -161,6 +165,34 @@ function showPoachModal(app, game, cartel, targetCartelId) {
       closeModal();
       if (!result.ok) alert(result.message);
       else alert(result.success ? "Se une a tu cártel." : "El intento fracasa y expone la maniobra.");
+      app.render();
+    });
+  });
+}
+
+function showIntimidateModal(app, game, cartel, targetCartelId) {
+  const target = game.cartels[targetCartelId];
+  const reachable = target.territories.filter((tId) => isAttackable(game, cartel.id, tId)).map((tId) => game.territories[tId]);
+
+  showModal(`
+    <h2>Intimidar a ${escapeHtml(target.name)}</h2>
+    <p class="small text-dim">Coste: ${fmtMoney(ACTION_COSTS.intimidate_territory)}. Un despliegue de amenazas en un territorio suyo colindante con el tuyo, sin enfrentamiento armado: si sale bien, daña su reputación local y el valor del territorio, sin bajas para nadie. Si fracasa, la amenaza queda expuesta y te cuesta más heat.</p>
+    ${reachable.length ? reachable.map((t) => `
+      <button class="block" data-territory="${t.id}">
+        ${escapeHtml(t.name)}
+        <div class="small text-dim">Valor económico: ${t.value}</div>
+      </button>
+    `).join("") : `<p class="small text-dim">No tienes ningún territorio colindante con los suyos.</p>`}
+    <button class="ghost block" id="close-btn">Cancelar</button>
+  `);
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.querySelectorAll("[data-territory]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const result = applyAction(game, cartel.id, "intimidate_territory", { territoryId: btn.dataset.territory });
+      app.setGame(game);
+      closeModal();
+      if (!result.ok) alert(result.message);
+      else alert(result.success ? "La intimidación funciona: dañas su reputación local sin derramar sangre." : "El intento fracasa y expone la amenaza.");
       app.render();
     });
   });
