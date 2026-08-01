@@ -127,6 +127,23 @@ export const SCRIPTED_EVENTS = {
         }
       },
     },
+    {
+      id: "arresto-felix-gallardo-1989",
+      year: 1989,
+      run(game, addLog) {
+        // The real end of the unified Guadalajara Cartel: Félix Gallardo's arrest, and — per the
+        // well-documented account — the division of the country's smuggling corridors among his
+        // lieutenants shortly before/after it, the direct origin of the Tijuana, Sinaloa, and
+        // Juárez cartels of the following decades.
+        const arrests = imprisonScriptedCharacter(
+          game,
+          "felix_gallardo",
+          addLog,
+          "una redada en Guadalajara, poco después de repartir las plazas del país entre sus lugartenientes en una reunión en Acapulco — el origen directo de los cárteles de Tijuana, Sinaloa y Juárez de las décadas siguientes"
+        );
+        return { deaths: [], arrests };
+      },
+    },
   ],
   "medellin-cali-1980-1995": [
     {

@@ -1326,6 +1326,43 @@ test("the Camarena 1985 event pauses for a player choice when the player control
   assert.equal(npcGame.firedScriptedEvents.includes("camarena-1985"), true);
 });
 
+test("Félix Gallardo's 1989 arrest imprisons him for life and hands Guadalajara a new leader when he's not the player", () => {
+  const era = loadEra("guadalajara-1975-1989.json");
+  const npcGame = buildGameFromEra(era, { mode: "existing", cartelId: "golfo", characterId: "garcia_abrego" });
+  npcGame.firedScriptedEvents = ["camarena-1985"]; // already resolved by the time we jump to 1989
+
+  const result = rollScriptedEvents(npcGame, () => {}, 1989);
+  assert.equal(result.deaths.length, 0);
+  assert.equal(result.arrests.length, 1);
+  assert.equal(result.arrests[0].characterId, "felix_gallardo");
+  assert.equal(result.arrests[0].lifeSentence, true);
+  assert.equal(result.arrests[0].wasLeader, true);
+  assert.equal(npcGame.characters.felix_gallardo.imprisoned.lifeSentence, true);
+  assert.equal(npcGame.firedScriptedEvents.includes("arresto-felix-gallardo-1989"), true);
+});
+
+test("Félix Gallardo's 1989 arrest gives the player a 55% chance to evade capture when controlling him directly", () => {
+  const era = loadEra("guadalajara-1975-1989.json");
+  const originalRandom = Math.random;
+  try {
+    const evades = buildGameFromEra(era, { mode: "existing", cartelId: "guadalajara", characterId: "felix_gallardo" });
+    evades.firedScriptedEvents = ["camarena-1985"];
+    Math.random = () => 0.99; // >= 0.55, so the evasion roll succeeds
+    const evadedResult = rollScriptedEvents(evades, () => {}, 1989);
+    assert.equal(evadedResult.arrests.length, 0, "Félix Gallardo should evade capture when the roll favors the player");
+    assert.equal(evades.characters.felix_gallardo.imprisoned, null);
+
+    const captured = buildGameFromEra(era, { mode: "existing", cartelId: "guadalajara", characterId: "felix_gallardo" });
+    captured.firedScriptedEvents = ["camarena-1985"];
+    Math.random = () => 0; // < 0.55, so the historical arrest goes through
+    const capturedResult = rollScriptedEvents(captured, () => {}, 1989);
+    assert.equal(capturedResult.arrests.length, 1);
+    assert.equal(captured.characters.felix_gallardo.imprisoned.lifeSentence, true);
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
 function minimalCoupGame({ sicariosBondWithPlayer = 0, allyBond = 50 } = {}) {
   const game = {
     turn: 0,
