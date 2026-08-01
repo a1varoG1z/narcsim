@@ -333,6 +333,107 @@ test("a successful or failed internal purge damages bondWithPlayer for the rest 
   assert.ok(game.characters[sicariosChiefId].bondWithPlayer < 50, "a bystander in the leadership circle should trust you less after a failed internal purge");
 });
 
+test("assassinate_rival killing someone outside your cartel can leave a living, role-holding relative with a vendetta against the attacker, but not a relative without a role", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  cartel.resources.money = 100_000_000;
+  // rosalinda_gonzalez (financeChief, not the leader, so her death doesn't trigger a succession that
+  // could hand a role to el_menchito) is married to el_mencho (the leader) and mother to el_menchito
+  // (who holds no role at all).
+  const targetId = "rosalinda_gonzalez";
+  const husband = game.characters.el_mencho;
+  const son = game.characters.el_menchito;
+  assert.equal(son.role, null, "sanity check: the son should start with no cartel role");
+
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0; // guarantees both the hit and the (50%) grief roll succeed
+    const result = applyAction(game, "sinaloa", "assassinate_rival", { targetCharacterId: targetId });
+    assert.equal(result.success, true);
+  } finally {
+    Math.random = originalRandom;
+  }
+  assert.equal(game.characters[targetId].alive, false);
+  assert.deepEqual(husband.vendetta, { targetCartelId: "sinaloa", sinceTurn: game.turn }, "a role-holding widower should swear revenge against the cartel that killed his wife");
+  assert.equal(son.vendetta, null, "a relative with no cartel role shouldn't pick up a vendetta — they have no mechanical way to act on it");
+});
+
+test("assassinate_rival never assigns a vendetta for an internal purge (there's no rival cartel to blame)", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  cartel.resources.money = 100_000_000;
+  const underbossId = cartel.roles.underboss;
+
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0;
+    applyAction(game, "sinaloa", "assassinate_rival", { targetCharacterId: underbossId });
+  } finally {
+    Math.random = originalRandom;
+  }
+  assert.equal(game.characters[underbossId].alive, false);
+  assert.ok(Object.values(game.characters).every((c) => !c.vendetta), "no character should have picked up a vendetta from a purely internal purge");
+});
+
+test("an active vendetta gives a real success bonus against the exact cartel it targets, and resolves (clears) once the avenger's hit actually succeeds", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  cartel.resources.money = 100_000_000;
+  const hitman = game.characters[cartel.roles.sicariosChief];
+  hitman.stats.stealth = 50;
+  hitman.stats.violence = 50;
+  const targetCartel = game.cartels.cjng;
+  const targetId = targetCartel.roles.underboss;
+  const target = game.characters[targetId];
+  target.stats.stealth = 50;
+  targetCartel.resources.corruptPolice = 0;
+  // attackSkill = (50+50)/2 = 50; defenseSkill = 50 + 0/4 = 50; base successChance = clamp(0.35 + 0/150) = 0.35
+
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.4; // above the unboosted 0.35 base chance
+    const withoutVendetta = applyAction(game, "sinaloa", "assassinate_rival", { targetCharacterId: targetId });
+    assert.equal(withoutVendetta.success, false, "0.4 should fail against the unboosted 0.35 base chance");
+
+    cartel.resources.money = 100_000_000;
+    hitman.vendetta = { targetCartelId: "cjng", sinceTurn: game.turn };
+    Math.random = () => 0.4; // still above 0.35, but under the vendetta-boosted 0.35+0.12=0.47
+    const withVendetta = applyAction(game, "sinaloa", "assassinate_rival", { targetCharacterId: targetId });
+    assert.equal(withVendetta.success, true, "an active vendetta against this exact cartel should push the same roll over the line");
+    assert.equal(hitman.vendetta, null, "a successful revenge hit should resolve and clear the vendetta");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("a vendetta against one cartel gives no bonus when the hit targets a different cartel, and fades on its own if never acted on", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  cartel.resources.money = 100_000_000;
+  const hitman = game.characters[cartel.roles.sicariosChief];
+  hitman.stats.stealth = 50;
+  hitman.stats.violence = 50;
+  hitman.vendetta = { targetCartelId: "golfo", sinceTurn: game.turn }; // grudge against a different cartel entirely
+  const targetCartel = game.cartels.cjng;
+  const targetId = targetCartel.roles.underboss;
+  game.characters[targetId].stats.stealth = 50;
+  targetCartel.resources.corruptPolice = 0;
+
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.4; // above the unboosted 0.35 base chance for CJNG, and unaffected by the unrelated Gulf vendetta
+    const result = applyAction(game, "sinaloa", "assassinate_rival", { targetCharacterId: targetId });
+    assert.equal(result.success, false, "a vendetta against the Gulf cartel shouldn't help a hit against CJNG");
+  } finally {
+    Math.random = originalRandom;
+  }
+  assert.deepEqual(hitman.vendetta, { targetCartelId: "golfo", sinceTurn: 0 }, "an unrelated, unused vendetta should still be sitting there");
+
+  hitman.vendetta.sinceTurn = game.turn - 16; // backdate past the expiry window instead of simulating 16 real turns
+  endTurn(game);
+  assert.equal(hitman.vendetta, null, "a vendetta that's never acted on should fade after enough time passes");
+});
+
 test("poach_member refuses insufficient funds, an invalid target, and a rival cartel's own leader", () => {
   const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
   const cartel = game.cartels.sinaloa;

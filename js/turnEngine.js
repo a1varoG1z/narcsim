@@ -18,6 +18,27 @@ function hasActiveInformant(cartel, targetCartelId) {
 
 const INFORMANT_SUCCESS_BONUS = 0.12;
 
+const VENDETTA_BONUS = 0.12;
+const VENDETTA_EXPIRY_TURNS = 16;
+const VENDETTA_CHANCE = 0.5;
+
+/** Living spouse, parents, children, and same-parent siblings of a character — the pool a
+ * vendetta (see assassinate_rival) can fall on when someone in the family is murdered. */
+function getCloseRelatives(game, character) {
+  const ids = new Set();
+  if (character.spouseId) ids.add(character.spouseId);
+  for (const id of character.parents || []) ids.add(id);
+  for (const id of character.childrenIds || []) ids.add(id);
+  for (const parentId of character.parents || []) {
+    const parent = game.characters[parentId];
+    for (const siblingId of (parent && parent.childrenIds) || []) {
+      if (siblingId !== character.id) ids.add(siblingId);
+    }
+  }
+  ids.delete(character.id);
+  return [...ids].map((id) => game.characters[id]).filter((c) => c && c.alive);
+}
+
 const WAR_FOCUS_DURATION = 4;
 const WAR_FOCUS_BONUS = 1.25;
 const WAR_FOCUS_PENALTY = 0.85;
@@ -579,6 +600,9 @@ export function applyAction(game, cartelId, type, payload = {}) {
       if (method === "accident") successChance = clamp(successChance - 0.15, 0.05, 0.6);
       else if (method === "public") successChance = clamp(successChance + 0.05, 0.1, 0.85);
       if (!isInternal && hasActiveInformant(cartel, targetCartel.id)) successChance = clamp(successChance + INFORMANT_SUCCESS_BONUS, 0.05, 0.9);
+      // A grieving relative personally running the hit squad puts more into it than a routine job.
+      const avenging = !isInternal && hitman && hitman.vendetta && hitman.vendetta.targetCartelId === targetCartel.id;
+      if (avenging) successChance = clamp(successChance + VENDETTA_BONUS, 0.05, 0.9);
       // A leader's own private security detail (invest_security) only protects them specifically —
       // it doesn't help the rest of the cartel's roster.
       if (targetCartel.roles.leader === target.id && targetCartel.resources.securityBonus) {
@@ -629,6 +653,22 @@ export function applyAction(game, cartelId, type, payload = {}) {
               vacateRole(game, targetCartel.id, target.id);
               fillVacantRoles(targetCartel, game.characters, currentYear(game));
             }
+          }
+          if (!isInternal) {
+            // A grieving relative with real standing in the org (a role, not just a bystander) can
+            // come out of this swearing revenge on the cartel responsible — not every death, and
+            // not every relative, but often enough that it's a real recurring thread.
+            const grievers = getCloseRelatives(game, target).filter(
+              (rel) => rel.cartelId === targetCartel.id && rel.role && !rel.vendetta && chance(VENDETTA_CHANCE)
+            );
+            for (const rel of grievers) {
+              rel.vendetta = { targetCartelId: cartelId, sinceTurn: game.turn };
+              log(`${rel.name} jura venganza contra ${cartel.name} por la muerte de ${target.name}.`, "event");
+            }
+          }
+          if (avenging) {
+            hitman.vendetta = null;
+            log(`${hitman.name} cumple su venganza: ${target.name} paga por la muerte de su familiar a manos de ${targetCartel.name}.`, "good");
           }
         }
         const verb = survives ? "sobrevive por poco a" : "muere en";
@@ -1268,7 +1308,11 @@ function runAiCartels(game) {
       if (!canAfford(cartel, choice)) continue;
     }
     if (choice === "assassinate_rival") {
-      const target = rivalCartels.length ? pick(rivalCartels) : null;
+      const avengerHitman = game.characters[cartel.roles.sicariosChief];
+      const vendettaTarget = avengerHitman && avengerHitman.vendetta
+        ? rivalCartels.find((c) => c.id === avengerHitman.vendetta.targetCartelId)
+        : null;
+      const target = vendettaTarget && chance(0.7) ? vendettaTarget : (rivalCartels.length ? pick(rivalCartels) : null);
       const targetChar = target ? game.characters[target.roles.leader] : null;
       if (targetChar && targetChar.alive) {
         applyAction(game, cartel.id, "assassinate_rival", { targetCharacterId: targetChar.id });
@@ -1377,6 +1421,17 @@ function decayWarFocus(game) {
     if (!cartel.warFocus) continue;
     cartel.warFocus.turnsRemaining -= 1;
     if (cartel.warFocus.turnsRemaining <= 0) cartel.warFocus = null;
+  }
+}
+
+/** A vendetta (see assassinate_rival) that's never acted on fades after a few years — grief
+ * doesn't stay sharp forever. */
+function decayVendettas(game) {
+  for (const c of Object.values(game.characters)) {
+    if (!c.vendetta || !c.alive) continue;
+    if (game.turn - c.vendetta.sinceTurn >= VENDETTA_EXPIRY_TURNS) {
+      c.vendetta = null;
+    }
   }
 }
 
@@ -1617,6 +1672,7 @@ export function endTurn(game) {
   driftMemberBonds(game);
   decayInformants(game);
   decayWarFocus(game);
+  decayVendettas(game);
 
   let pendingSuccession = null;
   let pendingRegentChoice = null;

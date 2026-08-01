@@ -32,6 +32,7 @@ export function showCharacterProfile(app, characterId) {
     : c.imprisoned
     ? (c.imprisoned.lifeSentence ? "Cumple cadena perpetua." : `Preso, posible salida en el turno ${c.imprisoned.releaseTurn}.`)
     : "Activo.";
+  const vendettaCartel = c.alive && c.vendetta ? game.cartels[c.vendetta.targetCartelId] : null;
 
   // "What has this person actually done" — reuses the same named-log-entry matching the turn
   // summary/significant-events views already rely on elsewhere, rather than tracking a whole
@@ -51,6 +52,7 @@ export function showCharacterProfile(app, characterId) {
         <h2>${escapeHtml(c.name)}</h2>
         <div class="text-dim small">${c.alive ? age(c, year) : age(c, c.deathYear)} años · ${c.role ? roleLabel(c.role) : "Sin cargo"} · ${escapeHtml(cartel?.name || "")}</div>
         <div class="small">${status}</div>
+        ${vendettaCartel ? `<div class="small text-danger">🔪 Jura venganza contra ${escapeHtml(vendettaCartel.name)}</div>` : ""}
       </div>
     </div>
     <h3 class="mt-2">Atributos</h3>

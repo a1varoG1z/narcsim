@@ -44,7 +44,7 @@ export function makeCharacter({
   id, name, sex = "M", birthYear, deathYear = null, deathCause = null, alive = true,
   cartelId = null, role = null, stats = null, traits = [],
   portrait = null, parents = [], spouseId = null, childrenIds = [],
-  historical = false, notes = "", imprisoned = null,
+  historical = false, notes = "", imprisoned = null, vendetta = null,
 } = {}) {
   return {
     id: id || uid("char"),
@@ -65,6 +65,7 @@ export function makeCharacter({
     historical,
     notes,
     imprisoned, // { sinceTurn, releaseTurn, lifeSentence }
+    vendetta, // { targetCartelId, sinceTurn } | null — a personal grudge over a slain relative
   };
 }
 
