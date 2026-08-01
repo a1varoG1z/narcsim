@@ -26,22 +26,25 @@ function killScriptedCharacter(game, characterId, addLog, causeText) {
 }
 
 /** Same principle as killScriptedCharacter, for a scripted arrest instead of a death: an NPC's
- * historical capture plays out as a life sentence, but the player gets the same 55% chance to
- * defy the historical record and evade it. Returns an entry in the `arrests` shape that endTurn's
- * own arrests loop already knows how to process (see rollPoliceOperations), so a life-sentence
- * arrest here correctly triggers a succession choice if it lands on the player's own character. */
-function imprisonScriptedCharacter(game, characterId, addLog, causeText) {
+ * historical capture plays out as scripted, but the player gets the same 55% chance to defy the
+ * historical record and evade it. Returns an entry in the `arrests` shape that endTurn's own
+ * arrests loop already knows how to process (see rollPoliceOperations), so the arrest correctly
+ * triggers a succession/regent choice if it lands on the player's own character. Defaults to a
+ * life sentence; pass { lifeSentence: false } for a capture meant to be reversible later (e.g. by
+ * a subsequent scripted escape event, as with fuga-chapo-2001) — a life sentence would otherwise
+ * be a dead end no scripted event or gameplay system can undo. */
+function imprisonScriptedCharacter(game, characterId, addLog, causeText, { lifeSentence = true } = {}) {
   const c = game.characters[characterId];
   if (!c || !c.alive || c.imprisoned) return [];
   if (characterId === game.playerCharacterId && !chance(0.55)) {
     addLog(`Desafías al destino: evitas la captura que en la vida real terminó con ${c.name} preso (${causeText}).`, "good");
     return [];
   }
-  c.imprisoned = { sinceTurn: game.turn, releaseTurn: null, lifeSentence: true };
-  addLog(`${c.name} es detenido/a en ${causeText}. Enfrenta cadena perpetua.`, "death");
+  c.imprisoned = { sinceTurn: game.turn, releaseTurn: null, lifeSentence };
+  addLog(`${c.name} es detenido/a en ${causeText}. ${lifeSentence ? "Enfrenta cadena perpetua." : "Su condena queda abierta."}`, "death");
   const cartel = game.cartels[c.cartelId];
   const wasLeader = !!cartel && cartel.roles.leader === c.id;
-  return [{ characterId: c.id, cartelId: c.cartelId, wasLeader, lifeSentence: true }];
+  return [{ characterId: c.id, cartelId: c.cartelId, wasLeader, lifeSentence }];
 }
 
 function openWarEntry(game, aId, bId) {
@@ -272,6 +275,27 @@ export const SCRIPTED_EVENTS = {
           c.resources.publicImage = Math.max(0, c.resources.publicImage - 25);
           addLog("El cártel esconde a los responsables y refuerza su seguridad, a costa de una imagen pública devastada.", "death");
         }
+      },
+    },
+    {
+      id: "arresto-chapo-1993",
+      year: 1993,
+      run(game, addLog) {
+        // Sets up the arrest half of the real arrest-then-escape arc that fuga-chapo-2001
+        // completes: without this, that later event only ever fires if the emergent police-
+        // operations system happened to catch him first, which usually never happens.
+        // lifeSentence: false is essential here — fuga-chapo-2001 bails out entirely on a life
+        // sentence, since no scripted escape should be able to undo one.
+        return {
+          deaths: [],
+          arrests: imprisonScriptedCharacter(
+            game,
+            "chapo_guzman",
+            addLog,
+            "una captura en Guatemala, semanas después del caos por el asesinato del Cardenal Posadas Ocampo, tras ser extraditado a México",
+            { lifeSentence: false }
+          ),
+        };
       },
     },
     {

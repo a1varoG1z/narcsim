@@ -1088,7 +1088,7 @@ test("the 2002 fall of the Arellano Félix brothers kills Ramón and imprisons B
   // Jumping straight to 2002 (rather than simulating turn-by-turn) means this era's earlier,
   // unrelated scripted events (1997, 2001) would also be "due" and fire alongside this one —
   // mark them as already resolved, exactly as real turn-by-turn play would have by this point.
-  npcGame.firedScriptedEvents = ["muerte-amado-1997", "fuga-chapo-2001"];
+  npcGame.firedScriptedEvents = ["arresto-chapo-1993", "muerte-amado-1997", "fuga-chapo-2001"];
 
   const result = rollScriptedEvents(npcGame, () => {}, 2002);
   assert.equal(result.deaths.length, 1);
@@ -1109,7 +1109,7 @@ test("the 2002 fall of the Arellano Félix brothers gives the player a 55% chanc
   const originalRandom = Math.random;
   try {
     const ramonSurvives = buildGameFromEra(era, { mode: "existing", cartelId: "tijuana", characterId: "ramon_arellano" });
-    ramonSurvives.firedScriptedEvents = ["muerte-amado-1997", "fuga-chapo-2001"];
+    ramonSurvives.firedScriptedEvents = ["arresto-chapo-1993", "muerte-amado-1997", "fuga-chapo-2001"];
     Math.random = () => 0.99; // >= 0.55, so the survival chance() call fails and he lives
     const survivedResult = rollScriptedEvents(ramonSurvives, () => {}, 2002);
     assert.equal(survivedResult.deaths.length, 0, "Ramón should survive when the roll favors the player");
@@ -1119,14 +1119,14 @@ test("the 2002 fall of the Arellano Félix brothers gives the player a 55% chanc
     assert.equal(survivedResult.arrests[0].characterId, "benjamin_arellano");
 
     const ramonDies = buildGameFromEra(era, { mode: "existing", cartelId: "tijuana", characterId: "ramon_arellano" });
-    ramonDies.firedScriptedEvents = ["muerte-amado-1997", "fuga-chapo-2001"];
+    ramonDies.firedScriptedEvents = ["arresto-chapo-1993", "muerte-amado-1997", "fuga-chapo-2001"];
     Math.random = () => 0; // < 0.55, so the roll succeeds and the historical death goes through
     const diedResult = rollScriptedEvents(ramonDies, () => {}, 2002);
     assert.equal(diedResult.deaths.length, 1);
     assert.equal(ramonDies.characters.ramon_arellano.alive, false);
 
     const benjaminEvades = buildGameFromEra(era, { mode: "existing", cartelId: "tijuana", characterId: "benjamin_arellano" });
-    benjaminEvades.firedScriptedEvents = ["muerte-amado-1997", "fuga-chapo-2001"];
+    benjaminEvades.firedScriptedEvents = ["arresto-chapo-1993", "muerte-amado-1997", "fuga-chapo-2001"];
     Math.random = () => 0.99;
     const evadedResult = rollScriptedEvents(benjaminEvades, () => {}, 2002);
     assert.equal(evadedResult.arrests.length, 0, "Benjamín should evade capture when the roll favors the player");
@@ -1135,7 +1135,7 @@ test("the 2002 fall of the Arellano Félix brothers gives the player a 55% chanc
     assert.equal(evadedResult.deaths.length, 1);
 
     const benjaminCaptured = buildGameFromEra(era, { mode: "existing", cartelId: "tijuana", characterId: "benjamin_arellano" });
-    benjaminCaptured.firedScriptedEvents = ["muerte-amado-1997", "fuga-chapo-2001"];
+    benjaminCaptured.firedScriptedEvents = ["arresto-chapo-1993", "muerte-amado-1997", "fuga-chapo-2001"];
     Math.random = () => 0;
     const capturedResult = rollScriptedEvents(benjaminCaptured, () => {}, 2002);
     assert.equal(capturedResult.arrests.length, 1);
@@ -1179,6 +1179,75 @@ test("the Posadas Ocampo (1993) event pauses for a player choice when the player
   assert.equal(npcResult.pendingChoice, null, "should auto-resolve when the player isn't Tijuana");
   assert.ok(npcGame.cartels.tijuana.resources.heat > npcHeatBefore);
   assert.equal(npcGame.firedScriptedEvents.includes("posadas-ocampo-1993"), true);
+});
+
+test("El Chapo's 1993 arrest imprisons him with a non-life sentence and hands Sinaloa an acting leader when he's not the player", () => {
+  const era = loadEra("mexico-rutas-1990-2006.json");
+  const npcGame = buildGameFromEra(era, { mode: "existing", cartelId: "tijuana", characterId: "benjamin_arellano" });
+  npcGame.firedScriptedEvents = ["posadas-ocampo-1993"]; // same year, order doesn't matter but keep it resolved
+
+  const result = rollScriptedEvents(npcGame, () => {}, 1993);
+  assert.equal(result.arrests.length, 1);
+  assert.equal(result.arrests[0].characterId, "chapo_guzman");
+  assert.equal(result.arrests[0].lifeSentence, false, "must not be a life sentence, or fuga-chapo-2001 could never free him later");
+  assert.equal(result.arrests[0].wasLeader, true);
+  assert.equal(npcGame.characters.chapo_guzman.imprisoned.lifeSentence, false);
+  assert.equal(npcGame.firedScriptedEvents.includes("arresto-chapo-1993"), true);
+});
+
+test("El Chapo's 1993 arrest gives the player a 55% chance to evade capture when controlling him directly", () => {
+  const era = loadEra("mexico-rutas-1990-2006.json");
+  const originalRandom = Math.random;
+  try {
+    const evades = buildGameFromEra(era, { mode: "existing", cartelId: "sinaloa", characterId: "chapo_guzman" });
+    evades.firedScriptedEvents = ["posadas-ocampo-1993"];
+    Math.random = () => 0.99; // >= 0.55, so the evasion roll succeeds
+    const evadedResult = rollScriptedEvents(evades, () => {}, 1993);
+    assert.equal(evadedResult.arrests.length, 0, "El Chapo should evade capture when the roll favors the player");
+    assert.equal(evades.characters.chapo_guzman.imprisoned, null);
+
+    const captured = buildGameFromEra(era, { mode: "existing", cartelId: "sinaloa", characterId: "chapo_guzman" });
+    captured.firedScriptedEvents = ["posadas-ocampo-1993"];
+    Math.random = () => 0; // < 0.55, so the historical arrest goes through
+    const capturedResult = rollScriptedEvents(captured, () => {}, 1993);
+    assert.equal(capturedResult.arrests.length, 1);
+    assert.equal(captured.characters.chapo_guzman.imprisoned.lifeSentence, false);
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("the arrest→escape arc completes end-to-end through real endTurn calls: 1993's arresto-chapo sets up exactly what 2001's fuga-chapo needs to free him", () => {
+  const era = loadEra("mexico-rutas-1990-2006.json");
+  // Player controls an unrelated cartel (Golfo) so this exercises Chapo's NPC/wasLeader path,
+  // and pre-seed posadas-ocampo-1993 (interactive, targets Tijuana) as already resolved so it
+  // doesn't produce a pendingChoice that's irrelevant to what this test is checking.
+  const game = buildGameFromEra(era, { mode: "existing", cartelId: "golfo", characterId: "osiel_cardenas" });
+  game.firedScriptedEvents = ["posadas-ocampo-1993"];
+  const originalRandom = Math.random;
+  try {
+    // Neither imprisonScriptedCharacter's arrest nor fuga-chapo-2001's escape ever consult
+    // chance() at all when the target isn't the player (see both functions) — the arrest and
+    // escape are unconditional for an NPC. So instead of forcing every chance() roll to succeed
+    // (which would also mass-kill/arrest the rest of the cast via mortality/police-ops that
+    // same turn), pin Math.random near 1 so everything ELSE this turn fails/skips, keeping
+    // mayo_zambada and the rest of the cast untouched while still letting the two scripted
+    // beats under test fire deterministically.
+    game.turn = 6; // year 1993 for this era
+    Math.random = () => 0.999;
+    endTurn(game);
+    assert.equal(game.characters.chapo_guzman.imprisoned.lifeSentence, false);
+    assert.equal(game.cartels.sinaloa.roles.leader, "mayo_zambada", "Sinaloa's underboss should act as leader while Chapo is locked up");
+    assert.equal(game.cartels.sinaloa.imprisonedLeaderId, "chapo_guzman");
+
+    game.turn = 22; // year 2001 for this era
+    endTurn(game);
+    assert.equal(game.characters.chapo_guzman.imprisoned, null, "the 2001 escape should free him");
+    assert.equal(game.cartels.sinaloa.roles.leader, "chapo_guzman", "leadership should be restored to him on escape");
+    assert.equal(game.cartels.sinaloa.imprisonedLeaderId, null);
+  } finally {
+    Math.random = originalRandom;
+  }
 });
 
 test("the Viernes Negro (2015) event pauses for a player choice when the player controls CJNG, and applies immediately for NPC-controlled CJNG", () => {
