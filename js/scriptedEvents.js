@@ -162,6 +162,18 @@ export const SCRIPTED_EVENTS = {
       },
     },
     {
+      id: "muerte-escobar-1993",
+      year: 1993,
+      run(game, addLog) {
+        return killScriptedCharacter(
+          game,
+          "pablo_escobar",
+          addLog,
+          "un tiroteo en un tejado de Medellín, acorralado por el Bloque de Búsqueda tras año y medio de persecución desde su fuga de La Catedral"
+        );
+      },
+    },
+    {
       id: "proceso-8000-1995",
       year: 1995,
       interactive: true,

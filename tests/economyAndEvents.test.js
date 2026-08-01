@@ -1023,6 +1023,45 @@ test("the player is capped at ACTIONS_PER_TURN budgeted actions, is refused past
   assert.equal(getActionsRemaining(game), ACTIONS_PER_TURN);
 });
 
+test("Pablo Escobar's 1993 death kills him and hands Medellín a new leader when he's not the player", () => {
+  const era = loadEra("medellin-cali-1980-1995.json");
+  const npcGame = buildGameFromEra(era, { mode: "existing", cartelId: "cali", characterId: "gilberto_rodriguez" });
+  npcGame.firedScriptedEvents = ["guerra-extradicion-1989"]; // already resolved by the time we jump to 1993
+
+  const result = rollScriptedEvents(npcGame, () => {}, 1993);
+  assert.equal(result.deaths.length, 1);
+  assert.equal(result.deaths[0].characterId, "pablo_escobar");
+  assert.equal(result.deaths[0].wasLeader, true);
+  assert.equal(npcGame.characters.pablo_escobar.alive, false);
+  assert.equal(
+    npcGame.characters.pablo_escobar.deathCause,
+    "un tiroteo en un tejado de Medellín, acorralado por el Bloque de Búsqueda tras año y medio de persecución desde su fuga de La Catedral"
+  );
+  assert.equal(npcGame.firedScriptedEvents.includes("muerte-escobar-1993"), true);
+});
+
+test("Pablo Escobar's 1993 death gives the player a 55% chance to survive when controlling him directly", () => {
+  const era = loadEra("medellin-cali-1980-1995.json");
+  const originalRandom = Math.random;
+  try {
+    const survives = buildGameFromEra(era, { mode: "existing", cartelId: "medellin", characterId: "pablo_escobar" });
+    survives.firedScriptedEvents = ["guerra-extradicion-1989"];
+    Math.random = () => 0.99; // >= 0.55, so the survival roll succeeds
+    const survivedResult = rollScriptedEvents(survives, () => {}, 1993);
+    assert.equal(survivedResult.deaths.length, 0, "Escobar should survive when the roll favors the player");
+    assert.equal(survives.characters.pablo_escobar.alive, true);
+
+    const dies = buildGameFromEra(era, { mode: "existing", cartelId: "medellin", characterId: "pablo_escobar" });
+    dies.firedScriptedEvents = ["guerra-extradicion-1989"];
+    Math.random = () => 0; // < 0.55, so the historical death goes through
+    const diedResult = rollScriptedEvents(dies, () => {}, 1993);
+    assert.equal(diedResult.deaths.length, 1);
+    assert.equal(dies.characters.pablo_escobar.alive, false);
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
 test("the Proceso 8000 (1995) event pauses for a player choice when the player controls Cali, and applies immediately for NPC-controlled Cali", () => {
   const era = loadEra("medellin-cali-1980-1995.json");
 
