@@ -207,7 +207,11 @@ export function rollSiblingRivalry(game, addLog, year) {
 export function policeOperationChance(cartel) {
   const heat = cartel.resources.heat;
   const shield = cartel.resources.corruptPolice * 0.5 + cartel.resources.corruptGov * 0.3;
-  return clamp((heat - shield * 0.4) / 500, 0, 0.5);
+  // A famous cartel draws real DEA/Interpol attention on top of local heat — not just the one-time
+  // heat cost of the PR actions that built that fame in the first place. Kept modest (max +0.1 at
+  // maximum reputation) so it only meaningfully bites cartels that leaned hard into global infamy.
+  const internationalPressure = (cartel.resources.internationalReputation ?? 15) / 1000;
+  return clamp((heat - shield * 0.4) / 500 + internationalPressure, 0, 0.5);
 }
 
 /** Returns { arrests, pendingRaidTip }. When the operation would hit the player's own character,

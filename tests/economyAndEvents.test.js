@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import { buildGameFromEra } from "../js/state.js";
 import { applyAction, getWarsForCartel, resolveScriptedChoice, endTurn, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, getIncomeBreakdown, MONEY_SCALE, getDrugProfile, DRUG_PROFILES, resolveRaidTip, getSuccessionCandidates, resolveSuccession, resolveCoups, checkLandlessCollapse, attemptEscape } from "../js/turnEngine.js";
 import { rollScriptedEvents } from "../js/scriptedEvents.js";
-import { rollLoyaltyEvents, getMemberBond, driftMemberBonds, rollSiblingRivalry, rollPoliceOperations, rollMortality } from "../js/events.js";
+import { rollLoyaltyEvents, getMemberBond, driftMemberBonds, rollSiblingRivalry, rollPoliceOperations, rollMortality, policeOperationChance } from "../js/events.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ERA_DIR = path.join(__dirname, "..", "data", "eras");
@@ -776,11 +776,17 @@ test("invest_hideout's bonus only helps the player personally resist a police ra
   // bonus, resistChance becomes clamp(0.05+0.3, .05, .9) = 0.35. A stub of 0.11 threads all of it:
   // triggers the operation (< 0.12), skips the advance-warning tip-off (>= 0.1), fails to resist
   // without a hideout (>= 0.05) but succeeds in resisting with one (< 0.35).
+  // With a single fixed Math.random() stub applied across every cartel in the era, other cartels'
+  // own (unrelated) international-reputation-driven raid risk can also cross the threshold and
+  // produce their own arrests — that's real, intended behavior, just not what this test is about.
+  // Filter down to sinaloa's own arrest so the assertion stays about the player's cartel only.
+  const sinaloaArrests = (arrests) => arrests.filter((a) => a.cartelId === "sinaloa");
+
   const originalRandom = Math.random;
   try {
     Math.random = () => 0.11;
     const { arrests: withoutHideout } = rollPoliceOperations(game, () => {}, game.year);
-    assert.equal(withoutHideout.length, 1, "without a hideout, this exact roll should still result in an arrest");
+    assert.equal(sinaloaArrests(withoutHideout).length, 1, "without a hideout, this exact roll should still result in an arrest");
   } finally {
     Math.random = originalRandom;
   }
@@ -791,7 +797,7 @@ test("invest_hideout's bonus only helps the player personally resist a police ra
   try {
     Math.random = () => 0.11;
     const { arrests: withHideout } = rollPoliceOperations(game, () => {}, game.year);
-    assert.equal(withHideout.length, 0, "the exact same roll should let the player's hideout help them dodge the raid entirely");
+    assert.equal(sinaloaArrests(withHideout).length, 0, "the exact same roll should let the player's hideout help them dodge the raid entirely");
   } finally {
     Math.random = originalRandom;
   }
@@ -1345,6 +1351,22 @@ test("invest_production's payout scales with the era's drug profile, everything 
   } finally {
     Math.random = originalRandom;
   }
+});
+
+test("policeOperationChance rises with international reputation on top of heat, modestly and capped", () => {
+  const base = { resources: { heat: 50, corruptPolice: 0, corruptGov: 0, internationalReputation: 5 } };
+  const famous = { resources: { heat: 50, corruptPolice: 0, corruptGov: 0, internationalReputation: 100 } };
+  const baseChance = policeOperationChance(base);
+  const famousChance = policeOperationChance(famous);
+  assert.ok(famousChance > baseChance, "a world-famous cartel should face a higher raid risk than an obscure one at the same heat");
+  assert.ok(famousChance - baseChance < 0.15, "the international-fame bump should stay modest relative to heat's own effect");
+  assert.ok(famousChance <= 0.5, "the overall chance should still respect the existing cap");
+});
+
+test("policeOperationChance defaults internationalReputation to the same 15 baseline used elsewhere when it's missing from resources", () => {
+  const withDefault = { resources: { heat: 50, corruptPolice: 0, corruptGov: 0 } };
+  const explicit15 = { resources: { heat: 50, corruptPolice: 0, corruptGov: 0, internationalReputation: 15 } };
+  assert.equal(policeOperationChance(withDefault), policeOperationChance(explicit15));
 });
 
 /** A minimal synthetic game with a single cartel/character, just enough for rollPoliceOperations

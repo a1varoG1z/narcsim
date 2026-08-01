@@ -24,7 +24,7 @@ export function render(container, app) {
       ${statBar("Reputación internacional", r.internationalReputation ?? 15)}
       ${statBar("Nivel de búsqueda (heat)", r.heat, "heat")}
       <div class="small"><strong>${escapeHtml(heatLabel(r.heat))}</strong></div>
-      <p class="text-dim small mt-1">La imagen pública mueve a la opinión local. La reputación internacional abre mercados de exportación más rentables (hasta un +25% de ingresos por territorio con fama máxima), pero la exposición tiene un precio en heat.</p>
+      <p class="text-dim small mt-1">La imagen pública mueve a la opinión local. La reputación internacional abre mercados de exportación más rentables (hasta un +25% de ingresos por territorio con fama máxima), pero la exposición tiene un precio: además del heat que cuestan las propias acciones que la construyen, ser mundialmente famoso atrae de forma constante más atención de agencias internacionales (DEA, Interpol), lo que sube algo el riesgo de operativo cada turno.</p>
     </div>
     <div class="card">
       <h3>Acciones de imagen</h3>
