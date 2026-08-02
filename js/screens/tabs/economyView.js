@@ -1,17 +1,20 @@
 import { getPlayerCartel } from "../../state.js";
 import { escapeHtml } from "../../ui/components.js";
 import { fmtMoney, fmtNum } from "../../utils/text.js";
-import { getIncomeBreakdown, getWorldMarketShare } from "../../turnEngine.js";
+import { getIncomeBreakdown, getWorldMarketShare, getDrugProfile, getDrugProfiles } from "../../turnEngine.js";
 
 export function render(container, app) {
   const game = app.game;
   const cartel = getPlayerCartel(game);
   const r = cartel.resources;
   const b = getIncomeBreakdown(game, cartel);
-  const marketShare = getWorldMarketShare(game, cartel);
+  const drug = getDrugProfile(game, cartel);
+  const multiDrugEra = getDrugProfiles(game).length > 1;
+  const marketShare = getWorldMarketShare(game, cartel, drug.id);
+  const aggregateShare = getWorldMarketShare(game, cartel);
   const rivalShares = Object.values(game.cartels)
-    .filter((c) => c.id !== cartel.id && !c.destroyed && c.resources.distributionVolume)
-    .map((c) => ({ name: c.name, share: getWorldMarketShare(game, c) }))
+    .filter((c) => c.id !== cartel.id && !c.destroyed && c.resources.distributionVolumeByDrug?.[drug.id])
+    .map((c) => ({ name: c.name, share: getWorldMarketShare(game, c, drug.id) }))
     .sort((a, b2) => b2.share - a.share)
     .slice(0, 3);
 
@@ -43,11 +46,12 @@ export function render(container, app) {
 
     <div class="card">
       <h3>Comercio internacional</h3>
-      <p class="text-dim small">Cuota estimada del mercado mundial de la droga: el volumen acumulado de tus envíos ("Enviar cargamento") frente al de todos los demás cárteles de la partida — un cálculo de suma cero, no una cifra propia que solo puede subir.</p>
-      <p class="small">Tu cuota: <strong>${marketShare.toFixed(1)}%</strong></p>
+      <p class="text-dim small">Cuota estimada del mercado mundial de ${escapeHtml(drug.name.toLowerCase())}: el volumen acumulado de tus envíos ("Enviar cargamento") frente al de todos los demás cárteles que trafican con lo mismo — un cálculo de suma cero, no una cifra propia que solo puede subir.</p>
+      <p class="small">Tu cuota de este mercado: <strong>${marketShare.toFixed(1)}%</strong></p>
+      ${multiDrugEra ? `<p class="small text-dim">Cuota agregada de todas las drogas de la partida: ${aggregateShare.toFixed(1)}%</p>` : ""}
       ${r.tradeRouteBonus ? `<p class="small text-success">Rutas comerciales internacionales propias: +${Math.round(r.tradeRouteBonus * 100)}% de rendimiento en cada envío futuro.</p>` : `<p class="small text-dim">Sin rutas comerciales propias todavía — invierte en ellas desde la pestaña Decisiones.</p>`}
       ${rivalShares.length ? `
-        <p class="small text-dim mt-1">Mayores rivales en el mercado:</p>
+        <p class="small text-dim mt-1">Mayores rivales en este mercado:</p>
         <table style="width:100%;border-collapse:collapse" class="small">
           ${rivalShares.map((c) => `<tr><td>${escapeHtml(c.name)}</td><td class="center">${c.share.toFixed(1)}%</td></tr>`).join("")}
         </table>

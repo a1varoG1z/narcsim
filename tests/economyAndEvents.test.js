@@ -1618,6 +1618,68 @@ test("getWorldMarketShare is a genuine zero-sum comparison across cartels, built
   );
 });
 
+test("switch_drug lets a cartel change specialization (Félix Gallardo's marijuana/heroin -> cocaine arc), gated by year and refusing invalid targets", () => {
+  const game = newGame("guadalajara-1975-1989.json", "guadalajara");
+  const cartel = game.cartels.guadalajara;
+  cartel.resources.money = 100_000_000;
+
+  const unknownResult = applyAction(game, "guadalajara", "switch_drug", { drugId: "not-a-real-drug" });
+  assert.equal(unknownResult.ok, false);
+
+  const sameDrugResult = applyAction(game, "guadalajara", "switch_drug", { drugId: "marijuana_heroin" });
+  assert.equal(sameDrugResult.ok, false, "should refuse switching to the drug you're already dealing in");
+
+  // game.turn=0 -> year 1975, well before cocaine's 1980 availableFromYear.
+  const tooEarlyResult = applyAction(game, "guadalajara", "switch_drug", { drugId: "cocaine" });
+  assert.equal(tooEarlyResult.ok, false, "cocaine shouldn't be available yet in 1975");
+  assert.match(tooEarlyResult.message, /1980/);
+  assert.equal(getDrugProfile(game, cartel).id, "marijuana_heroin", "should still be on the original drug");
+
+  game.turn = 10; // 1975 + 10*6/12 = 1980
+  const moneyBefore = cartel.resources.money;
+  const switchResult = applyAction(game, "guadalajara", "switch_drug", { drugId: "cocaine" });
+  assert.equal(switchResult.ok, true, "cocaine should be available from 1980 onward");
+  assert.equal(cartel.resources.drugId, "cocaine");
+  assert.equal(getDrugProfile(game, cartel).id, "cocaine");
+  assert.ok(cartel.resources.money < moneyBefore, "switching should cost money");
+});
+
+test("a cartel that switches to a more lucrative drug genuinely earns more from traffic_shipment afterward", () => {
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.5;
+    const beforeGame = newGame("guadalajara-1975-1989.json", "guadalajara");
+    beforeGame.cartels.guadalajara.resources.money = 100_000_000;
+    const beforeResult = applyAction(beforeGame, "guadalajara", "traffic_shipment");
+
+    const afterGame = newGame("guadalajara-1975-1989.json", "guadalajara");
+    afterGame.cartels.guadalajara.resources.money = 100_000_000;
+    afterGame.turn = 10;
+    applyAction(afterGame, "guadalajara", "switch_drug", { drugId: "cocaine" });
+    const afterResult = applyAction(afterGame, "guadalajara", "traffic_shipment");
+
+    if (!beforeResult.message?.includes("Interceptado") && !afterResult.message?.includes("Interceptado")) {
+      const beforePayout = Number(beforeResult.message.replace("+", ""));
+      const afterPayout = Number(afterResult.message.replace("+", ""));
+      assert.ok(afterPayout > beforePayout, "cocaine's higher payoutMult should raise the shipment's earnings versus marijuana/heroin");
+    }
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("getWorldMarketShare scoped to a specific drug only compares cartels dealing in that same drug", () => {
+  const game = newGame("guadalajara-1975-1989.json", "guadalajara");
+  const guadalajara = game.cartels.guadalajara;
+  const golfo = game.cartels.golfo;
+
+  guadalajara.resources.distributionVolumeByDrug = { marijuana_heroin: 100 };
+  golfo.resources.distributionVolumeByDrug = { marijuana_heroin: 300 };
+
+  assert.ok(Math.abs(getWorldMarketShare(game, guadalajara, "marijuana_heroin") - 25) < 0.01);
+  assert.equal(getWorldMarketShare(game, guadalajara, "cocaine"), 0, "no one has ever moved cocaine yet, so there's no share of it to have");
+});
+
 test("invest_hideout's bonus only helps the player personally resist a police raid, not the cartel at large", () => {
   const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
   const cartel = game.cartels.sinaloa;
@@ -2610,11 +2672,12 @@ test("rollSiblingRivalry with a real rivalry (bond < 35) escalates to reputation
   }
 });
 
-test("getDrugProfile returns the era-specific profile, or a neutral default for an unknown era", () => {
+test("getDrugProfile returns the era's default (first) profile for a cartel that never switched, or a neutral default for an unknown era", () => {
   const chapitosGame = newGame("chapitos-mayiza-2024-actualidad.json", "chapitos");
-  assert.equal(getDrugProfile(chapitosGame).name, DRUG_PROFILES["chapitos-mayiza-2024-actualidad"].name);
+  const cartel = chapitosGame.cartels.chapitos;
+  assert.equal(getDrugProfile(chapitosGame, cartel).name, DRUG_PROFILES["chapitos-mayiza-2024-actualidad"][0].name);
 
-  const fallback = getDrugProfile({ eraId: "not-a-real-era" });
+  const fallback = getDrugProfile({ eraId: "not-a-real-era" }, cartel);
   assert.equal(fallback.payoutMult, 1);
   assert.equal(fallback.heatMult, 1);
   assert.equal(fallback.seizureMult, 1);

@@ -1,5 +1,5 @@
-import { getPlayerCartel } from "../../state.js";
-import { applyAction, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, MONEY_SCALE, getDrugProfile } from "../../turnEngine.js";
+import { getPlayerCartel, currentYear } from "../../state.js";
+import { applyAction, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, MONEY_SCALE, getDrugProfile, getDrugProfiles } from "../../turnEngine.js";
 import { showModal, closeModal } from "../../ui/modal.js";
 import { escapeHtml } from "../../ui/components.js";
 import { fmtMoney } from "../../utils/text.js";
@@ -38,7 +38,9 @@ export function render(container, app) {
   const cartel = getPlayerCartel(game);
   const remaining = getActionsRemaining(game);
   const exhausted = remaining <= 0;
-  const drug = getDrugProfile(game);
+  const drug = getDrugProfile(game, cartel);
+  const otherDrugs = getDrugProfiles(game).filter((p) => p.id !== drug.id);
+  const switchCost = ACTION_COSTS.switch_drug;
 
   container.innerHTML = `
     <div class="card">
@@ -46,6 +48,13 @@ export function render(container, app) {
       <p class="text-dim small">Tienes <strong>${remaining}/${ACTIONS_PER_TURN}</strong> acciones disponibles antes de avanzar el turno. Las decisiones diplomáticas y militares no gastan acciones.</p>
       <p class="small">📦 <strong>${escapeHtml(drug.name)}</strong></p>
       <p class="text-dim small">${escapeHtml(describeDrugProfile(drug))}</p>
+      ${otherDrugs.length ? otherDrugs.map((d) => {
+        const locked = d.availableFromYear && currentYear(game) < d.availableFromYear;
+        return `<button class="block tight" data-switch-drug="${d.id}" ${locked || cartel.resources.money < switchCost ? "disabled" : ""}>
+          Establecer conexión: ${escapeHtml(d.name)} — ${fmtMoney(switchCost)}
+          <div class="small text-dim">${locked ? `Todavía no hay una conexión real para esto (no antes de ${d.availableFromYear}).` : "Cambia de qué droga se dedica tu cártel de ahora en adelante."}</div>
+        </button>`;
+      }).join("") : ""}
       ${ACTIONS.map((a) => {
         const cost = ACTION_COSTS[a.type] || 0;
         const noTerritories = a.type === "extort_territory" && !cartel.territories.length;
@@ -95,6 +104,15 @@ export function render(container, app) {
       <p class="small text-dim mt-1">Total lavado hasta ahora: ${fmtMoney(cartel.resources.launderedMoney || 0)}</p>
     </div>
   `;
+
+  container.querySelectorAll("[data-switch-drug]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const result = applyAction(game, cartel.id, "switch_drug", { drugId: btn.dataset.switchDrug });
+      app.setGame(game);
+      if (!result.ok) alert(result.message);
+      app.render();
+    });
+  });
 
   container.querySelectorAll("[data-action]").forEach((btn) => {
     btn.addEventListener("click", () => {

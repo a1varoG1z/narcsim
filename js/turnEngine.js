@@ -166,22 +166,52 @@ export function getWarsForCartel(game, cartelId) {
  * of reading as a few hundred literal dollars. */
 export const MONEY_SCALE = 10000;
 
-// Which drug each era's economy really turned on, and a rough mechanical shorthand for how that
-// changed the risk/reward profile: bulkier plant-based drugs (marijuana/heroin) were harder to
-// conceal but drew less international heat than the cocaine boom; modern synthetics (meth/fentanyl)
-// are far more profitable per shipment and easier to hide, but draw the most intense scrutiny of all.
+// Which drug(s) each era's economy really turned on, and a rough mechanical shorthand for how
+// that changed the risk/reward profile: bulkier plant-based drugs (marijuana/heroin) were harder
+// to conceal but drew less international heat than the cocaine boom; modern synthetics
+// (meth/fentanyl) are far more profitable per shipment and easier to hide, but draw the most
+// intense scrutiny of all. Most eras only ever really had one dominant product, so they get a
+// single-entry list — but some cartels genuinely shifted product over the course of their real
+// history (most famously Miguel Ángel Félix Gallardo's Guadalajara cartel, which built its early
+// power on marijuana and heroin in the 1970s and only moved into cocaine once Colombian groups
+// started routing product through Mexico after US pressure choked off the Caribbean corridor in
+// the early 1980s), so a second entry with `availableFromYear` lets a cartel switch onto it later
+// via `switch_drug` instead of being locked into one product for the whole game.
 export const DRUG_PROFILES = {
-  "guadalajara-1975-1989": { name: "Marihuana y heroína", payoutMult: 0.85, heatMult: 0.9, seizureMult: 1.15 },
-  "medellin-cali-1980-1995": { name: "Cocaína", payoutMult: 1.3, heatMult: 1.2, seizureMult: 1 },
-  "mexico-rutas-1990-2006": { name: "Cocaína en tránsito hacia EE. UU.", payoutMult: 1.1, heatMult: 1, seizureMult: 1 },
-  "fragmentacion-2006-2015": { name: "Cocaína, bajo una guerra abierta contra el narco", payoutMult: 1.15, heatMult: 1.3, seizureMult: 1.2 },
-  "cjng-sinaloa-2015-actualidad": { name: "Metanfetamina y fentanilo", payoutMult: 1.4, heatMult: 1.4, seizureMult: 0.9 },
-  "chapitos-mayiza-2024-actualidad": { name: "Fentanilo", payoutMult: 1.5, heatMult: 1.5, seizureMult: 0.85 },
+  "guadalajara-1975-1989": [
+    { id: "marijuana_heroin", name: "Marihuana y heroína", payoutMult: 0.85, heatMult: 0.9, seizureMult: 1.15 },
+    { id: "cocaine", name: "Cocaína (conexión colombiana)", payoutMult: 1.3, heatMult: 1.2, seizureMult: 1, availableFromYear: 1980 },
+  ],
+  "medellin-cali-1980-1995": [
+    { id: "cocaine", name: "Cocaína", payoutMult: 1.3, heatMult: 1.2, seizureMult: 1 },
+  ],
+  "mexico-rutas-1990-2006": [
+    { id: "cocaine_transit", name: "Cocaína en tránsito hacia EE. UU.", payoutMult: 1.1, heatMult: 1, seizureMult: 1 },
+  ],
+  "fragmentacion-2006-2015": [
+    { id: "cocaine_war", name: "Cocaína, bajo una guerra abierta contra el narco", payoutMult: 1.15, heatMult: 1.3, seizureMult: 1.2 },
+  ],
+  "cjng-sinaloa-2015-actualidad": [
+    { id: "meth_fentanyl", name: "Metanfetamina y fentanilo", payoutMult: 1.4, heatMult: 1.4, seizureMult: 0.9 },
+  ],
+  "chapitos-mayiza-2024-actualidad": [
+    { id: "fentanyl", name: "Fentanilo", payoutMult: 1.5, heatMult: 1.5, seizureMult: 0.85 },
+  ],
 };
-const DEFAULT_DRUG_PROFILE = { name: "Narcóticos diversos", payoutMult: 1, heatMult: 1, seizureMult: 1 };
+const DEFAULT_DRUG_PROFILE = { id: "generic", name: "Narcóticos diversos", payoutMult: 1, heatMult: 1, seizureMult: 1 };
 
-export function getDrugProfile(game) {
-  return DRUG_PROFILES[game.eraId] || DEFAULT_DRUG_PROFILE;
+/** Every drug this era has on offer, regardless of who's currently dealing in what. */
+export function getDrugProfiles(game) {
+  return DRUG_PROFILES[game.eraId] || [DEFAULT_DRUG_PROFILE];
+}
+
+/** The specific drug this cartel currently deals in — defaults to the era's first/dominant
+ * product until (if ever) it switches via `switch_drug`, so existing behavior is unchanged for
+ * any cartel that never touches the new mechanic. */
+export function getDrugProfile(game, cartel) {
+  const profiles = getDrugProfiles(game);
+  const drugId = cartel?.resources?.drugId;
+  return profiles.find((p) => p.id === drugId) || profiles[0];
 }
 
 export const ACTION_COSTS = {
@@ -212,6 +242,7 @@ export const ACTION_COSTS = {
   invest_security: 400 * MONEY_SCALE,
   invest_hideout: 350 * MONEY_SCALE,
   invest_trade_route: 450 * MONEY_SCALE,
+  switch_drug: 300 * MONEY_SCALE,
   sell_art: 0,
 };
 
@@ -260,7 +291,7 @@ export function applyAction(game, cartelId, type, payload = {}) {
         territory = owned.reduce((best, t) => (t.value > best.value ? t : best), owned[0]);
       }
       r.money -= cost;
-      const drug = getDrugProfile(game);
+      const drug = getDrugProfile(game, cartel);
       const productionBonus = productionChiefBonus(game.characters[cartel.roles.productionChief]);
       const seizeChance = clamp(clamp(r.heat / 300, 0.03, 0.35) * drug.seizureMult - productionBonus / 100, 0.02, 0.5);
       if (chance(seizeChance)) {
@@ -283,7 +314,7 @@ export function applyAction(game, cartelId, type, payload = {}) {
         return { ok: false, message: `No puedes venderle a ${partner.name}: estáis en guerra.` };
       }
       r.money -= cost;
-      const drug = getDrugProfile(game);
+      const drug = getDrugProfile(game, cartel);
       const traffickingBonus = traffickingChiefBonus(game.characters[cartel.roles.traffickingChief]);
       const interdictChance = clamp(clamp(r.heat / 220, 0.05, 0.5) * drug.seizureMult - traffickingBonus / 100, 0.03, 0.65);
       if (chance(interdictChance)) {
@@ -296,8 +327,12 @@ export function applyAction(game, cartelId, type, payload = {}) {
       r.money += payout;
       r.heat = Math.min(100, r.heat + Math.round(5 * drug.heatMult));
       // Tracked for getWorldMarketShare — every cartel's cumulative distribution volume, not just
-      // the player's, so market share is a genuine zero-sum comparison against real rivals.
+      // the player's, so market share is a genuine zero-sum comparison against real rivals. Kept
+      // per-drug too, so a cartel dealing in more than one product (see switch_drug) can be
+      // measured against rivals in that specific market, not just an undifferentiated total.
       r.distributionVolume = (r.distributionVolume || 0) + payout;
+      if (!r.distributionVolumeByDrug) r.distributionVolumeByDrug = {};
+      r.distributionVolumeByDrug[drug.id] = (r.distributionVolumeByDrug[drug.id] || 0) + payout;
       if (partner) {
         partner.resources.money = Math.round(partner.resources.money + payout * 0.15);
         const tensionDelta = partnerStatus === "alliance" ? -5 : -2;
@@ -919,7 +954,9 @@ export function applyAction(game, cartelId, type, payload = {}) {
       // A skilled traffickingChief on the target's side means the shipment being ambushed was
       // better routed/covered in the first place — harder to catch, not just harder to rob once caught.
       const defense = target.resources.corruptPolice / 2 + 20 + traffickingChiefBonus(game.characters[target.roles.traffickingChief]);
-      const drug = getDrugProfile(game);
+      // The shipment being ambushed is the target's, so its own drug (not the raider's) is what
+      // determines how easy it is to catch in transit.
+      const drug = getDrugProfile(game, target);
       let successChance = clamp(clamp(0.35 + (skill - defense) / 150, 0.15, 0.7) * drug.seizureMult, 0.1, 0.8);
       if (hasActiveInformant(cartel, target.id)) successChance = clamp(successChance + INFORMANT_SUCCESS_BONUS, 0.1, 0.9);
       const bumpTension = (delta) => {
@@ -1219,6 +1256,27 @@ export function applyAction(game, cartelId, type, payload = {}) {
       log(`${cartel.name} establece una nueva ruta comercial internacional (bonus permanente a los envíos: +${Math.round(r.tradeRouteBonus * 100)}%).`, "good");
       return { ok: true, tradeRouteBonus: r.tradeRouteBonus };
     }
+    case "switch_drug": {
+      // Real cartels didn't always stay married to one product for their whole history — most
+      // famously Félix Gallardo's Guadalajara cartel built its early power on marijuana and heroin
+      // before pivoting to cocaine once Colombian groups started routing product through Mexico in
+      // the 1980s. `availableFromYear` (see DRUG_PROFILES) gates a switch to something the cartel
+      // couldn't plausibly have had access to yet.
+      const profiles = getDrugProfiles(game);
+      const target = profiles.find((p) => p.id === payload.drugId);
+      if (!target) return { ok: false, message: "Ese producto no existe en esta época." };
+      const currentDrug = getDrugProfile(game, cartel);
+      if (target.id === currentDrug.id) return { ok: false, message: "Ya te dedicas a esto." };
+      if (target.availableFromYear && currentYear(game) < target.availableFromYear) {
+        return { ok: false, message: `Todavía no hay una conexión real para esto (no antes de ${target.availableFromYear}).` };
+      }
+      const cost = ACTION_COSTS.switch_drug;
+      if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
+      r.money -= cost;
+      r.drugId = target.id;
+      log(`${cartel.name} establece una nueva conexión y empieza a mover ${target.name.toLowerCase()}.`, "good");
+      return { ok: true, drugId: target.id };
+    }
     default:
       return { ok: false, message: "Acción desconocida." };
   }
@@ -1494,6 +1552,12 @@ function runAiCartels(game) {
     if (r.money >= ACTION_COSTS.invest_security && (r.securityBonus || 0) < 0.3) options.push({ item: "invest_security", weight: atWar ? 1.2 : 0.6 });
     if (r.money >= ACTION_COSTS.invest_hideout && (r.hideoutBonus || 0) < 0.3) options.push({ item: "invest_hideout", weight: r.heat > 50 ? 1.2 : 0.5 });
     if (r.money >= ACTION_COSTS.invest_trade_route && (r.tradeRouteBonus || 0) < 0.3) options.push({ item: "invest_trade_route", weight: 1 });
+    {
+      const drugProfiles = getDrugProfiles(game);
+      const currentDrug = getDrugProfile(game, cartel);
+      const betterDrug = drugProfiles.find((p) => p.id !== currentDrug.id && p.payoutMult > currentDrug.payoutMult && (!p.availableFromYear || currentYear(game) >= p.availableFromYear));
+      if (betterDrug && r.money >= ACTION_COSTS.switch_drug) options.push({ item: "switch_drug", weight: 0.6 });
+    }
 
     let choice = weightedChoice(options);
     if (choice === "attack_territory") {
@@ -1624,6 +1688,17 @@ function runAiCartels(game) {
       choice = "corrupt_gov";
       if (!canAfford(cartel, choice)) continue;
     }
+    if (choice === "switch_drug") {
+      const profiles = getDrugProfiles(game);
+      const currentDrug = getDrugProfile(game, cartel);
+      const target = profiles.find((p) => p.id !== currentDrug.id && p.payoutMult > currentDrug.payoutMult && (!p.availableFromYear || currentYear(game) >= p.availableFromYear));
+      if (target) {
+        applyAction(game, cartel.id, "switch_drug", { drugId: target.id });
+        continue;
+      }
+      choice = "invest_trade_route";
+      if (!canAfford(cartel, choice)) continue;
+    }
     if (choice) applyAction(game, cartel.id, choice, {});
   }
 }
@@ -1727,12 +1802,13 @@ export function getIncomeBreakdown(game, cartel) {
  * across every living cartel. Zero-sum by construction: growing your own volume only raises your
  * share for real if rivals aren't growing theirs just as fast. Returns 0 before anyone has ever
  * completed a shipment (nothing to have a share of yet). */
-export function getWorldMarketShare(game, cartel) {
+export function getWorldMarketShare(game, cartel, drugId) {
+  const volumeOf = (c) => (drugId ? (c.resources.distributionVolumeByDrug?.[drugId] || 0) : (c.resources.distributionVolume || 0));
   const total = Object.values(game.cartels)
     .filter((c) => !c.destroyed)
-    .reduce((s, c) => s + (c.resources.distributionVolume || 0), 0);
+    .reduce((s, c) => s + volumeOf(c), 0);
   if (total <= 0) return 0;
-  return ((cartel.resources.distributionVolume || 0) / total) * 100;
+  return (volumeOf(cartel) / total) * 100;
 }
 
 function incomeTick(game) {
