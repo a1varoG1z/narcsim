@@ -55,6 +55,14 @@ function traffickingChiefBonus(chief) {
   return clamp(Math.round((skill - 50) / 8), -6, 6);
 }
 
+/** diplomatChief scales how persuasive your peace/alliance diplomacy actually is — same modest,
+ * skill-50-centered shape (charisma+intrigue, like the corruption chiefs) as the other role hooks.
+ * An absent or average diplomat changes almost nothing. */
+function diplomatChiefBonus(chief) {
+  const skill = chief ? (chief.stats.charisma + chief.stats.intrigue) / 2 : 40;
+  return clamp(Math.round((skill - 50) / 8), -6, 6);
+}
+
 const VENDETTA_BONUS = 0.12;
 const VENDETTA_EXPIRY_TURNS = 16;
 const VENDETTA_CHANCE = 0.5;
@@ -416,6 +424,8 @@ export function applyAction(game, cartelId, type, payload = {}) {
       if (validCession) acceptChance = clamp(acceptChance + 0.3, 0.1, 0.97);
       const demandIndemnity = !!payload.demandIndemnity;
       if (demandIndemnity) acceptChance = clamp(acceptChance - 0.2, 0.05, 0.97);
+      const peaceDiplomatBonus = diplomatChiefBonus(game.characters[cartel.roles.diplomatChief]);
+      acceptChance = clamp(acceptChance + peaceDiplomatBonus / 100, 0.05, 0.97);
 
       if (chance(acceptChance)) {
         cartel.relations[target.id] = { status: "neutral", tension: 30 };
@@ -480,7 +490,8 @@ export function applyAction(game, cartelId, type, payload = {}) {
           bonus = clamp(giftAmount / (5000 * MONEY_SCALE), 0, 0.25);
         }
       }
-      const acceptChance = clamp(0.35 - cartel.relations[target.id].tension / 200 + bonus, 0.05, 0.9);
+      const allianceDiplomatBonus = diplomatChiefBonus(game.characters[cartel.roles.diplomatChief]);
+      const acceptChance = clamp(0.35 - cartel.relations[target.id].tension / 200 + bonus + allianceDiplomatBonus / 100, 0.05, 0.9);
       if (chance(acceptChance)) {
         cartel.relations[target.id] = { status: "alliance", tension: 5 };
         target.relations[cartel.id] = { status: "alliance", tension: 5 };

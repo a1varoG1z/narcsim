@@ -1584,6 +1584,60 @@ test("propose_alliance's 'commonEnemy' approach gives a real chance bonus when t
   }
 });
 
+test("propose_alliance's diplomatChief genuinely moves the odds: a skilled diplomat flips a roll a clumsy one would lose", () => {
+  // Base acceptChance with no approach: 0.35 - 40/200 = 0.15. A skill-10 diplomat nudges it to
+  // 0.10 (bonus -5/100); a skill-90 diplomat nudges it to 0.20 (bonus +5/100).
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.15; // between the two thresholds
+    const weakGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    weakGame.cartels.sinaloa.relations.golfo.tension = 40;
+    const weakDiplomat = weakGame.characters[weakGame.cartels.sinaloa.roles.diplomatChief];
+    weakDiplomat.stats.charisma = 10;
+    weakDiplomat.stats.intrigue = 10;
+    const weakResult = applyAction(weakGame, "sinaloa", "propose_alliance", { targetCartelId: "golfo" });
+    assert.equal(weakResult.accepted, false, "a clumsy diplomat shouldn't be enough to land this roll");
+
+    const skilledGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    skilledGame.cartels.sinaloa.relations.golfo.tension = 40;
+    const skilledDiplomat = skilledGame.characters[skilledGame.cartels.sinaloa.roles.diplomatChief];
+    skilledDiplomat.stats.charisma = 90;
+    skilledDiplomat.stats.intrigue = 90;
+    const skilledResult = applyAction(skilledGame, "sinaloa", "propose_alliance", { targetCartelId: "golfo" });
+    assert.equal(skilledResult.accepted, true, "a skilled diplomat should be enough to land the exact same roll");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("propose_peace's diplomatChief genuinely moves the odds the same way", () => {
+  // Equal armies give a base acceptChance of exactly 0.3. A skill-10 diplomat nudges it to 0.25;
+  // a skill-90 diplomat nudges it to 0.35.
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.3; // between the two thresholds
+    const weakGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    applyAction(weakGame, "sinaloa", "declare_war", { targetCartelId: "cdn" });
+    weakGame.cartels.cdn.resources.armySize = weakGame.cartels.sinaloa.resources.armySize;
+    const weakDiplomat = weakGame.characters[weakGame.cartels.sinaloa.roles.diplomatChief];
+    weakDiplomat.stats.charisma = 10;
+    weakDiplomat.stats.intrigue = 10;
+    const weakResult = applyAction(weakGame, "sinaloa", "propose_peace", { targetCartelId: "cdn" });
+    assert.equal(weakResult.accepted, false, "a clumsy diplomat shouldn't be enough to land this roll");
+
+    const skilledGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    applyAction(skilledGame, "sinaloa", "declare_war", { targetCartelId: "cdn" });
+    skilledGame.cartels.cdn.resources.armySize = skilledGame.cartels.sinaloa.resources.armySize;
+    const skilledDiplomat = skilledGame.characters[skilledGame.cartels.sinaloa.roles.diplomatChief];
+    skilledDiplomat.stats.charisma = 90;
+    skilledDiplomat.stats.intrigue = 90;
+    const skilledResult = applyAction(skilledGame, "sinaloa", "propose_peace", { targetCartelId: "cdn" });
+    assert.equal(skilledResult.accepted, true, "a skilled diplomat should be enough to land the exact same roll");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
 test("traffic_shipment refuses to sell to a cartel you're at war with", () => {
   const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
   game.cartels.sinaloa.resources.money = ACTION_COSTS.traffic_shipment * 10; // comfortably enough that the war check, not the cost check, is what's exercised
