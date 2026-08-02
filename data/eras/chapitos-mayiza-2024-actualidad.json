@@ -149,20 +149,236 @@
       "value": 13,
       "adj": [
         "guerrero",
-        "ecuador"
+        "honduras",
+        "el_salvador"
+      ]
+    },
+    {
+      "id": "honduras",
+      "name": "Honduras",
+      "x": 13,
+      "y": 104,
+      "w": 17,
+      "h": 10,
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "guatemala",
+        "el_salvador",
+        "nicaragua"
+      ]
+    },
+    {
+      "id": "el_salvador",
+      "name": "El Salvador",
+      "x": 13,
+      "y": 119,
+      "w": 17,
+      "h": 10,
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "guatemala",
+        "honduras"
+      ]
+    },
+    {
+      "id": "nicaragua",
+      "name": "Nicaragua",
+      "x": 13,
+      "y": 134,
+      "w": 17,
+      "h": 10,
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "honduras",
+        "costa_rica"
+      ]
+    },
+    {
+      "id": "costa_rica",
+      "name": "Costa Rica",
+      "x": 13,
+      "y": 149,
+      "w": 17,
+      "h": 10,
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "nicaragua",
+        "panama"
+      ]
+    },
+    {
+      "id": "panama",
+      "name": "Panamá",
+      "x": 13,
+      "y": 164,
+      "w": 17,
+      "h": 10,
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "costa_rica",
+        "colombia"
+      ]
+    },
+    {
+      "id": "colombia",
+      "name": "Colombia",
+      "x": 13,
+      "y": 179,
+      "w": 17,
+      "h": 10,
+      "controllerId": null,
+      "value": 16,
+      "adj": [
+        "panama",
+        "venezuela",
+        "ecuador",
+        "peru",
+        "brasil"
+      ]
+    },
+    {
+      "id": "venezuela",
+      "name": "Venezuela",
+      "x": 13,
+      "y": 194,
+      "w": 17,
+      "h": 10,
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "colombia",
+        "brasil"
+      ]
+    },
+    {
+      "id": "peru",
+      "name": "Perú",
+      "x": 13,
+      "y": 224,
+      "w": 17,
+      "h": 10,
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "ecuador",
+        "colombia",
+        "brasil",
+        "bolivia",
+        "chile"
+      ]
+    },
+    {
+      "id": "bolivia",
+      "name": "Bolivia",
+      "x": 13,
+      "y": 239,
+      "w": 17,
+      "h": 10,
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "peru",
+        "brasil",
+        "paraguay",
+        "argentina",
+        "chile"
+      ]
+    },
+    {
+      "id": "brasil",
+      "name": "Brasil",
+      "x": 13,
+      "y": 254,
+      "w": 17,
+      "h": 10,
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "colombia",
+        "venezuela",
+        "peru",
+        "bolivia",
+        "paraguay",
+        "uruguay"
+      ]
+    },
+    {
+      "id": "paraguay",
+      "name": "Paraguay",
+      "x": 13,
+      "y": 269,
+      "w": 17,
+      "h": 10,
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "bolivia",
+        "brasil",
+        "argentina"
+      ]
+    },
+    {
+      "id": "argentina",
+      "name": "Argentina",
+      "x": 13,
+      "y": 284,
+      "w": 17,
+      "h": 10,
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "bolivia",
+        "paraguay",
+        "uruguay",
+        "chile"
+      ]
+    },
+    {
+      "id": "uruguay",
+      "name": "Uruguay",
+      "x": 13,
+      "y": 299,
+      "w": 17,
+      "h": 10,
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "brasil",
+        "argentina"
+      ]
+    },
+    {
+      "id": "chile",
+      "name": "Chile",
+      "x": 13,
+      "y": 314,
+      "w": 17,
+      "h": 10,
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "peru",
+        "bolivia",
+        "argentina"
       ]
     },
     {
       "id": "ecuador",
       "name": "Guayas (Ecuador)",
       "x": 13,
-      "y": 104,
+      "y": 209,
       "w": 17,
       "h": 10,
       "controllerId": "choneros",
       "value": 14,
       "adj": [
-        "guatemala"
+        "colombia",
+        "peru"
       ]
     }
   ],
