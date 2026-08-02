@@ -1491,6 +1491,32 @@ test("invest_hideout grants a capped, cumulative bonus, and refuses without enou
   assert.equal(cartel.resources.hideoutBonus, 0.3, "10 purchases of +3% each should hit the 30% cap");
 });
 
+test("invest_weapons/invest_security/invest_hideout each get a genuinely bigger bonus per purchase from a skilled militaryChief/sicariosChief/intelChief, same modest shape as the other role hooks", () => {
+  const cases = [
+    { type: "invest_weapons", field: "weaponsBonus", role: "militaryChief", stats: ["violence", "business"] },
+    { type: "invest_security", field: "securityBonus", role: "sicariosChief", stats: ["violence", "stealth"] },
+    { type: "invest_hideout", field: "hideoutBonus", role: "intelChief", stats: ["intrigue", "stealth"] },
+  ];
+  for (const { type, field, role, stats } of cases) {
+    const weakGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    weakGame.cartels.cjng.resources.money = 100_000_000;
+    const weakChief = weakGame.characters[weakGame.cartels.cjng.roles[role]];
+    for (const stat of stats) weakChief.stats[stat] = 10;
+    applyAction(weakGame, "cjng", type);
+
+    const skilledGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    skilledGame.cartels.cjng.resources.money = 100_000_000;
+    const skilledChief = skilledGame.characters[skilledGame.cartels.cjng.roles[role]];
+    for (const stat of stats) skilledChief.stats[stat] = 90;
+    applyAction(skilledGame, "cjng", type);
+
+    assert.ok(
+      skilledGame.cartels.cjng.resources[field] > weakGame.cartels.cjng.resources[field],
+      `${type}: a skilled ${role} should yield a bigger bonus per purchase than a weak one`
+    );
+  }
+});
+
 test("invest_hideout's bonus only helps the player personally resist a police raid, not the cartel at large", () => {
   const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
   const cartel = game.cartels.sinaloa;

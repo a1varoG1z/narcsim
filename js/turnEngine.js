@@ -64,6 +64,23 @@ function financeChiefBonus(chief) {
   return clamp(Math.round((skill - 50) / 8), -6, 6);
 }
 
+/** militaryChief/sicariosChief/intelChief also scale how much ground each round of permanent
+ * investment (weapons, personal security, hideout) actually buys per purchase — same modest,
+ * skill-50-centered shape as the other role hooks. An absent or average chief changes almost
+ * nothing. */
+function militaryChiefBonus(chief) {
+  const skill = chief ? (chief.stats.violence + chief.stats.business) / 2 : 40;
+  return clamp(Math.round((skill - 50) / 8), -6, 6);
+}
+function sicariosChiefBonus(chief) {
+  const skill = chief ? (chief.stats.violence + chief.stats.stealth) / 2 : 40;
+  return clamp(Math.round((skill - 50) / 8), -6, 6);
+}
+function intelChiefBonus(chief) {
+  const skill = chief ? (chief.stats.intrigue + chief.stats.stealth) / 2 : 40;
+  return clamp(Math.round((skill - 50) / 8), -6, 6);
+}
+
 /** diplomatChief scales how persuasive your peace/alliance diplomacy actually is — same modest,
  * skill-50-centered shape (charisma+intrigue, like the corruption chiefs) as the other role hooks.
  * An absent or average diplomat changes almost nothing. */
@@ -1159,7 +1176,8 @@ export function applyAction(game, cartelId, type, payload = {}) {
       const cost = ACTION_COSTS.invest_weapons;
       if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
       r.money -= cost;
-      r.weaponsBonus = clamp((r.weaponsBonus || 0) + 0.02, 0, 0.3);
+      const weaponsMilitaryBonus = militaryChiefBonus(game.characters[cartel.roles.militaryChief]);
+      r.weaponsBonus = clamp((r.weaponsBonus || 0) + 0.02 * (1 + weaponsMilitaryBonus / 50), 0, 0.3);
       r.heat = Math.min(100, r.heat + randInt(2, 5));
       log(`${cartel.name} arma y equipa mejor a su gente (bonificación de combate: +${Math.round(r.weaponsBonus * 100)}%).`, "good");
       return { ok: true, weaponsBonus: r.weaponsBonus };
@@ -1168,7 +1186,8 @@ export function applyAction(game, cartelId, type, payload = {}) {
       const cost = ACTION_COSTS.invest_security;
       if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
       r.money -= cost;
-      r.securityBonus = clamp((r.securityBonus || 0) + 0.03, 0, 0.3);
+      const securitySicariosBonus = sicariosChiefBonus(game.characters[cartel.roles.sicariosChief]);
+      r.securityBonus = clamp((r.securityBonus || 0) + 0.03 * (1 + securitySicariosBonus / 50), 0, 0.3);
       log(`${cartel.name} refuerza la seguridad privada de su líder (reduce en ${Math.round(r.securityBonus * 100)}% la probabilidad de que un atentado contra él/ella tenga éxito).`, "good");
       return { ok: true, securityBonus: r.securityBonus };
     }
@@ -1176,7 +1195,8 @@ export function applyAction(game, cartelId, type, payload = {}) {
       const cost = ACTION_COSTS.invest_hideout;
       if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
       r.money -= cost;
-      r.hideoutBonus = clamp((r.hideoutBonus || 0) + 0.03, 0, 0.3);
+      const hideoutIntelBonus = intelChiefBonus(game.characters[cartel.roles.intelChief]);
+      r.hideoutBonus = clamp((r.hideoutBonus || 0) + 0.03 * (1 + hideoutIntelBonus / 50), 0, 0.3);
       log(`${cartel.name} habilita un refugio con vías de escape (mejora en ${Math.round(r.hideoutBonus * 100)}% tus probabilidades de esquivar una redada o de fugarte con éxito).`, "good");
       return { ok: true, hideoutBonus: r.hideoutBonus };
     }
