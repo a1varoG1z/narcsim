@@ -394,13 +394,41 @@ function showRaidModal(app, game, cartel, targetCartelId) {
   document.getElementById("close-btn").addEventListener("click", closeModal);
   document.querySelectorAll("[data-territory]").forEach((btn) => {
     btn.addEventListener("click", () => {
-      const result = applyAction(game, cartel.id, "raid_territory", { territoryId: btn.dataset.territory });
-      app.setGame(game);
-      closeModal();
-      if (!result.ok) alert(result.message);
-      else alert(`La redada deja ${result.casualties} bajas y daña la zona.`);
-      app.render();
+      showRaidApproachModal(app, game, cartel, game.territories[btn.dataset.territory]);
     });
+  });
+}
+
+function showRaidApproachModal(app, game, cartel, territory) {
+  const apply = (approach) => {
+    const result = applyAction(game, cartel.id, "raid_territory", { territoryId: territory.id, approach });
+    app.setGame(game);
+    closeModal();
+    if (!result.ok) alert(result.message);
+    else alert(`La redada deja ${result.casualties} bajas y daña la zona.`);
+    app.render();
+  };
+
+  showModal(`
+    <h2>¿Cómo llevas la redada contra ${escapeHtml(territory.name)}?</h2>
+    <p class="small text-dim">El método cambia cuánto daño causas y cuánto heat y riesgo asumes tú mismo.</p>
+    <button class="block" data-approach="surgical">
+      Golpe quirúrgico
+      <div class="small text-dim">Menos bajas causadas y menos daño al territorio, pero también mucho menos heat para los dos bandos.</div>
+    </button>
+    <button class="danger block" data-approach="standard">
+      Redada estándar
+      <div class="small text-dim">El equilibrio de siempre entre bajas causadas, daño al territorio y heat.</div>
+    </button>
+    <button class="danger block" data-approach="all_out">
+      Asalto total
+      <div class="small text-dim">Muchas más bajas causadas y mucho más daño al territorio, pero dispara el heat de ambos bandos y el enfrentamiento te cuesta también bajas propias.</div>
+    </button>
+    <button class="ghost block mt-1" id="close-btn">Cancelar</button>
+  `);
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.querySelectorAll("[data-approach]").forEach((btn) => {
+    btn.addEventListener("click", () => apply(btn.dataset.approach));
   });
 }
 

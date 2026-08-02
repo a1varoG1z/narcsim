@@ -988,17 +988,41 @@ export function applyAction(game, cartelId, type, payload = {}) {
       if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
       const defender = game.cartels[territory.controllerId];
       r.money -= cost;
-      const casualties = Math.round(defender.resources.armySize * randInt(2, 8) / 100);
+      const approach = payload.approach || "standard";
+      let casualtyPct = [2, 8];
+      let valueLoss = [1, 3];
+      let defenderHeat = [4, 9];
+      let ownHeat = [3, 7];
+      let tensionGain = [8, 18];
+      let ownCasualtyPct = null;
+      if (approach === "surgical") {
+        casualtyPct = [1, 4];
+        valueLoss = [0, 2];
+        defenderHeat = [2, 5];
+        ownHeat = [1, 4];
+        tensionGain = [4, 10];
+      } else if (approach === "all_out") {
+        casualtyPct = [8, 18];
+        valueLoss = [3, 6];
+        defenderHeat = [10, 18];
+        ownHeat = [10, 18];
+        tensionGain = [20, 35];
+        ownCasualtyPct = [1, 5];
+      }
+      const casualties = Math.round(defender.resources.armySize * randInt(...casualtyPct) / 100);
       defender.resources.armySize = Math.max(0, defender.resources.armySize - casualties);
-      territory.value = Math.max(1, territory.value - randInt(1, 3));
-      defender.resources.heat = Math.min(100, defender.resources.heat + randInt(4, 9));
-      r.heat = Math.min(100, r.heat + randInt(3, 7));
+      territory.value = Math.max(1, territory.value - randInt(...valueLoss));
+      defender.resources.heat = Math.min(100, defender.resources.heat + randInt(...defenderHeat));
+      r.heat = Math.min(100, r.heat + randInt(...ownHeat));
+      if (ownCasualtyPct) {
+        r.armySize = Math.max(0, r.armySize - Math.round(r.armySize * randInt(...ownCasualtyPct) / 100));
+      }
       const status = cartel.relations[defender.id]?.status || "neutral";
-      const tension = clamp((cartel.relations[defender.id]?.tension || 30) + randInt(8, 18), 0, 100);
+      const tension = clamp((cartel.relations[defender.id]?.tension || 30) + randInt(...tensionGain), 0, 100);
       cartel.relations[defender.id] = { status, tension };
       defender.relations[cartelId] = { status, tension };
       log(`${cartel.name} realiza una redada contra instalaciones de ${defender.name} en ${territory.name}, dejando ${casualties} bajas y dañando la zona.`, "event");
-      return { ok: true, casualties, newValue: territory.value };
+      return { ok: true, casualties, newValue: territory.value, approach };
     }
     case "intimidate_territory": {
       // Deliberately distinct from raid_territory: a loud, public show of force with no armed

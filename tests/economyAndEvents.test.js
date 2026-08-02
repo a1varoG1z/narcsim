@@ -1181,6 +1181,57 @@ test("raid_territory only works on an adjacent enemy-owned territory, causing ca
   assert.equal(game.territories[adjacentEnemyTerritory].controllerId, defender.id, "a raid should never transfer ownership");
 });
 
+test("raid_territory defaults to 'standard' behavior when no approach is passed, matching what AI cartels get", () => {
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.5;
+    const withoutApproach = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    const withStandard = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    withoutApproach.cartels.sinaloa.resources.money = 100_000_000;
+    withStandard.cartels.sinaloa.resources.money = 100_000_000;
+    const r1 = applyAction(withoutApproach, "sinaloa", "raid_territory", { territoryId: "jalisco" });
+    const r2 = applyAction(withStandard, "sinaloa", "raid_territory", { territoryId: "jalisco", approach: "standard" });
+    assert.equal(r1.approach, "standard");
+    assert.equal(r2.approach, "standard");
+    assert.equal(r1.casualties, r2.casualties);
+    assert.equal(withoutApproach.cartels.cjng.resources.heat, withStandard.cartels.cjng.resources.heat);
+    assert.equal(withoutApproach.cartels.sinaloa.resources.heat, withStandard.cartels.sinaloa.resources.heat);
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("raid_territory's approach is a genuine trade-off: 'surgical' causes less damage and heat, 'all_out' causes much more but costs your own army men too", () => {
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.01; // pins every roll to its range floor, for a clean relative comparison
+    const surgicalGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    surgicalGame.cartels.sinaloa.resources.money = 100_000_000;
+    const surgicalArmyBefore = surgicalGame.cartels.sinaloa.resources.armySize;
+    const surgicalResult = applyAction(surgicalGame, "sinaloa", "raid_territory", { territoryId: "jalisco", approach: "surgical" });
+
+    const standardGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    standardGame.cartels.sinaloa.resources.money = 100_000_000;
+    const standardArmyBefore = standardGame.cartels.sinaloa.resources.armySize;
+    const standardResult = applyAction(standardGame, "sinaloa", "raid_territory", { territoryId: "jalisco", approach: "standard" });
+
+    const allOutGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    allOutGame.cartels.sinaloa.resources.money = 100_000_000;
+    const allOutArmyBefore = allOutGame.cartels.sinaloa.resources.armySize;
+    const allOutResult = applyAction(allOutGame, "sinaloa", "raid_territory", { territoryId: "jalisco", approach: "all_out" });
+
+    assert.ok(surgicalResult.casualties < standardResult.casualties, "surgical should cause fewer casualties than standard");
+    assert.ok(standardResult.casualties < allOutResult.casualties, "all_out should cause more casualties than standard");
+    assert.ok(surgicalGame.cartels.cjng.resources.heat < standardGame.cartels.cjng.resources.heat, "surgical should raise the defender's heat less than standard");
+    assert.ok(standardGame.cartels.cjng.resources.heat < allOutGame.cartels.cjng.resources.heat, "all_out should raise the defender's heat more than standard");
+    assert.equal(surgicalGame.cartels.sinaloa.resources.armySize, surgicalArmyBefore, "surgical shouldn't cost the attacker any army men");
+    assert.equal(standardGame.cartels.sinaloa.resources.armySize, standardArmyBefore, "standard shouldn't cost the attacker any army men");
+    assert.ok(allOutGame.cartels.sinaloa.resources.armySize < allOutArmyBefore, "all_out should cost the attacker army men in the resulting firefight");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
 test("intimidate_territory only works on an adjacent enemy-owned territory, and unlike raid_territory never causes casualties", () => {
   const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
   const cartel = game.cartels.sinaloa;
