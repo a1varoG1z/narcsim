@@ -1312,6 +1312,17 @@ function runAiCartels(game) {
     if (warDeclarationTargets.length && activeWarCount < 2 && r.armySize > 100) {
       options.push({ item: "declare_war", weight: 0.4 });
     }
+    // Free and already fully tested from the player's side — fighting on 2+ fronts at once is
+    // exactly the situation set_war_focus is meant for, so a cartel in that spot reconsiders its
+    // focus once the current one is about to lapse (or it never had one) rather than re-declaring
+    // it every single turn.
+    const warFocusTargets = Object.entries(cartel.relations)
+      .filter(([, rel]) => rel.status === "war")
+      .map(([id]) => game.cartels[id])
+      .filter((c) => c && !c.destroyed);
+    if (activeWarCount >= 2 && (!cartel.warFocus || cartel.warFocus.turnsRemaining <= 1)) {
+      options.push({ item: "set_war_focus", weight: 2 });
+    }
     if (rivalCartels.length && r.money >= ACTION_COSTS.assassinate_rival) {
       options.push({ item: "assassinate_rival", weight: atWar ? 1.5 : 0.4 });
     }
@@ -1391,6 +1402,15 @@ function runAiCartels(game) {
       if (warDeclarationTargets.length) {
         const target = pick(warDeclarationTargets);
         applyAction(game, cartel.id, "declare_war", { targetCartelId: target.id, pretext: "open" });
+        continue;
+      }
+      choice = "recruit_army";
+      if (!canAfford(cartel, choice)) continue;
+    }
+    if (choice === "set_war_focus") {
+      if (warFocusTargets.length) {
+        const biggestThreat = warFocusTargets.reduce((a, b) => (b.resources.armySize > a.resources.armySize ? b : a));
+        applyAction(game, cartel.id, "set_war_focus", { targetCartelId: biggestThreat.id });
         continue;
       }
       choice = "recruit_army";
