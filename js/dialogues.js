@@ -113,6 +113,55 @@ export function defaultPoachDialogue() {
   };
 }
 
+export function defaultInformantDialogue() {
+  return {
+    start: "greeting",
+    nodes: {
+      greeting: {
+        text: "Te acercas a {partner} en privado para proponerle un trato: información a cambio de protección y dinero, sin que nadie más lo sepa.",
+        options: [
+          { label: "Ofrecer un pago fijo y discreto", next: "money", warmth: 1 },
+          { label: "Apelar a un rencor o resentimiento que ya tiene", next: "grievance", warmth: 2 },
+          { label: "Presionar con lo que ya sabes de él/ella", next: "pressure", warmth: -1 },
+        ],
+      },
+      money: {
+        text: "{partner} escucha con cautela; el dinero le interesa, pero teme que lo descubran.",
+        options: [
+          { label: "Prometerle máxima discreción y un canal seguro", next: "close", warmth: 2 },
+          { label: "Insistir en que el riesgo merece la pena", next: "close", warmth: 1 },
+        ],
+      },
+      grievance: {
+        text: "{partner} baja la voz: reconoce que hay cosas de su propio cártel que no le sientan bien.",
+        options: [
+          { label: "Escuchar y dejar que se desahogue", next: "close", warmth: 3 },
+          { label: "Ir directo a cerrar el trato", next: "close", warmth: 1 },
+        ],
+      },
+      pressure: {
+        text: "{partner} se pone tenso/a; no le gusta sentirse acorralado/a.",
+        options: [
+          { label: "Suavizar el tono antes de que se cierre", next: "close", warmth: 0 },
+          { label: "Mantener la presión de todos modos", next: "walk_away_early", warmth: -3 },
+        ],
+      },
+      close: {
+        text: "{partner} se queda callado/a un momento, sopesando el riesgo real de aceptar.",
+        options: [
+          { label: "Continuar", resolve: "attempt", warmth: 0 },
+        ],
+      },
+      walk_away_early: {
+        text: "{partner} corta la conversación en seco, nervioso/a por lo que podría pasar si alguien se entera.",
+        options: [
+          { label: "Aceptar y retirarte", resolve: "walk_away", warmth: 0 },
+        ],
+      },
+    },
+  };
+}
+
 export function cloneDialogueTree(tree) {
   return JSON.parse(JSON.stringify(tree));
 }

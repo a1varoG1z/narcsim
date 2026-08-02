@@ -1,7 +1,7 @@
 import { escapeHtml, portraitImg } from "../../ui/components.js";
 import { STATS, STAT_ORDER, ROLE_ORDER, ROLES } from "../../model.js";
 import { exportGameToFile, exportJSONFile, importGameFromFile, deleteSaveSlot, readImageAsDataURL } from "../../utils/storage.js";
-import { defaultConceptionDialogue, defaultPoachDialogue, isValidDialogueTree } from "../../dialogues.js";
+import { defaultConceptionDialogue, defaultPoachDialogue, defaultInformantDialogue, isValidDialogueTree } from "../../dialogues.js";
 import { getGithubToken, setGithubToken, saveGameToGist, loadGameFromGist } from "../../utils/github.js";
 
 const STATUS_LABEL = { war: "En guerra", alliance: "Aliados", neutral: "Neutral" };
@@ -24,6 +24,14 @@ const DIALOGUE_TREE_META = {
     resolveOptions: [
       { value: "attempt", label: "Fin de la escena: intentar el reclutamiento" },
       { value: "walk_away", label: "Fin de la escena: se aleja, sin trato" },
+    ],
+  },
+  informant: {
+    label: "Reclutar informante",
+    defaultTree: defaultInformantDialogue,
+    resolveOptions: [
+      { value: "attempt", label: "Fin de la escena: intentar reclutarlo/a como informante" },
+      { value: "walk_away", label: "Fin de la escena: se cierra, sin trato" },
     ],
   },
 };

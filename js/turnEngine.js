@@ -876,25 +876,36 @@ export function applyAction(game, cartelId, type, payload = {}) {
     case "recruit_informant": {
       const cost = ACTION_COSTS.recruit_informant;
       if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
-      const target = game.cartels[payload.targetCartelId];
-      if (!target || target.id === cartelId || target.destroyed) return { ok: false, message: "Objetivo no válido." };
+      const target = game.characters[payload.targetCharacterId];
+      const targetCartel = target ? game.cartels[target.cartelId] : null;
+      if (!target || !target.alive || target.imprisoned || !targetCartel || targetCartel.id === cartelId || targetCartel.destroyed) {
+        return { ok: false, message: "Objetivo no válido." };
+      }
+      if (targetCartel.roles.leader === target.id) {
+        return { ok: false, message: "El líder de un cártel no traiciona así a su propia gente." };
+      }
       r.money -= cost;
       const recruiter = game.characters[cartel.roles.intelChief] || game.characters[cartel.roles.sicariosChief];
       const skill = recruiter ? (recruiter.stats.intrigue + recruiter.stats.stealth) / 2 : 40;
-      const defense = target.resources.corruptPolice / 2 + 25;
-      const successChance = clamp(0.35 + (skill - defense) / 150, 0.15, 0.7);
+      // Same cartel-level defense as before (corruptPolice), plus a modest, centered swing from
+      // this specific person's own loyalty — a true believer is genuinely harder to turn, a
+      // resentful lieutenant genuinely easier, without changing the average case.
+      const personalResistance = clamp((target.stats.loyaltyInspiring - 50) / 4, -12, 12);
+      const defense = targetCartel.resources.corruptPolice / 2 + 25 + personalResistance;
+      let successChance = clamp(0.35 + (skill - defense) / 150, 0.15, 0.7);
+      if (payload.persuasionBoost) successChance = clamp(successChance + payload.persuasionBoost * 0.02, 0.05, 0.85);
       if (chance(successChance)) {
         if (!cartel.informants) cartel.informants = {};
-        cartel.informants[target.id] = { turnsRemaining: randInt(4, 8) };
-        log(`${cartel.name} recluta un informante dentro de ${target.name}: tus próximos golpes contra ellos irán mejor informados.`, "event");
+        cartel.informants[targetCartel.id] = { turnsRemaining: randInt(4, 8), characterId: target.id };
+        log(`${cartel.name} recluta a ${target.name} como informante dentro de ${targetCartel.name}: tus próximos golpes contra ellos irán mejor informados.`, "event");
         return { ok: true, success: true };
       }
       r.heat = Math.min(100, r.heat + randInt(5, 12));
-      const status = cartel.relations[target.id]?.status || "neutral";
-      const tension = clamp((cartel.relations[target.id]?.tension || 30) + randInt(8, 16), 0, 100);
-      cartel.relations[target.id] = { status, tension };
-      target.relations[cartelId] = { status, tension };
-      log(`El intento de infiltrar a ${target.name} fracasa y despierta sus sospechas.`, "event");
+      const status = cartel.relations[targetCartel.id]?.status || "neutral";
+      const tension = clamp((cartel.relations[targetCartel.id]?.tension || 30) + randInt(8, 16), 0, 100);
+      cartel.relations[targetCartel.id] = { status, tension };
+      targetCartel.relations[cartelId] = { status, tension };
+      log(`El intento de convencer a ${target.name} de informar contra ${targetCartel.name} fracasa y despierta sospechas.`, "event");
       return { ok: true, success: false };
     }
     case "poach_member": {
@@ -1452,9 +1463,17 @@ function runAiCartels(game) {
       if (!canAfford(cartel, choice)) continue;
     }
     if (choice === "recruit_informant") {
-      const target = informantTargets.length ? pick(informantTargets) : null;
-      if (target) {
-        applyAction(game, cartel.id, "recruit_informant", { targetCartelId: target.id });
+      const informantTargetCartel = informantTargets.length ? pick(informantTargets) : null;
+      const informantCandidates = informantTargetCartel
+        ? ROLE_ORDER.filter((role) => role !== "leader")
+            .map((role) => informantTargetCartel.roles[role])
+            .filter((id, i, arr) => id && arr.indexOf(id) === i)
+            .map((id) => game.characters[id])
+            .filter((c) => c && c.alive)
+        : [];
+      const targetChar = informantCandidates.length ? pick(informantCandidates) : null;
+      if (targetChar) {
+        applyAction(game, cartel.id, "recruit_informant", { targetCharacterId: targetChar.id });
         continue;
       }
       choice = "corrupt_police";

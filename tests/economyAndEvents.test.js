@@ -960,36 +960,106 @@ test("intercept_shipment costs the attacker army and heat on failure, without to
   assert.ok(cartel.resources.armySize < 1000, "a failed ambush should cost the attacker some men");
 });
 
-test("recruit_informant succeeds or fails, refuses invalid targets/insufficient funds, and the resulting informant decays over its turn duration", () => {
+test("recruit_informant succeeds or fails, refuses invalid targets/insufficient funds/the target's own leader, and the resulting informant decays over its turn duration", () => {
   const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
   const cartel = game.cartels.sinaloa;
+  const cjngUnderbossId = game.cartels.cjng.roles.underboss;
   cartel.resources.money = 0;
-  const poorResult = applyAction(game, "sinaloa", "recruit_informant", { targetCartelId: "cjng" });
+  const poorResult = applyAction(game, "sinaloa", "recruit_informant", { targetCharacterId: cjngUnderbossId });
   assert.equal(poorResult.ok, false);
 
   cartel.resources.money = 100_000_000;
-  const sameCartelResult = applyAction(game, "sinaloa", "recruit_informant", { targetCartelId: "sinaloa" });
+  const sameCartelResult = applyAction(game, "sinaloa", "recruit_informant", { targetCharacterId: cartel.roles.underboss });
   assert.equal(sameCartelResult.ok, false);
 
-  const missingResult = applyAction(game, "sinaloa", "recruit_informant", { targetCartelId: "does-not-exist" });
+  const leaderResult = applyAction(game, "sinaloa", "recruit_informant", { targetCharacterId: game.cartels.cjng.roles.leader });
+  assert.equal(leaderResult.ok, false, "a rival cartel's own leader shouldn't inform on themselves");
+
+  const missingResult = applyAction(game, "sinaloa", "recruit_informant", { targetCharacterId: "does-not-exist" });
   assert.equal(missingResult.ok, false);
 
   const originalRandom = Math.random;
   let result;
   try {
     Math.random = () => 0; // guarantees the recruitment attempt succeeds
-    result = applyAction(game, "sinaloa", "recruit_informant", { targetCartelId: "cjng" });
+    result = applyAction(game, "sinaloa", "recruit_informant", { targetCharacterId: cjngUnderbossId });
   } finally {
     Math.random = originalRandom;
   }
   assert.equal(result.ok, true);
   assert.equal(result.success, true);
   assert.ok(cartel.informants && cartel.informants.cjng, "a successful recruitment should register an informant");
+  assert.equal(cartel.informants.cjng.characterId, cjngUnderbossId, "the informant record should remember exactly who agreed to talk");
   const turns = cartel.informants.cjng.turnsRemaining;
   assert.ok(turns >= 4 && turns <= 8, "the informant's duration should be within the documented 4-8 turn range");
 
   for (let i = 0; i < turns; i++) endTurn(game);
   assert.equal(cartel.informants.cjng, undefined, "the informant should have expired after its duration in turns");
+});
+
+test("recruit_informant's persuasionBoost (from how the actual conversation went) genuinely moves the success chance, but is a no-op when absent (e.g. an AI-initiated recruitment)", () => {
+  const setupCase = () => {
+    const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    const cartel = game.cartels.sinaloa;
+    const cjng = game.cartels.cjng;
+    cartel.resources.money = 100_000_000;
+    cjng.resources.corruptPolice = 0;
+    const recruiter = game.characters[cartel.roles.intelChief] || game.characters[cartel.roles.sicariosChief];
+    recruiter.stats.intrigue = 50;
+    recruiter.stats.stealth = 50;
+    const target = game.characters[cjng.roles.underboss];
+    target.stats.loyaltyInspiring = 50;
+    return { game, target };
+    // skill = 50; personalResistance = (50-50)/4 = 0; defense = 0/2+25+0 = 25;
+    // base successChance = clamp(0.35 + (50-25)/150, .15, .7) = 0.5167.
+  };
+
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.55; // above the unboosted ~0.517 chance
+    const { game: gameNoBoost, target: targetNoBoost } = setupCase();
+    const withoutBoost = applyAction(gameNoBoost, "sinaloa", "recruit_informant", { targetCharacterId: targetNoBoost.id });
+    assert.equal(withoutBoost.success, false, "no persuasionBoost (e.g. an AI recruitment, or the old instant-click flow) should behave exactly as before");
+
+    // persuasionBoost of 5 adds 5*0.02 = 0.10, pushing ~0.517 -> ~0.617, over the 0.55 roll.
+    const { game: gameBoost, target: targetBoost } = setupCase();
+    const withBoost = applyAction(gameBoost, "sinaloa", "recruit_informant", { targetCharacterId: targetBoost.id, persuasionBoost: 5 });
+    assert.equal(withBoost.success, true, "a strong conversation should push the same roll over the line");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("recruit_informant is genuinely easier against a target with weak personal loyalty than a staunchly loyal one, same recruiter skill", () => {
+  const setupCase = (loyaltyInspiring) => {
+    const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    const cartel = game.cartels.sinaloa;
+    const cjng = game.cartels.cjng;
+    cartel.resources.money = 100_000_000;
+    cjng.resources.corruptPolice = 0;
+    const recruiter = game.characters[cartel.roles.intelChief] || game.characters[cartel.roles.sicariosChief];
+    recruiter.stats.intrigue = 50;
+    recruiter.stats.stealth = 50;
+    const target = game.characters[cjng.roles.underboss];
+    target.stats.loyaltyInspiring = loyaltyInspiring;
+    return { game, target };
+  };
+  // loyalty 100 -> personalResistance +12 -> defense 37 -> chance = clamp(0.35 + 13/150) = 0.4367
+  // loyalty 0   -> personalResistance -12 -> defense 13 -> chance = clamp(0.35 + 37/150) = 0.5967
+
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.5; // between the two chances above
+    const { game: loyalGame, target: loyalTarget } = setupCase(100);
+    const vsLoyal = applyAction(loyalGame, "sinaloa", "recruit_informant", { targetCharacterId: loyalTarget.id });
+    assert.equal(vsLoyal.success, false, "a staunchly loyal target should resist at this roll");
+
+    const { game: weakGame, target: weakTarget } = setupCase(0);
+    const vsWeak = applyAction(weakGame, "sinaloa", "recruit_informant", { targetCharacterId: weakTarget.id });
+    assert.equal(vsWeak.success, true, "the identical roll should succeed against a target with weak personal loyalty");
+  } finally {
+    Math.random = originalRandom;
+  }
 });
 
 test("an active informant grants a real success-chance bonus for sabotage_rival against that specific cartel", () => {

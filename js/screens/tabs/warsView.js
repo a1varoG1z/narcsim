@@ -5,7 +5,7 @@ import { showModal, closeModal } from "../../ui/modal.js";
 import { showCartelProfile } from "./cartelProfile.js";
 import { fmtMoney } from "../../utils/text.js";
 import { ROLE_ORDER } from "../../model.js";
-import { defaultPoachDialogue } from "../../dialogues.js";
+import { defaultPoachDialogue, defaultInformantDialogue } from "../../dialogues.js";
 import { loadSettings, saveSettings } from "../../utils/storage.js";
 
 const STATUS_LABEL = { war: "En guerra", alliance: "Aliados", neutral: "Neutral" };
@@ -37,7 +37,7 @@ export function render(container, app) {
             <span class="badge ${STATUS_CLASS[rel.status]}">${STATUS_LABEL[rel.status]}</span>
           </div>
           <p class="small text-dim">Tensión: ${rel.tension}/100 · Ejército: ${o.resources.armySize} · Territorios: ${o.territories.length}</p>
-          ${hasActiveInformant(cartel, o.id) ? `<p class="small text-dim">🕵️ Tienes un informante infiltrado aquí (${cartel.informants[o.id].turnsRemaining} turnos más): mejores probabilidades en atentados y sabotajes.</p>` : ""}
+          ${hasActiveInformant(cartel, o.id) ? `<p class="small text-dim">🕵️ ${cartel.informants[o.id].characterId && game.characters[cartel.informants[o.id].characterId] ? `${escapeHtml(game.characters[cartel.informants[o.id].characterId].name)} te informa desde dentro` : "Tienes un informante infiltrado aquí"} (${cartel.informants[o.id].turnsRemaining} turnos más): mejores probabilidades en atentados y sabotajes.</p>` : ""}
           ${rel.status === "war" && cartel.warFocus?.targetCartelId === o.id ? `<p class="small text-success">🎯 Fuerzas concentradas en este frente (${cartel.warFocus.turnsRemaining} turnos más): más poder de combate aquí, menos en tus otros frentes abiertos.</p>` : ""}
           <div class="btn-row">
             ${rel.status !== "war" ? `<button class="danger" data-war="${o.id}">Declarar guerra</button>` : `<button data-peace="${o.id}">Proponer paz</button>`}
@@ -126,12 +126,7 @@ export function render(container, app) {
     showIntimidateModal(app, game, cartel, btn.dataset.intimidate);
   }));
   container.querySelectorAll("[data-informant]").forEach((btn) => btn.addEventListener("click", () => {
-    if (!confirm(`¿Reclutar un informante dentro de ${game.cartels[btn.dataset.informant].name} por ${fmtMoney(ACTION_COSTS.recruit_informant)}?`)) return;
-    const result = applyAction(game, cartel.id, "recruit_informant", { targetCartelId: btn.dataset.informant });
-    app.setGame(game);
-    if (!result.ok) alert(result.message);
-    else alert(result.success ? "Reclutas a un informante con éxito." : "El intento fracasa y despierta sospechas.");
-    app.render();
+    showInformantModal(app, game, cartel, btn.dataset.informant);
   }));
   container.querySelectorAll("[data-poach]").forEach((btn) => btn.addEventListener("click", () => {
     showPoachModal(app, game, cartel, btn.dataset.poach);
@@ -235,6 +230,114 @@ function finishPoachDialogue(app, game, cartel, targetCharacterId, resolution, p
       showModal(`
         <h2>${result.success ? "Se une a tu cártel" : "El intento fracasa"}</h2>
         <p>${result.success ? "Acepta el cambio de bando." : "No consigues convencerlo/a, y la maniobra queda expuesta."}</p>
+        <button class="primary block" id="ok-btn">Aceptar</button>
+      `);
+    }
+  }
+  document.getElementById("ok-btn").addEventListener("click", () => {
+    closeModal();
+    app.setGame(game);
+    app.render();
+  });
+}
+
+function showInformantModal(app, game, cartel, targetCartelId) {
+  const target = game.cartels[targetCartelId];
+  const candidates = ROLE_ORDER
+    .filter((role) => role !== "leader")
+    .map((role) => target.roles[role])
+    .filter((id, i, arr) => id && arr.indexOf(id) === i)
+    .map((id) => game.characters[id])
+    .filter((c) => c && c.alive);
+  const quickMode = !!loadSettings().quickDialogueMode;
+
+  showModal(`
+    <h2>Reclutar un informante dentro de ${escapeHtml(target.name)}</h2>
+    <p class="small text-dim">Coste: ${fmtMoney(ACTION_COSTS.recruit_informant)}. A diferencia de "Reclutar a un miembro", no cambia de bando: sigue donde está, pero te pasa información — cuanto más leal sea a su jefe, más difícil será convencerlo, y cómo lleves la conversación también cuenta.</p>
+    ${candidates.length ? candidates.map((c) => `
+      <button class="block" data-target="${c.id}">
+        <div class="person-row" style="border:none;padding:0">
+          ${portraitImg(c)}
+          <div class="info"><div class="name">${escapeHtml(c.name)}</div><div class="role">${c.role ? roleLabel(c.role) : "Sin cargo"}</div></div>
+        </div>
+      </button>
+    `).join("") : `<p class="small text-dim">No hay objetivos disponibles en este cártel.</p>`}
+    <label style="display:flex;align-items:center;gap:.5rem;margin-top:.8rem">
+      <input type="checkbox" id="quick-mode-toggle" ${quickMode ? "checked" : ""}>
+      Modo rápido (resolver al instante, sin conversación)
+    </label>
+    <button class="ghost block mt-1" id="close-btn">Cancelar</button>
+  `);
+  document.getElementById("quick-mode-toggle").addEventListener("change", (e) => {
+    saveSettings({ ...loadSettings(), quickDialogueMode: e.target.checked });
+  });
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.querySelectorAll("[data-target]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      closeModal();
+      startInformantDialogue(app, game, cartel, btn.dataset.target);
+    });
+  });
+}
+
+function startInformantDialogue(app, game, cartel, targetCharacterId) {
+  if (loadSettings().quickDialogueMode) {
+    finishInformantDialogue(app, game, cartel, targetCharacterId, "attempt", NEUTRAL_QUICK_PERSUASION);
+    return;
+  }
+  if (!game.dialogueTrees) game.dialogueTrees = {};
+  if (!game.dialogueTrees.informant) game.dialogueTrees.informant = defaultInformantDialogue();
+  const tree = game.dialogueTrees.informant;
+  if (!tree.nodes[tree.start]) {
+    alert("No hay un diálogo configurado para este momento. Revísalo en el Editor.");
+    return;
+  }
+  runInformantDialogueNode(app, game, cartel, tree, targetCharacterId, tree.start, 0);
+}
+
+function runInformantDialogueNode(app, game, cartel, tree, targetCharacterId, nodeId, persuasion) {
+  const target = game.characters[targetCharacterId];
+  const node = tree.nodes[nodeId];
+  if (!node) return;
+  const text = node.text.replace(/\{partner\}/g, escapeHtml(target?.name || ""));
+
+  showModal(`
+    <h2>${escapeHtml(target?.name || "")}</h2>
+    <p>${text}</p>
+    ${node.options.map((opt, i) => `<button class="block" data-option="${i}">${escapeHtml(opt.label)}</button>`).join("")}
+  `);
+
+  document.querySelectorAll("[data-option]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const option = node.options[Number(btn.dataset.option)];
+      const nextPersuasion = persuasion + (option.warmth || 0);
+      if (option.resolve) {
+        closeModal();
+        finishInformantDialogue(app, game, cartel, targetCharacterId, option.resolve, nextPersuasion);
+      } else if (option.next) {
+        runInformantDialogueNode(app, game, cartel, tree, targetCharacterId, option.next, nextPersuasion);
+      } else {
+        closeModal();
+      }
+    });
+  });
+}
+
+function finishInformantDialogue(app, game, cartel, targetCharacterId, resolution, persuasion) {
+  if (resolution === "walk_away") {
+    showModal(`
+      <h2>No hay trato</h2>
+      <p>La conversación no llega a ningún lado. Podrás intentarlo de nuevo más adelante.</p>
+      <button class="primary block" id="ok-btn">Aceptar</button>
+    `);
+  } else {
+    const result = applyAction(game, cartel.id, "recruit_informant", { targetCharacterId, persuasionBoost: persuasion });
+    if (!result.ok) {
+      showModal(`<h2>No ha sido posible</h2><p>${escapeHtml(result.message || "")}</p><button class="primary block" id="ok-btn">Aceptar</button>`);
+    } else {
+      showModal(`
+        <h2>${result.success ? "Acepta informar" : "El intento fracasa"}</h2>
+        <p>${result.success ? "A partir de ahora te pasa información desde dentro." : "No consigues convencerlo/a, y la maniobra despierta sospechas."}</p>
         <button class="primary block" id="ok-btn">Aceptar</button>
       `);
     }
