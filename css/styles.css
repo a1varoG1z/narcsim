@@ -246,7 +246,7 @@ label { display: block; font-size: .82rem; color: var(--text-dim); margin: .5rem
 .log .entry.death { border-color: var(--danger); }
 .log .entry.good { border-color: var(--success); }
 
-.map { position: relative; width: 100%; aspect-ratio: 4 / 3; background: #0f0c0a; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.map { position: relative; width: 100%; aspect-ratio: 4 / 3; background: #0f0c0a; border: 1px solid var(--border); border-radius: var(--radius); overflow-y: auto; overflow-x: hidden; }
 .territory {
   position: absolute;
   border: 1px solid rgba(0,0,0,.5);
