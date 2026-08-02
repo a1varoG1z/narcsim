@@ -1,10 +1,32 @@
 import { escapeHtml, portraitImg } from "../../ui/components.js";
 import { STATS, STAT_ORDER, ROLE_ORDER, ROLES } from "../../model.js";
 import { exportGameToFile, exportJSONFile, importGameFromFile, deleteSaveSlot, readImageAsDataURL } from "../../utils/storage.js";
-import { defaultConceptionDialogue, isValidDialogueTree } from "../../dialogues.js";
+import { defaultConceptionDialogue, defaultPoachDialogue, isValidDialogueTree } from "../../dialogues.js";
 import { getGithubToken, setGithubToken, saveGameToGist, loadGameFromGist } from "../../utils/github.js";
 
 const STATUS_LABEL = { war: "En guerra", alliance: "Aliados", neutral: "Neutral" };
+
+// Each dialogue tree has its own vocabulary for how a scene actually ends (conception resolves to
+// "attempt"/"rejected", poach to "attempt"/"walk_away"), so the visual editor needs to know each
+// tree's own labels/values rather than assuming conception's are universal.
+const DIALOGUE_TREE_META = {
+  conception: {
+    label: "Formar una familia",
+    defaultTree: defaultConceptionDialogue,
+    resolveOptions: [
+      { value: "attempt", label: "Fin de la escena: intentarlo" },
+      { value: "rejected", label: "Fin de la escena: rechazo, sin intentarlo" },
+    ],
+  },
+  poach: {
+    label: "Reclutar a un miembro",
+    defaultTree: defaultPoachDialogue,
+    resolveOptions: [
+      { value: "attempt", label: "Fin de la escena: intentar el reclutamiento" },
+      { value: "walk_away", label: "Fin de la escena: se aleja, sin trato" },
+    ],
+  },
+};
 
 export function render(container, app) {
   const game = app.game;
@@ -35,7 +57,11 @@ export function render(container, app) {
     </div>
     <div class="card">
       <h3>Diálogos</h3>
-      <p class="text-dim small">Edita paso a paso la conversación de "Formar una familia": elige un nodo, escribe su texto y a qué lleva cada opción. Usa <code>{partner}</code> donde quieras que aparezca el nombre de la otra persona.</p>
+      <label>Conversación</label>
+      <select id="ed-dialogue-tree">
+        ${Object.entries(DIALOGUE_TREE_META).map(([key, meta]) => `<option value="${key}" ${key === (game._editorLastDialogueTree || "conception") ? "selected" : ""}>${escapeHtml(meta.label)}</option>`).join("")}
+      </select>
+      <p class="text-dim small" id="dialogue-tree-desc"></p>
       <label>Nodo</label>
       <select id="ed-dialogue-node"></select>
       <div id="dialogue-node-editor" class="mt-1"></div>
@@ -45,7 +71,7 @@ export function render(container, app) {
         <textarea id="ed-dialogue-json" rows="14" style="width:100%;font-family:monospace;font-size:.8rem">${escapeHtml(JSON.stringify(game.dialogueTrees || { conception: defaultConceptionDialogue() }, null, 2))}</textarea>
         <button class="primary block mt-1" id="save-dialogue">Guardar JSON</button>
       </details>
-      <button class="block ghost mt-1" id="reset-dialogue">Restaurar diálogo por defecto</button>
+      <button class="block ghost mt-1" id="reset-dialogue"></button>
       <h4 class="mt-2">Reutilizar este diálogo en otra partida</h4>
       <p class="text-dim small">Guárdalo aparte del resto de la partida para no tener que reescribirlo cada vez.</p>
       <div class="btn-row">
@@ -290,13 +316,26 @@ export function render(container, app) {
     });
   }
 
+  const dialogueTreeSelect = container.querySelector("#ed-dialogue-tree");
   const dialogueNodeSelect = container.querySelector("#ed-dialogue-node");
+  const dialogueTreeDesc = container.querySelector("#dialogue-tree-desc");
+  const resetDialogueBtn = container.querySelector("#reset-dialogue");
   const OPTION_SLOTS = 6;
 
-  function getConceptionTree() {
-    if (!game.dialogueTrees) game.dialogueTrees = { conception: defaultConceptionDialogue() };
-    if (!game.dialogueTrees.conception) game.dialogueTrees.conception = defaultConceptionDialogue();
-    return game.dialogueTrees.conception;
+  function selectedTreeKey() {
+    return DIALOGUE_TREE_META[dialogueTreeSelect.value] ? dialogueTreeSelect.value : "conception";
+  }
+
+  function getSelectedTree() {
+    const key = selectedTreeKey();
+    // A full re-render (triggered by app.render() after any save/add/delete) rebuilds the <select>
+    // from scratch, so the chosen tree has to be persisted onto the game object itself — same
+    // pattern already used for the node dropdown via game._editorLastDialogueNode — or it would
+    // silently snap back to the first tree and the next edit would land on the wrong one.
+    game._editorLastDialogueTree = key;
+    if (!game.dialogueTrees) game.dialogueTrees = {};
+    if (!game.dialogueTrees[key]) game.dialogueTrees[key] = DIALOGUE_TREE_META[key].defaultTree();
+    return game.dialogueTrees[key];
   }
 
   function nodePreview(id, node, isStart) {
@@ -307,7 +346,10 @@ export function render(container, app) {
   }
 
   function renderDialogueEditor() {
-    const tree = getConceptionTree();
+    const meta = DIALOGUE_TREE_META[selectedTreeKey()];
+    dialogueTreeDesc.textContent = `Edita paso a paso la conversación de "${meta.label}": elige un nodo, escribe su texto y a qué lleva cada opción. Usa {partner} donde quieras que aparezca el nombre de la otra persona.`;
+    resetDialogueBtn.textContent = `Restaurar "${meta.label}" por defecto`;
+    const tree = getSelectedTree();
     const nodeIds = Object.keys(tree.nodes);
     dialogueNodeSelect.innerHTML = nodeIds.map((id) => `<option value="${id}">${escapeHtml(nodePreview(id, tree.nodes[id], id === tree.start))}</option>`).join("");
     const preferredId = game._editorLastDialogueNode;
@@ -318,7 +360,8 @@ export function render(container, app) {
   }
 
   function renderDialogueNodeEditor() {
-    const tree = getConceptionTree();
+    const meta = DIALOGUE_TREE_META[selectedTreeKey()];
+    const tree = getSelectedTree();
     const nodeId = dialogueNodeSelect.value;
     const node = tree.nodes[nodeId];
     const target = container.querySelector("#dialogue-node-editor");
@@ -329,8 +372,7 @@ export function render(container, app) {
     const otherNodeIds = Object.keys(tree.nodes);
     const destOptions = (selected) => `
       <option value="" ${!selected ? "selected" : ""}>— (vacío) —</option>
-      <option value="__attempt__" ${selected === "__attempt__" ? "selected" : ""}>Fin de la escena: intentarlo</option>
-      <option value="__rejected__" ${selected === "__rejected__" ? "selected" : ""}>Fin de la escena: rechazo, sin intentarlo</option>
+      ${meta.resolveOptions.map((r) => `<option value="__resolve__:${r.value}" ${selected === r.value ? "selected" : ""}>${escapeHtml(r.label)}</option>`).join("")}
       ${otherNodeIds.map((id) => `<option value="${id}" ${selected === id ? "selected" : ""}>Ir a: ${escapeHtml(nodePreview(id, tree.nodes[id], id === tree.start))}</option>`).join("")}
     `;
     const slots = Math.max(OPTION_SLOTS, node.options.length + 2);
@@ -368,7 +410,7 @@ export function render(container, app) {
         if (!dest) continue;
         const warmth = Number(target.querySelector(`[data-opt-warmth="${i}"]`).value) || 0;
         const option = { label, warmth };
-        if (dest === "__attempt__" || dest === "__rejected__") option.resolve = dest;
+        if (dest.startsWith("__resolve__:")) option.resolve = dest.slice("__resolve__:".length);
         else option.next = dest;
         options.push(option);
       }
@@ -399,9 +441,10 @@ export function render(container, app) {
     });
   }
 
+  dialogueTreeSelect.addEventListener("change", renderDialogueEditor);
   dialogueNodeSelect.addEventListener("change", renderDialogueNodeEditor);
   container.querySelector("#add-dialogue-node").addEventListener("click", () => {
-    const tree = getConceptionTree();
+    const tree = getSelectedTree();
     let n = Object.keys(tree.nodes).length + 1;
     while (tree.nodes[`nodo_${n}`]) n++;
     const newId = `nodo_${n}`;
@@ -426,24 +469,29 @@ export function render(container, app) {
       alert("El JSON no es válido: " + e.message);
       return;
     }
-    if (!parsed.conception || !isValidDialogueTree(parsed.conception)) {
-      alert("El árbol 'conception' necesita un nodo 'start' válido dentro de 'nodes'.");
-      return;
+    for (const key of Object.keys(parsed)) {
+      if (DIALOGUE_TREE_META[key] && !isValidDialogueTree(parsed[key])) {
+        alert(`El árbol '${key}' necesita un nodo 'start' válido dentro de 'nodes'.`);
+        return;
+      }
     }
     game.dialogueTrees = parsed;
     app.setGame(game);
     app.render();
   });
 
-  container.querySelector("#reset-dialogue").addEventListener("click", () => {
-    if (!confirm("¿Restaurar el diálogo de 'Formar una familia' a su versión por defecto?")) return;
-    game.dialogueTrees = { ...game.dialogueTrees, conception: defaultConceptionDialogue() };
+  resetDialogueBtn.addEventListener("click", () => {
+    const key = selectedTreeKey();
+    const meta = DIALOGUE_TREE_META[key];
+    if (!confirm(`¿Restaurar el diálogo de "${meta.label}" a su versión por defecto?`)) return;
+    game.dialogueTrees = { ...game.dialogueTrees, [key]: meta.defaultTree() };
     app.setGame(game);
     app.render();
   });
 
   container.querySelector("#export-dialogue-btn").addEventListener("click", () => {
-    exportJSONFile({ conception: getConceptionTree() }, "narcosim-dialogo-formar-familia");
+    const key = selectedTreeKey();
+    exportJSONFile({ [key]: getSelectedTree() }, `narcosim-dialogo-${key}`);
   });
 
   const importDialogueFile = container.querySelector("#import-dialogue-file");
@@ -458,11 +506,13 @@ export function render(container, app) {
       alert("El archivo no contiene JSON válido: " + e.message);
       return;
     }
-    if (!parsed.conception || !isValidDialogueTree(parsed.conception)) {
-      alert("El archivo necesita un nodo 'start' válido dentro de 'conception.nodes'.");
+    const key = selectedTreeKey();
+    const importedTree = parsed[key] || parsed;
+    if (!isValidDialogueTree(importedTree)) {
+      alert(`El archivo necesita un nodo 'start' válido dentro de '${key}.nodes' (o directamente en la raíz).`);
       return;
     }
-    game.dialogueTrees = { ...game.dialogueTrees, conception: parsed.conception };
+    game.dialogueTrees = { ...game.dialogueTrees, [key]: importedTree };
     importDialogueFile.value = "";
     app.setGame(game);
     app.render();
