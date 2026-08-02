@@ -55,6 +55,15 @@ function traffickingChiefBonus(chief) {
   return clamp(Math.round((skill - 50) / 8), -6, 6);
 }
 
+/** financeChief already scaled launder_money's fee rate directly off business skill; the other
+ * money-management decisions (property, fronts, art) never consulted it at all. Same modest,
+ * skill-50-centered shape as the other role hooks (business alone, since this chief's whole job is
+ * handling money) — an absent or average finance chief changes almost nothing. */
+function financeChiefBonus(chief) {
+  const skill = chief ? chief.stats.business : 40;
+  return clamp(Math.round((skill - 50) / 8), -6, 6);
+}
+
 /** diplomatChief scales how persuasive your peace/alliance diplomacy actually is — same modest,
  * skill-50-centered shape (charisma+intrigue, like the corruption chiefs) as the other role hooks.
  * An absent or average diplomat changes almost nothing. */
@@ -1098,7 +1107,8 @@ export function applyAction(game, cartelId, type, payload = {}) {
       const cost = ACTION_COSTS.invest_property;
       if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
       r.money -= cost;
-      const gained = Math.round((30 + randInt(0, 20)) * MONEY_SCALE);
+      const financeBonus = financeChiefBonus(game.characters[cartel.roles.financeChief]);
+      const gained = Math.round((30 + randInt(0, 20)) * MONEY_SCALE * (1 + financeBonus / 50));
       r.propertyIncome = (r.propertyIncome || 0) + gained;
       r.heat = Math.min(100, r.heat + randInt(1, 3));
       log(`${cartel.name} adquiere propiedades que generan ${fmtMoney(gained)} adicionales cada turno.`, "good");
@@ -1108,7 +1118,8 @@ export function applyAction(game, cartelId, type, payload = {}) {
       const cost = ACTION_COSTS.invest_art;
       if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
       r.money -= cost;
-      const gained = Math.round(cost * (0.9 + Math.random() * 0.3));
+      const artFinanceBonus = financeChiefBonus(game.characters[cartel.roles.financeChief]);
+      const gained = Math.round(cost * (0.9 + Math.random() * 0.3) * (1 + artFinanceBonus / 50));
       r.artValue = (r.artValue || 0) + gained;
       r.heat = Math.min(100, r.heat + 1);
       log(`${cartel.name} invierte en arte y coleccionables por valor de ${fmtMoney(gained)}, una vía clásica de lavado.`, "good");
@@ -1117,7 +1128,8 @@ export function applyAction(game, cartelId, type, payload = {}) {
     case "sell_art": {
       const held = r.artValue || 0;
       if (held <= 0) return { ok: false, message: "No tienes arte que vender." };
-      const seizeChance = clamp(r.heat / 300, 0.03, 0.3);
+      const sellFinanceBonus = financeChiefBonus(game.characters[cartel.roles.financeChief]);
+      const seizeChance = clamp(r.heat / 300 - sellFinanceBonus / 100, 0.03, 0.3);
       if (chance(seizeChance)) {
         const seized = Math.round(held * (0.2 + Math.random() * 0.3));
         r.artValue = 0;
@@ -1136,7 +1148,8 @@ export function applyAction(game, cartelId, type, payload = {}) {
       const cost = ACTION_COSTS.invest_business;
       if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
       r.money -= cost;
-      const gained = Math.round((35 + randInt(0, 15)) * MONEY_SCALE);
+      const businessFinanceBonus = financeChiefBonus(game.characters[cartel.roles.financeChief]);
+      const gained = Math.round((35 + randInt(0, 15)) * MONEY_SCALE * (1 + businessFinanceBonus / 50));
       r.businessIncome = (r.businessIncome || 0) + gained;
       r.heat = Math.max(0, r.heat - randInt(3, 6));
       log(`${cartel.name} monta un negocio legal de fachada: ${fmtMoney(gained)} más por turno y menos sospechas.`, "good");

@@ -1359,6 +1359,62 @@ test("invest_art creates a holding that appreciates over time via endTurn, and s
   assert.ok(sellResult.received <= heldValue, "a seizure would mean less than full value received");
 });
 
+test("financeChief's business skill genuinely raises the payout from invest_property/invest_business/invest_art, same modest shape as the other role hooks", () => {
+  for (const type of ["invest_property", "invest_business", "invest_art"]) {
+    const field = type === "invest_property" ? "propertyIncome" : type === "invest_business" ? "businessIncome" : "artValue";
+    const originalRandom = Math.random;
+    try {
+      Math.random = () => 0.5; // pins the base roll identically across both cases
+      const weakGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+      weakGame.cartels.sinaloa.resources.money = 100_000_000;
+      const weakChief = weakGame.characters[weakGame.cartels.sinaloa.roles.financeChief];
+      weakChief.stats.business = 10;
+      applyAction(weakGame, "sinaloa", type);
+
+      const skilledGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+      skilledGame.cartels.sinaloa.resources.money = 100_000_000;
+      const skilledChief = skilledGame.characters[skilledGame.cartels.sinaloa.roles.financeChief];
+      skilledChief.stats.business = 90;
+      applyAction(skilledGame, "sinaloa", type);
+
+      assert.ok(
+        skilledGame.cartels.sinaloa.resources[field] > weakGame.cartels.sinaloa.resources[field],
+        `${type}: a skilled finance chief should yield more than a weak one`
+      );
+    } finally {
+      Math.random = originalRandom;
+    }
+  }
+});
+
+test("financeChief's business skill genuinely lowers sell_art's seizure risk", () => {
+  // Base seizeChance at heat=60 is 0.2. A skill-10 chief (bonus -5) pushes it to 0.25; a skill-90
+  // chief (bonus +5) pulls it down to 0.15. A 0.20 roll lands between the two.
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.2;
+    const weakGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    weakGame.cartels.sinaloa.resources.money = 100_000_000;
+    weakGame.cartels.sinaloa.resources.heat = 60;
+    const weakChief = weakGame.characters[weakGame.cartels.sinaloa.roles.financeChief];
+    weakChief.stats.business = 10;
+    applyAction(weakGame, "sinaloa", "invest_art");
+    const weakResult = applyAction(weakGame, "sinaloa", "sell_art");
+    assert.ok(weakResult.seized > 0, "a weak finance chief shouldn't be enough to dodge this exact seizure roll");
+
+    const skilledGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    skilledGame.cartels.sinaloa.resources.money = 100_000_000;
+    skilledGame.cartels.sinaloa.resources.heat = 60;
+    const skilledChief = skilledGame.characters[skilledGame.cartels.sinaloa.roles.financeChief];
+    skilledChief.stats.business = 90;
+    applyAction(skilledGame, "sinaloa", "invest_art");
+    const skilledResult = applyAction(skilledGame, "sinaloa", "sell_art");
+    assert.equal(skilledResult.seized, undefined, "a skilled finance chief should be enough to avoid this exact seizure roll");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
 test("invest_weapons grants a capped, cumulative combat bonus", () => {
   const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
   // Apply to a non-player cartel (cjng) to bypass the per-turn action budget entirely, isolating
