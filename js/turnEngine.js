@@ -556,7 +556,8 @@ export function applyAction(game, cartelId, type, payload = {}) {
       // occupying a neutral territory isn't just a flat coin flip regardless of your strength.
       const overreachPenalty = clamp((cartel.territories.length - 3) * 0.03, 0, 0.3);
       const armyFactor = clamp(r.armySize / (territory.value * 60), 0.5, 1.15);
-      const successChance = clamp(0.75 * armyFactor - overreachPenalty, 0.2, 0.9);
+      const expeditionBonus = militaryChiefBonus(game.characters[cartel.roles.militaryChief]);
+      const successChance = clamp(0.75 * armyFactor - overreachPenalty + expeditionBonus / 100, 0.2, 0.9);
       if (chance(successChance)) {
         territory.controllerId = cartelId;
         cartel.territories.push(territory.id);
@@ -577,7 +578,8 @@ export function applyAction(game, cartelId, type, payload = {}) {
       const cost = territory.value * 20 * MONEY_SCALE;
       if (r.money < cost) return { ok: false, message: `Hace falta ${fmtMoney(cost)} para desarrollar ${territory.name}.` };
       r.money -= cost;
-      const failChance = clamp(r.heat / 350, 0.03, 0.25);
+      const developGovBonus = corruptionChiefBonus(game.characters[cartel.roles.corruptionGovChief]);
+      const failChance = clamp(r.heat / 350 - developGovBonus / 100, 0.03, 0.25);
       if (chance(failChance)) {
         r.heat = Math.min(100, r.heat + randInt(2, 5));
         log(`La inversión de infraestructura de ${cartel.name} en ${territory.name} se pierde entre trabas y decomisos.`, "event");

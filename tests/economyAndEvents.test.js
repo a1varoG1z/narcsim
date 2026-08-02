@@ -446,6 +446,34 @@ test("develop_territory refuses a territory the cartel doesn't own", () => {
   assert.equal(result.ok, false);
 });
 
+test("develop_territory's corruptionGovChief genuinely lowers the 'trabas y decomisos' failure risk", () => {
+  // At heat=70, base failChance is 0.2. A skill-10 gov chief (bonus -5) pushes it to 0.25 (the
+  // ceiling); a skill-90 chief (bonus +5) pulls it down to 0.15. A 0.20 roll lands between the two.
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.2;
+    const weakGame = newGame("mexico-rutas-1990-2006.json", "sinaloa");
+    weakGame.cartels.sinaloa.resources.money = 100_000_000;
+    weakGame.cartels.sinaloa.resources.heat = 70;
+    const weakChief = weakGame.characters[weakGame.cartels.sinaloa.roles.corruptionGovChief];
+    weakChief.stats.charisma = 10;
+    weakChief.stats.intrigue = 10;
+    const weakResult = applyAction(weakGame, "sinaloa", "develop_territory", { territoryId: weakGame.cartels.sinaloa.territories[0] });
+    assert.equal(weakResult.success, false, "a clumsy gov chief shouldn't be enough to dodge this exact roll");
+
+    const skilledGame = newGame("mexico-rutas-1990-2006.json", "sinaloa");
+    skilledGame.cartels.sinaloa.resources.money = 100_000_000;
+    skilledGame.cartels.sinaloa.resources.heat = 70;
+    const skilledChief = skilledGame.characters[skilledGame.cartels.sinaloa.roles.corruptionGovChief];
+    skilledChief.stats.charisma = 90;
+    skilledChief.stats.intrigue = 90;
+    const skilledResult = applyAction(skilledGame, "sinaloa", "develop_territory", { territoryId: skilledGame.cartels.sinaloa.territories[0] });
+    assert.equal(skilledResult.success, true, "a skilled gov chief should be enough to dodge the exact same roll");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
 test("assassinate_rival kills the target on success, triggers succession if they were the leader, and opens a war", () => {
   const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
   const cartel = game.cartels.sinaloa;

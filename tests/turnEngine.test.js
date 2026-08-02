@@ -237,6 +237,35 @@ test("occupy_territory's success chance scales with army strength relative to th
   }
 });
 
+test("occupy_territory's militaryChief genuinely moves the odds: a skilled commander flips a roll a clumsy one would lose", () => {
+  // armySize=400 against coahuila (value 11) gives armyFactor≈0.606, base successChance≈0.4545,
+  // no overreach penalty (only 3 starting territories). A skill-10 commander (bonus -5) pulls that
+  // to ≈0.4045; a skill-90 commander (bonus +5) pushes it to ≈0.5045.
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.45;
+    const weakGame = newGame("mexico-rutas-1990-2006.json", "sinaloa");
+    weakGame.cartels.sinaloa.resources.money = 100_000_000;
+    weakGame.cartels.sinaloa.resources.armySize = 400;
+    const weakChief = weakGame.characters[weakGame.cartels.sinaloa.roles.militaryChief];
+    weakChief.stats.violence = 10;
+    weakChief.stats.business = 10;
+    const weakResult = applyAction(weakGame, "sinaloa", "occupy_territory", { territoryId: "coahuila" });
+    assert.equal(weakResult.success, false, "a clumsy commander shouldn't be enough to land this roll");
+
+    const strongGame = newGame("mexico-rutas-1990-2006.json", "sinaloa");
+    strongGame.cartels.sinaloa.resources.money = 100_000_000;
+    strongGame.cartels.sinaloa.resources.armySize = 400;
+    const strongChief = strongGame.characters[strongGame.cartels.sinaloa.roles.militaryChief];
+    strongChief.stats.violence = 90;
+    strongChief.stats.business = 90;
+    const strongResult = applyAction(strongGame, "sinaloa", "occupy_territory", { territoryId: "coahuila" });
+    assert.equal(strongResult.success, true, "a skilled commander should be enough to land the exact same roll");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
 test("attemptEscape allows breaking a life sentence, but far less reliably than a regular one, and succeeds/fails deterministically otherwise", () => {
   const game = newGame("mexico-rutas-1990-2006.json", "sinaloa", "chapo_guzman");
   const chapo = game.characters.chapo_guzman;
