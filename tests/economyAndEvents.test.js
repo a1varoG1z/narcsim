@@ -4,7 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildGameFromEra } from "../js/state.js";
-import { applyAction, getWarsForCartel, resolveScriptedChoice, endTurn, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, getIncomeBreakdown, MONEY_SCALE, getDrugProfile, DRUG_PROFILES, resolveRaidTip, getSuccessionCandidates, resolveSuccession, resolveCoups, checkLandlessCollapse, attemptEscape } from "../js/turnEngine.js";
+import { applyAction, getWarsForCartel, resolveScriptedChoice, endTurn, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, getIncomeBreakdown, getWorldMarketShare, MONEY_SCALE, getDrugProfile, DRUG_PROFILES, resolveRaidTip, getSuccessionCandidates, resolveSuccession, resolveCoups, checkLandlessCollapse, attemptEscape } from "../js/turnEngine.js";
 import { rollScriptedEvents } from "../js/scriptedEvents.js";
 import { rollLoyaltyEvents, getMemberBond, driftMemberBonds, rollSiblingRivalry, rollPoliceOperations, rollMortality, policeOperationChance } from "../js/events.js";
 
@@ -1543,6 +1543,79 @@ test("invest_weapons/invest_security/invest_hideout each get a genuinely bigger 
       `${type}: a skilled ${role} should yield a bigger bonus per purchase than a weak one`
     );
   }
+});
+
+test("invest_trade_route grants a capped, cumulative bonus that genuinely raises traffic_shipment's payout, and a skilled traffickingChief grows it faster", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.cjng;
+  cartel.resources.money = 100_000_000;
+
+  for (let i = 0; i < 20; i++) {
+    applyAction(game, "cjng", "invest_trade_route");
+  }
+  assert.equal(cartel.resources.tradeRouteBonus, 0.3, "enough purchases should hit the 30% cap");
+
+  const weakGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  weakGame.cartels.cjng.resources.money = 100_000_000;
+  const weakChief = weakGame.characters[weakGame.cartels.cjng.roles.traffickingChief];
+  weakChief.stats.intrigue = 10;
+  weakChief.stats.stealth = 10;
+  applyAction(weakGame, "cjng", "invest_trade_route");
+
+  const skilledGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  skilledGame.cartels.cjng.resources.money = 100_000_000;
+  const skilledChief = skilledGame.characters[skilledGame.cartels.cjng.roles.traffickingChief];
+  skilledChief.stats.intrigue = 90;
+  skilledChief.stats.stealth = 90;
+  applyAction(skilledGame, "cjng", "invest_trade_route");
+
+  assert.ok(
+    skilledGame.cartels.cjng.resources.tradeRouteBonus > weakGame.cartels.cjng.resources.tradeRouteBonus,
+    "a skilled traffickingChief should yield a bigger trade-route bonus per purchase"
+  );
+
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.5;
+    const noRouteGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    noRouteGame.cartels.sinaloa.resources.money = ACTION_COSTS.traffic_shipment * 10;
+    const noRouteResult = applyAction(noRouteGame, "sinaloa", "traffic_shipment");
+
+    const withRouteGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    withRouteGame.cartels.sinaloa.resources.money = ACTION_COSTS.traffic_shipment * 10;
+    withRouteGame.cartels.sinaloa.resources.tradeRouteBonus = 0.3;
+    const withRouteResult = applyAction(withRouteGame, "sinaloa", "traffic_shipment");
+
+    if (!noRouteResult.message?.includes("Interceptado") && !withRouteResult.message?.includes("Interceptado")) {
+      const noRoutePayout = noRouteGame.cartels.sinaloa.resources.money - (ACTION_COSTS.traffic_shipment * 10 - ACTION_COSTS.traffic_shipment);
+      const withRoutePayout = withRouteGame.cartels.sinaloa.resources.money - (ACTION_COSTS.traffic_shipment * 10 - ACTION_COSTS.traffic_shipment);
+      assert.ok(withRoutePayout > noRoutePayout, "an established trade route should raise the payout of the exact same shipment roll");
+    }
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("getWorldMarketShare is a genuine zero-sum comparison across cartels, built from successful traffic_shipment volume", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const sinaloa = game.cartels.sinaloa;
+  const cjng = game.cartels.cjng;
+
+  assert.equal(getWorldMarketShare(game, sinaloa), 0, "nobody has shipped anything yet, so nobody has a share");
+
+  sinaloa.resources.distributionVolume = 300;
+  cjng.resources.distributionVolume = 100;
+  const sinaloaShare = getWorldMarketShare(game, sinaloa);
+  const cjngShare = getWorldMarketShare(game, cjng);
+  assert.ok(Math.abs(sinaloaShare - 75) < 0.01, "300 out of a 400 total should be exactly 75%");
+  assert.ok(Math.abs(cjngShare - 25) < 0.01, "100 out of a 400 total should be exactly 25%");
+  assert.ok(Math.abs(sinaloaShare + cjngShare - 100) < 0.5, "shares across a two-cartel world should sum close to 100% (minus whatever other cartels also hold)");
+
+  cjng.resources.distributionVolume = 300;
+  assert.ok(
+    Math.abs(getWorldMarketShare(game, sinaloa) - getWorldMarketShare(game, cjng)) < 0.01,
+    "equal volumes should mean an equal share, even though sinaloa's own absolute volume never changed"
+  );
 });
 
 test("invest_hideout's bonus only helps the player personally resist a police raid, not the cartel at large", () => {

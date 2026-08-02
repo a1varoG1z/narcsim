@@ -23,6 +23,7 @@ const INVESTMENTS = [
   { type: "invest_weapons", label: "Armar y equipar a tu gente", desc: "Bonificación de combate permanente y acumulable (hasta un máximo), a cambio de heat." },
   { type: "invest_security", label: "Seguridad privada para el líder", desc: "Reduce de forma permanente y acumulable (hasta un máximo) la probabilidad de que un atentado contra tu líder tenga éxito. Sin coste de heat." },
   { type: "invest_hideout", label: "Refugio con vías de escape", desc: "Mejora de forma permanente y acumulable (hasta un máximo) tus probabilidades personales de esquivar una redada policial y de fugarte con éxito de prisión. Sin coste de heat." },
+  { type: "invest_trade_route", label: "Establecer una ruta comercial internacional", desc: "Sube de forma permanente y acumulable (hasta un máximo) lo que rinde cada 'Enviar cargamento' futuro — tu propia red de distribución exterior, no un envío suelto." },
 ];
 
 function describeDrugProfile(drug) {
@@ -69,6 +70,7 @@ export function render(container, app) {
       ${cartel.resources.weaponsBonus ? `<p class="small text-success">Bonificación de combate: +${Math.round(cartel.resources.weaponsBonus * 100)}%</p>` : ""}
       ${cartel.resources.securityBonus ? `<p class="small text-success">Seguridad del líder: -${Math.round(cartel.resources.securityBonus * 100)}% de probabilidad de atentado exitoso</p>` : ""}
       ${cartel.resources.hideoutBonus ? `<p class="small text-success">Refugio con vías de escape: +${Math.round(cartel.resources.hideoutBonus * 100)}% en tus probabilidades de esquivar una redada o fugarte con éxito</p>` : ""}
+      ${cartel.resources.tradeRouteBonus ? `<p class="small text-success">Rutas comerciales internacionales: +${Math.round(cartel.resources.tradeRouteBonus * 100)}% en el rendimiento de cada envío</p>` : ""}
       ${INVESTMENTS.map((a) => {
         const cost = ACTION_COSTS[a.type] || 0;
         return `

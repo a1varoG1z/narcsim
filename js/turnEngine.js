@@ -211,6 +211,7 @@ export const ACTION_COSTS = {
   invest_weapons: 350 * MONEY_SCALE,
   invest_security: 400 * MONEY_SCALE,
   invest_hideout: 350 * MONEY_SCALE,
+  invest_trade_route: 450 * MONEY_SCALE,
   sell_art: 0,
 };
 
@@ -291,9 +292,12 @@ export function applyAction(game, cartelId, type, payload = {}) {
         return { ok: true, message: "Interceptado." };
       }
       const partnerMultiplier = partnerStatus === "alliance" ? 1.25 : partnerStatus === "neutral" ? 1 : 0.85;
-      const payout = Math.round(cost * (1.6 + Math.random() * 1.2) * partnerMultiplier * drug.payoutMult * (1 + traffickingBonus / 50));
+      const payout = Math.round(cost * (1.6 + Math.random() * 1.2) * partnerMultiplier * drug.payoutMult * (1 + traffickingBonus / 50) * (1 + (r.tradeRouteBonus || 0)));
       r.money += payout;
       r.heat = Math.min(100, r.heat + Math.round(5 * drug.heatMult));
+      // Tracked for getWorldMarketShare — every cartel's cumulative distribution volume, not just
+      // the player's, so market share is a genuine zero-sum comparison against real rivals.
+      r.distributionVolume = (r.distributionVolume || 0) + payout;
       if (partner) {
         partner.resources.money = Math.round(partner.resources.money + payout * 0.15);
         const tensionDelta = partnerStatus === "alliance" ? -5 : -2;
@@ -1202,6 +1206,19 @@ export function applyAction(game, cartelId, type, payload = {}) {
       log(`${cartel.name} habilita un refugio con vías de escape (mejora en ${Math.round(r.hideoutBonus * 100)}% tus probabilidades de esquivar una redada o de fugarte con éxito).`, "good");
       return { ok: true, hideoutBonus: r.hideoutBonus };
     }
+    case "invest_trade_route": {
+      // A permanent, cumulative bonus (same shape as weapons/security/hideout) that represents
+      // your own established international distribution network, separate from any single
+      // shipment: every future traffic_shipment sells for more, on top of whatever
+      // traffickingChief already does for that one shipment's own risk/payout.
+      const cost = ACTION_COSTS.invest_trade_route;
+      if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
+      r.money -= cost;
+      const tradeRouteTraffickingBonus = traffickingChiefBonus(game.characters[cartel.roles.traffickingChief]);
+      r.tradeRouteBonus = clamp((r.tradeRouteBonus || 0) + 0.03 * (1 + tradeRouteTraffickingBonus / 50), 0, 0.3);
+      log(`${cartel.name} establece una nueva ruta comercial internacional (bonus permanente a los envíos: +${Math.round(r.tradeRouteBonus * 100)}%).`, "good");
+      return { ok: true, tradeRouteBonus: r.tradeRouteBonus };
+    }
     default:
       return { ok: false, message: "Acción desconocida." };
   }
@@ -1476,6 +1493,7 @@ function runAiCartels(game) {
     if (r.money >= ACTION_COSTS.invest_weapons && (r.weaponsBonus || 0) < 0.3) options.push({ item: "invest_weapons", weight: atWar ? 2 : 0.8 });
     if (r.money >= ACTION_COSTS.invest_security && (r.securityBonus || 0) < 0.3) options.push({ item: "invest_security", weight: atWar ? 1.2 : 0.6 });
     if (r.money >= ACTION_COSTS.invest_hideout && (r.hideoutBonus || 0) < 0.3) options.push({ item: "invest_hideout", weight: r.heat > 50 ? 1.2 : 0.5 });
+    if (r.money >= ACTION_COSTS.invest_trade_route && (r.tradeRouteBonus || 0) < 0.3) options.push({ item: "invest_trade_route", weight: 1 });
 
     let choice = weightedChoice(options);
     if (choice === "attack_territory") {
@@ -1702,6 +1720,19 @@ export function getIncomeBreakdown(game, cartel) {
     propertyIncome, businessIncome, passiveIncome, upkeep,
     net: territoryIncome + passiveIncome - upkeep,
   };
+}
+
+/** Your share of the world drug market: cumulative distributionVolume (built up by successful
+ * traffic_shipment runs, across every cartel — not just the player's) as a fraction of the total
+ * across every living cartel. Zero-sum by construction: growing your own volume only raises your
+ * share for real if rivals aren't growing theirs just as fast. Returns 0 before anyone has ever
+ * completed a shipment (nothing to have a share of yet). */
+export function getWorldMarketShare(game, cartel) {
+  const total = Object.values(game.cartels)
+    .filter((c) => !c.destroyed)
+    .reduce((s, c) => s + (c.resources.distributionVolume || 0), 0);
+  if (total <= 0) return 0;
+  return ((cartel.resources.distributionVolume || 0) / total) * 100;
 }
 
 function incomeTick(game) {
