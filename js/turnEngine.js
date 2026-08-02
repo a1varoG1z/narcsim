@@ -335,11 +335,26 @@ export function applyAction(game, cartelId, type, payload = {}) {
       const cost = ACTION_COSTS.recruit_army;
       if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
       r.money -= cost;
-      const gained = randInt(15, 35);
+      const approach = payload.approach || "standard";
+      let gained, heatGain, verb;
+      if (approach === "quiet") {
+        gained = randInt(8, 18);
+        heatGain = 0;
+        verb = "recluta discretamente";
+      } else if (approach === "forced") {
+        gained = randInt(35, 60);
+        heatGain = randInt(6, 12);
+        r.publicImage = Math.max(0, r.publicImage - randInt(5, 12));
+        verb = "impone una leva forzosa que reúne a";
+      } else {
+        gained = randInt(15, 35);
+        heatGain = 1;
+        verb = "recluta";
+      }
       r.armySize += gained;
-      r.heat = Math.min(100, r.heat + 1);
-      log(`${cartel.name} recluta ${gained} sicarios más.`, "good");
-      return { ok: true };
+      r.heat = Math.min(100, r.heat + heatGain);
+      log(`${cartel.name} ${verb} ${gained} sicarios más.`, "good");
+      return { ok: true, approach, gained };
     }
     case "lay_low": {
       r.heat = Math.max(0, r.heat - randInt(10, 20));

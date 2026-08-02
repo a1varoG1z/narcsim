@@ -112,6 +112,10 @@ export function render(container, app) {
         showCorruptApproachModal(app, game, cartel, btn.dataset.action);
         return;
       }
+      if (btn.dataset.action === "recruit_army") {
+        showRecruitApproachModal(app, game, cartel);
+        return;
+      }
       applyAction(game, cartel.id, btn.dataset.action);
       app.setGame(game);
       app.render();
@@ -222,6 +226,38 @@ function showCorruptApproachModal(app, game, cartel, actionType) {
     <button class="danger block" data-approach="aggressive">
       Presión y amenazas veladas
       <div class="small text-dim">Mucha más corrupción ganada de golpe, pero sube el heat en vez de bajarlo — y hay riesgo real de que se filtre y la maniobra se vuelva en tu contra.</div>
+    </button>
+    <button class="ghost block mt-1" id="close-btn">Cancelar</button>
+  `);
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.querySelectorAll("[data-approach]").forEach((btn) => {
+    btn.addEventListener("click", () => apply(btn.dataset.approach));
+  });
+}
+
+function showRecruitApproachModal(app, game, cartel) {
+  const apply = (approach) => {
+    const result = applyAction(game, cartel.id, "recruit_army", { approach });
+    app.setGame(game);
+    closeModal();
+    if (!result.ok) alert(result.message);
+    app.render();
+  };
+
+  showModal(`
+    <h2>¿Cómo reclutas más sicarios?</h2>
+    <p class="small text-dim">El método cambia cuántos hombres consigues y cuánto heat e imagen pública te cuesta.</p>
+    <button class="block" data-approach="quiet">
+      Reclutamiento discreto, de boca en boca
+      <div class="small text-dim">Menos hombres reclutados, pero no sube el heat en absoluto.</div>
+    </button>
+    <button class="block" data-approach="standard">
+      Reclutamiento estándar
+      <div class="small text-dim">El equilibrio de siempre entre hombres reclutados y heat.</div>
+    </button>
+    <button class="danger block" data-approach="forced">
+      Leva forzosa
+      <div class="small text-dim">Muchos más hombres de golpe, pero dispara el heat y daña tu imagen pública: la gente no olvida que os llevasteis a alguien a la fuerza.</div>
     </button>
     <button class="ghost block mt-1" id="close-btn">Cancelar</button>
   `);

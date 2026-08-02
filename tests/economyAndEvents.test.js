@@ -1616,6 +1616,50 @@ test("the player is capped at ACTIONS_PER_TURN budgeted actions, is refused past
   assert.equal(getActionsRemaining(game), ACTIONS_PER_TURN);
 });
 
+test("recruit_army defaults to 'standard' behavior when no approach is passed, matching what AI cartels get", () => {
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.5;
+    const withoutApproach = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    const withStandard = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    const r1 = applyAction(withoutApproach, "sinaloa", "recruit_army");
+    const r2 = applyAction(withStandard, "sinaloa", "recruit_army", { approach: "standard" });
+    assert.equal(r1.approach, "standard");
+    assert.equal(r2.approach, "standard");
+    assert.equal(r1.gained, r2.gained);
+    assert.equal(withoutApproach.cartels.sinaloa.resources.heat, withStandard.cartels.sinaloa.resources.heat);
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("recruit_army's approach is a genuine trade-off: 'quiet' gains fewer men for zero heat, 'forced' gains far more men but spikes heat and damages public image", () => {
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.01; // pins every roll to its range floor, for a clean relative comparison
+    const quietGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    const quietImageBefore = quietGame.cartels.sinaloa.resources.publicImage;
+    const quietHeatBefore = quietGame.cartels.sinaloa.resources.heat;
+    const quietResult = applyAction(quietGame, "sinaloa", "recruit_army", { approach: "quiet" });
+
+    const standardGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    const standardResult = applyAction(standardGame, "sinaloa", "recruit_army", { approach: "standard" });
+
+    const forcedGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    const forcedImageBefore = forcedGame.cartels.sinaloa.resources.publicImage;
+    const forcedResult = applyAction(forcedGame, "sinaloa", "recruit_army", { approach: "forced" });
+
+    assert.ok(quietResult.gained < standardResult.gained, "quiet should gain fewer men than standard");
+    assert.ok(standardResult.gained < forcedResult.gained, "forced should gain more men than standard");
+    assert.equal(quietGame.cartels.sinaloa.resources.heat, quietHeatBefore, "quiet recruitment shouldn't raise heat at all");
+    assert.ok(standardGame.cartels.sinaloa.resources.heat < forcedGame.cartels.sinaloa.resources.heat, "forced should raise heat more than standard");
+    assert.equal(quietGame.cartels.sinaloa.resources.publicImage, quietImageBefore, "quiet recruitment shouldn't touch public image");
+    assert.ok(forcedGame.cartels.sinaloa.resources.publicImage < forcedImageBefore, "forced conscription should damage public image");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
 test("Pablo Escobar's 1993 death kills him and hands Medellín a new leader when he's not the player", () => {
   const era = loadEra("medellin-cali-1980-1995.json");
   const npcGame = buildGameFromEra(era, { mode: "existing", cartelId: "cali", characterId: "gilberto_rodriguez" });
