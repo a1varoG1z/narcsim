@@ -373,6 +373,20 @@ export function applyAction(game, cartelId, type, payload = {}) {
         r.heat = Math.min(100, r.heat + randInt(3, 8));
         log(`${cartel.name} declara la guerra a ${target.name}.`, "event");
       }
+      if (game._reactiveEvents && target.id === game.playerCartelId) {
+        // Offer an immediate counter-attack only if the aggressor already has a territory the
+        // player can actually reach — otherwise the war starts cold, same as any other war without
+        // a shared border yet.
+        const reachableId = cartel.territories.find((tId) => isAttackable(game, target.id, tId));
+        const reachableTerritory = reachableId ? game.territories[reachableId] : null;
+        game._reactiveEvents.push({
+          type: "warDeclared",
+          byCartelId: cartel.id,
+          byCartelName: cartel.name,
+          reachableTerritoryId: reachableTerritory ? reachableTerritory.id : null,
+          reachableTerritoryName: reachableTerritory ? reachableTerritory.name : null,
+        });
+      }
       return { ok: true };
     }
     case "propose_peace": {
@@ -1285,6 +1299,19 @@ function runAiCartels(game) {
     const developable = cartel.territories.map((id) => game.territories[id]).filter((t) => t && t.value < 40 && r.money >= t.value * 20 * MONEY_SCALE);
     if (developable.length) options.push({ item: "develop_territory", weight: 2 });
     const rivalCartels = Object.values(game.cartels).filter((c) => c.id !== cartel.id && !c.destroyed);
+    // Declaring a brand-new war is a rare, deliberate escalation, not routine AI behavior: it only
+    // ever fires against a rival that's already built up real, sustained tension (>=70 — well past
+    // the >60 threshold that makes an "accusation" pretext land as credible), is capped at 2
+    // simultaneous wars so no cartel overextends into everyone at once, and needs a real army behind
+    // it. Kept at a low weight relative to everything else on offer.
+    const activeWarCount = Object.values(cartel.relations).filter((rel) => rel.status === "war").length;
+    const warDeclarationTargets = rivalCartels.filter((c) => {
+      const rel = cartel.relations[c.id];
+      return rel && rel.status === "neutral" && rel.tension >= 70;
+    });
+    if (warDeclarationTargets.length && activeWarCount < 2 && r.armySize > 100) {
+      options.push({ item: "declare_war", weight: 0.4 });
+    }
     if (rivalCartels.length && r.money >= ACTION_COSTS.assassinate_rival) {
       options.push({ item: "assassinate_rival", weight: atWar ? 1.5 : 0.4 });
     }
@@ -1358,6 +1385,15 @@ function runAiCartels(game) {
         continue;
       }
       choice = "invest_production";
+      if (!canAfford(cartel, choice)) continue;
+    }
+    if (choice === "declare_war") {
+      if (warDeclarationTargets.length) {
+        const target = pick(warDeclarationTargets);
+        applyAction(game, cartel.id, "declare_war", { targetCartelId: target.id, pretext: "open" });
+        continue;
+      }
+      choice = "recruit_army";
       if (!canAfford(cartel, choice)) continue;
     }
     if (choice === "assassinate_rival") {

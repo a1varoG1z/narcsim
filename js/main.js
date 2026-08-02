@@ -127,13 +127,14 @@ const app = {
     const interceptions = (reactiveEvents || []).filter((e) => e.type === "shipmentIntercepted");
     const hits = (reactiveEvents || []).filter((e) => e.type === "assassinationAttempted");
     const intimidations = (reactiveEvents || []).filter((e) => e.type === "intimidated");
+    const warDeclarations = (reactiveEvents || []).filter((e) => e.type === "warDeclared");
     showModal(`
       <h2>Resumen del turno</h2>
       <p>Esto ha pasado mientras avanzabas el tiempo:</p>
       <div class="log" style="margin-bottom:1rem">
         ${events.map((e) => `<div class="entry ${e.type}">${icon(e.type)} ${escapeHtml(e.text)}</div>`).join("")}
       </div>
-      ${territoryLosses.length || sabotages.length || interceptions.length || hits.length || intimidations.length ? `<h3>¿Reaccionas ahora?</h3>` : ""}
+      ${territoryLosses.length || sabotages.length || interceptions.length || hits.length || intimidations.length || warDeclarations.length ? `<h3>¿Reaccionas ahora?</h3>` : ""}
       ${poachings.map((e) => `
         <div class="card tight mt-1">
           <p class="small">${e.success ? `${escapeHtml(e.byCartelName)} se ha llevado a <strong>${escapeHtml(e.characterName)}</strong> a sus filas.` : `${escapeHtml(e.byCartelName)} ha intentado reclutar a ${escapeHtml(e.characterName)} (el intento fracasó).`}</p>
@@ -171,6 +172,14 @@ const app = {
         <div class="card tight mt-1" data-reactive-row="intimidate-${i}">
           <p class="small">${escapeHtml(e.byCartelName)} ${e.success ? `te ha intimidado en <strong>${escapeHtml(e.territoryName)}</strong>, dañando tu reputación local` : `ha intentado intimidarte en ${escapeHtml(e.territoryName)} (el intento fracasó)`}.</p>
           <button class="danger block" data-retaliate-intimidate="intimidate-${i}" data-target="${e.byCartelId}">Represalia: intimidarles de vuelta (${fmtMoney(ACTION_COSTS.intimidate_territory)})</button>
+        </div>
+      `).join("")}
+      ${warDeclarations.map((e, i) => `
+        <div class="card tight mt-1" data-reactive-row="wardecl-${i}">
+          <p class="small"><strong>${escapeHtml(e.byCartelName)} te ha declarado la guerra.</strong></p>
+          ${e.reachableTerritoryId
+            ? `<button class="danger block" data-retaliate-war="wardecl-${i}" data-territory="${e.reachableTerritoryId}">Represalia: atacar ${escapeHtml(e.reachableTerritoryName)} ahora</button>`
+            : `<p class="small text-dim">Aún no tienes ningún territorio suyo colindante con el tuyo al que responder de inmediato.</p>`}
         </div>
       `).join("")}
       <button class="primary block mt-1" id="turn-summary-ok">Continuar</button>
@@ -269,6 +278,23 @@ const app = {
               ? "La intimidación funciona: dañas su reputación local sin derramar sangre."
               : "Tu represalia fracasa y expone la amenaza.";
         }
+        row.appendChild(msg);
+        btn.disabled = true;
+      });
+    });
+    document.querySelectorAll("[data-retaliate-war]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const cartel = getPlayerCartel(this.game);
+        const result = applyAction(this.game, cartel.id, "attack_territory", { territoryId: btn.dataset.territory });
+        persist(this.game);
+        const row = btn.closest("[data-reactive-row]");
+        const msg = document.createElement("p");
+        msg.className = "small";
+        msg.textContent = !result.ok
+          ? result.message
+          : result.attackerWins
+            ? "¡Territorio conquistado! Les devuelves el golpe de inmediato."
+            : "El contraataque fracasa.";
         row.appendChild(msg);
         btn.disabled = true;
       });

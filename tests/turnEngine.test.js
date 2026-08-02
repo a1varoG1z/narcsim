@@ -621,6 +621,39 @@ test("assassinate_rival does NOT record a reactive event for an internal purge, 
   assert.equal(game._reactiveEvents.length, 0, "an internal purge has no external attacker to react against");
 });
 
+test("declare_war records a 'warDeclared' reactive event when the player is the target, including a reachable territory when the aggressor already borders them", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  game._reactiveEvents = [];
+  // cjng's "jalisco" is adjacent to sinaloa's "sinaloa_t" from era start, so this war opens hot.
+  const result = applyAction(game, "cjng", "declare_war", { targetCartelId: "sinaloa", pretext: "open" });
+  assert.equal(result.ok, true);
+  assert.equal(game.cartels.sinaloa.relations.cjng.status, "war");
+  assert.equal(game._reactiveEvents.length, 1);
+  assert.deepEqual(game._reactiveEvents[0], {
+    type: "warDeclared",
+    byCartelId: "cjng",
+    byCartelName: game.cartels.cjng.name,
+    reachableTerritoryId: "jalisco",
+    reachableTerritoryName: game.territories.jalisco.name,
+  });
+});
+
+test("declare_war's reactive event has no reachable territory when the aggressor doesn't yet border the player, and records nothing when the player isn't the target", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  game._reactiveEvents = [];
+  // pcc only controls "brasil", nowhere near any of sinaloa's territories: a cold war.
+  const result = applyAction(game, "pcc", "declare_war", { targetCartelId: "sinaloa", pretext: "open" });
+  assert.equal(result.ok, true);
+  assert.equal(game._reactiveEvents.length, 1);
+  assert.equal(game._reactiveEvents[0].reachableTerritoryId, null);
+  assert.equal(game._reactiveEvents[0].reachableTerritoryName, null);
+
+  const gameNotPlayer = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  gameNotPlayer._reactiveEvents = [];
+  applyAction(gameNotPlayer, "cjng", "declare_war", { targetCartelId: "pcc", pretext: "open" });
+  assert.equal(gameNotPlayer._reactiveEvents.length, 0, "a war between two cartels that don't include the player shouldn't generate a reactive event");
+});
+
 test("endTurn returns reactiveEvents (empty by default) and never leaks the transient _reactiveEvents field into game state", () => {
   const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
   const result = endTurn(game);
