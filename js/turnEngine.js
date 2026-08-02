@@ -33,6 +33,14 @@ function corruptionAggressiveChance(chief) {
   return clamp(0.8 + (corruptionChiefSkill(chief) - 50) / 250, 0.5, 0.95);
 }
 
+/** prChief scales how much ground the media actions actually gain (or, for damage_control, how
+ * much heat they actually shed) — same modest, skill-50-centered shape as the corruption chiefs,
+ * so an average or absent chief changes almost nothing. */
+function prChiefBonus(chief) {
+  const skill = chief ? chief.stats.charisma : 40;
+  return clamp(Math.round((skill - 50) / 8), -6, 6);
+}
+
 const VENDETTA_BONUS = 0.12;
 const VENDETTA_EXPIRY_TURNS = 16;
 const VENDETTA_CHANCE = 0.5;
@@ -502,7 +510,8 @@ export function applyAction(game, cartelId, type, payload = {}) {
       const cost = ACTION_COSTS.press_release;
       if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
       r.money -= cost;
-      r.publicImage = Math.min(100, r.publicImage + randInt(5, 10));
+      const prBonus = prChiefBonus(game.characters[cartel.roles.prChief]);
+      r.publicImage = clamp(r.publicImage + randInt(5, 10) + prBonus, 0, 100);
       r.heat = Math.max(0, r.heat - randInt(2, 4));
       log(`${cartel.name} emite un comunicado de prensa para suavizar su imagen.`, "good");
       return { ok: true };
@@ -511,8 +520,9 @@ export function applyAction(game, cartelId, type, payload = {}) {
       const cost = ACTION_COSTS.corridos_campaign;
       if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
       r.money -= cost;
-      r.publicImage = Math.min(100, r.publicImage + randInt(8, 14));
-      r.internationalReputation = Math.min(100, (r.internationalReputation ?? 15) + randInt(3, 6));
+      const prBonus = prChiefBonus(game.characters[cartel.roles.prChief]);
+      r.publicImage = clamp(r.publicImage + randInt(8, 14) + prBonus, 0, 100);
+      r.internationalReputation = clamp((r.internationalReputation ?? 15) + randInt(3, 6) + Math.round(prBonus / 2), 0, 100);
       r.heat = Math.min(100, r.heat + randInt(3, 6));
       log(`${cartel.name} patrocina corridos y narcocultura: crece su leyenda, pero también su exposición.`, "event");
       return { ok: true };
@@ -521,7 +531,8 @@ export function applyAction(game, cartelId, type, payload = {}) {
       const cost = ACTION_COSTS.social_work;
       if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
       r.money -= cost;
-      r.publicImage = Math.min(100, r.publicImage + randInt(15, 25));
+      const prBonus = prChiefBonus(game.characters[cartel.roles.prChief]);
+      r.publicImage = clamp(r.publicImage + randInt(15, 25) + prBonus, 0, 100);
       r.heat = Math.max(0, r.heat - randInt(8, 12));
       log(`${cartel.name} financia obra social (escuelas, iglesias, caminos) y gana el favor de la comunidad.`, "good");
       return { ok: true };
@@ -530,8 +541,12 @@ export function applyAction(game, cartelId, type, payload = {}) {
       const cost = ACTION_COSTS.international_interview;
       if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
       r.money -= cost;
-      const spokesperson = game.characters[cartel.roles.leader] || game.characters[cartel.roles.prChief];
-      const charisma = spokesperson ? spokesperson.stats.charisma : 50;
+      // Either the leader or the PR chief can plausibly front an international interview —
+      // whoever is more charismatic actually does the talking, so a skilled prChief genuinely
+      // matters here instead of only ever losing out to a leader who always exists.
+      const leaderChar = game.characters[cartel.roles.leader];
+      const prChar = game.characters[cartel.roles.prChief];
+      const charisma = Math.max(leaderChar ? leaderChar.stats.charisma : 0, prChar ? prChar.stats.charisma : 0) || 50;
       const successChance = clamp(charisma / 130, 0.2, 0.75);
       if (chance(successChance)) {
         r.internationalReputation = Math.min(100, (r.internationalReputation ?? 15) + randInt(15, 25));
@@ -548,7 +563,8 @@ export function applyAction(game, cartelId, type, payload = {}) {
       const cost = ACTION_COSTS.damage_control;
       if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
       r.money -= cost;
-      r.heat = Math.max(0, r.heat - randInt(15, 20));
+      const prBonus = prChiefBonus(game.characters[cartel.roles.prChief]);
+      r.heat = clamp(r.heat - randInt(15, 20) - prBonus, 0, 100);
       log(`${cartel.name} invierte en control de daños para acallar un episodio reciente.`, "good");
       return { ok: true };
     }

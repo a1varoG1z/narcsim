@@ -228,6 +228,76 @@ test("a highly skilled corruption chief makes the 'aggressive' approach meaningf
   }
 });
 
+test("a charismatic prChief genuinely raises publicImage gains for press_release, corridos_campaign, and social_work over a weak one", () => {
+  for (const type of ["press_release", "corridos_campaign", "social_work"]) {
+    const skilledGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    skilledGame.characters[skilledGame.cartels.sinaloa.roles.prChief].stats.charisma = 100;
+
+    const weakGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    weakGame.characters[weakGame.cartels.sinaloa.roles.prChief].stats.charisma = 1;
+
+    const originalRandom = Math.random;
+    try {
+      Math.random = () => 0.5; // pins the base randInt roll identically in both games
+      const skilledBefore = skilledGame.cartels.sinaloa.resources.publicImage;
+      applyAction(skilledGame, "sinaloa", type);
+      const skilledGain = skilledGame.cartels.sinaloa.resources.publicImage - skilledBefore;
+
+      const weakBefore = weakGame.cartels.sinaloa.resources.publicImage;
+      applyAction(weakGame, "sinaloa", type);
+      const weakGain = weakGame.cartels.sinaloa.resources.publicImage - weakBefore;
+
+      assert.ok(skilledGain > weakGain, `${type}: a charismatic prChief (100) should out-perform a weak one (1) at the identical base roll`);
+    } finally {
+      Math.random = originalRandom;
+    }
+  }
+});
+
+test("a skilled prChief sheds more heat from damage_control than a weak one", () => {
+  const skilledGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  skilledGame.characters[skilledGame.cartels.sinaloa.roles.prChief].stats.charisma = 100;
+  skilledGame.cartels.sinaloa.resources.heat = 80;
+
+  const weakGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  weakGame.characters[weakGame.cartels.sinaloa.roles.prChief].stats.charisma = 1;
+  weakGame.cartels.sinaloa.resources.heat = 80;
+
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.5;
+    applyAction(skilledGame, "sinaloa", "damage_control");
+    applyAction(weakGame, "sinaloa", "damage_control");
+    assert.ok(skilledGame.cartels.sinaloa.resources.heat < weakGame.cartels.sinaloa.resources.heat, "a skilled prChief's damage control should shed more heat than a weak one at the identical base roll");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("international_interview lets a charismatic prChief matter even though the leader always exists (whoever is more charismatic fronts the interview)", () => {
+  const strongLeaderGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  strongLeaderGame.characters[strongLeaderGame.cartels.sinaloa.roles.leader].stats.charisma = 20;
+  strongLeaderGame.characters[strongLeaderGame.cartels.sinaloa.roles.prChief].stats.charisma = 100;
+  // charisma = max(20, 100) = 100 -> successChance = clamp(100/130, 0.2, 0.75) = 0.75
+
+  const weakBothGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  weakBothGame.characters[weakBothGame.cartels.sinaloa.roles.leader].stats.charisma = 20;
+  weakBothGame.characters[weakBothGame.cartels.sinaloa.roles.prChief].stats.charisma = 20;
+  // charisma = max(20, 20) = 20 -> successChance = clamp(20/130, 0.2, 0.75) = 0.2
+
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.3; // above the weak-both 0.2 chance (fails), below the strong-prChief 0.75 chance (succeeds)
+    const withStrongPrChief = applyAction(strongLeaderGame, "sinaloa", "international_interview");
+    assert.equal(withStrongPrChief.success, true, "a highly charismatic prChief should be able to front the interview even with a weak leader");
+
+    const withWeakBoth = applyAction(weakBothGame, "sinaloa", "international_interview");
+    assert.equal(withWeakBoth.success, false, "with both leader and prChief weak, the same roll should fail");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
 test("develop_territory permanently raises a territory's value when affordable, and refuses once maxed out", () => {
   const game = newGame("mexico-rutas-1990-2006.json", "sinaloa");
   const cartel = game.cartels.sinaloa;
