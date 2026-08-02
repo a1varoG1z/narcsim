@@ -895,6 +895,77 @@ test("sabotage_rival always costs money and damages the target's money on succes
   assert.equal(poorResult.ok, false);
 });
 
+test("sabotage_rival defaults to 'standard' behavior when no approach is passed, matching what AI cartels get", () => {
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.5;
+    const withoutApproach = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    const withStandard = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    const r1 = applyAction(withoutApproach, "sinaloa", "sabotage_rival", { targetCartelId: "cjng" });
+    const r2 = applyAction(withStandard, "sinaloa", "sabotage_rival", { targetCartelId: "cjng", approach: "standard" });
+    assert.equal(r1.approach, "standard");
+    assert.equal(r2.approach, "standard");
+    assert.equal(withoutApproach.cartels.cjng.resources.money, withStandard.cartels.cjng.resources.money);
+    assert.equal(withoutApproach.cartels.sinaloa.resources.heat, withStandard.cartels.sinaloa.resources.heat);
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("sabotage_rival's approach is a genuine trade-off: 'covert' does less damage for much less heat, 'explosive' does more damage for much more heat", () => {
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.01; // low enough that even 'explosive's reduced success chance still succeeds; pins every roll to its range floor
+    const covertGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    const covertResult = applyAction(covertGame, "sinaloa", "sabotage_rival", { targetCartelId: "cjng", approach: "covert" });
+
+    const standardGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    const standardResult = applyAction(standardGame, "sinaloa", "sabotage_rival", { targetCartelId: "cjng", approach: "standard" });
+
+    const explosiveGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    const explosiveResult = applyAction(explosiveGame, "sinaloa", "sabotage_rival", { targetCartelId: "cjng", approach: "explosive" });
+
+    assert.equal(covertResult.success, true);
+    assert.equal(standardResult.success, true);
+    assert.equal(explosiveResult.success, true);
+    assert.ok(covertResult.damage < standardResult.damage, "covert should damage less than standard");
+    assert.ok(standardResult.damage < explosiveResult.damage, "explosive should damage more than standard");
+    assert.ok(covertGame.cartels.cjng.resources.heat < standardGame.cartels.cjng.resources.heat, "covert should raise the target's heat less than standard");
+    assert.ok(standardGame.cartels.cjng.resources.heat < explosiveGame.cartels.cjng.resources.heat, "explosive should raise the target's heat more than standard");
+    assert.ok(covertGame.cartels.sinaloa.relations.cjng.tension < standardGame.cartels.sinaloa.relations.cjng.tension, "covert should raise tension less than standard");
+    assert.ok(standardGame.cartels.sinaloa.relations.cjng.tension < explosiveGame.cartels.sinaloa.relations.cjng.tension, "explosive should raise tension more than standard");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("sabotage_rival's 'explosive' approach costs its own army men when it fails, unlike 'covert' or 'standard'", () => {
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.99; // guarantees failure regardless of approach
+    const covertGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    const covertArmyBefore = covertGame.cartels.sinaloa.resources.armySize;
+    const covertResult = applyAction(covertGame, "sinaloa", "sabotage_rival", { targetCartelId: "cjng", approach: "covert" });
+
+    const standardGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    const standardArmyBefore = standardGame.cartels.sinaloa.resources.armySize;
+    const standardResult = applyAction(standardGame, "sinaloa", "sabotage_rival", { targetCartelId: "cjng", approach: "standard" });
+
+    const explosiveGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    const explosiveArmyBefore = explosiveGame.cartels.sinaloa.resources.armySize;
+    const explosiveResult = applyAction(explosiveGame, "sinaloa", "sabotage_rival", { targetCartelId: "cjng", approach: "explosive" });
+
+    assert.equal(covertResult.success, false);
+    assert.equal(standardResult.success, false);
+    assert.equal(explosiveResult.success, false);
+    assert.equal(covertGame.cartels.sinaloa.resources.armySize, covertArmyBefore, "a failed covert sabotage shouldn't cost army men");
+    assert.equal(standardGame.cartels.sinaloa.resources.armySize, standardArmyBefore, "a failed standard sabotage shouldn't cost army men");
+    assert.ok(explosiveGame.cartels.sinaloa.resources.armySize < explosiveArmyBefore, "a failed explosive sabotage should cost army men in the resulting firefight");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
 test("intercept_shipment refuses insufficient funds and an invalid or same-cartel target", () => {
   const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
   const cartel = game.cartels.sinaloa;

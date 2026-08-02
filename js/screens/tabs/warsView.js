@@ -104,12 +104,7 @@ export function render(container, app) {
     showAssassinateMethodModal(app, game, cartel, cartel.id, game.characters[btn.dataset.purge]);
   }));
   container.querySelectorAll("[data-sabotage]").forEach((btn) => btn.addEventListener("click", () => {
-    if (!confirm(`¿Sabotear a ${game.cartels[btn.dataset.sabotage].name} por ${fmtMoney(ACTION_COSTS.sabotage_rival)}?`)) return;
-    const result = applyAction(game, cartel.id, "sabotage_rival", { targetCartelId: btn.dataset.sabotage });
-    app.setGame(game);
-    if (!result.ok) alert(result.message);
-    else alert(result.success ? `Sabotaje con éxito: le causas ${fmtMoney(result.damage)} en pérdidas.` : "El sabotaje fracasa y expone tu implicación.");
-    app.render();
+    showSabotageApproachModal(app, game, cartel, btn.dataset.sabotage);
   }));
   container.querySelectorAll("[data-intercept]").forEach((btn) => btn.addEventListener("click", () => {
     if (!confirm(`¿Interceptar un cargamento de ${game.cartels[btn.dataset.intercept].name} por ${fmtMoney(ACTION_COSTS.intercept_shipment)}?`)) return;
@@ -474,6 +469,41 @@ function showAssassinateMethodModal(app, game, cartel, targetCartelId, targetCha
   document.getElementById("close-btn").addEventListener("click", closeModal);
   document.querySelectorAll("[data-method]").forEach((btn) => {
     btn.addEventListener("click", () => order(btn.dataset.method));
+  });
+}
+
+function showSabotageApproachModal(app, game, cartel, targetCartelId) {
+  const target = game.cartels[targetCartelId];
+
+  const apply = (approach) => {
+    const result = applyAction(game, cartel.id, "sabotage_rival", { targetCartelId, approach });
+    app.setGame(game);
+    closeModal();
+    if (!result.ok) alert(result.message);
+    else alert(result.success ? `Sabotaje con éxito: le causas ${fmtMoney(result.damage)} en pérdidas.` : "El sabotaje fracasa y expone tu implicación.");
+    app.render();
+  };
+
+  showModal(`
+    <h2>¿Cómo saboteas a ${escapeHtml(target.name)}?</h2>
+    <p class="small text-dim">Coste: ${fmtMoney(ACTION_COSTS.sabotage_rival)}. El método cambia cuánto daño causas, cuánto heat te cuesta y qué tan a la vista queda tu implicación.</p>
+    <button class="block" data-approach="covert">
+      Sabotaje encubierto (cuentas y logística)
+      <div class="small text-dim">Menos daño económico, pero mucho más difícil de rastrear hasta ti: apenas sube el heat, en éxito o en fracaso.</div>
+    </button>
+    <button class="danger block" data-approach="standard">
+      Sabotaje estándar
+      <div class="small text-dim">El equilibrio de siempre entre daño causado y heat generado.</div>
+    </button>
+    <button class="danger block" data-approach="explosive">
+      Explosivos contra su infraestructura
+      <div class="small text-dim">Mucho más daño si sale bien, pero es más difícil de ejecutar con éxito, dispara el heat mucho más, y si fracasa el enfrentamiento te cuesta también bajas en tu propio ejército.</div>
+    </button>
+    <button class="ghost block mt-1" id="close-btn">Cancelar</button>
+  `);
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.querySelectorAll("[data-approach]").forEach((btn) => {
+    btn.addEventListener("click", () => apply(btn.dataset.approach));
   });
 }
 

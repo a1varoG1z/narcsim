@@ -798,10 +798,13 @@ export function applyAction(game, cartelId, type, payload = {}) {
       const target = game.cartels[payload.targetCartelId];
       if (!target || target.id === cartelId || target.destroyed) return { ok: false, message: "Objetivo no válido." };
       r.money -= cost;
+      const approach = payload.approach || "standard";
       const saboteur = game.characters[cartel.roles.intelChief] || game.characters[cartel.roles.sicariosChief];
       const skill = saboteur ? (saboteur.stats.stealth + saboteur.stats.intrigue) / 2 : 40;
       const defense = target.resources.corruptPolice / 2 + 20;
       let successChance = clamp(0.4 + (skill - defense) / 150, 0.15, 0.75);
+      if (approach === "covert") successChance = clamp(successChance + 0.15, 0.15, 0.9);
+      if (approach === "explosive") successChance = clamp(successChance - 0.1, 0.1, 0.75);
       if (hasActiveInformant(cartel, target.id)) successChance = clamp(successChance + INFORMANT_SUCCESS_BONUS, 0.1, 0.9);
       const bumpTension = (delta) => {
         const status = cartel.relations[target.id]?.status || "neutral";
@@ -810,23 +813,37 @@ export function applyAction(game, cartelId, type, payload = {}) {
         target.relations[cartelId] = { status, tension };
       };
       if (chance(successChance)) {
-        const damage = Math.round(target.resources.money * (0.05 + Math.random() * 0.1));
+        let damageMult = [0.05, 0.15];
+        let heatGain = [5, 10];
+        let tensionGain = [10, 20];
+        if (approach === "covert") { damageMult = [0.03, 0.08]; heatGain = [1, 4]; tensionGain = [5, 10]; }
+        if (approach === "explosive") { damageMult = [0.12, 0.25]; heatGain = [12, 20]; tensionGain = [20, 35]; }
+        const damage = Math.round(target.resources.money * (damageMult[0] + Math.random() * (damageMult[1] - damageMult[0])));
         target.resources.money = Math.max(0, target.resources.money - damage);
-        target.resources.heat = Math.min(100, target.resources.heat + randInt(5, 10));
-        bumpTension(randInt(10, 20));
-        log(`${cartel.name} sabotea operaciones de ${target.name}, causándole pérdidas por ${fmtMoney(damage)}.`, "event");
+        target.resources.heat = Math.min(100, target.resources.heat + randInt(...heatGain));
+        bumpTension(randInt(...tensionGain));
+        const verb = approach === "covert" ? "sabotea en silencio las cuentas y la logística de" : approach === "explosive" ? "vuela con explosivos parte de la infraestructura de" : "sabotea operaciones de";
+        log(`${cartel.name} ${verb} ${target.name}, causándole pérdidas por ${fmtMoney(damage)}.`, "event");
         if (game._reactiveEvents && target.id === game.playerCartelId) {
           game._reactiveEvents.push({ type: "sabotaged", byCartelId: cartel.id, byCartelName: cartel.name, damage, success: true });
         }
-        return { ok: true, success: true, damage };
+        return { ok: true, success: true, damage, approach };
       }
-      r.heat = Math.min(100, r.heat + randInt(10, 18));
-      bumpTension(randInt(15, 25));
+      let failHeat = [10, 18];
+      let failTension = [15, 25];
+      if (approach === "covert") { failHeat = [4, 9]; failTension = [8, 15]; }
+      if (approach === "explosive") {
+        failHeat = [20, 32];
+        failTension = [25, 40];
+        r.armySize = Math.max(0, r.armySize - randInt(2, 8));
+      }
+      r.heat = Math.min(100, r.heat + randInt(...failHeat));
+      bumpTension(randInt(...failTension));
       log(`El sabotaje de ${cartel.name} contra ${target.name} fracasa y expone su autoría.`, "event");
       if (game._reactiveEvents && target.id === game.playerCartelId) {
         game._reactiveEvents.push({ type: "sabotaged", byCartelId: cartel.id, byCartelName: cartel.name, damage: 0, success: false });
       }
-      return { ok: true, success: false };
+      return { ok: true, success: false, approach };
     }
     case "intercept_shipment": {
       // Distinct from sabotage_rival: this is a violent ambush on a specific shipment in transit,
@@ -1559,7 +1576,7 @@ function decayWarFocus(game) {
  * doesn't stay sharp forever. */
 function decayVendettas(game) {
   for (const c of Object.values(game.characters)) {
-    if (!c.vendetta || !c.alive) continue;
+    if (!c.vendetta) continue;
     if (game.turn - c.vendetta.sinceTurn >= VENDETTA_EXPIRY_TURNS) {
       c.vendetta = null;
     }
