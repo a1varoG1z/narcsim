@@ -41,6 +41,20 @@ function prChiefBonus(chief) {
   return clamp(Math.round((skill - 50) / 8), -6, 6);
 }
 
+/** productionChief (business+stealth: efficient, discreet processing) and traffickingChief
+ * (intrigue+stealth: routing and tradecraft) share the same skill-50-centered bonus shape as the
+ * other role hooks. The bonus is reused as both a probability nudge (divided by 100, so ±6 becomes
+ * ±0.06) and a payout multiplier nudge (divided by 50, so ±6 becomes the same ±0.12 swing already
+ * used elsewhere for informants/vendettas) — an absent or average chief changes nothing. */
+function productionChiefBonus(chief) {
+  const skill = chief ? (chief.stats.business + chief.stats.stealth) / 2 : 40;
+  return clamp(Math.round((skill - 50) / 8), -6, 6);
+}
+function traffickingChiefBonus(chief) {
+  const skill = chief ? (chief.stats.intrigue + chief.stats.stealth) / 2 : 40;
+  return clamp(Math.round((skill - 50) / 8), -6, 6);
+}
+
 const VENDETTA_BONUS = 0.12;
 const VENDETTA_EXPIRY_TURNS = 16;
 const VENDETTA_CHANCE = 0.5;
@@ -212,13 +226,14 @@ export function applyAction(game, cartelId, type, payload = {}) {
       }
       r.money -= cost;
       const drug = getDrugProfile(game);
-      const seizeChance = clamp(clamp(r.heat / 300, 0.03, 0.35) * drug.seizureMult, 0.02, 0.5);
+      const productionBonus = productionChiefBonus(game.characters[cartel.roles.productionChief]);
+      const seizeChance = clamp(clamp(r.heat / 300, 0.03, 0.35) * drug.seizureMult - productionBonus / 100, 0.02, 0.5);
       if (chance(seizeChance)) {
         r.heat = Math.min(100, r.heat + Math.round(randInt(3, 8) * drug.heatMult));
         log(`Un cargamento de ${cartel.name} es decomisado durante la producción en ${territory.name}.`, "event");
         return { ok: true, message: "Decomiso.", territoryId: territory.id };
       }
-      const payout = Math.round((90 + territory.value * 12) * MONEY_SCALE * (1.1 + Math.random() * 0.5) * drug.payoutMult);
+      const payout = Math.round((90 + territory.value * 12) * MONEY_SCALE * (1.1 + Math.random() * 0.5) * drug.payoutMult * (1 + productionBonus / 50));
       r.money += payout;
       r.heat = Math.min(100, r.heat + Math.round(2 * drug.heatMult));
       log(`${cartel.name} invierte en producción en ${territory.name} y obtiene ${fmtMoney(payout)} en ganancias.`, "good");
@@ -234,14 +249,15 @@ export function applyAction(game, cartelId, type, payload = {}) {
       }
       r.money -= cost;
       const drug = getDrugProfile(game);
-      const interdictChance = clamp(clamp(r.heat / 220, 0.05, 0.5) * drug.seizureMult, 0.03, 0.65);
+      const traffickingBonus = traffickingChiefBonus(game.characters[cartel.roles.traffickingChief]);
+      const interdictChance = clamp(clamp(r.heat / 220, 0.05, 0.5) * drug.seizureMult - traffickingBonus / 100, 0.03, 0.65);
       if (chance(interdictChance)) {
         r.heat = Math.min(100, r.heat + Math.round(randInt(6, 14) * drug.heatMult));
         log(`Un envío de ${cartel.name} es interceptado en la ruta.`, "event");
         return { ok: true, message: "Interceptado." };
       }
       const partnerMultiplier = partnerStatus === "alliance" ? 1.25 : partnerStatus === "neutral" ? 1 : 0.85;
-      const payout = Math.round(cost * (1.6 + Math.random() * 1.2) * partnerMultiplier * drug.payoutMult);
+      const payout = Math.round(cost * (1.6 + Math.random() * 1.2) * partnerMultiplier * drug.payoutMult * (1 + traffickingBonus / 50));
       r.money += payout;
       r.heat = Math.min(100, r.heat + Math.round(5 * drug.heatMult));
       if (partner) {
@@ -811,7 +827,9 @@ export function applyAction(game, cartelId, type, payload = {}) {
       r.money -= cost;
       const raider = game.characters[cartel.roles.sicariosChief] || game.characters[cartel.roles.intelChief];
       const skill = raider ? (raider.stats.violence + raider.stats.stealth) / 2 : 40;
-      const defense = target.resources.corruptPolice / 2 + 20;
+      // A skilled traffickingChief on the target's side means the shipment being ambushed was
+      // better routed/covered in the first place — harder to catch, not just harder to rob once caught.
+      const defense = target.resources.corruptPolice / 2 + 20 + traffickingChiefBonus(game.characters[target.roles.traffickingChief]);
       const drug = getDrugProfile(game);
       let successChance = clamp(clamp(0.35 + (skill - defense) / 150, 0.15, 0.7) * drug.seizureMult, 0.1, 0.8);
       if (hasActiveInformant(cartel, target.id)) successChance = clamp(successChance + INFORMANT_SUCCESS_BONUS, 0.1, 0.9);

@@ -298,6 +298,129 @@ test("international_interview lets a charismatic prChief matter even though the 
   }
 });
 
+test("a skilled productionChief genuinely raises invest_production's payout and lowers its seizure risk versus a weak one", () => {
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.99; // clears the seizure roll in both games regardless of the bonus, isolating payout
+    const skilledGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    skilledGame.cartels.sinaloa.resources.money = ACTION_COSTS.invest_production * 10;
+    skilledGame.cartels.sinaloa.resources.heat = 0;
+    skilledGame.characters[skilledGame.cartels.sinaloa.roles.productionChief].stats.business = 100;
+    skilledGame.characters[skilledGame.cartels.sinaloa.roles.productionChief].stats.stealth = 100;
+
+    const weakGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    weakGame.cartels.sinaloa.resources.money = ACTION_COSTS.invest_production * 10;
+    weakGame.cartels.sinaloa.resources.heat = 0;
+    weakGame.characters[weakGame.cartels.sinaloa.roles.productionChief].stats.business = 1;
+    weakGame.characters[weakGame.cartels.sinaloa.roles.productionChief].stats.stealth = 1;
+
+    const skilledResult = applyAction(skilledGame, "sinaloa", "invest_production");
+    const weakResult = applyAction(weakGame, "sinaloa", "invest_production");
+    const skilledPayout = Number(skilledResult.message.replace("+", ""));
+    const weakPayout = Number(weakResult.message.replace("+", ""));
+    assert.ok(skilledPayout > weakPayout, "a skilled productionChief (business/stealth 100) should out-earn a weak one (1) at the identical base roll");
+
+    // Now isolate the seizure-risk side: heat=90 puts the base chance well inside [0.02, 0.5], so
+    // the ±6-point role bonus (as a ±0.06 probability shift) can straddle a fixed roll.
+    const seizeSkilledGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    seizeSkilledGame.cartels.sinaloa.resources.money = ACTION_COSTS.invest_production * 10;
+    seizeSkilledGame.cartels.sinaloa.resources.heat = 90;
+    seizeSkilledGame.characters[seizeSkilledGame.cartels.sinaloa.roles.productionChief].stats.business = 100;
+    seizeSkilledGame.characters[seizeSkilledGame.cartels.sinaloa.roles.productionChief].stats.stealth = 100;
+
+    const seizeWeakGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    seizeWeakGame.cartels.sinaloa.resources.money = ACTION_COSTS.invest_production * 10;
+    seizeWeakGame.cartels.sinaloa.resources.heat = 90;
+    seizeWeakGame.characters[seizeWeakGame.cartels.sinaloa.roles.productionChief].stats.business = 1;
+    seizeWeakGame.characters[seizeWeakGame.cartels.sinaloa.roles.productionChief].stats.stealth = 1;
+
+    Math.random = () => 0.27; // between the skilled chief's ~0.21 seize chance and the weak chief's ~0.33
+    const seizeSkilledResult = applyAction(seizeSkilledGame, "sinaloa", "invest_production");
+    assert.notEqual(seizeSkilledResult.message, "Decomiso.", "a skilled productionChief should avoid a seizure at this roll");
+    const seizeWeakResult = applyAction(seizeWeakGame, "sinaloa", "invest_production");
+    assert.equal(seizeWeakResult.message, "Decomiso.", "a weak productionChief should still get seized at the identical roll");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("a skilled traffickingChief genuinely raises traffic_shipment's payout and lowers its interdiction risk versus a weak one", () => {
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.99; // clears the interdiction roll in both games, isolating payout
+    const skilledGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    skilledGame.cartels.sinaloa.resources.money = ACTION_COSTS.traffic_shipment * 10;
+    skilledGame.cartels.sinaloa.resources.heat = 0;
+    skilledGame.characters[skilledGame.cartels.sinaloa.roles.traffickingChief].stats.intrigue = 100;
+    skilledGame.characters[skilledGame.cartels.sinaloa.roles.traffickingChief].stats.stealth = 100;
+
+    const weakGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    weakGame.cartels.sinaloa.resources.money = ACTION_COSTS.traffic_shipment * 10;
+    weakGame.cartels.sinaloa.resources.heat = 0;
+    weakGame.characters[weakGame.cartels.sinaloa.roles.traffickingChief].stats.intrigue = 1;
+    weakGame.characters[weakGame.cartels.sinaloa.roles.traffickingChief].stats.stealth = 1;
+
+    const skilledResult = applyAction(skilledGame, "sinaloa", "traffic_shipment");
+    const weakResult = applyAction(weakGame, "sinaloa", "traffic_shipment");
+    assert.ok(skilledGame.cartels.sinaloa.resources.money > weakGame.cartels.sinaloa.resources.money, "a skilled traffickingChief (intrigue/stealth 100) should net more money than a weak one (1) at the identical base roll");
+    assert.notEqual(skilledResult.message, "Interceptado.");
+    assert.notEqual(weakResult.message, "Interceptado.");
+
+    // Isolate the interdiction-risk side: heat=110 puts the base chance at the [0.05, 0.5] ceiling
+    // before the seizure multiplier, so the ±0.06 role-bonus shift can straddle a fixed roll.
+    const interdictSkilledGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    interdictSkilledGame.cartels.sinaloa.resources.money = ACTION_COSTS.traffic_shipment * 10;
+    interdictSkilledGame.cartels.sinaloa.resources.heat = 110;
+    interdictSkilledGame.characters[interdictSkilledGame.cartels.sinaloa.roles.traffickingChief].stats.intrigue = 100;
+    interdictSkilledGame.characters[interdictSkilledGame.cartels.sinaloa.roles.traffickingChief].stats.stealth = 100;
+
+    const interdictWeakGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    interdictWeakGame.cartels.sinaloa.resources.money = ACTION_COSTS.traffic_shipment * 10;
+    interdictWeakGame.cartels.sinaloa.resources.heat = 110;
+    interdictWeakGame.characters[interdictWeakGame.cartels.sinaloa.roles.traffickingChief].stats.intrigue = 1;
+    interdictWeakGame.characters[interdictWeakGame.cartels.sinaloa.roles.traffickingChief].stats.stealth = 1;
+
+    Math.random = () => 0.45; // between the skilled chief's ~0.39 interdiction chance and the weak chief's ~0.51
+    const interdictSkilledResult = applyAction(interdictSkilledGame, "sinaloa", "traffic_shipment");
+    assert.notEqual(interdictSkilledResult.message, "Interceptado.", "a skilled traffickingChief should avoid interdiction at this roll");
+    const interdictWeakResult = applyAction(interdictWeakGame, "sinaloa", "traffic_shipment");
+    assert.equal(interdictWeakResult.message, "Interceptado.", "a weak traffickingChief should still get interdicted at the identical roll");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("intercept_shipment is genuinely harder against a target with a skilled traffickingChief than a weak one", () => {
+  const originalRandom = Math.random;
+  try {
+    const raidSkilledDefense = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    raidSkilledDefense.cartels.sinaloa.resources.money = ACTION_COSTS.intercept_shipment * 10;
+    const raider1 = raidSkilledDefense.characters[raidSkilledDefense.cartels.sinaloa.roles.sicariosChief];
+    raider1.stats.violence = 50;
+    raider1.stats.stealth = 50;
+    raidSkilledDefense.cartels.cjng.resources.corruptPolice = 0;
+    raidSkilledDefense.characters[raidSkilledDefense.cartels.cjng.roles.traffickingChief].stats.intrigue = 100;
+    raidSkilledDefense.characters[raidSkilledDefense.cartels.cjng.roles.traffickingChief].stats.stealth = 100;
+
+    const raidWeakDefense = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    raidWeakDefense.cartels.sinaloa.resources.money = ACTION_COSTS.intercept_shipment * 10;
+    const raider2 = raidWeakDefense.characters[raidWeakDefense.cartels.sinaloa.roles.sicariosChief];
+    raider2.stats.violence = 50;
+    raider2.stats.stealth = 50;
+    raidWeakDefense.cartels.cjng.resources.corruptPolice = 0;
+    raidWeakDefense.characters[raidWeakDefense.cartels.cjng.roles.traffickingChief].stats.intrigue = 1;
+    raidWeakDefense.characters[raidWeakDefense.cartels.cjng.roles.traffickingChief].stats.stealth = 1;
+
+    Math.random = () => 0.5; // between the skilled-defense ~0.459 success chance and the weak-defense ~0.531
+    const vsSkilled = applyAction(raidSkilledDefense, "sinaloa", "intercept_shipment", { targetCartelId: "cjng" });
+    assert.equal(vsSkilled.success, false, "a skilled traffickingChief on the target's side should thwart the ambush at this roll");
+    const vsWeak = applyAction(raidWeakDefense, "sinaloa", "intercept_shipment", { targetCartelId: "cjng" });
+    assert.equal(vsWeak.success, true, "the identical roll should succeed against a weak traffickingChief's shipment");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
 test("develop_territory permanently raises a territory's value when affordable, and refuses once maxed out", () => {
   const game = newGame("mexico-rutas-1990-2006.json", "sinaloa");
   const cartel = game.cartels.sinaloa;
