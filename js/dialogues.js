@@ -64,6 +64,55 @@ export function defaultConceptionDialogue() {
   };
 }
 
+export function defaultPoachDialogue() {
+  return {
+    start: "greeting",
+    nodes: {
+      greeting: {
+        text: "Te reúnes en privado con {partner} para tantear un cambio de bando.",
+        options: [
+          { label: "Ofrecerle dinero de sobra y un puesto mejor", next: "money", warmth: 1 },
+          { label: "Sugerir que su lealtad actual no está bien pagada", next: "grievance", warmth: 2 },
+          { label: "Advertirle sin rodeos que su cártel va a perder", next: "threat", warmth: -1 },
+        ],
+      },
+      money: {
+        text: "{partner} escucha con interés la oferta económica, pero no se compromete todavía.",
+        options: [
+          { label: "Subir la oferta sobre la marcha", next: "close", warmth: 2 },
+          { label: "Dejar la cifra tal cual y esperar su respuesta", next: "close", warmth: 1 },
+        ],
+      },
+      grievance: {
+        text: "{partner} baja la voz: reconoce que lleva tiempo sintiéndose infravalorado/a.",
+        options: [
+          { label: "Prometerle un cargo real en tu organización", next: "close", warmth: 3 },
+          { label: "Escuchar sus quejas sin prometer nada aún", next: "close", warmth: 1 },
+        ],
+      },
+      threat: {
+        text: "{partner} se pone a la defensiva; no le gusta que le hablen así.",
+        options: [
+          { label: "Suavizar el tono y ofrecer garantías", next: "close", warmth: 0 },
+          { label: "Mantener la presión", next: "walk_away_early", warmth: -3 },
+        ],
+      },
+      close: {
+        text: "{partner} se queda pensativo/a un momento antes de responder.",
+        options: [
+          { label: "Continuar", resolve: "attempt", warmth: 0 },
+        ],
+      },
+      walk_away_early: {
+        text: "{partner} da la conversación por terminada y se aleja, molesto/a.",
+        options: [
+          { label: "Aceptar y retirarte", resolve: "walk_away", warmth: 0 },
+        ],
+      },
+    },
+  };
+}
+
 export function cloneDialogueTree(tree) {
   return JSON.parse(JSON.stringify(tree));
 }

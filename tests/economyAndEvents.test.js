@@ -776,6 +776,49 @@ test("poach_member's success chance improves when the two cartels are already at
   }
 });
 
+test("poach_member's persuasionBoost (from how the actual conversation went) genuinely moves the success chance, but is a no-op when absent (e.g. an AI-initiated poach)", () => {
+  // Each case gets its own fresh game: a successful poach permanently moves the target to the
+  // attacker's cartel, so reusing the same target across cases would invalidate later calls.
+  const setupCase = () => {
+    const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    const cartel = game.cartels.sinaloa;
+    const cjng = game.cartels.cjng;
+    cartel.resources.money = 100_000_000;
+    const target = game.characters[cjng.roles.underboss];
+    target.stats.loyaltyInspiring = 90;
+    target.bondWithPlayer = 90;
+    const recruiter = game.characters[cartel.roles.diplomatChief];
+    recruiter.stats.charisma = 10;
+    recruiter.stats.intrigue = 10;
+    cjng.relations.sinaloa = { status: "neutral", tension: 30 };
+    cartel.relations.cjng = { status: "neutral", tension: 30 };
+    return { game, target };
+  };
+  // Baseline (no boost) chance is the same 0.1 floor as the war-comparison test above.
+
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.15; // above the unboosted 0.1 floor
+    const { game: gameNoBoost, target: targetNoBoost } = setupCase();
+    const withoutBoost = applyAction(gameNoBoost, "sinaloa", "poach_member", { targetCharacterId: targetNoBoost.id });
+    assert.equal(withoutBoost.success, false, "no persuasionBoost (e.g. an AI poach, or the old instant-click flow) should behave exactly as before");
+
+    // persuasionBoost of 5 (a strong conversation) adds 5*0.02 = 0.10, pushing 0.1 -> 0.2, over the 0.15 roll.
+    const { game: gameBoost, target: targetBoost } = setupCase();
+    const withBoost = applyAction(gameBoost, "sinaloa", "poach_member", { targetCharacterId: targetBoost.id, persuasionBoost: 5 });
+    assert.equal(withBoost.success, true, "a strong conversation should push the same roll over the line");
+
+    // A hostile conversation (negative boost) should make an already-marginal roll worse, not better:
+    // chance drops from 0.1 to 0.04, clamped to the 0.05 floor.
+    Math.random = () => 0.08; // under the unboosted 0.1 floor
+    const { game: gameNegBoost, target: targetNegBoost } = setupCase();
+    const withNegativeBoost = applyAction(gameNegBoost, "sinaloa", "poach_member", { targetCharacterId: targetNegBoost.id, persuasionBoost: -3 });
+    assert.equal(withNegativeBoost.success, false, "a poorly-handled conversation should make the roll fail, same as unboosted");
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
 test("assassinate_rival killing the player's own character defers to the succession pipeline instead of silently calling autoSuccession", () => {
   // The player leads sinaloa; a rival AI cartel (cjng) successfully assassinates them.
   const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");

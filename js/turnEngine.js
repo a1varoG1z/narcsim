@@ -916,6 +916,9 @@ export function applyAction(game, cartelId, type, payload = {}) {
       let successChance = clamp(0.3 + (persuasion - loyalty) / 150, 0.1, 0.6);
       // A cartel already at war and bleeding is a much easier place to poach a defector from.
       if (atWarWithThem) successChance = clamp(successChance + 0.12, 0.1, 0.7);
+      // How the actual conversation with them went (see the poach dialogue in dialogues.js) — an
+      // AI-initiated poach never sets this, so it's a no-op unless the player actually talked to them.
+      if (payload.persuasionBoost) successChance = clamp(successChance + payload.persuasionBoost * 0.02, 0.05, 0.85);
       const bumpTension = (delta) => {
         const status = cartel.relations[targetCartel.id]?.status || "neutral";
         const tension = clamp((cartel.relations[targetCartel.id]?.tension || 30) + delta, 0, 100);

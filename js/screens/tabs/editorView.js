@@ -437,7 +437,7 @@ export function render(container, app) {
 
   container.querySelector("#reset-dialogue").addEventListener("click", () => {
     if (!confirm("¿Restaurar el diálogo de 'Formar una familia' a su versión por defecto?")) return;
-    game.dialogueTrees = { conception: defaultConceptionDialogue() };
+    game.dialogueTrees = { ...game.dialogueTrees, conception: defaultConceptionDialogue() };
     app.setGame(game);
     app.render();
   });

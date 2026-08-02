@@ -5,9 +5,12 @@ import { showModal, closeModal } from "../../ui/modal.js";
 import { showCartelProfile } from "./cartelProfile.js";
 import { fmtMoney } from "../../utils/text.js";
 import { ROLE_ORDER } from "../../model.js";
+import { defaultPoachDialogue } from "../../dialogues.js";
+import { loadSettings, saveSettings } from "../../utils/storage.js";
 
 const STATUS_LABEL = { war: "En guerra", alliance: "Aliados", neutral: "Neutral" };
 const STATUS_CLASS = { war: "war", alliance: "alliance", neutral: "" };
+const NEUTRAL_QUICK_PERSUASION = 2;
 
 export function render(container, app) {
   const game = app.game;
@@ -143,10 +146,11 @@ function showPoachModal(app, game, cartel, targetCartelId) {
     .filter((id, i, arr) => id && arr.indexOf(id) === i)
     .map((id) => game.characters[id])
     .filter((c) => c && c.alive);
+  const quickMode = !!loadSettings().quickDialogueMode;
 
   showModal(`
     <h2>Reclutar a un miembro de ${escapeHtml(target.name)}</h2>
-    <p class="small text-dim">Coste: ${fmtMoney(ACTION_COSTS.poach_member)}. Ofreces un cambio de bando a alguien de su cúpula (nunca a su líder): cuanto más leal sea a su jefe, más difícil será convencerlo. Si ya estáis en guerra, es más fácil que acepte desertar.</p>
+    <p class="small text-dim">Coste: ${fmtMoney(ACTION_COSTS.poach_member)}. Ofreces un cambio de bando a alguien de su cúpula (nunca a su líder): cuanto más leal sea a su jefe, más difícil será convencerlo, y cómo lleves la conversación también cuenta. Si ya estáis en guerra, es más fácil que acepte desertar.</p>
     ${candidates.length ? candidates.map((c) => `
       <button class="block" data-target="${c.id}">
         <div class="person-row" style="border:none;padding:0">
@@ -155,18 +159,90 @@ function showPoachModal(app, game, cartel, targetCartelId) {
         </div>
       </button>
     `).join("") : `<p class="small text-dim">No hay objetivos disponibles en este cártel.</p>`}
-    <button class="ghost block" id="close-btn">Cancelar</button>
+    <label style="display:flex;align-items:center;gap:.5rem;margin-top:.8rem">
+      <input type="checkbox" id="quick-mode-toggle" ${quickMode ? "checked" : ""}>
+      Modo rápido (resolver al instante, sin conversación)
+    </label>
+    <button class="ghost block mt-1" id="close-btn">Cancelar</button>
   `);
+  document.getElementById("quick-mode-toggle").addEventListener("change", (e) => {
+    saveSettings({ ...loadSettings(), quickDialogueMode: e.target.checked });
+  });
   document.getElementById("close-btn").addEventListener("click", closeModal);
   document.querySelectorAll("[data-target]").forEach((btn) => {
     btn.addEventListener("click", () => {
-      const result = applyAction(game, cartel.id, "poach_member", { targetCharacterId: btn.dataset.target });
-      app.setGame(game);
       closeModal();
-      if (!result.ok) alert(result.message);
-      else alert(result.success ? "Se une a tu cártel." : "El intento fracasa y expone la maniobra.");
-      app.render();
+      startPoachDialogue(app, game, cartel, btn.dataset.target);
     });
+  });
+}
+
+function startPoachDialogue(app, game, cartel, targetCharacterId) {
+  if (loadSettings().quickDialogueMode) {
+    finishPoachDialogue(app, game, cartel, targetCharacterId, "attempt", NEUTRAL_QUICK_PERSUASION);
+    return;
+  }
+  if (!game.dialogueTrees) game.dialogueTrees = {};
+  if (!game.dialogueTrees.poach) game.dialogueTrees.poach = defaultPoachDialogue();
+  const tree = game.dialogueTrees.poach;
+  if (!tree.nodes[tree.start]) {
+    alert("No hay un diálogo configurado para este momento. Revísalo en el Editor.");
+    return;
+  }
+  runPoachDialogueNode(app, game, cartel, tree, targetCharacterId, tree.start, 0);
+}
+
+function runPoachDialogueNode(app, game, cartel, tree, targetCharacterId, nodeId, persuasion) {
+  const target = game.characters[targetCharacterId];
+  const node = tree.nodes[nodeId];
+  if (!node) return;
+  const text = node.text.replace(/\{partner\}/g, escapeHtml(target?.name || ""));
+
+  showModal(`
+    <h2>${escapeHtml(target?.name || "")}</h2>
+    <p>${text}</p>
+    ${node.options.map((opt, i) => `<button class="block" data-option="${i}">${escapeHtml(opt.label)}</button>`).join("")}
+  `);
+
+  document.querySelectorAll("[data-option]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const option = node.options[Number(btn.dataset.option)];
+      const nextPersuasion = persuasion + (option.warmth || 0);
+      if (option.resolve) {
+        closeModal();
+        finishPoachDialogue(app, game, cartel, targetCharacterId, option.resolve, nextPersuasion);
+      } else if (option.next) {
+        runPoachDialogueNode(app, game, cartel, tree, targetCharacterId, option.next, nextPersuasion);
+      } else {
+        closeModal();
+      }
+    });
+  });
+}
+
+function finishPoachDialogue(app, game, cartel, targetCharacterId, resolution, persuasion) {
+  if (resolution === "walk_away") {
+    showModal(`
+      <h2>No hay trato</h2>
+      <p>La conversación no llega a ningún lado. Podrás intentarlo de nuevo más adelante.</p>
+      <button class="primary block" id="ok-btn">Aceptar</button>
+    `);
+  } else {
+    const result = applyAction(game, cartel.id, "poach_member", { targetCharacterId, persuasionBoost: persuasion });
+    if (!result.ok) {
+      showModal(`<h2>No ha sido posible</h2><p>${escapeHtml(result.message || "")}</p><button class="primary block" id="ok-btn">Aceptar</button>`);
+    } else {
+      showModal(`
+        <h2>${result.success ? "Se une a tu cártel" : "El intento fracasa"}</h2>
+        <p>${result.success ? "Acepta el cambio de bando." : "No consigues convencerlo/a, y la maniobra queda expuesta."}</p>
+        <button class="primary block" id="ok-btn">Aceptar</button>
+      `);
+    }
+  }
+  document.getElementById("ok-btn").addEventListener("click", () => {
+    closeModal();
+    app.setGame(game);
+    app.render();
   });
 }
 
