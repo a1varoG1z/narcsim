@@ -1,7 +1,7 @@
 import { getPlayerCartel } from "../../state.js";
 import { escapeHtml } from "../../ui/components.js";
 import { fmtMoney, fmtNum } from "../../utils/text.js";
-import { getIncomeBreakdown, getWorldMarketShare, getDrugProfile, getDrugProfiles } from "../../turnEngine.js";
+import { getIncomeBreakdown, getWorldMarketShare, getRegionalMarketShare, getDrugProfile, getDrugProfiles, getMarketProfiles } from "../../turnEngine.js";
 
 export function render(container, app) {
   const game = app.game;
@@ -17,6 +17,12 @@ export function render(container, app) {
     .map((c) => ({ name: c.name, share: getWorldMarketShare(game, c, drug.id) }))
     .sort((a, b2) => b2.share - a.share)
     .slice(0, 3);
+  const regionalShares = getMarketProfiles(game).map((m) => ({
+    name: m.name,
+    share: getRegionalMarketShare(game, cartel, m.id),
+    hasVolume: !!cartel.resources.distributionVolumeByMarket?.[m.id],
+  }));
+  const multiMarketEra = regionalShares.length > 1;
 
   container.innerHTML = `
     <div class="card">
@@ -57,6 +63,19 @@ export function render(container, app) {
         </table>
       ` : ""}
     </div>
+
+    ${multiMarketEra ? `
+    <div class="card">
+      <h3>Mercados de destino</h3>
+      <p class="text-dim small">El comercio internacional no es un único mercado global: cada destino ("Enviar cargamento" te deja elegir uno) tiene su propia cuota, calculada por separado frente a quien también trafique hacia ese mismo destino.</p>
+      <table style="width:100%;border-collapse:collapse" class="small">
+        <tr class="text-dim"><th style="text-align:left">Mercado</th><th>Tu cuota</th></tr>
+        ${regionalShares.map((m) => `
+          <tr><td>${escapeHtml(m.name)}</td><td class="center">${m.hasVolume ? `${m.share.toFixed(1)}%` : `<span class="text-dim">Sin envíos aún</span>`}</td></tr>
+        `).join("")}
+      </table>
+    </div>
+    ` : ""}
 
     <div class="card">
       <h3>Dinero lavado</h3>

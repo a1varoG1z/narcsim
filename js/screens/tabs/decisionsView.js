@@ -1,5 +1,5 @@
 import { getPlayerCartel, currentYear } from "../../state.js";
-import { applyAction, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, MONEY_SCALE, getDrugProfile, getDrugProfiles } from "../../turnEngine.js";
+import { applyAction, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, MONEY_SCALE, getDrugProfile, getDrugProfiles, getMarketProfiles } from "../../turnEngine.js";
 import { showModal, closeModal } from "../../ui/modal.js";
 import { escapeHtml } from "../../ui/components.js";
 import { fmtMoney } from "../../utils/text.js";
@@ -340,6 +340,36 @@ function showProductionModal(app, game, cartel) {
 }
 
 function showTrafficModal(app, game, cartel) {
+  const markets = getMarketProfiles(game);
+  if (markets.length > 1) {
+    showMarketModal(app, game, cartel, markets);
+  } else {
+    showPartnerModal(app, game, cartel, markets[0].id);
+  }
+}
+
+function showMarketModal(app, game, cartel, markets) {
+  showModal(`
+    <h2>Enviar cargamento</h2>
+    <p class="small text-dim">Elige a qué mercado internacional va destinado este envío. Cada mercado paga y arriesga distinto — y tu cuota ahí se mide solo frente a quien también traficque hacia el mismo destino.</p>
+    ${markets.map((m) => {
+      const locked = m.availableFromYear && currentYear(game) < m.availableFromYear;
+      return `<button class="block" data-market="${m.id}" ${locked ? "disabled" : ""}>
+        ${escapeHtml(m.name)}
+        <div class="small text-dim">${locked ? `Ruta todavía no establecida (no antes de ${m.availableFromYear}).` : `Rendimiento ×${m.payoutMult.toFixed(2)}, riesgo de decomiso ${m.seizureMult > 1 ? "más alto" : m.seizureMult < 1 ? "más bajo" : "normal"} que el habitual.`}</div>
+      </button>`;
+    }).join("")}
+    <button class="ghost block" id="close-btn">Cancelar</button>
+  `);
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.querySelectorAll("[data-market]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      showPartnerModal(app, game, cartel, btn.dataset.market);
+    });
+  });
+}
+
+function showPartnerModal(app, game, cartel, marketId) {
   const partners = Object.values(game.cartels).filter((c) => c.id !== cartel.id && !c.destroyed);
   showModal(`
     <h2>Enviar cargamento</h2>
@@ -359,7 +389,7 @@ function showTrafficModal(app, game, cartel) {
   document.querySelectorAll("[data-partner]").forEach((btn) => {
     btn.addEventListener("click", () => {
       const partnerCartelId = btn.dataset.partner || undefined;
-      const result = applyAction(game, cartel.id, "traffic_shipment", { partnerCartelId });
+      const result = applyAction(game, cartel.id, "traffic_shipment", { partnerCartelId, marketId });
       app.setGame(game);
       closeModal();
       if (!result.ok) alert(result.message);

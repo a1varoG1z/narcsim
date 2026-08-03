@@ -214,6 +214,58 @@ export function getDrugProfile(game, cartel) {
   return profiles.find((p) => p.id === drugId) || profiles[0];
 }
 
+// Real international demand was never a single undifferentiated blob: the US market was the
+// biggest and closest, but the Colombian-Galician connection was already routing cocaine into
+// Europe by the early 1980s (well before Mexican cartels took over the US-bound transit routes in
+// the 1990s), and the Sinaloa/CJNG methamphetamine trade of the 2010s-20s made Australia one of
+// the highest wholesale meth prices in the world — a well-documented, genuinely distinct market.
+// `traffic_shipment` lets the player pick a destination per shipment (payload.marketId); the first
+// entry is always the baseline (payoutMult 1, seizureMult 1), so a cartel that never touches this
+// mechanic behaves exactly as before.
+export const MARKET_PROFILES = {
+  "guadalajara-1975-1989": [
+    { id: "us", name: "Estados Unidos", payoutMult: 1, seizureMult: 1 },
+    { id: "europa", name: "Europa (conexión gallega)", payoutMult: 1.3, seizureMult: 1.25, availableFromYear: 1980 },
+  ],
+  "medellin-cali-1980-1995": [
+    { id: "us", name: "Estados Unidos", payoutMult: 1, seizureMult: 1 },
+    { id: "europa", name: "Europa (ruta gallega/holandesa)", payoutMult: 1.3, seizureMult: 1.2 },
+  ],
+  "mexico-rutas-1990-2006": [
+    { id: "us", name: "Estados Unidos", payoutMult: 1, seizureMult: 1 },
+    { id: "europa", name: "Europa (contenedores marítimos)", payoutMult: 1.3, seizureMult: 1.2 },
+  ],
+  "fragmentacion-2006-2015": [
+    { id: "us", name: "Estados Unidos", payoutMult: 1, seizureMult: 1 },
+    { id: "europa", name: "Europa (contenedores marítimos)", payoutMult: 1.3, seizureMult: 1.2 },
+  ],
+  "cjng-sinaloa-2015-actualidad": [
+    { id: "us", name: "Estados Unidos", payoutMult: 1, seizureMult: 1 },
+    { id: "europa", name: "Europa", payoutMult: 1.25, seizureMult: 1.15 },
+    { id: "asia_pacifico", name: "Asia-Pacífico (metanfetamina a Australia)", payoutMult: 1.6, seizureMult: 1.4 },
+  ],
+  "chapitos-mayiza-2024-actualidad": [
+    { id: "us", name: "Estados Unidos", payoutMult: 1, seizureMult: 1 },
+    { id: "europa", name: "Europa (mercado del fentanilo aún incipiente)", payoutMult: 1.1, seizureMult: 1.15 },
+  ],
+};
+const DEFAULT_MARKET_PROFILE = { id: "generic", name: "Mercado internacional", payoutMult: 1, seizureMult: 1 };
+
+/** Every destination market this era offers for a shipment, regardless of what's currently
+ * reachable (see `availableFromYear`) — the UI is responsible for showing locked ones as such. */
+export function getMarketProfiles(game) {
+  return MARKET_PROFILES[game.eraId] || [DEFAULT_MARKET_PROFILE];
+}
+
+/** Resolves a chosen (or default) destination market for a shipment, falling back to the era's
+ * baseline market if the requested one doesn't exist or isn't reachable yet. */
+export function getMarketProfile(game, marketId) {
+  const profiles = getMarketProfiles(game);
+  const found = profiles.find((m) => m.id === marketId);
+  if (found && (!found.availableFromYear || currentYear(game) >= found.availableFromYear)) return found;
+  return profiles[0];
+}
+
 export const ACTION_COSTS = {
   invest_production: 150 * MONEY_SCALE,
   traffic_shipment: 250 * MONEY_SCALE,
@@ -315,32 +367,36 @@ export function applyAction(game, cartelId, type, payload = {}) {
       }
       r.money -= cost;
       const drug = getDrugProfile(game, cartel);
+      const market = getMarketProfile(game, payload.marketId);
       const traffickingBonus = traffickingChiefBonus(game.characters[cartel.roles.traffickingChief]);
-      const interdictChance = clamp(clamp(r.heat / 220, 0.05, 0.5) * drug.seizureMult - traffickingBonus / 100, 0.03, 0.65);
+      const interdictChance = clamp(clamp(r.heat / 220, 0.05, 0.5) * drug.seizureMult * market.seizureMult - traffickingBonus / 100, 0.03, 0.65);
       if (chance(interdictChance)) {
         r.heat = Math.min(100, r.heat + Math.round(randInt(6, 14) * drug.heatMult));
-        log(`Un envío de ${cartel.name} es interceptado en la ruta.`, "event");
+        log(`Un envío de ${cartel.name} con destino a ${market.name} es interceptado en la ruta.`, "event");
         return { ok: true, message: "Interceptado." };
       }
       const partnerMultiplier = partnerStatus === "alliance" ? 1.25 : partnerStatus === "neutral" ? 1 : 0.85;
-      const payout = Math.round(cost * (1.6 + Math.random() * 1.2) * partnerMultiplier * drug.payoutMult * (1 + traffickingBonus / 50) * (1 + (r.tradeRouteBonus || 0)));
+      const payout = Math.round(cost * (1.6 + Math.random() * 1.2) * partnerMultiplier * drug.payoutMult * market.payoutMult * (1 + traffickingBonus / 50) * (1 + (r.tradeRouteBonus || 0)));
       r.money += payout;
       r.heat = Math.min(100, r.heat + Math.round(5 * drug.heatMult));
-      // Tracked for getWorldMarketShare — every cartel's cumulative distribution volume, not just
-      // the player's, so market share is a genuine zero-sum comparison against real rivals. Kept
-      // per-drug too, so a cartel dealing in more than one product (see switch_drug) can be
-      // measured against rivals in that specific market, not just an undifferentiated total.
+      // Tracked for getWorldMarketShare/getRegionalMarketShare — every cartel's cumulative
+      // distribution volume, not just the player's, so market share is a genuine zero-sum
+      // comparison against real rivals. Kept per-drug and per-destination-market too, so a cartel
+      // can be measured against rivals in that specific product or region, not just an
+      // undifferentiated total.
       r.distributionVolume = (r.distributionVolume || 0) + payout;
       if (!r.distributionVolumeByDrug) r.distributionVolumeByDrug = {};
       r.distributionVolumeByDrug[drug.id] = (r.distributionVolumeByDrug[drug.id] || 0) + payout;
+      if (!r.distributionVolumeByMarket) r.distributionVolumeByMarket = {};
+      r.distributionVolumeByMarket[market.id] = (r.distributionVolumeByMarket[market.id] || 0) + payout;
       if (partner) {
         partner.resources.money = Math.round(partner.resources.money + payout * 0.15);
         const tensionDelta = partnerStatus === "alliance" ? -5 : -2;
         cartel.relations[partner.id].tension = clamp(cartel.relations[partner.id].tension + tensionDelta, 0, 100);
         partner.relations[cartel.id].tension = cartel.relations[partner.id].tension;
-        log(`${cartel.name} completa un envío por valor de ${fmtMoney(payout)} en sociedad con ${partner.name}.`, "good");
+        log(`${cartel.name} completa un envío con destino a ${market.name} por valor de ${fmtMoney(payout)} en sociedad con ${partner.name}.`, "good");
       } else {
-        log(`${cartel.name} completa un envío exitoso por valor de ${fmtMoney(payout)} en el mercado abierto.`, "good");
+        log(`${cartel.name} completa un envío exitoso con destino a ${market.name} por valor de ${fmtMoney(payout)} en el mercado abierto.`, "good");
       }
       return { ok: true, message: `+${payout}` };
     }
@@ -1596,6 +1652,12 @@ function runAiCartels(game) {
       choice = "invest_production";
       if (!canAfford(cartel, choice)) continue;
     }
+    if (choice === "traffic_shipment") {
+      const marketProfiles = getMarketProfiles(game).filter((m) => !m.availableFromYear || currentYear(game) >= m.availableFromYear);
+      const marketId = (marketProfiles.length > 1 ? pick(marketProfiles) : marketProfiles[0]).id;
+      applyAction(game, cartel.id, "traffic_shipment", { marketId });
+      continue;
+    }
     if (choice === "declare_war") {
       if (warDeclarationTargets.length) {
         const target = pick(warDeclarationTargets);
@@ -1804,6 +1866,19 @@ export function getIncomeBreakdown(game, cartel) {
  * completed a shipment (nothing to have a share of yet). */
 export function getWorldMarketShare(game, cartel, drugId) {
   const volumeOf = (c) => (drugId ? (c.resources.distributionVolumeByDrug?.[drugId] || 0) : (c.resources.distributionVolume || 0));
+  const total = Object.values(game.cartels)
+    .filter((c) => !c.destroyed)
+    .reduce((s, c) => s + volumeOf(c), 0);
+  if (total <= 0) return 0;
+  return (volumeOf(cartel) / total) * 100;
+}
+
+/** Same zero-sum comparison as getWorldMarketShare, but scoped to a single destination market
+ * (US, Europe, Asia-Pacific...) instead of a single drug — the international-trade counterpart to
+ * "who dominates cocaine" is "who dominates the European route", and a cartel can lead one region
+ * while barely registering in another. Returns 0 before anyone has shipped anything there yet. */
+export function getRegionalMarketShare(game, cartel, marketId) {
+  const volumeOf = (c) => c.resources.distributionVolumeByMarket?.[marketId] || 0;
   const total = Object.values(game.cartels)
     .filter((c) => !c.destroyed)
     .reduce((s, c) => s + volumeOf(c), 0);

@@ -4,7 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildGameFromEra } from "../js/state.js";
-import { applyAction, getWarsForCartel, resolveScriptedChoice, endTurn, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, getIncomeBreakdown, getWorldMarketShare, MONEY_SCALE, getDrugProfile, DRUG_PROFILES, resolveRaidTip, getSuccessionCandidates, resolveSuccession, resolveCoups, checkLandlessCollapse, attemptEscape } from "../js/turnEngine.js";
+import { applyAction, getWarsForCartel, resolveScriptedChoice, endTurn, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, getIncomeBreakdown, getWorldMarketShare, getRegionalMarketShare, getMarketProfiles, getMarketProfile, MONEY_SCALE, getDrugProfile, DRUG_PROFILES, resolveRaidTip, getSuccessionCandidates, resolveSuccession, resolveCoups, checkLandlessCollapse, attemptEscape } from "../js/turnEngine.js";
 import { rollScriptedEvents } from "../js/scriptedEvents.js";
 import { rollLoyaltyEvents, getMemberBond, driftMemberBonds, rollSiblingRivalry, rollPoliceOperations, rollMortality, policeOperationChance } from "../js/events.js";
 
@@ -1678,6 +1678,72 @@ test("getWorldMarketShare scoped to a specific drug only compares cartels dealin
 
   assert.ok(Math.abs(getWorldMarketShare(game, guadalajara, "marijuana_heroin") - 25) < 0.01);
   assert.equal(getWorldMarketShare(game, guadalajara, "cocaine"), 0, "no one has ever moved cocaine yet, so there's no share of it to have");
+});
+
+test("getMarketProfile falls back to the era's baseline market for an unknown or not-yet-available marketId, keeping old traffic_shipment behavior unchanged", () => {
+  const game = newGame("guadalajara-1975-1989.json", "guadalajara");
+  assert.equal(getMarketProfile(game, undefined).id, "us", "no marketId at all should behave exactly like before this feature existed");
+  assert.equal(getMarketProfile(game, "not-a-real-market").id, "us");
+  // game.turn=0 -> year 1975, well before europa's 1980 availableFromYear.
+  assert.equal(getMarketProfile(game, "europa").id, "us", "europa isn't reachable yet in 1975, so it should fall back to the baseline");
+  game.turn = 10; // 1975 + 10*6/12 = 1980
+  assert.equal(getMarketProfile(game, "europa").id, "europa", "europa should resolve correctly once its year is reached");
+});
+
+test("traffic_shipment lets a cartel pick a destination market, tracked separately per market via distributionVolumeByMarket", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  cartel.resources.money = 100_000_000;
+
+  const result = applyAction(game, "sinaloa", "traffic_shipment", { marketId: "europa" });
+  if (!result.message?.includes("Interceptado")) {
+    assert.ok(cartel.resources.distributionVolumeByMarket?.europa > 0, "a successful shipment to europa should be tracked under that market");
+    assert.equal(cartel.resources.distributionVolumeByMarket.us || 0, 0, "a shipment to europa shouldn't also count toward the us market");
+    assert.ok(cartel.resources.distributionVolume > 0, "the old aggregate distributionVolume should still accumulate regardless of market");
+  }
+});
+
+test("a cartel shipping to a higher-payout, higher-risk market genuinely earns (or risks) differently than the baseline market", () => {
+  const originalRandom = Math.random;
+  try {
+    Math.random = () => 0.5;
+    const usGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    usGame.cartels.sinaloa.resources.money = 100_000_000;
+    const usResult = applyAction(usGame, "sinaloa", "traffic_shipment", { marketId: "us" });
+
+    const asiaGame = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+    asiaGame.cartels.sinaloa.resources.money = 100_000_000;
+    const asiaResult = applyAction(asiaGame, "sinaloa", "traffic_shipment", { marketId: "asia_pacifico" });
+
+    if (!usResult.message?.includes("Interceptado") && !asiaResult.message?.includes("Interceptado")) {
+      const usPayout = Number(usResult.message.replace("+", ""));
+      const asiaPayout = Number(asiaResult.message.replace("+", ""));
+      assert.ok(asiaPayout > usPayout, "asia_pacifico's higher payoutMult should raise earnings versus the us baseline for an identical roll");
+    }
+  } finally {
+    Math.random = originalRandom;
+  }
+});
+
+test("getRegionalMarketShare is a genuine zero-sum comparison scoped to a single destination market", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const sinaloa = game.cartels.sinaloa;
+  const cjng = game.cartels.cjng;
+
+  assert.equal(getRegionalMarketShare(game, sinaloa, "europa"), 0, "nobody has shipped to europa yet, so nobody has a share of it");
+
+  sinaloa.resources.distributionVolumeByMarket = { europa: 300, us: 999 };
+  cjng.resources.distributionVolumeByMarket = { europa: 100 };
+  assert.ok(Math.abs(getRegionalMarketShare(game, sinaloa, "europa") - 75) < 0.01, "300 out of a 400 europa total should be 75%, ignoring sinaloa's unrelated us volume");
+  assert.ok(Math.abs(getRegionalMarketShare(game, cjng, "europa") - 25) < 0.01);
+});
+
+test("getMarketProfiles returns each era's real destination markets, always starting with the neutral baseline", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const markets = getMarketProfiles(game);
+  assert.ok(markets.length > 1, "the modern meth/fentanyl era should offer more than one destination market");
+  assert.equal(markets[0].id, "us", "the first entry must always be the payoutMult=1/seizureMult=1 baseline for backward compatibility");
+  assert.ok(markets.some((m) => m.id === "asia_pacifico"), "the meth era should include the real, documented Asia-Pacific market");
 });
 
 test("invest_hideout's bonus only helps the player personally resist a police raid, not the cartel at large", () => {
