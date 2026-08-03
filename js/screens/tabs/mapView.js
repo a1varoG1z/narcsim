@@ -14,6 +14,12 @@ import { getGeoShapes, preloadGeoShapes } from "../../geoShapes.js";
 // panned/zoomed to — it's a viewing convenience, not something worth persisting to a save file.
 let currentViewBox = null; // [vx, vy, vw, vh], mutated in place by pan/zoom
 let defaultViewBox = null;
+// Also a view preference, not game state: the map is the centerpiece of the game (per explicit
+// user feedback — it felt like a small tab panel, not the CK3-style focal point it should be),
+// so a fullscreen mode lets it take over the whole viewport instead of sharing space with the
+// legend and trade-route diagram below it.
+let isFullscreen = false;
+let escapeFullscreenHandler = null;
 
 export function render(container, app) {
   const game = app.game;
@@ -32,17 +38,18 @@ export function render(container, app) {
   container.innerHTML = `
     <div class="card">
       <h2>Mapa de territorios</h2>
-      <div class="map" id="map">
+      <div class="map${isFullscreen ? " fullscreen" : ""}" id="map">
         ${geo ? renderGeoMap(game, playerCartel, geo) : `<p class="text-dim small center" style="padding:2rem">Cargando el mapa…</p>`}
         ${geo ? `
           <div class="map-controls">
             <button type="button" id="map-zoom-in" aria-label="Acercar">+</button>
             <button type="button" id="map-zoom-out" aria-label="Alejar">−</button>
             <button type="button" id="map-zoom-reset" aria-label="Restablecer vista">⟲</button>
+            <button type="button" id="map-fullscreen-btn" aria-label="${isFullscreen ? "Salir de pantalla completa" : "Pantalla completa"}">${isFullscreen ? "✕" : "⛶"}</button>
           </div>
         ` : ""}
       </div>
-      <p class="text-dim small mt-1">Arrastra para mover el mapa, usa la rueda del ratón o pellizca con dos dedos para hacer zoom.</p>
+      <p class="text-dim small mt-1">Arrastra para mover el mapa, usa la rueda del ratón o pellizca con dos dedos para hacer zoom. El botón ⛶ lo pone a pantalla completa.</p>
       <div class="grid auto mt-1">
         ${Object.values(game.cartels).filter((c) => !c.destroyed).map((c) => `
           <div class="small" data-view-cartel="${c.id}" style="cursor:pointer"><span style="display:inline-block;width:10px;height:10px;background:${c.color};border-radius:2px;margin-right:4px"></span>${escapeHtml(c.name)}</div>
@@ -53,6 +60,25 @@ export function render(container, app) {
   `;
 
   if (geo) setupMapInteraction(container, app, geo);
+
+  document.getElementById("map-fullscreen-btn")?.addEventListener("click", () => {
+    isFullscreen = !isFullscreen;
+    app.render();
+  });
+
+  // `render()` re-runs on every game state change while this tab is open (not just once), so the
+  // previous render's Escape listener — still attached to `document`, which never gets torn down
+  // like `container` does — must be removed first or they'd pile up one per render.
+  document.removeEventListener("keydown", escapeFullscreenHandler);
+  if (isFullscreen) {
+    escapeFullscreenHandler = (e) => {
+      if (e.key === "Escape") {
+        isFullscreen = false;
+        app.render();
+      }
+    };
+    document.addEventListener("keydown", escapeFullscreenHandler);
+  }
 
   container.querySelectorAll("[data-view-cartel]").forEach((el) => {
     el.addEventListener("click", () => showCartelProfile(app, el.dataset.viewCartel));
@@ -188,7 +214,7 @@ function renderGeoMap(game, playerCartel, geo) {
   // clutter. Names are always available via hover tooltip and the click-through detail modal.
   const LABEL_MIN_AREA = 55;
   return `
-    <svg viewBox="${vx} ${vy} ${vw} ${vh}" style="width:100%;height:auto;display:block" role="img" aria-label="Mapa de territorios">
+    <svg viewBox="${vx} ${vy} ${vw} ${vh}" role="img" aria-label="Mapa de territorios">
       ${territories.map((t) => {
         const shape = geo.shapes[t.geo];
         const controller = t.controllerId ? game.cartels[t.controllerId] : null;
