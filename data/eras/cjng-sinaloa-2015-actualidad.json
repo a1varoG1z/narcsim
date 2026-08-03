@@ -302,7 +302,7 @@
       "y": 204,
       "w": 18,
       "h": 13,
-      "controllerId": null,
+      "controllerId": "choneros",
       "value": 11,
       "adj": [
         "colombia",
@@ -576,6 +576,32 @@
         "militaryChief": "pcc_military_chief",
         "diplomatChief": "pcc_diplomat_chief",
         "financeChief": "pcc_finance_chief"
+      }
+    },
+    {
+      "id": "choneros",
+      "name": "Los Choneros (Ecuador)",
+      "color": "#1f7a7a",
+      "aiControlled": true,
+      "historicalNote": "Los Choneros son la organización criminal más grande y antigua de Ecuador, con fuertes vínculos históricos de exportación de cocaína hacia México a través del puerto de Guayaquil, incluida una relación real documentada con el Cártel de Sinaloa. Su líder real, José Adolfo Macías Villamar 'Fito', dirigió la organización desde prisión durante buena parte de este periodo, hasta su fuga real en enero de 2024. En el juego se representa activo desde el inicio de la partida (2015), igual que el resto de figuras históricas de esta lista cuyo estatus real no encaja en un único turno inicial. Los cargos secundarios no documentados públicamente son ficticios.",
+      "resources": {
+        "money": 6000000,
+        "armySize": 500,
+        "corruptGov": 35,
+        "corruptPolice": 55,
+        "publicImage": 20,
+        "heat": 35,
+        "internationalReputation": 15,
+        "launderedMoney": 0
+      },
+      "roles": {
+        "leader": "fito_15",
+        "underboss": "choneros_underboss_15",
+        "sicariosChief": "choneros_sicarios_chief_15",
+        "intelChief": "choneros_intel_chief_15",
+        "militaryChief": "choneros_military_chief_15",
+        "diplomatChief": "choneros_diplomat_chief_15",
+        "financeChief": "choneros_finance_chief_15"
       }
     }
   ],
@@ -1579,6 +1605,169 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, encargada de lavar las ganancias del PCC a través de empresas de fachada y el llamado 'fundo de pensão' de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "fito_15",
+      "name": "José Adolfo Macías Villamar \"Fito\"",
+      "sex": "M",
+      "birthYear": 1980,
+      "alive": true,
+      "cartelId": "choneros",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 68,
+        "business": 70,
+        "charisma": 60,
+        "intrigue": 78,
+        "loyaltyInspiring": 60,
+        "stealth": 62
+      },
+      "traits": [
+        "fundador"
+      ],
+      "notes": "Líder de Los Choneros, la mayor organización criminal de Ecuador. En la vida real dirigió la organización desde prisión durante buena parte de este periodo, hasta su fuga real en enero de 2024. En el juego se representa activo desde el inicio. Su destino en el juego depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "choneros_underboss_15",
+      "name": "Bryan \"El Patrón\" Vera",
+      "sex": "M",
+      "birthYear": 1985,
+      "alive": true,
+      "cartelId": "choneros",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 62,
+        "business": 50,
+        "charisma": 45,
+        "intrigue": 55,
+        "loyaltyInspiring": 48,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "choneros_sicarios_chief_15",
+      "name": "Kevin \"El Titi\" Zambrano",
+      "sex": "M",
+      "birthYear": 1988,
+      "alive": true,
+      "cartelId": "choneros",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 72,
+        "business": 35,
+        "charisma": 42,
+        "intrigue": 55,
+        "loyaltyInspiring": 48,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo del brazo armado de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "choneros_intel_chief_15",
+      "name": "Gabriela Intriago",
+      "sex": "F",
+      "birthYear": 1985,
+      "alive": true,
+      "cartelId": "choneros",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 30,
+        "business": 55,
+        "charisma": 50,
+        "intrigue": 75,
+        "loyaltyInspiring": 48,
+        "stealth": 62
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de la red de contactos e informantes de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "choneros_military_chief_15",
+      "name": "Wellington Zambrano Cedeño",
+      "sex": "M",
+      "birthYear": 1988,
+      "alive": true,
+      "cartelId": "choneros",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 74,
+        "business": 38,
+        "charisma": 48,
+        "intrigue": 46,
+        "loyaltyInspiring": 55,
+        "stealth": 36
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de las células armadas de la organización en las cárceles y puertos de Guayas.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "choneros_diplomat_chief_15",
+      "name": "Ximena Alcívar Loor",
+      "sex": "F",
+      "birthYear": 1990,
+      "alive": true,
+      "cartelId": "choneros",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 55,
+        "charisma": 62,
+        "intrigue": 48,
+        "loyaltyInspiring": 50,
+        "stealth": 32
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de las negociaciones con socios mexicanos para la exportación de cocaína vía el puerto de Guayaquil.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "choneros_finance_chief_15",
+      "name": "Karina Vera Zambrano",
+      "sex": "F",
+      "birthYear": 1987,
+      "alive": true,
+      "cartelId": "choneros",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 70,
+        "charisma": 46,
+        "intrigue": 42,
+        "loyaltyInspiring": 42,
+        "stealth": 45
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, encargada de lavar las ganancias de la organización a través de negocios de importación y bienes raíces en Guayaquil.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

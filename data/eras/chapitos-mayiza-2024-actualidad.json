@@ -296,7 +296,7 @@
       "y": 254,
       "w": 17,
       "h": 10,
-      "controllerId": null,
+      "controllerId": "pcc",
       "value": 15,
       "adj": [
         "colombia",
@@ -491,6 +491,32 @@
         "militaryChief": "choneros_military_chief_24",
         "diplomatChief": "choneros_diplomat_chief_24",
         "financeChief": "choneros_finance_chief_24"
+      }
+    },
+    {
+      "id": "pcc",
+      "name": "Primeiro Comando da Capital (PCC)",
+      "color": "#c9a227",
+      "aiControlled": true,
+      "historicalNote": "El PCC, fundado en 1993 en el sistema penitenciario de São Paulo, sigue siendo hoy la organización criminal más grande y con mayor alcance internacional de Brasil, con rutas de cocaína documentadas hacia Europa a través de puertos como el de Santos. Marcos Willians Herbas Camacho, 'Marcola', es su histórico líder de referencia; en la vida real lleva encarcelado desde los años 90. En el juego se representa activo, igual que el resto de figuras históricas de esta lista. Los cargos secundarios no documentados públicamente son ficticios.",
+      "resources": {
+        "money": 14000000,
+        "armySize": 700,
+        "corruptGov": 40,
+        "corruptPolice": 50,
+        "publicImage": 20,
+        "heat": 40,
+        "internationalReputation": 30,
+        "launderedMoney": 0
+      },
+      "roles": {
+        "leader": "marcola_24",
+        "underboss": "pcc_underboss_24",
+        "sicariosChief": "pcc_sicarios_chief_24",
+        "intelChief": "pcc_intel_chief_24",
+        "militaryChief": "pcc_military_chief_24",
+        "diplomatChief": "pcc_diplomat_chief_24",
+        "financeChief": "pcc_finance_chief_24"
       }
     }
   ],
@@ -988,6 +1014,170 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, encargada de lavar las ganancias de la organización a través de negocios de importación y bienes raíces en Guayaquil.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "marcola_24",
+      "name": "Marcos Willians Herbas Camacho \"Marcola\"",
+      "sex": "M",
+      "birthYear": 1968,
+      "alive": true,
+      "cartelId": "pcc",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 65,
+        "business": 78,
+        "charisma": 60,
+        "intrigue": 85,
+        "loyaltyInspiring": 75,
+        "stealth": 60
+      },
+      "traits": [
+        "fundador",
+        "calculador"
+      ],
+      "notes": "Líder histórico de referencia del PCC. En la vida real lleva encarcelado desde los años 90; en el juego se representa activo. Su destino en el juego depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pcc_underboss_24",
+      "name": "Anderson \"Cabeça Branca\" Nunes",
+      "sex": "M",
+      "birthYear": 1972,
+      "alive": true,
+      "cartelId": "pcc",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 60,
+        "business": 65,
+        "charisma": 50,
+        "intrigue": 62,
+        "loyaltyInspiring": 55,
+        "stealth": 58
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pcc_sicarios_chief_24",
+      "name": "Ederson \"Cara de Fogo\" Alves",
+      "sex": "M",
+      "birthYear": 1980,
+      "alive": true,
+      "cartelId": "pcc",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 70,
+        "business": 35,
+        "charisma": 45,
+        "intrigue": 58,
+        "loyaltyInspiring": 55,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, encargado de la disciplina armada del PCC dentro y fuera del sistema penitenciario.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pcc_intel_chief_24",
+      "name": "Fernanda Lins",
+      "sex": "F",
+      "birthYear": 1975,
+      "alive": true,
+      "cartelId": "pcc",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 25,
+        "business": 58,
+        "charisma": 52,
+        "intrigue": 78,
+        "loyaltyInspiring": 55,
+        "stealth": 62
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de la red de contactos e informantes del PCC dentro y fuera del sistema penitenciario.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pcc_military_chief_24",
+      "name": "Anderson Feitosa Lima",
+      "sex": "M",
+      "birthYear": 1980,
+      "alive": true,
+      "cartelId": "pcc",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 72,
+        "business": 40,
+        "charisma": 50,
+        "intrigue": 48,
+        "loyaltyInspiring": 58,
+        "stealth": 38
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de las células armadas del PCC que operan tanto dentro como fuera de las prisiones brasileñas.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pcc_diplomat_chief_24",
+      "name": "Cristiane Bezerra Motta",
+      "sex": "F",
+      "birthYear": 1982,
+      "alive": true,
+      "cartelId": "pcc",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 22,
+        "business": 55,
+        "charisma": 62,
+        "intrigue": 50,
+        "loyaltyInspiring": 52,
+        "stealth": 32
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de las negociaciones del PCC con proveedores y socios mexicanos para las rutas de exportación vía Santos.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pcc_finance_chief_24",
+      "name": "Rosana Guedes Farias",
+      "sex": "F",
+      "birthYear": 1978,
+      "alive": true,
+      "cartelId": "pcc",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 72,
+        "charisma": 48,
+        "intrigue": 45,
+        "loyaltyInspiring": 45,
+        "stealth": 48
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, encargada de lavar las ganancias del PCC a través de empresas de fachada y el llamado 'fundo de pensão' de la organización.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []
