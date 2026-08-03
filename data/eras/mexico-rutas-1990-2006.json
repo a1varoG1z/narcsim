@@ -1578,7 +1578,7 @@
     {
       "id": "macao",
       "name": "Macao",
-      "controllerId": null,
+      "controllerId": "14k_triad",
       "value": 8,
       "adj": [
         "china"
@@ -2737,6 +2737,35 @@
         "corruptionPoliceChief": "soles_police_chief_90",
         "productionChief": "soles_production_chief_90",
         "prChief": "soles_pr_chief_90"
+      }
+    },
+    {
+      "id": "14k_triad",
+      "name": "Tríada 14K (Macao)",
+      "color": "#a02020",
+      "aiControlled": true,
+      "historicalNote": "Bajo el mando real de Wan Kuok-koi, apodado \"Dente Partido\" (\"Broken Tooth\"), la rama de Macao de la tríada 14K dominó buena parte del juego VIP, la usura y la extorsión en la industria del casino macaense durante los años previos a la retrocesión a China (1999), en pleno auge de las \"guerras de las tríadas\" de Macao de los 90 — incluidos atentados reales con explosivos e intimidación documentada a las propias autoridades policiales de la colonia portuguesa. Wan Kuok-koi fue detenido en mayo de 1998 y condenado en 1999 por asociación criminal y juego ilegal, cumpliendo 14 años de prisión — ambos hechos, arresto y condena, caen dentro de esta misma época. Años después de su puesta en libertad en 2012, el Departamento del Tesoro de EE. UU. lo sancionó en 2020 (ya fuera del marco temporal de esta época) por sus vínculos con el crimen organizado transnacional de la 14K. En el juego su destino depende de tus decisiones.",
+      "resources": {
+        "money": 90000000,
+        "armySize": 500,
+        "corruptGov": 65,
+        "corruptPolice": 58,
+        "publicImage": 28,
+        "heat": 55
+      },
+      "roles": {
+        "leader": "wk_leader",
+        "underboss": "wk_underboss",
+        "sicariosChief": "wk_sicarios_chief",
+        "intelChief": "wk_intel_chief",
+        "militaryChief": "wk_military_chief",
+        "diplomatChief": "wk_diplomat_chief",
+        "financeChief": "wk_finance_chief",
+        "traffickingChief": "wk_trafficking_chief",
+        "corruptionGovChief": "wk_gov_chief",
+        "corruptionPoliceChief": "wk_police_chief",
+        "productionChief": "wk_production_chief",
+        "prChief": "wk_pr_chief"
       }
     }
   ],
@@ -4287,6 +4316,285 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, oficial a cargo de negar públicamente cualquier vínculo entre la Guardia Nacional y el narcotráfico.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "wk_leader",
+      "name": "Wan Kuok-koi \"Dente Partido\"",
+      "sex": "M",
+      "birthYear": 1955,
+      "alive": true,
+      "cartelId": "14k_triad",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 75,
+        "business": 80,
+        "charisma": 70,
+        "intrigue": 78,
+        "loyaltyInspiring": 68,
+        "stealth": 62
+      },
+      "traits": [
+        "implacable",
+        "fundador"
+      ],
+      "notes": "Cabecilla real de la rama de Macao de la 14K. En la vida real fue detenido en 1998 y condenado en 1999 a 14 años de prisión; salió en libertad en 2012 y en 2020 fue sancionado por EE. UU. por sus vínculos con el crimen organizado transnacional. En el juego su destino depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "wk_underboss",
+      "name": "Chan Wai-hung",
+      "sex": "M",
+      "birthYear": 1958,
+      "alive": true,
+      "cartelId": "14k_triad",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 68,
+        "business": 65,
+        "charisma": 55,
+        "intrigue": 62,
+        "loyaltyInspiring": 58,
+        "stealth": 60
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los mandos de la organización más cercanos a Wan Kuok-koi.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "wk_sicarios_chief",
+      "name": "Lok Chi-ming",
+      "sex": "M",
+      "birthYear": 1962,
+      "alive": true,
+      "cartelId": "14k_triad",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 82,
+        "business": 35,
+        "charisma": 40,
+        "intrigue": 52,
+        "loyaltyInspiring": 45,
+        "stealth": 60
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los ejecutores de la organización, activos durante las reales \"guerras de las tríadas\" de Macao de los 90.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "wk_intel_chief",
+      "name": "Ho Sau-lan",
+      "sex": "F",
+      "birthYear": 1960,
+      "alive": true,
+      "cartelId": "14k_triad",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 38,
+        "business": 55,
+        "charisma": 48,
+        "intrigue": 76,
+        "loyaltyInspiring": 48,
+        "stealth": 78
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red de vigilancia e información de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "wk_military_chief",
+      "name": "Tang Ka-wai",
+      "sex": "M",
+      "birthYear": 1957,
+      "alive": true,
+      "cartelId": "14k_triad",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 75,
+        "business": 42,
+        "charisma": 45,
+        "intrigue": 55,
+        "loyaltyInspiring": 55,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los mandos armados de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "wk_diplomat_chief",
+      "name": "Ip Chi-hung",
+      "sex": "M",
+      "birthYear": 1953,
+      "alive": true,
+      "cartelId": "14k_triad",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 30,
+        "business": 60,
+        "charisma": 70,
+        "intrigue": 58,
+        "loyaltyInspiring": 52,
+        "stealth": 48
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa los canales de negociación con otras tríadas y con la industria del casino.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "wk_finance_chief",
+      "name": "Leong Choi-fong",
+      "sex": "M",
+      "birthYear": 1959,
+      "alive": true,
+      "cartelId": "14k_triad",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 82,
+        "charisma": 55,
+        "intrigue": 60,
+        "loyaltyInspiring": 42,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red real de casas de juego VIP y préstamos usurarios (\"junkets\") usada para mover el dinero de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "wk_trafficking_chief",
+      "name": "Chao Weng-fai",
+      "sex": "M",
+      "birthYear": 1963,
+      "alive": true,
+      "cartelId": "14k_triad",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 55,
+        "business": 68,
+        "charisma": 45,
+        "intrigue": 60,
+        "loyaltyInspiring": 48,
+        "stealth": 62
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa las rutas de contrabando y tráfico que la organización operaba a través del puerto de Macao.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "wk_gov_chief",
+      "name": "Ng Chi-keung",
+      "sex": "M",
+      "birthYear": 1951,
+      "alive": true,
+      "cartelId": "14k_triad",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 18,
+        "business": 62,
+        "charisma": 65,
+        "intrigue": 65,
+        "loyaltyInspiring": 45,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa complicidades reales dentro de la administración colonial portuguesa de Macao previa a 1999.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "wk_police_chief",
+      "name": "Fong Weng-san",
+      "sex": "M",
+      "birthYear": 1956,
+      "alive": true,
+      "cartelId": "14k_triad",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 32,
+        "business": 50,
+        "charisma": 42,
+        "intrigue": 62,
+        "loyaltyInspiring": 40,
+        "stealth": 65
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa las complicidades reales documentadas dentro de la policía de Macao durante esa época, incluida la intimidación conocida a mandos policiales.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "wk_production_chief",
+      "name": "Cheang Iok-meng",
+      "sex": "M",
+      "birthYear": 1965,
+      "alive": true,
+      "cartelId": "14k_triad",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 35,
+        "business": 55,
+        "charisma": 38,
+        "intrigue": 48,
+        "loyaltyInspiring": 38,
+        "stealth": 50
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa las operaciones de juego ilegal y casas de apuestas clandestinas de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "wk_pr_chief",
+      "name": "Lam Sao-ieng",
+      "sex": "F",
+      "birthYear": 1961,
+      "alive": true,
+      "cartelId": "14k_triad",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 22,
+        "business": 50,
+        "charisma": 65,
+        "intrigue": 50,
+        "loyaltyInspiring": 55,
+        "stealth": 45
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la fachada pública/empresarial que la organización cultivaba dentro de la industria del entretenimiento de Macao.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []
