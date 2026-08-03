@@ -180,7 +180,277 @@
       "controllerId": null,
       "value": 11,
       "adj": [
-        "michoacan"
+        "michoacan",
+        "oaxaca"
+      ]
+    },
+    {
+      "id": "oaxaca",
+      "name": "Oaxaca",
+      "x": 18,
+      "y": 89,
+      "w": 18,
+      "h": 13,
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "guerrero",
+        "chiapas"
+      ]
+    },
+    {
+      "id": "chiapas",
+      "name": "Chiapas",
+      "x": 18,
+      "y": 103,
+      "w": 18,
+      "h": 13,
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "oaxaca",
+        "guatemala"
+      ]
+    },
+    {
+      "id": "guatemala",
+      "name": "Guatemala",
+      "x": 18,
+      "y": 117,
+      "w": 18,
+      "h": 13,
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "chiapas",
+        "honduras"
+      ]
+    },
+    {
+      "id": "honduras",
+      "name": "Honduras",
+      "x": 18,
+      "y": 131,
+      "w": 18,
+      "h": 13,
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "guatemala",
+        "el_salvador",
+        "nicaragua"
+      ]
+    },
+    {
+      "id": "el_salvador",
+      "name": "El Salvador",
+      "x": 18,
+      "y": 145,
+      "w": 18,
+      "h": 13,
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "honduras"
+      ]
+    },
+    {
+      "id": "nicaragua",
+      "name": "Nicaragua",
+      "x": 18,
+      "y": 159,
+      "w": 18,
+      "h": 13,
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "honduras",
+        "costa_rica"
+      ]
+    },
+    {
+      "id": "costa_rica",
+      "name": "Costa Rica",
+      "x": 18,
+      "y": 173,
+      "w": 18,
+      "h": 13,
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "nicaragua",
+        "panama"
+      ]
+    },
+    {
+      "id": "panama",
+      "name": "Panamá",
+      "x": 18,
+      "y": 187,
+      "w": 18,
+      "h": 13,
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "costa_rica",
+        "colombia"
+      ]
+    },
+    {
+      "id": "colombia",
+      "name": "Colombia",
+      "x": 18,
+      "y": 201,
+      "w": 18,
+      "h": 13,
+      "controllerId": null,
+      "value": 16,
+      "adj": [
+        "panama",
+        "venezuela",
+        "ecuador",
+        "peru",
+        "brasil"
+      ]
+    },
+    {
+      "id": "venezuela",
+      "name": "Venezuela",
+      "x": 18,
+      "y": 215,
+      "w": 18,
+      "h": 13,
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "colombia",
+        "brasil"
+      ]
+    },
+    {
+      "id": "ecuador",
+      "name": "Ecuador",
+      "x": 18,
+      "y": 229,
+      "w": 18,
+      "h": 13,
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "colombia",
+        "peru"
+      ]
+    },
+    {
+      "id": "peru",
+      "name": "Perú",
+      "x": 18,
+      "y": 243,
+      "w": 18,
+      "h": 13,
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "ecuador",
+        "colombia",
+        "brasil",
+        "bolivia",
+        "chile"
+      ]
+    },
+    {
+      "id": "bolivia",
+      "name": "Bolivia",
+      "x": 18,
+      "y": 257,
+      "w": 18,
+      "h": 13,
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "peru",
+        "brasil",
+        "paraguay",
+        "argentina",
+        "chile"
+      ]
+    },
+    {
+      "id": "brasil",
+      "name": "Brasil",
+      "x": 18,
+      "y": 271,
+      "w": 18,
+      "h": 13,
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "colombia",
+        "venezuela",
+        "peru",
+        "bolivia",
+        "paraguay",
+        "uruguay"
+      ]
+    },
+    {
+      "id": "paraguay",
+      "name": "Paraguay",
+      "x": 18,
+      "y": 285,
+      "w": 18,
+      "h": 13,
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "bolivia",
+        "brasil",
+        "argentina"
+      ]
+    },
+    {
+      "id": "argentina",
+      "name": "Argentina",
+      "x": 18,
+      "y": 299,
+      "w": 18,
+      "h": 13,
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "bolivia",
+        "paraguay",
+        "uruguay",
+        "chile"
+      ]
+    },
+    {
+      "id": "uruguay",
+      "name": "Uruguay",
+      "x": 18,
+      "y": 313,
+      "w": 18,
+      "h": 13,
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "brasil",
+        "argentina"
+      ]
+    },
+    {
+      "id": "chile",
+      "name": "Chile",
+      "x": 18,
+      "y": 327,
+      "w": 18,
+      "h": 13,
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "peru",
+        "bolivia",
+        "argentina"
       ]
     }
   ],
