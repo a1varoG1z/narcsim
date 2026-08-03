@@ -176,7 +176,10 @@ export const MONEY_SCALE = 10000;
 // power on marijuana and heroin in the 1970s and only moved into cocaine once Colombian groups
 // started routing product through Mexico after US pressure choked off the Caribbean corridor in
 // the early 1980s), so a second entry with `availableFromYear` lets a cartel switch onto it later
-// via `switch_drug` instead of being locked into one product for the whole game.
+// via `switch_drug` instead of being locked into one product for the whole game. Another
+// well-documented case: the Arellano Félix organization (Tijuana) built its 1990s power on
+// cocaine transit but became notorious from the late 1990s onward for importing MDMA/ecstasy
+// from Europe into California nightclubs — a real, separate product line, not just a footnote.
 export const DRUG_PROFILES = {
   "guadalajara-1975-1989": [
     { id: "marijuana_heroin", name: "Marihuana y heroína", payoutMult: 0.85, heatMult: 0.9, seizureMult: 1.15 },
@@ -187,6 +190,7 @@ export const DRUG_PROFILES = {
   ],
   "mexico-rutas-1990-2006": [
     { id: "cocaine_transit", name: "Cocaína en tránsito hacia EE. UU.", payoutMult: 1.1, heatMult: 1, seizureMult: 1 },
+    { id: "ecstasy", name: "Éxtasis (MDMA)", payoutMult: 1.2, heatMult: 0.8, seizureMult: 0.85, availableFromYear: 1998 },
   ],
   "fragmentacion-2006-2015": [
     { id: "cocaine_war", name: "Cocaína, bajo una guerra abierta contra el narco", payoutMult: 1.15, heatMult: 1.3, seizureMult: 1.2 },

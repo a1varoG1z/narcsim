@@ -1,7 +1,7 @@
 import { getPlayerCartel } from "../../state.js";
 import { escapeHtml } from "../../ui/components.js";
 import { showModal, closeModal } from "../../ui/modal.js";
-import { applyAction, isAttackable } from "../../turnEngine.js";
+import { applyAction, isAttackable, getMarketProfiles, getRegionalMarketShare } from "../../turnEngine.js";
 import { showCartelProfile } from "./cartelProfile.js";
 
 export function render(container, app) {
@@ -28,6 +28,7 @@ export function render(container, app) {
         `).join("")}
       </div>
     </div>
+    ${renderTradeRoutes(game, playerCartel)}
   `;
 
   container.querySelectorAll("[data-territory]").forEach((el) => {
@@ -36,6 +37,51 @@ export function render(container, app) {
   container.querySelectorAll("[data-view-cartel]").forEach((el) => {
     el.addEventListener("click", () => showCartelProfile(app, el.dataset.viewCartel));
   });
+}
+
+/** A schematic routes diagram (not the geographic territory map, which already has its own
+ * coordinate system) showing your cartel's real destination markets as concrete lines instead of
+ * an abstract percentage — active routes (ones you've actually shipped through) are drawn solid
+ * and colored in your cartel's color, unused ones are a faint dashed line, so "having a market"
+ * and "actually working that route" read differently at a glance. */
+function renderTradeRoutes(game, playerCartel) {
+  const markets = getMarketProfiles(game);
+  if (markets.length <= 1) return "";
+
+  const cx = 100;
+  const cy = 100;
+  const radius = 78;
+  const nodes = markets.map((m, i) => {
+    const angle = (Math.PI * 2 * i) / markets.length - Math.PI / 2;
+    const x = cx + radius * Math.cos(angle);
+    const y = cy + radius * Math.sin(angle);
+    const active = !!playerCartel.resources.distributionVolumeByMarket?.[m.id];
+    const share = getRegionalMarketShare(game, playerCartel, m.id);
+    return { ...m, x, y, active, share };
+  });
+
+  return `
+    <div class="card">
+      <h3>Rutas comerciales internacionales</h3>
+      <p class="text-dim small">Cada envío ("Enviar cargamento", pestaña Decisiones) elige un destino real. Las líneas sólidas son rutas que ya has trabajado de verdad; las discontinuas, mercados todavía sin explotar.</p>
+      <svg viewBox="0 0 200 200" style="width:100%;max-width:360px;display:block;margin:0 auto" role="img" aria-label="Diagrama de rutas comerciales internacionales">
+        ${nodes.map((n) => `
+          <line x1="${cx}" y1="${cy}" x2="${n.x}" y2="${n.y}"
+            stroke="${n.active ? playerCartel.color : "#666"}"
+            stroke-width="${n.active ? 2.5 : 1.5}"
+            stroke-dasharray="${n.active ? "" : "4,4"}"
+            opacity="${n.active ? 0.9 : 0.4}" />
+        `).join("")}
+        <circle cx="${cx}" cy="${cy}" r="14" fill="${playerCartel.color}" />
+        <text x="${cx}" y="${cy + 4}" text-anchor="middle" font-size="8" fill="#fff">Tú</text>
+        ${nodes.map((n) => `
+          <circle cx="${n.x}" cy="${n.y}" r="11" fill="${n.active ? playerCartel.color : "#2a2420"}" opacity="${n.active ? 1 : 0.6}" />
+          <text x="${n.x}" y="${n.y - 16}" text-anchor="middle" font-size="7" fill="currentColor">${escapeHtml(n.name.split(" (")[0])}</text>
+          ${n.active ? `<text x="${n.x}" y="${n.y + 4}" text-anchor="middle" font-size="7" fill="#fff">${n.share.toFixed(0)}%</text>` : ""}
+        `).join("")}
+      </svg>
+    </div>
+  `;
 }
 
 function showTerritoryModal(app, territoryId) {

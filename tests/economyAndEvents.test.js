@@ -1644,6 +1644,22 @@ test("switch_drug lets a cartel change specialization (Félix Gallardo's marijua
   assert.ok(cartel.resources.money < moneyBefore, "switching should cost money");
 });
 
+test("switch_drug also lets Tijuana pivot into MDMA/ecstasy from 1998 onward, the documented Arellano Félix shift", () => {
+  const game = newGame("mexico-rutas-1990-2006.json", "tijuana");
+  const cartel = game.cartels.tijuana;
+  cartel.resources.money = 100_000_000;
+
+  // game.turn=0 -> year 1990, well before ecstasy's 1998 availableFromYear.
+  const tooEarlyResult = applyAction(game, "tijuana", "switch_drug", { drugId: "ecstasy" });
+  assert.equal(tooEarlyResult.ok, false, "ecstasy shouldn't be available yet in 1990");
+
+  game.turn = 16; // 1990 + 16*6/12 = 1998
+  const switchResult = applyAction(game, "tijuana", "switch_drug", { drugId: "ecstasy" });
+  assert.equal(switchResult.ok, true, "ecstasy should be available from 1998 onward");
+  assert.equal(cartel.resources.drugId, "ecstasy");
+  assert.equal(getDrugProfile(game, cartel).id, "ecstasy");
+});
+
 test("a cartel that switches to a more lucrative drug genuinely earns more from traffic_shipment afterward", () => {
   const originalRandom = Math.random;
   try {
