@@ -492,7 +492,8 @@
         "diplomatChief": "choneros_diplomat_chief_24",
         "financeChief": "choneros_finance_chief_24",
         "traffickingChief": "choneros_trafficking_chief_24",
-        "corruptionGovChief": "choneros_gov_chief_24"
+        "corruptionGovChief": "choneros_gov_chief_24",
+        "corruptionPoliceChief": "choneros_police_chief_24"
       }
     },
     {
@@ -520,7 +521,8 @@
         "diplomatChief": "pcc_diplomat_chief_24",
         "financeChief": "pcc_finance_chief_24",
         "traffickingChief": "pcc_trafficking_chief_24",
-        "corruptionGovChief": "pcc_gov_chief_24"
+        "corruptionGovChief": "pcc_gov_chief_24",
+        "corruptionPoliceChief": "pcc_police_chief_24"
       }
     }
   ],
@@ -1274,6 +1276,52 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, a cargo de sobornar a funcionarios del sistema penitenciario ecuatoriano — el propio Fito dirigió la organización desde prisión durante años hasta su fuga real de enero de 2024, un caso real y muy documentado de corrupción carcelaria.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pcc_police_chief_24",
+      "name": "Delegado Adilson Vasconcelos",
+      "sex": "M",
+      "birthYear": 1972,
+      "alive": true,
+      "cartelId": "pcc",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 40,
+        "business": 52,
+        "charisma": 48,
+        "intrigue": 58,
+        "loyaltyInspiring": 44,
+        "stealth": 48
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de sobornar a agentes de policía y del sistema penitenciario, reflejando casos reales y documentados de corrupción policial ligados al PCC en São Paulo.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "choneros_police_chief_24",
+      "name": "Comisario Édison Palma",
+      "sex": "M",
+      "birthYear": 1980,
+      "alive": true,
+      "cartelId": "choneros",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 38,
+        "business": 50,
+        "charisma": 46,
+        "intrigue": 56,
+        "loyaltyInspiring": 44,
+        "stealth": 46
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de sobornar a la policía nacional ecuatoriana en el puerto y las calles de Guayaquil.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

@@ -449,7 +449,8 @@
         "militaryChief": "pepes_military_chief",
         "diplomatChief": "pepes_diplomat_chief",
         "traffickingChief": "pepes_trafficking_chief",
-        "corruptionGovChief": "pepes_gov_chief"
+        "corruptionGovChief": "pepes_gov_chief",
+        "corruptionPoliceChief": "pepes_police_chief"
       }
     },
     {
@@ -475,7 +476,8 @@
         "militaryChief": "urdinola_military_chief",
         "diplomatChief": "urdinola_diplomat_chief",
         "traffickingChief": "urdinola_trafficking_chief",
-        "corruptionGovChief": "urdinola_gov_chief"
+        "corruptionGovChief": "urdinola_gov_chief",
+        "corruptionPoliceChief": "urdinola_police_chief"
       }
     },
     {
@@ -501,7 +503,8 @@
         "militaryChief": "suarez_military_chief",
         "diplomatChief": "suarez_diplomat_chief",
         "financeChief": "suarez_finance_chief",
-        "traffickingChief": "suarez_trafficking_chief"
+        "traffickingChief": "suarez_trafficking_chief",
+        "corruptionPoliceChief": "suarez_police_chief"
       }
     },
     {
@@ -527,7 +530,8 @@
         "diplomatChief": "vaticano_diplomat_chief",
         "financeChief": "vaticano_finance_chief",
         "traffickingChief": "vaticano_trafficking_chief",
-        "corruptionGovChief": "vaticano_gov_chief"
+        "corruptionGovChief": "vaticano_gov_chief",
+        "corruptionPoliceChief": "vaticano_police_chief"
       }
     },
     {
@@ -553,7 +557,8 @@
         "diplomatChief": "pdf_diplomat_chief",
         "financeChief": "pdf_finance_chief",
         "traffickingChief": "pdf_trafficking_chief",
-        "corruptionGovChief": "pdf_gov_chief"
+        "corruptionGovChief": "pdf_gov_chief",
+        "corruptionPoliceChief": "pdf_police_chief"
       }
     },
     {
@@ -579,7 +584,8 @@
         "diplomatChief": "soles_diplomat_chief",
         "financeChief": "soles_finance_chief",
         "traffickingChief": "soles_trafficking_chief",
-        "corruptionGovChief": "soles_gov_chief"
+        "corruptionGovChief": "soles_gov_chief",
+        "corruptionPoliceChief": "soles_police_chief"
       }
     }
   ],
@@ -2533,6 +2539,144 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, contacto civil a cargo de extender la red de sobornos del Cartel de los Soles a funcionarios civiles regionales, más allá de la propia Guardia Nacional.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pepes_police_chief",
+      "name": "Teniente Coronel Fabio Zuluaga",
+      "sex": "M",
+      "birthYear": 1948,
+      "alive": true,
+      "cartelId": "los_pepes",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 45,
+        "business": 45,
+        "charisma": 50,
+        "intrigue": 55,
+        "loyaltyInspiring": 46,
+        "stealth": 48
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, contacto dentro de la Policía Nacional que colaboraba informalmente con Los Pepes, reflejando las alianzas reales y documentadas entre sectores de la fuerza pública y el grupo durante la cacería de Escobar.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "urdinola_police_chief",
+      "name": "Capitán Osiris Bermúdez",
+      "sex": "M",
+      "birthYear": 1955,
+      "alive": true,
+      "cartelId": "urdinola",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 40,
+        "business": 48,
+        "charisma": 48,
+        "intrigue": 55,
+        "loyaltyInspiring": 44,
+        "stealth": 46
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de sobornar a la policía regional del Valle del Cauca, reflejando la penetración policial real y documentada de la organización de Iván Urdinola.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "suarez_police_chief",
+      "name": "Mayor Wálter Cáceres",
+      "sex": "M",
+      "birthYear": 1945,
+      "alive": true,
+      "cartelId": "suarez",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 42,
+        "business": 50,
+        "charisma": 46,
+        "intrigue": 55,
+        "loyaltyInspiring": 44,
+        "stealth": 46
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de sobornar a la policía antinarcóticos boliviana para proteger la producción de pasta base de la organización de Roberto Suárez.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "vaticano_police_chief",
+      "name": "Comandante Rufino Delgado",
+      "sex": "M",
+      "birthYear": 1950,
+      "alive": true,
+      "cartelId": "vaticano",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 40,
+        "business": 48,
+        "charisma": 46,
+        "intrigue": 55,
+        "loyaltyInspiring": 44,
+        "stealth": 46
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de sobornar a la policía regional del Alto Huallaga para proteger los laboratorios y rutas de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pdf_police_chief",
+      "name": "Capitán Belisario Ortega",
+      "sex": "M",
+      "birthYear": 1948,
+      "alive": true,
+      "cartelId": "pdf_panama",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 38,
+        "business": 48,
+        "charisma": 48,
+        "intrigue": 54,
+        "loyaltyInspiring": 44,
+        "stealth": 44
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de sobornar a la policía civil panameña, en paralelo a la propia estructura militar de las Fuerzas de Defensa.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_police_chief",
+      "name": "Comisario Argenis Loyo",
+      "sex": "M",
+      "birthYear": 1950,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 38,
+        "business": 48,
+        "charisma": 48,
+        "intrigue": 54,
+        "loyaltyInspiring": 44,
+        "stealth": 44
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, contacto dentro de los cuerpos policiales venezolanos, en paralelo a la propia corrupción castrense del Cartel de los Soles.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

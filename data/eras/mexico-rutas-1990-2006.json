@@ -528,7 +528,8 @@
         "diplomatChief": "cachiros_diplomat_chief",
         "financeChief": "cachiros_finance_chief",
         "traffickingChief": "cachiros_trafficking_chief",
-        "corruptionGovChief": "cachiros_gov_chief"
+        "corruptionGovChief": "cachiros_gov_chief",
+        "corruptionPoliceChief": "cachiros_police_chief"
       }
     },
     {
@@ -556,7 +557,8 @@
         "diplomatChief": "soles_diplomat_chief_90",
         "financeChief": "soles_finance_chief_90",
         "traffickingChief": "soles_trafficking_chief_90",
-        "corruptionGovChief": "soles_gov_chief_90"
+        "corruptionGovChief": "soles_gov_chief_90",
+        "corruptionPoliceChief": "soles_police_chief_90"
       }
     }
   ],
@@ -1969,6 +1971,52 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, contacto civil a cargo de extender la red de sobornos del Cartel de los Soles a funcionarios civiles regionales, más allá de la propia Guardia Nacional.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cachiros_police_chief",
+      "name": "Comisionado Reyes Bustillo",
+      "sex": "M",
+      "birthYear": 1965,
+      "alive": true,
+      "cartelId": "cachiros",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 38,
+        "business": 50,
+        "charisma": 46,
+        "intrigue": 56,
+        "loyaltyInspiring": 44,
+        "stealth": 46
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de sobornar a la policía hondureña para proteger las rutas de trasiego de la organización de los hermanos Rivera Maradiaga.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_police_chief_90",
+      "name": "Comisario Argenis Loyo",
+      "sex": "M",
+      "birthYear": 1952,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 38,
+        "business": 48,
+        "charisma": 48,
+        "intrigue": 54,
+        "loyaltyInspiring": 44,
+        "stealth": 44
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, contacto dentro de los cuerpos policiales venezolanos, en paralelo a la propia corrupción castrense del Cartel de los Soles.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []
