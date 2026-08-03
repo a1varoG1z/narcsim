@@ -919,7 +919,7 @@
     {
       "id": "rusia",
       "name": "Rusia",
-      "controllerId": null,
+      "controllerId": "mogilevich_org",
       "value": 22,
       "adj": [
         "azerbaiyan",
@@ -2769,6 +2769,35 @@
         "productionChief": "soles_production_chief_06",
         "prChief": "soles_pr_chief_06"
       }
+    },
+    {
+      "id": "mogilevich_org",
+      "name": "Organización de Semion Mogilevich",
+      "color": "#5a5a7a",
+      "aiControlled": true,
+      "historicalNote": "Bajo el mando real de Semion Mogilevich, con base principal en Moscú, una de las figuras más poderosas y documentadas del crimen organizado ruso/euroasiático de las últimas décadas, señalada por autoridades occidentales por una red de actividades criminales muy diversa — tráfico de armas, extorsión, fraude financiero a gran escala y contrabando — y por sus fuertes conexiones políticas que durante años lo protegieron de cualquier extradición real a Estados Unidos, pese a figurar en la lista de los diez más buscados del FBI durante buena parte de esta época (fue retirado de esa lista precisamente en 2015, al final del rango de esta época, al prescribir los cargos originales del caso real que lo llevó a ella). A diferencia de los cárteles latinoamericanos ya presentes en el juego, su poder real se apoyaba tanto en el crimen organizado como en una red de protección política de alto nivel — un matiz distinto, no solo una cuestión de fuerza armada. En el juego su destino depende de tus decisiones.",
+      "resources": {
+        "money": 175000000,
+        "armySize": 700,
+        "corruptGov": 85,
+        "corruptPolice": 70,
+        "publicImage": 30,
+        "heat": 35
+      },
+      "roles": {
+        "leader": "sm_leader",
+        "underboss": "sm_underboss",
+        "sicariosChief": "sm_sicarios_chief",
+        "intelChief": "sm_intel_chief",
+        "militaryChief": "sm_military_chief",
+        "diplomatChief": "sm_diplomat_chief",
+        "financeChief": "sm_finance_chief",
+        "traffickingChief": "sm_trafficking_chief",
+        "corruptionGovChief": "sm_gov_chief",
+        "corruptionPoliceChief": "sm_police_chief",
+        "productionChief": "sm_production_chief",
+        "prChief": "sm_pr_chief"
+      }
     }
   ],
   "characters": [
@@ -4079,6 +4108,285 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, oficial a cargo de negar públicamente cualquier vínculo entre la Guardia Nacional y el narcotráfico.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sm_leader",
+      "name": "Semion Mogilevich",
+      "sex": "M",
+      "birthYear": 1946,
+      "alive": true,
+      "cartelId": "mogilevich_org",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 60,
+        "business": 92,
+        "charisma": 62,
+        "intrigue": 90,
+        "loyaltyInspiring": 65,
+        "stealth": 85
+      },
+      "traits": [
+        "intrigante",
+        "fundador"
+      ],
+      "notes": "Figura real y muy documentada del crimen organizado ruso/euroasiático, con base principal en Moscú. Estuvo en la lista de los diez más buscados del FBI durante buena parte de esta época, protegido durante años de una extradición real gracias a sus conexiones políticas. En el juego su destino depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sm_underboss",
+      "name": "Arkady Volkov",
+      "sex": "M",
+      "birthYear": 1950,
+      "alive": true,
+      "cartelId": "mogilevich_org",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 55,
+        "business": 70,
+        "charisma": 55,
+        "intrigue": 72,
+        "loyaltyInspiring": 58,
+        "stealth": 68
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los mandos de la organización más cercanos a Mogilevich.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sm_sicarios_chief",
+      "name": "Yuri Pavlenko",
+      "sex": "M",
+      "birthYear": 1955,
+      "alive": true,
+      "cartelId": "mogilevich_org",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 88,
+        "business": 40,
+        "charisma": 40,
+        "intrigue": 55,
+        "loyaltyInspiring": 48,
+        "stealth": 65
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los ejecutores de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sm_intel_chief",
+      "name": "Irina Sokolova",
+      "sex": "F",
+      "birthYear": 1958,
+      "alive": true,
+      "cartelId": "mogilevich_org",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 35,
+        "business": 60,
+        "charisma": 55,
+        "intrigue": 85,
+        "loyaltyInspiring": 50,
+        "stealth": 88
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la extensa red de información e inteligencia real que rodeaba a la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sm_military_chief",
+      "name": "Dmitri Orlov",
+      "sex": "M",
+      "birthYear": 1952,
+      "alive": true,
+      "cartelId": "mogilevich_org",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 78,
+        "business": 48,
+        "charisma": 45,
+        "intrigue": 58,
+        "loyaltyInspiring": 60,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa las redes reales de tráfico de armas asociadas a la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sm_diplomat_chief",
+      "name": "Boris Kalinin",
+      "sex": "M",
+      "birthYear": 1948,
+      "alive": true,
+      "cartelId": "mogilevich_org",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 25,
+        "business": 68,
+        "charisma": 75,
+        "intrigue": 72,
+        "loyaltyInspiring": 55,
+        "stealth": 60
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red real de conexiones políticas de alto nivel que protegía a la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sm_finance_chief",
+      "name": "Lev Rudenko",
+      "sex": "M",
+      "birthYear": 1954,
+      "alive": true,
+      "cartelId": "mogilevich_org",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 90,
+        "charisma": 55,
+        "intrigue": 65,
+        "loyaltyInspiring": 45,
+        "stealth": 62
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa el real y extenso entramado de fraude financiero internacional (incluidas empresas fachada bursátiles) vinculado a la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sm_trafficking_chief",
+      "name": "Pavel Zhukov",
+      "sex": "M",
+      "birthYear": 1957,
+      "alive": true,
+      "cartelId": "mogilevich_org",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 60,
+        "business": 65,
+        "charisma": 42,
+        "intrigue": 60,
+        "loyaltyInspiring": 48,
+        "stealth": 65
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa las rutas de contrabando de la organización a través de Europa del Este.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sm_gov_chief",
+      "name": "Ministro Anatoly Fomin",
+      "sex": "M",
+      "birthYear": 1945,
+      "alive": true,
+      "cartelId": "mogilevich_org",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 65,
+        "charisma": 70,
+        "intrigue": 78,
+        "loyaltyInspiring": 50,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red real de protección política de alto nivel de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sm_police_chief",
+      "name": "Coronel Gennady Popov",
+      "sex": "M",
+      "birthYear": 1951,
+      "alive": true,
+      "cartelId": "mogilevich_org",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 30,
+        "business": 52,
+        "charisma": 45,
+        "intrigue": 68,
+        "loyaltyInspiring": 42,
+        "stealth": 65
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa complicidades dentro de las fuerzas de seguridad rusas.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sm_production_chief",
+      "name": "Andrei Melnik",
+      "sex": "M",
+      "birthYear": 1960,
+      "alive": true,
+      "cartelId": "mogilevich_org",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 40,
+        "business": 60,
+        "charisma": 38,
+        "intrigue": 50,
+        "loyaltyInspiring": 40,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa las operaciones industriales/logísticas de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sm_pr_chief",
+      "name": "Ekaterina Volskaya",
+      "sex": "F",
+      "birthYear": 1962,
+      "alive": true,
+      "cartelId": "mogilevich_org",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 55,
+        "charisma": 65,
+        "intrigue": 55,
+        "loyaltyInspiring": 52,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la fachada empresarial legítima que la organización cultivaba de puertas afuera.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []
