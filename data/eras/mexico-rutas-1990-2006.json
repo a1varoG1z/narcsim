@@ -248,7 +248,7 @@
       "y": 162,
       "w": 17,
       "h": 10,
-      "controllerId": null,
+      "controllerId": "soles",
       "value": 12,
       "adj": [
         "colombia",
@@ -527,6 +527,32 @@
         "militaryChief": "cachiros_military_chief",
         "diplomatChief": "cachiros_diplomat_chief",
         "financeChief": "cachiros_finance_chief"
+      }
+    },
+    {
+      "id": "soles",
+      "name": "Cartel de los Soles (Venezuela)",
+      "color": "#7a1f4a",
+      "aiControlled": true,
+      "historicalNote": "'Cartel de los Soles' es el término real, documentado desde principios de los 90, para la red de corrupción dentro de la Guardia Nacional y las fuerzas armadas venezolanas que facilita el narcotráfico a cambio de sobornos — el nombre viene de las insignias de sol que llevan los generales, tras un caso real de oficiales de alto rango sorprendidos traficando cocaína a comienzos de esa década. Igual que en \"Medellín vs Cali\", por tratarse de una red difusa ligada a las fuerzas armadas de un país real y no de un cártel con un capo identificable con seguridad, el personaje al mando es un oficial ficticio.",
+      "resources": {
+        "money": 8000000,
+        "armySize": 550,
+        "corruptGov": 70,
+        "corruptPolice": 60,
+        "publicImage": 25,
+        "heat": 32,
+        "internationalReputation": 10,
+        "launderedMoney": 0
+      },
+      "roles": {
+        "leader": "soles_leader_90",
+        "underboss": "soles_underboss_90",
+        "sicariosChief": "soles_sicarios_chief_90",
+        "intelChief": "soles_intel_chief_90",
+        "militaryChief": "soles_military_chief_90",
+        "diplomatChief": "soles_diplomat_chief_90",
+        "financeChief": "soles_finance_chief_90"
       }
     }
   ],
@@ -1686,6 +1712,167 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, encargada de lavar las ganancias de la organización a través de negocios ganaderos, hoteles y bienes raíces en Colón.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_leader_90",
+      "name": "General Rodolfo Cabrera Salcedo",
+      "sex": "M",
+      "birthYear": 1942,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "leader",
+      "historical": false,
+      "stats": {
+        "violence": 55,
+        "business": 68,
+        "charisma": 58,
+        "intrigue": 72,
+        "loyaltyInspiring": 58,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los mandos de la Guardia Nacional venezolana que facilitaban el narcotráfico a cambio de sobornos, el fenómeno real conocido como 'Cartel de los Soles'.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_underboss_90",
+      "name": "Coronel Iván Requena",
+      "sex": "M",
+      "birthYear": 1948,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 50,
+        "business": 55,
+        "charisma": 48,
+        "intrigue": 60,
+        "loyaltyInspiring": 50,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_sicarios_chief_90",
+      "name": "Mayor Ezequiel Farías",
+      "sex": "M",
+      "birthYear": 1953,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 65,
+        "business": 35,
+        "charisma": 42,
+        "intrigue": 58,
+        "loyaltyInspiring": 48,
+        "stealth": 52
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de la seguridad armada de los envíos que cruzan la frontera con La Guajira.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_intel_chief_90",
+      "name": "Capitán Zuleima Ordóñez",
+      "sex": "F",
+      "birthYear": 1954,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 32,
+        "business": 50,
+        "charisma": 50,
+        "intrigue": 78,
+        "loyaltyInspiring": 45,
+        "stealth": 68
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, oficial de inteligencia militar a cargo de vigilar tanto a rivales como a posibles informantes dentro de la propia red.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_military_chief_90",
+      "name": "Comandante Wilmer Goitía",
+      "sex": "M",
+      "birthYear": 1950,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 70,
+        "business": 36,
+        "charisma": 50,
+        "intrigue": 50,
+        "loyaltyInspiring": 52,
+        "stealth": 38
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, oficial de la Guardia Nacional a cargo de las tropas que custodian la ruta de trasiego por la frontera con La Guajira.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_diplomat_chief_90",
+      "name": "Coronela Nohemí Vielma",
+      "sex": "F",
+      "birthYear": 1956,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 52,
+        "charisma": 68,
+        "intrigue": 48,
+        "loyaltyInspiring": 50,
+        "stealth": 32
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, oficial de enlace a cargo de las negociaciones con los cárteles mexicanos y colombianos que trasiegan por la frontera con La Guajira.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_finance_chief_90",
+      "name": "Marielba Contreras Uzcátegui",
+      "sex": "F",
+      "birthYear": 1959,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 12,
+        "business": 70,
+        "charisma": 46,
+        "intrigue": 42,
+        "loyaltyInspiring": 42,
+        "stealth": 45
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, encargada de lavar las ganancias de la red a través de negocios de importación y cambio de divisas en Maracaibo.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

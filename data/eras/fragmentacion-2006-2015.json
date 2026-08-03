@@ -276,7 +276,7 @@
       "y": 151,
       "w": 20,
       "h": 13,
-      "controllerId": null,
+      "controllerId": "soles",
       "value": 12,
       "adj": [
         "colombia",
@@ -564,6 +564,32 @@
         "militaryChief": "lorenzana_military_chief",
         "diplomatChief": "lorenzana_diplomat_chief",
         "financeChief": "lorenzana_finance_chief"
+      }
+    },
+    {
+      "id": "soles",
+      "name": "Cartel de los Soles (Venezuela)",
+      "color": "#7a1f4a",
+      "aiControlled": true,
+      "historicalNote": "'Cartel de los Soles' es el término real para la red de corrupción dentro de la Guardia Nacional y las fuerzas armadas venezolanas que facilita el narcotráfico a cambio de sobornos, documentado desde principios de los 90 y ya consolidado como un fenómeno de largo plazo para esta época. El auge de la militarización de la lucha antidroga mexicana en estos años (ver el resto de esta partida) coincide con el fortalecimiento real de las rutas venezolanas como alternativa de trasiego hacia el Caribe y África Occidental. Igual que en las demás apariciones de esta red, el personaje al mando es un oficial ficticio, no una figura política real.",
+      "resources": {
+        "money": 12000000,
+        "armySize": 650,
+        "corruptGov": 72,
+        "corruptPolice": 62,
+        "publicImage": 22,
+        "heat": 38,
+        "internationalReputation": 12,
+        "launderedMoney": 0
+      },
+      "roles": {
+        "leader": "soles_leader_06",
+        "underboss": "soles_underboss_06",
+        "sicariosChief": "soles_sicarios_chief_06",
+        "intelChief": "soles_intel_chief_06",
+        "militaryChief": "soles_military_chief_06",
+        "diplomatChief": "soles_diplomat_chief_06",
+        "financeChief": "soles_finance_chief_06"
       }
     }
   ],
@@ -1484,6 +1510,167 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, encargada de lavar las ganancias de la organización a través de fincas agrícolas y ganaderas en Zacapa.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_leader_06",
+      "name": "General Argenis Tovar Mendoza",
+      "sex": "M",
+      "birthYear": 1955,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "leader",
+      "historical": false,
+      "stats": {
+        "violence": 55,
+        "business": 68,
+        "charisma": 58,
+        "intrigue": 72,
+        "loyaltyInspiring": 58,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los mandos de la Guardia Nacional venezolana que facilitaban el narcotráfico a cambio de sobornos, el fenómeno real conocido como 'Cartel de los Soles'.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_underboss_06",
+      "name": "Coronel Deivis Aponte",
+      "sex": "M",
+      "birthYear": 1960,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 50,
+        "business": 55,
+        "charisma": 48,
+        "intrigue": 60,
+        "loyaltyInspiring": 50,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_sicarios_chief_06",
+      "name": "Mayor Yosmar Belisario",
+      "sex": "M",
+      "birthYear": 1965,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 65,
+        "business": 35,
+        "charisma": 42,
+        "intrigue": 58,
+        "loyaltyInspiring": 48,
+        "stealth": 52
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de la seguridad armada de los envíos que cruzan la frontera con La Guajira.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_intel_chief_06",
+      "name": "Capitán Carilú Andrade",
+      "sex": "F",
+      "birthYear": 1966,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 32,
+        "business": 50,
+        "charisma": 50,
+        "intrigue": 78,
+        "loyaltyInspiring": 45,
+        "stealth": 68
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, oficial de inteligencia militar a cargo de vigilar tanto a rivales como a posibles informantes dentro de la propia red.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_military_chief_06",
+      "name": "Comandante Néstor Guaramato",
+      "sex": "M",
+      "birthYear": 1962,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 70,
+        "business": 36,
+        "charisma": 50,
+        "intrigue": 50,
+        "loyaltyInspiring": 52,
+        "stealth": 38
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, oficial de la Guardia Nacional a cargo de las tropas que custodian la ruta de trasiego por la frontera con La Guajira.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_diplomat_chief_06",
+      "name": "Coronela Yulimar Peraza",
+      "sex": "F",
+      "birthYear": 1964,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 52,
+        "charisma": 68,
+        "intrigue": 48,
+        "loyaltyInspiring": 50,
+        "stealth": 32
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, oficial de enlace a cargo de las negociaciones con los cárteles mexicanos y colombianos que trasiegan por la frontera con La Guajira.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_finance_chief_06",
+      "name": "Ana Yulitza Rondón",
+      "sex": "F",
+      "birthYear": 1968,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 12,
+        "business": 70,
+        "charisma": 46,
+        "intrigue": 42,
+        "loyaltyInspiring": 42,
+        "stealth": 45
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, encargada de lavar las ganancias de la red a través de negocios de importación y cambio de divisas en Maracaibo.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []
