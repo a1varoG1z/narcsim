@@ -1643,7 +1643,7 @@
     {
       "id": "myanmar",
       "name": "Birmania",
-      "controllerId": null,
+      "controllerId": "mong_tai_army",
       "value": 14,
       "adj": [
         "bangladesh",
@@ -2701,6 +2701,35 @@
         "underboss": "ojinaga_underboss",
         "financeChief": "ojinaga_finance_chief"
       }
+    },
+    {
+      "id": "mong_tai_army",
+      "name": "Mong Tai Army / Shan United Army (Khun Sa)",
+      "color": "#4a6b1a",
+      "aiControlled": true,
+      "historicalNote": "Bajo el mando real de Khun Sa (nombre de nacimiento Zhang Qifu), el señor de la guerra que dominó buena parte del comercio de opio y heroína del Triángulo de Oro en el este de Birmania (hoy Myanmar) desde los años 60 hasta los 90. Su Shan United Army se fusionó con otras milicias en 1985 para formar el Mong Tai Army, con el que llegó a controlar, según estimaciones de la época, hasta la mitad del suministro mundial de heroína. A diferencia de los cárteles latinoamericanos de este juego, la organización de Khun Sa financiaba también un movimiento real de insurgencia por la independencia del Estado Shan frente al gobierno birmano — el opio no era solo negocio, sino la fuente de ingresos de una causa política armada, una dualidad muy documentada en su caso. Estados Unidos lo acusó formalmente de narcotráfico en 1989, justo al final de esta época; en la vida real jamás fue extraditado, se rindió al gobierno birmano en 1996 y murió en 2007 sin cumplir condena — en el juego su destino depende de tus decisiones.",
+      "resources": {
+        "money": 160000000,
+        "armySize": 950,
+        "corruptGov": 60,
+        "corruptPolice": 45,
+        "publicImage": 40,
+        "heat": 40
+      },
+      "roles": {
+        "leader": "ks_leader",
+        "underboss": "ks_underboss",
+        "sicariosChief": "ks_sicarios_chief",
+        "intelChief": "ks_intel_chief",
+        "militaryChief": "ks_military_chief",
+        "diplomatChief": "ks_diplomat_chief",
+        "financeChief": "ks_finance_chief",
+        "traffickingChief": "ks_trafficking_chief",
+        "corruptionGovChief": "ks_gov_chief",
+        "corruptionPoliceChief": "ks_police_chief",
+        "productionChief": "ks_production_chief",
+        "prChief": "ks_pr_chief"
+      }
     }
   ],
   "characters": [
@@ -3350,6 +3379,285 @@
       },
       "traits": [],
       "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "ks_leader",
+      "name": "Khun Sa (Zhang Qifu)",
+      "sex": "M",
+      "birthYear": 1934,
+      "alive": true,
+      "cartelId": "mong_tai_army",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 78,
+        "business": 82,
+        "charisma": 75,
+        "intrigue": 80,
+        "loyaltyInspiring": 78,
+        "stealth": 70
+      },
+      "traits": [
+        "fundador",
+        "insurgente"
+      ],
+      "notes": "Señor de la guerra real del Triángulo de Oro, apodado \"el Rey del Opio\". En la vida real se rindió al gobierno birmano en 1996 y murió en 2007 sin ser extraditado a EE. UU. pese a la acusación real de 1989. En el juego su destino depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "ks_underboss",
+      "name": "Coronel Sai Lin",
+      "sex": "M",
+      "birthYear": 1938,
+      "alive": true,
+      "cartelId": "mong_tai_army",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 70,
+        "business": 60,
+        "charisma": 55,
+        "intrigue": 65,
+        "loyaltyInspiring": 62,
+        "stealth": 60
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los mandos del Mong Tai Army más cercanos a Khun Sa.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "ks_sicarios_chief",
+      "name": "Aung Myat",
+      "sex": "M",
+      "birthYear": 1945,
+      "alive": true,
+      "cartelId": "mong_tai_army",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 85,
+        "business": 35,
+        "charisma": 40,
+        "intrigue": 55,
+        "loyaltyInspiring": 48,
+        "stealth": 62
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los ejecutores y la disciplina interna de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "ks_intel_chief",
+      "name": "Nang Kham",
+      "sex": "F",
+      "birthYear": 1942,
+      "alive": true,
+      "cartelId": "mong_tai_army",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 40,
+        "business": 55,
+        "charisma": 50,
+        "intrigue": 78,
+        "loyaltyInspiring": 50,
+        "stealth": 80
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red de información e inteligencia de la organización en el Estado Shan.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "ks_military_chief",
+      "name": "General Zau Mai",
+      "sex": "M",
+      "birthYear": 1936,
+      "alive": true,
+      "cartelId": "mong_tai_army",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 80,
+        "business": 45,
+        "charisma": 52,
+        "intrigue": 58,
+        "loyaltyInspiring": 65,
+        "stealth": 50
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los mandos militares reales de la insurgencia armada del Estado Shan, financiada por el negocio del opio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "ks_diplomat_chief",
+      "name": "Sao Noan",
+      "sex": "M",
+      "birthYear": 1940,
+      "alive": true,
+      "cartelId": "mong_tai_army",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 30,
+        "business": 62,
+        "charisma": 72,
+        "intrigue": 60,
+        "loyaltyInspiring": 55,
+        "stealth": 50
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa los canales de negociación con otras milicias del Triángulo de Oro y con intermediarios tailandeses.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "ks_finance_chief",
+      "name": "Lin Zhicheng",
+      "sex": "M",
+      "birthYear": 1944,
+      "alive": true,
+      "cartelId": "mong_tai_army",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 25,
+        "business": 78,
+        "charisma": 50,
+        "intrigue": 58,
+        "loyaltyInspiring": 45,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red real de rutas comerciales hacia Tailandia usada para blanquear y mover las ganancias del opio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "ks_trafficking_chief",
+      "name": "Ye Naing",
+      "sex": "M",
+      "birthYear": 1948,
+      "alive": true,
+      "cartelId": "mong_tai_army",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 55,
+        "business": 70,
+        "charisma": 48,
+        "intrigue": 62,
+        "loyaltyInspiring": 50,
+        "stealth": 65
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa las rutas reales de exportación de heroína del Triángulo de Oro hacia el sudeste asiático y más allá.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "ks_gov_chief",
+      "name": "Thein Zaw",
+      "sex": "M",
+      "birthYear": 1937,
+      "alive": true,
+      "cartelId": "mong_tai_army",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 60,
+        "charisma": 58,
+        "intrigue": 65,
+        "loyaltyInspiring": 48,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa complicidades con autoridades locales y regionales.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "ks_police_chief",
+      "name": "Kyaw Zin",
+      "sex": "M",
+      "birthYear": 1941,
+      "alive": true,
+      "cartelId": "mong_tai_army",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 35,
+        "business": 50,
+        "charisma": 45,
+        "intrigue": 60,
+        "loyaltyInspiring": 42,
+        "stealth": 62
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa complicidades con fuerzas de seguridad locales.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "ks_production_chief",
+      "name": "Sai Long",
+      "sex": "M",
+      "birthYear": 1950,
+      "alive": true,
+      "cartelId": "mong_tai_army",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 40,
+        "business": 58,
+        "charisma": 38,
+        "intrigue": 48,
+        "loyaltyInspiring": 40,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa los laboratorios reales de refinado de opio a heroína en el Estado Shan.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "ks_pr_chief",
+      "name": "Nang Zing",
+      "sex": "F",
+      "birthYear": 1946,
+      "alive": true,
+      "cartelId": "mong_tai_army",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 25,
+        "business": 48,
+        "charisma": 68,
+        "intrigue": 52,
+        "loyaltyInspiring": 58,
+        "stealth": 48
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la legitimidad real que Khun Sa cultivaba ante la población Shan al presentar su causa como una lucha por la independencia.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []
