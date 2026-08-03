@@ -447,7 +447,8 @@
         "sicariosChief": "pepes_sicarios_chief",
         "intelChief": "pepes_intel_chief",
         "militaryChief": "pepes_military_chief",
-        "diplomatChief": "pepes_diplomat_chief"
+        "diplomatChief": "pepes_diplomat_chief",
+        "traffickingChief": "pepes_trafficking_chief"
       }
     },
     {
@@ -471,7 +472,8 @@
         "sicariosChief": "urdinola_sicarios_chief",
         "intelChief": "urdinola_intel_chief",
         "militaryChief": "urdinola_military_chief",
-        "diplomatChief": "urdinola_diplomat_chief"
+        "diplomatChief": "urdinola_diplomat_chief",
+        "traffickingChief": "urdinola_trafficking_chief"
       }
     },
     {
@@ -496,7 +498,8 @@
         "intelChief": "suarez_intel_chief",
         "militaryChief": "suarez_military_chief",
         "diplomatChief": "suarez_diplomat_chief",
-        "financeChief": "suarez_finance_chief"
+        "financeChief": "suarez_finance_chief",
+        "traffickingChief": "suarez_trafficking_chief"
       }
     },
     {
@@ -520,7 +523,8 @@
         "intelChief": "vaticano_intel_chief",
         "militaryChief": "vaticano_military_chief",
         "diplomatChief": "vaticano_diplomat_chief",
-        "financeChief": "vaticano_finance_chief"
+        "financeChief": "vaticano_finance_chief",
+        "traffickingChief": "vaticano_trafficking_chief"
       }
     },
     {
@@ -544,7 +548,8 @@
         "intelChief": "pdf_intel_chief",
         "militaryChief": "pdf_military_chief",
         "diplomatChief": "pdf_diplomat_chief",
-        "financeChief": "pdf_finance_chief"
+        "financeChief": "pdf_finance_chief",
+        "traffickingChief": "pdf_trafficking_chief"
       }
     },
     {
@@ -568,7 +573,8 @@
         "intelChief": "soles_intel_chief",
         "militaryChief": "soles_military_chief",
         "diplomatChief": "soles_diplomat_chief",
-        "financeChief": "soles_finance_chief"
+        "financeChief": "soles_finance_chief",
+        "traffickingChief": "soles_trafficking_chief"
       }
     }
   ],
@@ -2269,6 +2275,144 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, a cargo de las negociaciones con el Cártel de Cali y otros socios de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pepes_trafficking_chief",
+      "name": "Fernando \"El Navegante\" Restrepo",
+      "sex": "M",
+      "birthYear": 1958,
+      "alive": true,
+      "cartelId": "los_pepes",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 40,
+        "business": 62,
+        "charisma": 45,
+        "intrigue": 68,
+        "loyaltyInspiring": 50,
+        "stealth": 65
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, exsocio de tráfico del Cártel de Cali reconvertido en informante logístico de Los Pepes sobre las rutas y contactos del propio Escobar.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "urdinola_trafficking_chief",
+      "name": "Gustavo Riascos",
+      "sex": "M",
+      "birthYear": 1955,
+      "alive": true,
+      "cartelId": "urdinola",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 38,
+        "business": 65,
+        "charisma": 48,
+        "intrigue": 65,
+        "loyaltyInspiring": 50,
+        "stealth": 62
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de coordinar los envíos de la organización de Iván Urdinola hacia México y EE. UU.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "suarez_trafficking_chief",
+      "name": "Néstor Áñez",
+      "sex": "M",
+      "birthYear": 1948,
+      "alive": true,
+      "cartelId": "suarez",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 35,
+        "business": 68,
+        "charisma": 45,
+        "intrigue": 62,
+        "loyaltyInspiring": 48,
+        "stealth": 58
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de coordinar el traslado de la pasta base producida por la organización de Roberto Suárez hacia los compradores colombianos.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "vaticano_trafficking_chief",
+      "name": "Walter Aguirre",
+      "sex": "M",
+      "birthYear": 1952,
+      "alive": true,
+      "cartelId": "vaticano",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 32,
+        "business": 62,
+        "charisma": 42,
+        "intrigue": 70,
+        "loyaltyInspiring": 45,
+        "stealth": 68
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de coordinar los 'narcovuelos' que trasladan la pasta base peruana producida por la organización hacia Colombia y México.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pdf_trafficking_chief",
+      "name": "Mayor Edilberto Solís",
+      "sex": "M",
+      "birthYear": 1950,
+      "alive": true,
+      "cartelId": "pdf_panama",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 38,
+        "business": 60,
+        "charisma": 45,
+        "intrigue": 65,
+        "loyaltyInspiring": 48,
+        "stealth": 60
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, oficial panameño a cargo de coordinar el tránsito de cargamentos colombianos por los puertos y aeropuertos bajo control de las Fuerzas de Defensa.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_trafficking_chief",
+      "name": "Teniente Coronel Régulo Paredes",
+      "sex": "M",
+      "birthYear": 1946,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 36,
+        "business": 58,
+        "charisma": 44,
+        "intrigue": 66,
+        "loyaltyInspiring": 48,
+        "stealth": 60
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, oficial a cargo de coordinar el trasiego de cargamentos colombianos por la frontera con La Guajira.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

@@ -526,7 +526,8 @@
         "intelChief": "cachiros_intel_chief",
         "militaryChief": "cachiros_military_chief",
         "diplomatChief": "cachiros_diplomat_chief",
-        "financeChief": "cachiros_finance_chief"
+        "financeChief": "cachiros_finance_chief",
+        "traffickingChief": "cachiros_trafficking_chief"
       }
     },
     {
@@ -552,7 +553,8 @@
         "intelChief": "soles_intel_chief_90",
         "militaryChief": "soles_military_chief_90",
         "diplomatChief": "soles_diplomat_chief_90",
-        "financeChief": "soles_finance_chief_90"
+        "financeChief": "soles_finance_chief_90",
+        "traffickingChief": "soles_trafficking_chief_90"
       }
     }
   ],
@@ -1873,6 +1875,52 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, encargada de lavar las ganancias de la red a través de negocios de importación y cambio de divisas en Maracaibo.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cachiros_trafficking_chief",
+      "name": "Ramiro Discua",
+      "sex": "M",
+      "birthYear": 1968,
+      "alive": true,
+      "cartelId": "cachiros",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 35,
+        "business": 62,
+        "charisma": 42,
+        "intrigue": 65,
+        "loyaltyInspiring": 46,
+        "stealth": 60
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de coordinar los envíos de la organización de los hermanos Rivera Maradiaga por los corredores aéreos y terrestres hondureños hacia México.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_trafficking_chief_90",
+      "name": "Teniente Coronel Aquiles Bermúdez",
+      "sex": "M",
+      "birthYear": 1949,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 36,
+        "business": 58,
+        "charisma": 44,
+        "intrigue": 66,
+        "loyaltyInspiring": 48,
+        "stealth": 60
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, oficial a cargo de coordinar el trasiego de cargamentos por la frontera con La Guajira.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []
