@@ -1436,6 +1436,36 @@ function resolveBattle(game, attacker, defender, territory) {
   return { attackerWins, casualtiesAtk, casualtiesDef };
 }
 
+/** A display-only preview of attack odds for the map's territory modal — reuses the exact same
+ * power formula as resolveBattle, but with the random rolls replaced by their midpoints, so the
+ * label is honest about what resolveBattle actually weighs (army, commander quality, territory
+ * fortification) without guaranteeing an outcome, since the real fight still rolls its own dice. */
+export function estimateConquestDifficulty(game, attackerCartel, territory) {
+  const defender = territory.controllerId ? game.cartels[territory.controllerId] : null;
+  if (!defender || defender.id === attackerCartel.id) return null;
+  const fortBonus = 1 + territory.value / 150;
+  const atkPower = attackerCartel.resources.armySize * commanderMultiplier(game, attackerCartel) * 1.0;
+  const defPower = defender.resources.armySize * commanderMultiplier(game, defender) * 1.15 * fortBonus;
+  const ratio = atkPower / Math.max(1, defPower);
+  let label;
+  if (ratio >= 1.5) label = "Fácil";
+  else if (ratio >= 1.05) label = "Favorable";
+  else if (ratio >= 0.8) label = "Reñido";
+  else if (ratio >= 0.5) label = "Difícil";
+  else label = "Muy difícil";
+  return { ratio, label };
+}
+
+/** Same success-chance formula occupy_territory actually rolls against, exposed so the map modal
+ * can show it before the player commits money to the expedition. */
+export function estimateOccupyChance(game, cartel, territory) {
+  if (territory.controllerId) return null;
+  const overreachPenalty = clamp((cartel.territories.length - 3) * 0.03, 0, 0.3);
+  const armyFactor = clamp(cartel.resources.armySize / (territory.value * 60), 0.5, 1.15);
+  const expeditionBonus = militaryChiefBonus(game.characters[cartel.roles.militaryChief]);
+  return clamp(0.75 * armyFactor - overreachPenalty + expeditionBonus / 100, 0.2, 0.9);
+}
+
 /** Neither side at war can currently reach the other: rather than let two AI cartels stay locked
  * in an unresolvable war forever, growing war-weariness gives them a chance to negotiate an end
  * to it, scaled by how many years the stalemate has dragged on. Left alone for wars involving the

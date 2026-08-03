@@ -1,4 +1,4 @@
-const CACHE_NAME = "narcosim-cache-v1";
+const CACHE_NAME = "narcosim-cache-v2";
 
 const PRECACHE_URLS = [
   "./",

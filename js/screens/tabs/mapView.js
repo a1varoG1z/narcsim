@@ -1,7 +1,11 @@
 import { getPlayerCartel } from "../../state.js";
 import { escapeHtml } from "../../ui/components.js";
 import { showModal, closeModal } from "../../ui/modal.js";
-import { applyAction, isAttackable, getMarketProfiles, getRegionalMarketShare } from "../../turnEngine.js";
+import {
+  applyAction, isAttackable, getMarketProfiles, getRegionalMarketShare,
+  estimateConquestDifficulty, estimateOccupyChance, getActionsRemaining, ACTION_COSTS, MONEY_SCALE,
+} from "../../turnEngine.js";
+import { fmtMoney } from "../../utils/text.js";
 import { showCartelProfile } from "./cartelProfile.js";
 import { getGeoShapes, preloadGeoShapes } from "../../geoShapes.js";
 
@@ -18,8 +22,11 @@ export function render(container, app) {
   if (!geo) preloadGeoShapes().then(() => app.render());
 
   if (geo && !currentViewBox) {
-    defaultViewBox = geo.viewBox;
-    currentViewBox = geo.viewBox.slice();
+    // The stored regional view frames Latin America — where every era's starting cartels
+    // actually are — instead of the whole world, so the map opens legible instead of showing
+    // 200+ tiny countries at once. geo.viewBox (the full world) is still reachable by zooming out.
+    defaultViewBox = geo.regionalViewBox || geo.viewBox;
+    currentViewBox = defaultViewBox.slice();
   }
 
   container.innerHTML = `
@@ -61,7 +68,7 @@ function setupMapInteraction(container, app, geo) {
   if (!svgEl) return;
 
   const MIN_WIDTH = defaultViewBox[2] / 12; // most zoomed in
-  const MAX_WIDTH = defaultViewBox[2]; // most zoomed out: the full continent, never further
+  const MAX_WIDTH = geo.viewBox[2]; // most zoomed out: the whole world, never further
 
   function applyViewBox() {
     svgEl.setAttribute("viewBox", currentViewBox.join(" "));
@@ -175,7 +182,7 @@ function setupMapInteraction(container, app, geo) {
  * multi-department drug corridor with no official boundary) a small marker circle at its real
  * approximate location instead of a fabricated silhouette. */
 function renderGeoMap(game, playerCartel, geo) {
-  const [vx, vy, vw, vh] = geo.viewBox;
+  const [vx, vy, vw, vh] = geo.regionalViewBox || geo.viewBox;
   const territories = Object.values(game.territories).filter((t) => geo.shapes[t.geo]);
   // Labels only fit inside reasonably large shapes — small states/departments would just get
   // clutter. Names are always available via hover tooltip and the click-through detail modal.
@@ -249,6 +256,9 @@ function renderTradeRoutes(game, playerCartel) {
   `;
 }
 
+/** CK3-style territory panel: who holds it, how hard it'd be to take, and — when it's yours —
+ * the concrete business actions available on it, all from one click instead of hunting through
+ * the Decisiones tab for a territory-scoped version of the same actions. */
 function showTerritoryModal(app, territoryId) {
   const game = app.game;
   const t = game.territories[territoryId];
@@ -257,22 +267,65 @@ function showTerritoryModal(app, territoryId) {
   const isMine = t.controllerId === playerCartel.id;
   const attackable = !isMine && controller && isAttackable(game, playerCartel.id, t.id);
   const occupiable = !controller && isAttackable(game, playerCartel.id, t.id);
-  const occupyCost = t.value * 15;
+  const occupyCost = t.value * 15 * MONEY_SCALE;
   const neighborNames = (t.adj || []).map((id) => game.territories[id]?.name).filter(Boolean).join(", ");
+  const difficulty = attackable ? estimateConquestDifficulty(game, playerCartel, t) : null;
+  const occupyChance = occupiable ? estimateOccupyChance(game, playerCartel, t) : null;
+  const actionsLeft = getActionsRemaining(game);
 
   showModal(`
     <h2>${escapeHtml(t.name)}</h2>
-    <p class="small text-dim">Controlado por: ${controller ? escapeHtml(controller.name) : "Nadie (territorio libre)"}</p>
+    <p class="small text-dim">
+      Controlado por: ${controller ? `<a href="#" id="view-controller">${escapeHtml(controller.name)}</a>` : "Nadie (territorio libre)"}
+    </p>
     <p class="small">Valor económico: ${t.value}</p>
     ${neighborNames ? `<p class="small text-dim">Linda con: ${escapeHtml(neighborNames)}</p>` : ""}
-    ${attackable ? `<button class="danger block" id="attack-btn">Atacar y disputar este territorio</button>` : ""}
-    ${!isMine && controller && !attackable ? `<p class="small text-dim">No tienes ningún territorio colindante: no puedes atacarlo directamente todavía.</p>` : ""}
-    ${occupiable ? `<button class="primary block" id="occupy-btn">Ocupar territorio libre ($${occupyCost})</button>` : ""}
-    ${!controller && !occupiable ? `<p class="small text-dim">Territorio libre, pero no linda con ninguno de tus dominios todavía.</p>` : ""}
-    <button class="ghost block" id="close-btn">Cerrar</button>
+
+    ${controller && !isMine ? `
+      <div class="card tight mt-1">
+        <h3>Conquista</h3>
+        ${attackable ? `
+          <p class="small">Dificultad estimada: <strong>${difficulty.label}</strong> <span class="text-dim">(fuerza relativa ${(difficulty.ratio * 100).toFixed(0)}%)</span></p>
+          <button class="danger block" id="attack-btn">Atacar y disputar este territorio</button>
+        ` : `<p class="small text-dim">No tienes ningún territorio colindante: no puedes atacarlo directamente todavía.</p>`}
+      </div>
+    ` : ""}
+
+    ${!controller ? `
+      <div class="card tight mt-1">
+        <h3>Ocupación</h3>
+        ${occupiable ? `
+          <p class="small">Probabilidad de éxito estimada: <strong>${(occupyChance * 100).toFixed(0)}%</strong></p>
+          <button class="primary block" id="occupy-btn">Ocupar territorio libre (${fmtMoney(occupyCost)})</button>
+        ` : `<p class="small text-dim">Territorio libre, pero no linda con ninguno de tus dominios todavía.</p>`}
+      </div>
+    ` : ""}
+
+    ${isMine ? `
+      <div class="card tight mt-1">
+        <h3>Opciones de negocio aquí</h3>
+        <p class="small text-dim">Te quedan ${actionsLeft} acción(es) este turno.</p>
+        <button class="block" id="invest-production-btn" ${actionsLeft <= 0 || playerCartel.resources.money < ACTION_COSTS.invest_production ? "disabled" : ""}>
+          Invertir en producción aquí (${fmtMoney(ACTION_COSTS.invest_production)})
+        </button>
+        <button class="block" id="develop-btn" ${actionsLeft <= 0 || t.value >= 40 || playerCartel.resources.money < t.value * 20 * MONEY_SCALE ? "disabled" : ""}>
+          Desarrollar territorio ${t.value >= 40 ? "(máximo)" : `(${fmtMoney(t.value * 20 * MONEY_SCALE)})`}
+        </button>
+        <button class="block" id="extort-btn" ${actionsLeft <= 0 ? "disabled" : ""}>
+          Extorsionar aquí
+        </button>
+      </div>
+    ` : ""}
+
+    <button class="ghost block mt-1" id="close-btn">Cerrar</button>
   `);
 
   document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.getElementById("view-controller")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    closeModal();
+    showCartelProfile(app, controller.id);
+  });
   document.getElementById("attack-btn")?.addEventListener("click", () => {
     const result = applyAction(game, playerCartel.id, "attack_territory", { territoryId });
     app.setGame(game);
@@ -307,5 +360,26 @@ function showTerritoryModal(app, territoryId) {
       closeModal();
       app.render();
     });
+  });
+  document.getElementById("invest-production-btn")?.addEventListener("click", () => {
+    const result = applyAction(game, playerCartel.id, "invest_production", { territoryId });
+    app.setGame(game);
+    closeModal();
+    if (!result.ok) alert(result.message);
+    app.render();
+  });
+  document.getElementById("develop-btn")?.addEventListener("click", () => {
+    const result = applyAction(game, playerCartel.id, "develop_territory", { territoryId });
+    app.setGame(game);
+    closeModal();
+    if (!result.ok) alert(result.message);
+    app.render();
+  });
+  document.getElementById("extort-btn")?.addEventListener("click", () => {
+    const result = applyAction(game, playerCartel.id, "extort_territory", { territoryId });
+    app.setGame(game);
+    closeModal();
+    if (!result.ok) alert(result.message);
+    app.render();
   });
 }
