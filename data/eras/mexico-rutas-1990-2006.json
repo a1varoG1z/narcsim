@@ -10,38 +10,28 @@
     {
       "id": "baja_california",
       "name": "Baja California (Tijuana)",
-      "x": 2,
-      "y": 12,
-      "w": 17,
-      "h": 16,
       "controllerId": "tijuana",
       "value": 18,
       "adj": [
         "sonora"
-      ]
+      ],
+      "geo": "MEX_BajaCalifornia"
     },
     {
       "id": "sonora",
       "name": "Sonora",
-      "x": 21,
-      "y": 10,
-      "w": 17,
-      "h": 17,
       "controllerId": "sinaloa",
       "value": 12,
       "adj": [
         "baja_california",
         "chihuahua",
         "sinaloa"
-      ]
+      ],
+      "geo": "MEX_Sonora"
     },
     {
       "id": "chihuahua",
       "name": "Chihuahua (Juárez)",
-      "x": 40,
-      "y": 8,
-      "w": 20,
-      "h": 19,
       "controllerId": "juarez",
       "value": 20,
       "adj": [
@@ -49,15 +39,12 @@
         "sinaloa",
         "durango",
         "coahuila"
-      ]
+      ],
+      "geo": "MEX_Chihuahua"
     },
     {
       "id": "sinaloa",
       "name": "Sinaloa",
-      "x": 6,
-      "y": 31,
-      "w": 16,
-      "h": 16,
       "controllerId": "sinaloa",
       "value": 20,
       "adj": [
@@ -65,15 +52,12 @@
         "chihuahua",
         "durango",
         "jalisco"
-      ]
+      ],
+      "geo": "MEX_Sinaloa"
     },
     {
       "id": "durango",
       "name": "Durango",
-      "x": 24,
-      "y": 31,
-      "w": 16,
-      "h": 16,
       "controllerId": "sinaloa",
       "value": 10,
       "adj": [
@@ -81,156 +65,123 @@
         "sinaloa",
         "coahuila",
         "jalisco"
-      ]
+      ],
+      "geo": "MEX_Durango"
     },
     {
       "id": "coahuila",
       "name": "Coahuila",
-      "x": 42,
-      "y": 29,
-      "w": 17,
-      "h": 16,
       "controllerId": null,
       "value": 11,
       "adj": [
         "chihuahua",
         "durango",
         "nuevo_leon"
-      ]
+      ],
+      "geo": "MEX_Coahuila"
     },
     {
       "id": "nuevo_leon",
       "name": "Nuevo León",
-      "x": 58,
-      "y": 30,
-      "w": 15,
-      "h": 16,
       "controllerId": "golfo",
       "value": 13,
       "adj": [
         "coahuila",
         "tamaulipas"
-      ]
+      ],
+      "geo": "MEX_NuevoLeon"
     },
     {
       "id": "tamaulipas",
       "name": "Tamaulipas (Golfo)",
-      "x": 72,
-      "y": 18,
-      "w": 18,
-      "h": 22,
       "controllerId": "golfo",
       "value": 16,
       "adj": [
         "nuevo_leon"
-      ]
+      ],
+      "geo": "MEX_Tamaulipas"
     },
     {
       "id": "jalisco",
       "name": "Jalisco",
-      "x": 12,
-      "y": 51,
-      "w": 20,
-      "h": 17,
       "controllerId": null,
       "value": 18,
       "adj": [
         "sinaloa",
         "durango",
         "michoacan"
-      ]
+      ],
+      "geo": "MEX_Jalisco"
     },
     {
       "id": "michoacan",
       "name": "Michoacán",
-      "x": 34,
-      "y": 51,
-      "w": 17,
-      "h": 16,
       "controllerId": "milenio",
       "value": 10,
       "adj": [
         "jalisco",
         "honduras"
-      ]
+      ],
+      "geo": "MEX_Michoacan"
     },
     {
       "id": "honduras",
       "name": "Honduras (escala aérea de \"El Señor de los Cielos\")",
-      "x": 34,
-      "y": 70,
-      "w": 20,
-      "h": 16,
       "controllerId": "cachiros",
       "value": 13,
       "adj": [
         "michoacan",
         "el_salvador",
         "nicaragua"
-      ]
+      ],
+      "geo": "COUNTRY_HND"
     },
     {
       "id": "el_salvador",
       "name": "El Salvador",
-      "x": 34,
-      "y": 87,
-      "w": 17,
-      "h": 10,
       "controllerId": null,
       "value": 8,
       "adj": [
         "honduras"
-      ]
+      ],
+      "geo": "COUNTRY_SLV"
     },
     {
       "id": "nicaragua",
       "name": "Nicaragua",
-      "x": 34,
-      "y": 102,
-      "w": 17,
-      "h": 10,
       "controllerId": null,
       "value": 8,
       "adj": [
         "honduras",
         "costa_rica"
-      ]
+      ],
+      "geo": "COUNTRY_NIC"
     },
     {
       "id": "costa_rica",
       "name": "Costa Rica",
-      "x": 34,
-      "y": 117,
-      "w": 17,
-      "h": 10,
       "controllerId": null,
       "value": 10,
       "adj": [
         "nicaragua",
         "panama"
-      ]
+      ],
+      "geo": "COUNTRY_CRI"
     },
     {
       "id": "panama",
       "name": "Panamá",
-      "x": 34,
-      "y": 132,
-      "w": 17,
-      "h": 10,
       "controllerId": null,
       "value": 12,
       "adj": [
         "costa_rica",
         "colombia"
-      ]
+      ],
+      "geo": "COUNTRY_PAN"
     },
     {
       "id": "colombia",
       "name": "Colombia",
-      "x": 34,
-      "y": 147,
-      "w": 17,
-      "h": 10,
       "controllerId": null,
       "value": 16,
       "adj": [
@@ -239,43 +190,34 @@
         "ecuador",
         "peru",
         "brasil"
-      ]
+      ],
+      "geo": "COUNTRY_COL"
     },
     {
       "id": "venezuela",
       "name": "Venezuela",
-      "x": 34,
-      "y": 162,
-      "w": 17,
-      "h": 10,
       "controllerId": "soles",
       "value": 12,
       "adj": [
         "colombia",
         "brasil"
-      ]
+      ],
+      "geo": "COUNTRY_VEN"
     },
     {
       "id": "ecuador",
       "name": "Ecuador",
-      "x": 34,
-      "y": 177,
-      "w": 17,
-      "h": 10,
       "controllerId": null,
       "value": 11,
       "adj": [
         "colombia",
         "peru"
-      ]
+      ],
+      "geo": "COUNTRY_ECU"
     },
     {
       "id": "peru",
       "name": "Perú",
-      "x": 34,
-      "y": 192,
-      "w": 17,
-      "h": 10,
       "controllerId": null,
       "value": 14,
       "adj": [
@@ -284,15 +226,12 @@
         "brasil",
         "bolivia",
         "chile"
-      ]
+      ],
+      "geo": "COUNTRY_PER"
     },
     {
       "id": "bolivia",
       "name": "Bolivia",
-      "x": 34,
-      "y": 207,
-      "w": 17,
-      "h": 10,
       "controllerId": null,
       "value": 10,
       "adj": [
@@ -301,15 +240,12 @@
         "paraguay",
         "argentina",
         "chile"
-      ]
+      ],
+      "geo": "COUNTRY_BOL"
     },
     {
       "id": "brasil",
       "name": "Brasil",
-      "x": 34,
-      "y": 222,
-      "w": 17,
-      "h": 10,
       "controllerId": null,
       "value": 15,
       "adj": [
@@ -319,30 +255,24 @@
         "bolivia",
         "paraguay",
         "uruguay"
-      ]
+      ],
+      "geo": "COUNTRY_BRA"
     },
     {
       "id": "paraguay",
       "name": "Paraguay",
-      "x": 34,
-      "y": 237,
-      "w": 17,
-      "h": 10,
       "controllerId": null,
       "value": 8,
       "adj": [
         "bolivia",
         "brasil",
         "argentina"
-      ]
+      ],
+      "geo": "COUNTRY_PRY"
     },
     {
       "id": "argentina",
       "name": "Argentina",
-      "x": 34,
-      "y": 252,
-      "w": 17,
-      "h": 10,
       "controllerId": null,
       "value": 14,
       "adj": [
@@ -350,36 +280,31 @@
         "paraguay",
         "uruguay",
         "chile"
-      ]
+      ],
+      "geo": "COUNTRY_ARG"
     },
     {
       "id": "uruguay",
       "name": "Uruguay",
-      "x": 34,
-      "y": 267,
-      "w": 17,
-      "h": 10,
       "controllerId": null,
       "value": 8,
       "adj": [
         "brasil",
         "argentina"
-      ]
+      ],
+      "geo": "COUNTRY_URY"
     },
     {
       "id": "chile",
       "name": "Chile",
-      "x": 34,
-      "y": 282,
-      "w": 17,
-      "h": 10,
       "controllerId": null,
       "value": 12,
       "adj": [
         "peru",
         "bolivia",
         "argentina"
-      ]
+      ],
+      "geo": "COUNTRY_CHL"
     }
   ],
   "cartels": [

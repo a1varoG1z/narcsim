@@ -39,6 +39,9 @@ const PRECACHE_URLS = [
   "./data/eras/guadalajara-1975-1989.json",
   "./data/eras/medellin-cali-1980-1995.json",
   "./data/eras/mexico-rutas-1990-2006.json",
+  "./data/eras/chapitos-mayiza-2024-actualidad.json",
+  "./data/geo/shapes.json",
+  "./js/geoShapes.js",
   "./assets/icon.svg",
 ];
 

@@ -10,25 +10,18 @@
     {
       "id": "antioquia",
       "name": "Antioquia (Medellín)",
-      "x": 30,
-      "y": 20,
-      "w": 20,
-      "h": 18,
       "controllerId": "medellin",
       "value": 22,
       "adj": [
         "magdalena_medio",
         "eje_cafetero",
         "caribe_atlantico"
-      ]
+      ],
+      "geo": "COL_Antioquia"
     },
     {
       "id": "magdalena_medio",
       "name": "Magdalena Medio",
-      "x": 50,
-      "y": 30,
-      "w": 18,
-      "h": 16,
       "controllerId": "medellin",
       "value": 14,
       "adj": [
@@ -36,42 +29,33 @@
         "bogota",
         "caribe_atlantico",
         "eje_cafetero"
-      ]
+      ],
+      "geo": "COL_MagdalenaMedio_Point"
     },
     {
       "id": "la_guajira",
       "name": "La Guajira",
-      "x": 68,
-      "y": 4,
-      "w": 20,
-      "h": 14,
       "controllerId": "medellin",
       "value": 12,
       "adj": [
         "caribe_atlantico",
         "venezuela"
-      ]
+      ],
+      "geo": "COL_LaGuajira"
     },
     {
       "id": "venezuela",
       "name": "Zulia (Venezuela)",
-      "x": 90,
-      "y": 4,
-      "w": 20,
-      "h": 14,
       "controllerId": "soles",
       "value": 14,
       "adj": [
         "la_guajira"
-      ]
+      ],
+      "geo": "VEN_Zulia"
     },
     {
       "id": "caribe_atlantico",
       "name": "Costa Caribe",
-      "x": 40,
-      "y": 4,
-      "w": 22,
-      "h": 14,
       "controllerId": "los_pepes",
       "value": 13,
       "adj": [
@@ -79,72 +63,57 @@
         "antioquia",
         "magdalena_medio",
         "panama"
-      ]
+      ],
+      "geo": "COL_Atlantico"
     },
     {
       "id": "panama",
       "name": "Panamá (bajo Noriega)",
-      "x": 4,
-      "y": 2,
-      "w": 22,
-      "h": 16,
       "controllerId": "pdf_panama",
       "value": 16,
       "adj": [
         "caribe_atlantico",
         "costa_rica"
-      ]
+      ],
+      "geo": "COUNTRY_PAN"
     },
     {
       "id": "valle_cauca",
       "name": "Valle del Cauca (Cali)",
-      "x": 8,
-      "y": 42,
-      "w": 20,
-      "h": 17,
       "controllerId": "cali",
       "value": 22,
       "adj": [
         "norte_del_valle",
         "eje_cafetero",
         "narino_putumayo"
-      ]
+      ],
+      "geo": "COL_ValleCauca_Resto"
     },
     {
       "id": "norte_del_valle",
       "name": "Norte del Valle",
-      "x": 8,
-      "y": 24,
-      "w": 18,
-      "h": 16,
       "controllerId": "urdinola",
       "value": 13,
       "adj": [
         "valle_cauca",
         "eje_cafetero"
-      ]
+      ],
+      "geo": "COL_ValleCauca_Norte"
     },
     {
       "id": "bogota",
       "name": "Bogotá D.C.",
-      "x": 34,
-      "y": 42,
-      "w": 16,
-      "h": 16,
       "controllerId": null,
       "value": 18,
       "adj": [
         "magdalena_medio",
         "eje_cafetero"
-      ]
+      ],
+      "geo": "COL_Bogota"
     },
     {
       "id": "narino_putumayo",
       "name": "Nariño / Putumayo",
-      "x": 6,
-      "y": 62,
-      "w": 20,
-      "h": 18,
       "controllerId": null,
       "value": 10,
       "adj": [
@@ -153,15 +122,12 @@
         "bolivia",
         "peru",
         "ecuador"
-      ]
+      ],
+      "geo": "COL_NarinoPutumayo"
     },
     {
       "id": "bolivia",
       "name": "Beni (Bolivia)",
-      "x": 60,
-      "y": 62,
-      "w": 24,
-      "h": 20,
       "controllerId": "suarez",
       "value": 11,
       "adj": [
@@ -171,15 +137,12 @@
         "paraguay",
         "argentina",
         "chile"
-      ]
+      ],
+      "geo": "BOL_Beni"
     },
     {
       "id": "peru",
       "name": "Alto Huallaga (Perú)",
-      "x": 34,
-      "y": 84,
-      "w": 24,
-      "h": 16,
       "controllerId": "vaticano",
       "value": 13,
       "adj": [
@@ -188,98 +151,77 @@
         "ecuador",
         "chile",
         "brasil"
-      ]
+      ],
+      "geo": "PER_SanMartin"
     },
     {
       "id": "costa_rica",
       "name": "Costa Rica",
-      "x": 4,
-      "y": 105,
-      "w": 18,
-      "h": 11,
       "controllerId": null,
       "value": 10,
       "adj": [
         "panama",
         "nicaragua"
-      ]
+      ],
+      "geo": "COUNTRY_CRI"
     },
     {
       "id": "nicaragua",
       "name": "Nicaragua",
-      "x": 4,
-      "y": 119,
-      "w": 18,
-      "h": 11,
       "controllerId": null,
       "value": 8,
       "adj": [
         "costa_rica",
         "honduras"
-      ]
+      ],
+      "geo": "COUNTRY_NIC"
     },
     {
       "id": "honduras",
       "name": "Honduras",
-      "x": 4,
-      "y": 133,
-      "w": 18,
-      "h": 11,
       "controllerId": null,
       "value": 10,
       "adj": [
         "nicaragua",
         "el_salvador"
-      ]
+      ],
+      "geo": "COUNTRY_HND"
     },
     {
       "id": "el_salvador",
       "name": "El Salvador",
-      "x": 4,
-      "y": 147,
-      "w": 18,
-      "h": 11,
       "controllerId": null,
       "value": 8,
       "adj": [
         "honduras",
         "guatemala"
-      ]
+      ],
+      "geo": "COUNTRY_SLV"
     },
     {
       "id": "guatemala",
       "name": "Guatemala",
-      "x": 4,
-      "y": 161,
-      "w": 18,
-      "h": 11,
       "controllerId": null,
       "value": 10,
       "adj": [
         "el_salvador"
-      ]
+      ],
+      "geo": "COUNTRY_GTM"
     },
     {
       "id": "ecuador",
       "name": "Ecuador",
-      "x": 4,
-      "y": 175,
-      "w": 18,
-      "h": 11,
       "controllerId": null,
       "value": 11,
       "adj": [
         "narino_putumayo",
         "peru"
-      ]
+      ],
+      "geo": "COUNTRY_ECU"
     },
     {
       "id": "brasil",
       "name": "Brasil",
-      "x": 4,
-      "y": 189,
-      "w": 18,
-      "h": 11,
       "controllerId": null,
       "value": 15,
       "adj": [
@@ -287,30 +229,24 @@
         "bolivia",
         "paraguay",
         "uruguay"
-      ]
+      ],
+      "geo": "COUNTRY_BRA"
     },
     {
       "id": "paraguay",
       "name": "Paraguay",
-      "x": 4,
-      "y": 203,
-      "w": 18,
-      "h": 11,
       "controllerId": null,
       "value": 8,
       "adj": [
         "bolivia",
         "brasil",
         "argentina"
-      ]
+      ],
+      "geo": "COUNTRY_PRY"
     },
     {
       "id": "argentina",
       "name": "Argentina",
-      "x": 4,
-      "y": 217,
-      "w": 18,
-      "h": 11,
       "controllerId": null,
       "value": 14,
       "adj": [
@@ -318,44 +254,35 @@
         "paraguay",
         "uruguay",
         "chile"
-      ]
+      ],
+      "geo": "COUNTRY_ARG"
     },
     {
       "id": "uruguay",
       "name": "Uruguay",
-      "x": 4,
-      "y": 231,
-      "w": 18,
-      "h": 11,
       "controllerId": null,
       "value": 8,
       "adj": [
         "brasil",
         "argentina"
-      ]
+      ],
+      "geo": "COUNTRY_URY"
     },
     {
       "id": "chile",
       "name": "Chile",
-      "x": 4,
-      "y": 245,
-      "w": 18,
-      "h": 11,
       "controllerId": null,
       "value": 12,
       "adj": [
         "peru",
         "bolivia",
         "argentina"
-      ]
+      ],
+      "geo": "COUNTRY_CHL"
     },
     {
       "id": "eje_cafetero",
       "name": "Eje Cafetero",
-      "x": 30,
-      "y": 40,
-      "w": 15,
-      "h": 14,
       "controllerId": null,
       "value": 9,
       "adj": [
@@ -365,7 +292,8 @@
         "norte_del_valle",
         "bogota",
         "narino_putumayo"
-      ]
+      ],
+      "geo": "COL_EjeCafetero"
     }
   ],
   "cartels": [

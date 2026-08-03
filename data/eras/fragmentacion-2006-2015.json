@@ -10,38 +10,28 @@
     {
       "id": "baja_california",
       "name": "Baja California",
-      "x": 2,
-      "y": 10,
-      "w": 16,
-      "h": 15,
       "controllerId": null,
       "value": 15,
       "adj": [
         "sonora"
-      ]
+      ],
+      "geo": "MEX_BajaCalifornia"
     },
     {
       "id": "sonora",
       "name": "Sonora",
-      "x": 20,
-      "y": 8,
-      "w": 16,
-      "h": 16,
       "controllerId": "sinaloa",
       "value": 12,
       "adj": [
         "baja_california",
         "chihuahua",
         "sinaloa_t"
-      ]
+      ],
+      "geo": "MEX_Sonora"
     },
     {
       "id": "chihuahua",
       "name": "Chihuahua",
-      "x": 38,
-      "y": 6,
-      "w": 19,
-      "h": 18,
       "controllerId": "juarez",
       "value": 16,
       "adj": [
@@ -49,86 +39,68 @@
         "sinaloa_t",
         "durango",
         "coahuila"
-      ]
+      ],
+      "geo": "MEX_Chihuahua"
     },
     {
       "id": "coahuila",
       "name": "Coahuila",
-      "x": 40,
-      "y": 26,
-      "w": 16,
-      "h": 15,
       "controllerId": "zetas",
       "value": 11,
       "adj": [
         "chihuahua",
         "durango",
         "nuevo_leon"
-      ]
+      ],
+      "geo": "MEX_Coahuila"
     },
     {
       "id": "nuevo_leon",
       "name": "Nuevo León",
-      "x": 57,
-      "y": 27,
-      "w": 14,
-      "h": 15,
       "controllerId": "zetas",
       "value": 14,
       "adj": [
         "coahuila",
         "tamaulipas"
-      ]
+      ],
+      "geo": "MEX_NuevoLeon"
     },
     {
       "id": "tamaulipas",
       "name": "Tamaulipas",
-      "x": 71,
-      "y": 15,
-      "w": 17,
-      "h": 21,
       "controllerId": "golfo",
       "value": 15,
       "adj": [
         "nuevo_leon",
         "veracruz"
-      ]
+      ],
+      "geo": "MEX_Tamaulipas"
     },
     {
       "id": "veracruz",
       "name": "Veracruz",
-      "x": 58,
-      "y": 44,
-      "w": 17,
-      "h": 18,
       "controllerId": "zetas",
       "value": 16,
       "adj": [
         "tamaulipas",
         "guatemala"
-      ]
+      ],
+      "geo": "MEX_Veracruz"
     },
     {
       "id": "guatemala",
       "name": "Zacapa (Guatemala)",
-      "x": 56,
-      "y": 64,
-      "w": 20,
-      "h": 16,
       "controllerId": "lorenzana",
       "value": 14,
       "adj": [
         "veracruz",
         "honduras"
-      ]
+      ],
+      "geo": "COUNTRY_GTM"
     },
     {
       "id": "sinaloa_t",
       "name": "Sinaloa",
-      "x": 5,
-      "y": 29,
-      "w": 15,
-      "h": 15,
       "controllerId": "sinaloa",
       "value": 20,
       "adj": [
@@ -136,15 +108,12 @@
         "chihuahua",
         "durango",
         "jalisco"
-      ]
+      ],
+      "geo": "MEX_Sinaloa"
     },
     {
       "id": "durango",
       "name": "Durango",
-      "x": 22,
-      "y": 29,
-      "w": 15,
-      "h": 15,
       "controllerId": "sinaloa",
       "value": 10,
       "adj": [
@@ -152,113 +121,89 @@
         "sinaloa_t",
         "coahuila",
         "jalisco"
-      ]
+      ],
+      "geo": "MEX_Durango"
     },
     {
       "id": "jalisco",
       "name": "Jalisco",
-      "x": 10,
-      "y": 48,
-      "w": 18,
-      "h": 16,
       "controllerId": null,
       "value": 19,
       "adj": [
         "sinaloa_t",
         "durango",
         "michoacan"
-      ]
+      ],
+      "geo": "MEX_Jalisco"
     },
     {
       "id": "michoacan",
       "name": "Michoacán",
-      "x": 30,
-      "y": 48,
-      "w": 16,
-      "h": 15,
       "controllerId": "familia_michoacana",
       "value": 14,
       "adj": [
         "jalisco",
         "guerrero"
-      ]
+      ],
+      "geo": "MEX_Michoacan"
     },
     {
       "id": "guerrero",
       "name": "Guerrero",
-      "x": 14,
-      "y": 66,
-      "w": 18,
-      "h": 15,
       "controllerId": "beltran_leyva",
       "value": 13,
       "adj": [
         "michoacan"
-      ]
+      ],
+      "geo": "MEX_Guerrero"
     },
     {
       "id": "honduras",
       "name": "Honduras",
-      "x": 56,
-      "y": 81,
-      "w": 20,
-      "h": 13,
       "controllerId": null,
       "value": 10,
       "adj": [
         "guatemala",
         "nicaragua"
-      ]
+      ],
+      "geo": "COUNTRY_HND"
     },
     {
       "id": "nicaragua",
       "name": "Nicaragua",
-      "x": 56,
-      "y": 95,
-      "w": 20,
-      "h": 13,
       "controllerId": null,
       "value": 8,
       "adj": [
         "honduras",
         "costa_rica"
-      ]
+      ],
+      "geo": "COUNTRY_NIC"
     },
     {
       "id": "costa_rica",
       "name": "Costa Rica",
-      "x": 56,
-      "y": 109,
-      "w": 20,
-      "h": 13,
       "controllerId": null,
       "value": 10,
       "adj": [
         "nicaragua",
         "panama"
-      ]
+      ],
+      "geo": "COUNTRY_CRI"
     },
     {
       "id": "panama",
       "name": "Panamá",
-      "x": 56,
-      "y": 123,
-      "w": 20,
-      "h": 13,
       "controllerId": null,
       "value": 12,
       "adj": [
         "costa_rica",
         "colombia"
-      ]
+      ],
+      "geo": "COUNTRY_PAN"
     },
     {
       "id": "colombia",
       "name": "Colombia",
-      "x": 56,
-      "y": 137,
-      "w": 20,
-      "h": 13,
       "controllerId": null,
       "value": 16,
       "adj": [
@@ -267,43 +212,34 @@
         "ecuador",
         "peru",
         "brasil"
-      ]
+      ],
+      "geo": "COUNTRY_COL"
     },
     {
       "id": "venezuela",
       "name": "Venezuela",
-      "x": 56,
-      "y": 151,
-      "w": 20,
-      "h": 13,
       "controllerId": "soles",
       "value": 12,
       "adj": [
         "colombia",
         "brasil"
-      ]
+      ],
+      "geo": "COUNTRY_VEN"
     },
     {
       "id": "ecuador",
       "name": "Ecuador",
-      "x": 56,
-      "y": 165,
-      "w": 20,
-      "h": 13,
       "controllerId": null,
       "value": 11,
       "adj": [
         "colombia",
         "peru"
-      ]
+      ],
+      "geo": "COUNTRY_ECU"
     },
     {
       "id": "peru",
       "name": "Perú",
-      "x": 56,
-      "y": 179,
-      "w": 20,
-      "h": 13,
       "controllerId": null,
       "value": 14,
       "adj": [
@@ -312,15 +248,12 @@
         "brasil",
         "bolivia",
         "chile"
-      ]
+      ],
+      "geo": "COUNTRY_PER"
     },
     {
       "id": "bolivia",
       "name": "Bolivia",
-      "x": 56,
-      "y": 193,
-      "w": 20,
-      "h": 13,
       "controllerId": null,
       "value": 10,
       "adj": [
@@ -329,15 +262,12 @@
         "paraguay",
         "argentina",
         "chile"
-      ]
+      ],
+      "geo": "COUNTRY_BOL"
     },
     {
       "id": "brasil",
       "name": "Brasil",
-      "x": 56,
-      "y": 207,
-      "w": 20,
-      "h": 13,
       "controllerId": null,
       "value": 15,
       "adj": [
@@ -347,30 +277,24 @@
         "bolivia",
         "paraguay",
         "uruguay"
-      ]
+      ],
+      "geo": "COUNTRY_BRA"
     },
     {
       "id": "paraguay",
       "name": "Paraguay",
-      "x": 56,
-      "y": 221,
-      "w": 20,
-      "h": 13,
       "controllerId": null,
       "value": 8,
       "adj": [
         "bolivia",
         "brasil",
         "argentina"
-      ]
+      ],
+      "geo": "COUNTRY_PRY"
     },
     {
       "id": "argentina",
       "name": "Argentina",
-      "x": 56,
-      "y": 235,
-      "w": 20,
-      "h": 13,
       "controllerId": null,
       "value": 14,
       "adj": [
@@ -378,36 +302,31 @@
         "paraguay",
         "uruguay",
         "chile"
-      ]
+      ],
+      "geo": "COUNTRY_ARG"
     },
     {
       "id": "uruguay",
       "name": "Uruguay",
-      "x": 56,
-      "y": 249,
-      "w": 20,
-      "h": 13,
       "controllerId": null,
       "value": 8,
       "adj": [
         "brasil",
         "argentina"
-      ]
+      ],
+      "geo": "COUNTRY_URY"
     },
     {
       "id": "chile",
       "name": "Chile",
-      "x": 56,
-      "y": 263,
-      "w": 20,
-      "h": 13,
       "controllerId": null,
       "value": 12,
       "adj": [
         "peru",
         "bolivia",
         "argentina"
-      ]
+      ],
+      "geo": "COUNTRY_CHL"
     }
   ],
   "cartels": [

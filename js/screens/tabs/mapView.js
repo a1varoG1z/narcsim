@@ -3,24 +3,19 @@ import { escapeHtml } from "../../ui/components.js";
 import { showModal, closeModal } from "../../ui/modal.js";
 import { applyAction, isAttackable, getMarketProfiles, getRegionalMarketShare } from "../../turnEngine.js";
 import { showCartelProfile } from "./cartelProfile.js";
+import { getGeoShapes, preloadGeoShapes } from "../../geoShapes.js";
 
 export function render(container, app) {
   const game = app.game;
   const playerCartel = getPlayerCartel(game);
+  const geo = getGeoShapes();
+  if (!geo) preloadGeoShapes().then(() => app.render());
 
   container.innerHTML = `
     <div class="card">
       <h2>Mapa de territorios</h2>
       <div class="map" id="map">
-        ${Object.values(game.territories).map((t) => {
-          const controller = t.controllerId ? game.cartels[t.controllerId] : null;
-          const color = controller ? controller.color : "#2a2420";
-          const atWar = controller && playerCartel.relations[controller.id]?.status === "war";
-          return `<div class="territory ${atWar ? "contested" : ""}" data-territory="${t.id}"
-            style="left:${t.x}%;top:${t.y}%;width:${t.w}%;height:${t.h}%;background:${color}">
-            ${escapeHtml(t.name)}
-          </div>`;
-        }).join("")}
+        ${geo ? renderGeoMap(game, playerCartel, geo) : `<p class="text-dim small center" style="padding:2rem">Cargando el mapa…</p>`}
       </div>
       <div class="grid auto mt-1">
         ${Object.values(game.cartels).filter((c) => !c.destroyed).map((c) => `
@@ -37,6 +32,41 @@ export function render(container, app) {
   container.querySelectorAll("[data-view-cartel]").forEach((el) => {
     el.addEventListener("click", () => showCartelProfile(app, el.dataset.viewCartel));
   });
+}
+
+/** Real administrative-boundary shapes (see js/geoShapes.js) instead of schematic rectangles —
+ * every territory maps to a real country/state/department polygon, or (for the handful of
+ * historically meaningful but administratively informal areas, like a specific border plaza or a
+ * multi-department drug corridor with no official boundary) a small marker circle at its real
+ * approximate location instead of a fabricated silhouette. */
+function renderGeoMap(game, playerCartel, geo) {
+  const [vx, vy, vw, vh] = geo.viewBox;
+  const territories = Object.values(game.territories).filter((t) => geo.shapes[t.geo]);
+  // Labels only fit inside reasonably large shapes — small states/departments would just get
+  // clutter. Names are always available via hover tooltip and the click-through detail modal.
+  const LABEL_MIN_AREA = 55;
+  return `
+    <svg viewBox="${vx} ${vy} ${vw} ${vh}" style="width:100%;height:auto;display:block" role="img" aria-label="Mapa de territorios">
+      ${territories.map((t) => {
+        const shape = geo.shapes[t.geo];
+        const controller = t.controllerId ? game.cartels[t.controllerId] : null;
+        const color = controller ? controller.color : "#2a2420";
+        const atWar = controller && playerCartel.relations[controller.id]?.status === "war";
+        const cls = `territory-shape${atWar ? " contested" : ""}`;
+        if (shape.point) {
+          return `<circle class="${cls}" data-territory="${t.id}" cx="${shape.cx}" cy="${shape.cy}" r="3.2" fill="${color}" stroke="#000" stroke-width="0.4"><title>${escapeHtml(t.name)}</title></circle>`;
+        }
+        return `<path class="${cls}" data-territory="${t.id}" d="${shape.d}" fill="${color}" stroke="#000" stroke-width="0.3"><title>${escapeHtml(t.name)}</title></path>`;
+      }).join("")}
+      ${territories.map((t) => {
+        const shape = geo.shapes[t.geo];
+        if (shape.point) return "";
+        const [bx0, by0, bx1, by1] = shape.bbox;
+        if ((bx1 - bx0) * (by1 - by0) < LABEL_MIN_AREA) return "";
+        return `<text x="${shape.cx}" y="${shape.cy}" text-anchor="middle" font-size="3.2" fill="#fff" style="pointer-events:none;text-shadow:0 0 2px #000" >${escapeHtml(t.name)}</text>`;
+      }).join("")}
+    </svg>
+  `;
 }
 
 /** A schematic routes diagram (not the geographic territory map, which already has its own
