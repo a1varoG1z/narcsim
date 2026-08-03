@@ -91,7 +91,8 @@
       "controllerId": "pdf_panama",
       "value": 16,
       "adj": [
-        "caribe_atlantico"
+        "caribe_atlantico",
+        "costa_rica"
       ]
     },
     {
@@ -150,7 +151,8 @@
         "valle_cauca",
         "eje_cafetero",
         "bolivia",
-        "peru"
+        "peru",
+        "ecuador"
       ]
     },
     {
@@ -164,7 +166,11 @@
       "value": 11,
       "adj": [
         "narino_putumayo",
-        "peru"
+        "peru",
+        "brasil",
+        "paraguay",
+        "argentina",
+        "chile"
       ]
     },
     {
@@ -178,7 +184,169 @@
       "value": 13,
       "adj": [
         "narino_putumayo",
-        "bolivia"
+        "bolivia",
+        "ecuador",
+        "chile",
+        "brasil"
+      ]
+    },
+    {
+      "id": "costa_rica",
+      "name": "Costa Rica",
+      "x": 4,
+      "y": 105,
+      "w": 18,
+      "h": 11,
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "panama",
+        "nicaragua"
+      ]
+    },
+    {
+      "id": "nicaragua",
+      "name": "Nicaragua",
+      "x": 4,
+      "y": 119,
+      "w": 18,
+      "h": 11,
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "costa_rica",
+        "honduras"
+      ]
+    },
+    {
+      "id": "honduras",
+      "name": "Honduras",
+      "x": 4,
+      "y": 133,
+      "w": 18,
+      "h": 11,
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "nicaragua",
+        "el_salvador"
+      ]
+    },
+    {
+      "id": "el_salvador",
+      "name": "El Salvador",
+      "x": 4,
+      "y": 147,
+      "w": 18,
+      "h": 11,
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "honduras",
+        "guatemala"
+      ]
+    },
+    {
+      "id": "guatemala",
+      "name": "Guatemala",
+      "x": 4,
+      "y": 161,
+      "w": 18,
+      "h": 11,
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "el_salvador"
+      ]
+    },
+    {
+      "id": "ecuador",
+      "name": "Ecuador",
+      "x": 4,
+      "y": 175,
+      "w": 18,
+      "h": 11,
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "narino_putumayo",
+        "peru"
+      ]
+    },
+    {
+      "id": "brasil",
+      "name": "Brasil",
+      "x": 4,
+      "y": 189,
+      "w": 18,
+      "h": 11,
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "peru",
+        "bolivia",
+        "paraguay",
+        "uruguay"
+      ]
+    },
+    {
+      "id": "paraguay",
+      "name": "Paraguay",
+      "x": 4,
+      "y": 203,
+      "w": 18,
+      "h": 11,
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "bolivia",
+        "brasil",
+        "argentina"
+      ]
+    },
+    {
+      "id": "argentina",
+      "name": "Argentina",
+      "x": 4,
+      "y": 217,
+      "w": 18,
+      "h": 11,
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "bolivia",
+        "paraguay",
+        "uruguay",
+        "chile"
+      ]
+    },
+    {
+      "id": "uruguay",
+      "name": "Uruguay",
+      "x": 4,
+      "y": 231,
+      "w": 18,
+      "h": 11,
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "brasil",
+        "argentina"
+      ]
+    },
+    {
+      "id": "chile",
+      "name": "Chile",
+      "x": 4,
+      "y": 245,
+      "w": 18,
+      "h": 11,
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "peru",
+        "bolivia",
+        "argentina"
       ]
     },
     {
