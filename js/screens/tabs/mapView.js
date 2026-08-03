@@ -5,18 +5,37 @@ import { applyAction, isAttackable, getMarketProfiles, getRegionalMarketShare } 
 import { showCartelProfile } from "./cartelProfile.js";
 import { getGeoShapes, preloadGeoShapes } from "../../geoShapes.js";
 
+// Persists across re-renders within the page session (module-level, not per-game state) so
+// conquering a territory or switching tabs and back doesn't reset wherever the player had
+// panned/zoomed to — it's a viewing convenience, not something worth persisting to a save file.
+let currentViewBox = null; // [vx, vy, vw, vh], mutated in place by pan/zoom
+let defaultViewBox = null;
+
 export function render(container, app) {
   const game = app.game;
   const playerCartel = getPlayerCartel(game);
   const geo = getGeoShapes();
   if (!geo) preloadGeoShapes().then(() => app.render());
 
+  if (geo && !currentViewBox) {
+    defaultViewBox = geo.viewBox;
+    currentViewBox = geo.viewBox.slice();
+  }
+
   container.innerHTML = `
     <div class="card">
       <h2>Mapa de territorios</h2>
       <div class="map" id="map">
         ${geo ? renderGeoMap(game, playerCartel, geo) : `<p class="text-dim small center" style="padding:2rem">Cargando el mapa…</p>`}
+        ${geo ? `
+          <div class="map-controls">
+            <button type="button" id="map-zoom-in" aria-label="Acercar">+</button>
+            <button type="button" id="map-zoom-out" aria-label="Alejar">−</button>
+            <button type="button" id="map-zoom-reset" aria-label="Restablecer vista">⟲</button>
+          </div>
+        ` : ""}
       </div>
+      <p class="text-dim small mt-1">Arrastra para mover el mapa, usa la rueda del ratón o pellizca con dos dedos para hacer zoom.</p>
       <div class="grid auto mt-1">
         ${Object.values(game.cartels).filter((c) => !c.destroyed).map((c) => `
           <div class="small" data-view-cartel="${c.id}" style="cursor:pointer"><span style="display:inline-block;width:10px;height:10px;background:${c.color};border-radius:2px;margin-right:4px"></span>${escapeHtml(c.name)}</div>
@@ -26,11 +45,127 @@ export function render(container, app) {
     ${renderTradeRoutes(game, playerCartel)}
   `;
 
-  container.querySelectorAll("[data-territory]").forEach((el) => {
-    el.addEventListener("click", () => showTerritoryModal(app, el.dataset.territory));
-  });
+  if (geo) setupMapInteraction(container, app, geo);
+
   container.querySelectorAll("[data-view-cartel]").forEach((el) => {
     el.addEventListener("click", () => showCartelProfile(app, el.dataset.viewCartel));
+  });
+}
+
+/** Pan (drag or one-finger touch) and zoom (wheel, +/-/reset buttons, or two-finger pinch) over
+ * the map's SVG viewBox — a click that didn't move (beyond a small threshold) still opens the
+ * territory modal as before; a drag or pinch never does. */
+function setupMapInteraction(container, app, geo) {
+  const mapEl = container.querySelector("#map");
+  const svgEl = mapEl.querySelector("svg");
+  if (!svgEl) return;
+
+  const MIN_WIDTH = defaultViewBox[2] / 12; // most zoomed in
+  const MAX_WIDTH = defaultViewBox[2]; // most zoomed out: the full continent, never further
+
+  function applyViewBox() {
+    svgEl.setAttribute("viewBox", currentViewBox.join(" "));
+  }
+  applyViewBox();
+
+  function zoomBy(factor, centerClientX, centerClientY) {
+    const rect = svgEl.getBoundingClientRect();
+    const [vx, vy, vw, vh] = currentViewBox;
+    const cx = centerClientX == null ? vx + vw / 2 : vx + ((centerClientX - rect.left) / rect.width) * vw;
+    const cy = centerClientY == null ? vy + vh / 2 : vy + ((centerClientY - rect.top) / rect.height) * vh;
+    let newW = vw / factor;
+    newW = Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, newW));
+    const appliedFactor = vw / newW;
+    const newH = vh / appliedFactor;
+    currentViewBox = [cx - (cx - vx) / appliedFactor, cy - (cy - vy) / appliedFactor, newW, newH];
+    applyViewBox();
+  }
+
+  document.getElementById("map-zoom-in")?.addEventListener("click", () => zoomBy(1.5));
+  document.getElementById("map-zoom-out")?.addEventListener("click", () => zoomBy(1 / 1.5));
+  document.getElementById("map-zoom-reset")?.addEventListener("click", () => {
+    currentViewBox = defaultViewBox.slice();
+    applyViewBox();
+  });
+
+  svgEl.addEventListener("wheel", (e) => {
+    e.preventDefault();
+    zoomBy(e.deltaY < 0 ? 1.15 : 1 / 1.15, e.clientX, e.clientY);
+  }, { passive: false });
+
+  const pointers = new Map(); // pointerId -> {x, y}
+  let dragged = false;
+  let lastMid = null;
+  let lastDist = null;
+  // `setPointerCapture` below keeps the drag tracking events flowing to svgEl even if the
+  // pointer leaves it mid-gesture — but it also *retargets* the eventual pointerup/click to
+  // svgEl itself, so a child <path>/<circle> never actually receives its own click. Recording
+  // the real target here, before capture takes effect, is what makes tap-to-open-territory work.
+  let downTarget = null;
+
+  svgEl.addEventListener("pointerdown", (e) => {
+    downTarget = e.target.closest("[data-territory]");
+    try { svgEl.setPointerCapture(e.pointerId); } catch { /* not a capturable pointer (e.g. some synthetic events) — pan/zoom still works via bubbling */ }
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    dragged = false;
+    lastMid = null;
+    lastDist = null;
+  });
+
+  svgEl.addEventListener("pointermove", (e) => {
+    if (!pointers.has(e.pointerId)) return;
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    const pts = [...pointers.values()];
+    const rect = svgEl.getBoundingClientRect();
+    const scaleX = currentViewBox[2] / rect.width;
+    const scaleY = currentViewBox[3] / rect.height;
+
+    if (pts.length === 1) {
+      const [p] = pts;
+      if (lastMid) {
+        const dx = (p.x - lastMid.x) * scaleX;
+        const dy = (p.y - lastMid.y) * scaleY;
+        if (Math.abs(p.x - lastMid.x) > 3 || Math.abs(p.y - lastMid.y) > 3) dragged = true;
+        currentViewBox[0] -= dx;
+        currentViewBox[1] -= dy;
+        applyViewBox();
+      }
+      lastMid = p;
+    } else if (pts.length >= 2) {
+      const [p1, p2] = pts;
+      const mid = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 };
+      const dist = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+      if (lastMid && lastDist) {
+        const dx = (mid.x - lastMid.x) * scaleX;
+        const dy = (mid.y - lastMid.y) * scaleY;
+        currentViewBox[0] -= dx;
+        currentViewBox[1] -= dy;
+        if (dist !== lastDist) zoomBy(dist / lastDist, mid.x, mid.y);
+        else applyViewBox();
+        dragged = true;
+      }
+      lastMid = mid;
+      lastDist = dist;
+    }
+  });
+
+  function endPointer(e) {
+    const wasSingleTap = pointers.size === 1 && !dragged && downTarget;
+    pointers.delete(e.pointerId);
+    if (pointers.size < 2) lastDist = null;
+    if (pointers.size === 0) lastMid = null;
+    if (wasSingleTap) {
+      const territoryId = downTarget.dataset.territory;
+      downTarget = null;
+      showTerritoryModal(app, territoryId);
+    }
+  }
+  svgEl.addEventListener("pointerup", endPointer);
+  svgEl.addEventListener("pointercancel", () => {
+    pointers.clear();
+    lastDist = null;
+    lastMid = null;
+    downTarget = null;
   });
 }
 
