@@ -564,7 +564,8 @@
         "militaryChief": "lorenzana_military_chief",
         "diplomatChief": "lorenzana_diplomat_chief",
         "financeChief": "lorenzana_finance_chief",
-        "traffickingChief": "lorenzana_trafficking_chief"
+        "traffickingChief": "lorenzana_trafficking_chief",
+        "corruptionGovChief": "lorenzana_gov_chief"
       }
     },
     {
@@ -591,7 +592,8 @@
         "militaryChief": "soles_military_chief_06",
         "diplomatChief": "soles_diplomat_chief_06",
         "financeChief": "soles_finance_chief_06",
-        "traffickingChief": "soles_trafficking_chief_06"
+        "traffickingChief": "soles_trafficking_chief_06",
+        "corruptionGovChief": "soles_gov_chief_06"
       }
     }
   ],
@@ -1719,6 +1721,52 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, oficial a cargo de coordinar el trasiego de cargamentos por la frontera con La Guajira.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "lorenzana_gov_chief",
+      "name": "Herminia Cordón Recinos",
+      "sex": "F",
+      "birthYear": 1955,
+      "alive": true,
+      "cartelId": "lorenzana",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 16,
+        "business": 58,
+        "charisma": 60,
+        "intrigue": 58,
+        "loyaltyInspiring": 44,
+        "stealth": 42
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de mantener los contactos políticos regionales de la organización en Zacapa.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_gov_chief_06",
+      "name": "Marisela Gamboa",
+      "sex": "F",
+      "birthYear": 1958,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 18,
+        "business": 55,
+        "charisma": 60,
+        "intrigue": 58,
+        "loyaltyInspiring": 44,
+        "stealth": 42
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, contacto civil a cargo de extender la red de sobornos del Cartel de los Soles a funcionarios civiles regionales, más allá de la propia Guardia Nacional.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

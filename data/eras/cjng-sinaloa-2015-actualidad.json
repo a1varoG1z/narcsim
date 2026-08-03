@@ -576,7 +576,8 @@
         "militaryChief": "pcc_military_chief",
         "diplomatChief": "pcc_diplomat_chief",
         "financeChief": "pcc_finance_chief",
-        "traffickingChief": "pcc_trafficking_chief"
+        "traffickingChief": "pcc_trafficking_chief",
+        "corruptionGovChief": "pcc_gov_chief"
       }
     },
     {
@@ -603,7 +604,8 @@
         "militaryChief": "choneros_military_chief_15",
         "diplomatChief": "choneros_diplomat_chief_15",
         "financeChief": "choneros_finance_chief_15",
-        "traffickingChief": "choneros_trafficking_chief_15"
+        "traffickingChief": "choneros_trafficking_chief_15",
+        "corruptionGovChief": "choneros_gov_chief_15"
       }
     }
   ],
@@ -1816,6 +1818,52 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, a cargo de coordinar las rutas de exportación de cocaína de la organización vía el puerto de Guayaquil hacia México.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pcc_gov_chief",
+      "name": "Leandro Bittencourt",
+      "sex": "M",
+      "birthYear": 1970,
+      "alive": true,
+      "cartelId": "pcc",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 22,
+        "business": 58,
+        "charisma": 60,
+        "intrigue": 62,
+        "loyaltyInspiring": 44,
+        "stealth": 46
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de sobornar a funcionarios del sistema penitenciario y autoridades locales, reflejando casos reales y documentados de corrupción carcelaria ligados al PCC.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "choneros_gov_chief_15",
+      "name": "Katiuska Zambrano",
+      "sex": "F",
+      "birthYear": 1978,
+      "alive": true,
+      "cartelId": "choneros",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 18,
+        "business": 55,
+        "charisma": 58,
+        "intrigue": 60,
+        "loyaltyInspiring": 44,
+        "stealth": 44
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de sobornar a funcionarios del sistema penitenciario ecuatoriano — el propio Fito dirigió la organización desde prisión durante años, un caso real y muy documentado de corrupción carcelaria.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

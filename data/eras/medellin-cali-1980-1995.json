@@ -448,7 +448,8 @@
         "intelChief": "pepes_intel_chief",
         "militaryChief": "pepes_military_chief",
         "diplomatChief": "pepes_diplomat_chief",
-        "traffickingChief": "pepes_trafficking_chief"
+        "traffickingChief": "pepes_trafficking_chief",
+        "corruptionGovChief": "pepes_gov_chief"
       }
     },
     {
@@ -473,7 +474,8 @@
         "intelChief": "urdinola_intel_chief",
         "militaryChief": "urdinola_military_chief",
         "diplomatChief": "urdinola_diplomat_chief",
-        "traffickingChief": "urdinola_trafficking_chief"
+        "traffickingChief": "urdinola_trafficking_chief",
+        "corruptionGovChief": "urdinola_gov_chief"
       }
     },
     {
@@ -524,7 +526,8 @@
         "militaryChief": "vaticano_military_chief",
         "diplomatChief": "vaticano_diplomat_chief",
         "financeChief": "vaticano_finance_chief",
-        "traffickingChief": "vaticano_trafficking_chief"
+        "traffickingChief": "vaticano_trafficking_chief",
+        "corruptionGovChief": "vaticano_gov_chief"
       }
     },
     {
@@ -549,7 +552,8 @@
         "militaryChief": "pdf_military_chief",
         "diplomatChief": "pdf_diplomat_chief",
         "financeChief": "pdf_finance_chief",
-        "traffickingChief": "pdf_trafficking_chief"
+        "traffickingChief": "pdf_trafficking_chief",
+        "corruptionGovChief": "pdf_gov_chief"
       }
     },
     {
@@ -574,7 +578,8 @@
         "militaryChief": "soles_military_chief",
         "diplomatChief": "soles_diplomat_chief",
         "financeChief": "soles_finance_chief",
-        "traffickingChief": "soles_trafficking_chief"
+        "traffickingChief": "soles_trafficking_chief",
+        "corruptionGovChief": "soles_gov_chief"
       }
     }
   ],
@@ -2413,6 +2418,121 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, oficial a cargo de coordinar el trasiego de cargamentos colombianos por la frontera con La Guajira.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pepes_gov_chief",
+      "name": "Álvaro Mejía Restrepo",
+      "sex": "M",
+      "birthYear": 1950,
+      "alive": true,
+      "cartelId": "los_pepes",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 30,
+        "business": 55,
+        "charisma": 62,
+        "intrigue": 60,
+        "loyaltyInspiring": 48,
+        "stealth": 45
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, contacto político regional del grupo, reflejando los vínculos reales documentados de Los Pepes con sectores políticos y militares antioqueños afines a la persecución de Escobar.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "urdinola_gov_chief",
+      "name": "Consuelo Ibarra",
+      "sex": "F",
+      "birthYear": 1952,
+      "alive": true,
+      "cartelId": "urdinola",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 22,
+        "business": 58,
+        "charisma": 60,
+        "intrigue": 58,
+        "loyaltyInspiring": 45,
+        "stealth": 42
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de sobornar a funcionarios regionales del Valle del Cauca, reflejando la penetración política real y documentada de la organización de Iván Urdinola en la zona.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "vaticano_gov_chief",
+      "name": "Percy Salinas",
+      "sex": "M",
+      "birthYear": 1948,
+      "alive": true,
+      "cartelId": "vaticano",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 25,
+        "business": 55,
+        "charisma": 58,
+        "intrigue": 60,
+        "loyaltyInspiring": 44,
+        "stealth": 44
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de sobornar a autoridades civiles y jueces regionales del Alto Huallaga, en paralelo al soborno castrense de los 'narcovuelos'.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pdf_gov_chief",
+      "name": "Ricardo Solórzano",
+      "sex": "M",
+      "birthYear": 1946,
+      "alive": true,
+      "cartelId": "pdf_panama",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 55,
+        "charisma": 65,
+        "intrigue": 58,
+        "loyaltyInspiring": 42,
+        "stealth": 40
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, funcionario civil a cargo de extender la red de sobornos del régimen de Noriega más allá de las propias Fuerzas de Defensa.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_gov_chief",
+      "name": "Marisela Gamboa",
+      "sex": "F",
+      "birthYear": 1950,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 18,
+        "business": 55,
+        "charisma": 60,
+        "intrigue": 58,
+        "loyaltyInspiring": 44,
+        "stealth": 42
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, contacto civil a cargo de extender la red de sobornos del Cartel de los Soles a funcionarios civiles regionales, más allá de la propia Guardia Nacional.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

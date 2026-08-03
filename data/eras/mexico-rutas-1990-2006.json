@@ -527,7 +527,8 @@
         "militaryChief": "cachiros_military_chief",
         "diplomatChief": "cachiros_diplomat_chief",
         "financeChief": "cachiros_finance_chief",
-        "traffickingChief": "cachiros_trafficking_chief"
+        "traffickingChief": "cachiros_trafficking_chief",
+        "corruptionGovChief": "cachiros_gov_chief"
       }
     },
     {
@@ -554,7 +555,8 @@
         "militaryChief": "soles_military_chief_90",
         "diplomatChief": "soles_diplomat_chief_90",
         "financeChief": "soles_finance_chief_90",
-        "traffickingChief": "soles_trafficking_chief_90"
+        "traffickingChief": "soles_trafficking_chief_90",
+        "corruptionGovChief": "soles_gov_chief_90"
       }
     }
   ],
@@ -1921,6 +1923,52 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, oficial a cargo de coordinar el trasiego de cargamentos por la frontera con La Guajira.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cachiros_gov_chief",
+      "name": "Marlene Aguilar",
+      "sex": "F",
+      "birthYear": 1970,
+      "alive": true,
+      "cartelId": "cachiros",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 18,
+        "business": 58,
+        "charisma": 60,
+        "intrigue": 58,
+        "loyaltyInspiring": 44,
+        "stealth": 42
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de sobornar a autoridades municipales de Olancho, reflejando la penetración política real y documentada de la organización de los hermanos Rivera Maradiaga en la región.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_gov_chief_90",
+      "name": "Marisela Gamboa",
+      "sex": "F",
+      "birthYear": 1952,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 18,
+        "business": 55,
+        "charisma": 60,
+        "intrigue": 58,
+        "loyaltyInspiring": 44,
+        "stealth": 42
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, contacto civil a cargo de extender la red de sobornos del Cartel de los Soles a funcionarios civiles regionales, más allá de la propia Guardia Nacional.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []
