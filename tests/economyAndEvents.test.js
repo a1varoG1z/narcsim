@@ -1660,6 +1660,39 @@ test("switch_drug also lets Tijuana pivot into MDMA/ecstasy from 1998 onward, th
   assert.equal(getDrugProfile(game, cartel).id, "ecstasy");
 });
 
+test("switch_drug also lets a cartel pivot into methamphetamine from 2008 onward, reflecting the real rise of Mexican super labs", () => {
+  const game = newGame("fragmentacion-2006-2015.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  cartel.resources.money = 100_000_000;
+
+  // game.turn=0 -> year 2006, well before methamphetamine's 2008 availableFromYear.
+  const tooEarlyResult = applyAction(game, "sinaloa", "switch_drug", { drugId: "methamphetamine" });
+  assert.equal(tooEarlyResult.ok, false, "methamphetamine shouldn't be available yet in 2006");
+
+  game.turn = 4; // 2006 + 4*6/12 = 2008
+  const switchResult = applyAction(game, "sinaloa", "switch_drug", { drugId: "methamphetamine" });
+  assert.equal(switchResult.ok, true, "methamphetamine should be available from 2008 onward");
+  assert.equal(cartel.resources.drugId, "methamphetamine");
+  assert.equal(getDrugProfile(game, cartel).id, "methamphetamine");
+});
+
+test("switch_drug also lets a cartel pivot from meth into fentanyl from 2019 onward, reflecting the real cheaper-Chinese-precursor shift", () => {
+  const game = newGame("cjng-sinaloa-2015-actualidad.json", "sinaloa");
+  const cartel = game.cartels.sinaloa;
+  cartel.resources.money = 100_000_000;
+  assert.equal(getDrugProfile(game, cartel).id, "meth", "should start on the era's baseline meth profile, unchanged from before this split");
+
+  // game.turn=0 -> year 2015, well before fentanyl's 2019 availableFromYear.
+  const tooEarlyResult = applyAction(game, "sinaloa", "switch_drug", { drugId: "fentanyl" });
+  assert.equal(tooEarlyResult.ok, false, "fentanyl shouldn't be available yet in 2015");
+
+  game.turn = 8; // 2015 + 8*6/12 = 2019
+  const switchResult = applyAction(game, "sinaloa", "switch_drug", { drugId: "fentanyl" });
+  assert.equal(switchResult.ok, true, "fentanyl should be available from 2019 onward");
+  assert.equal(cartel.resources.drugId, "fentanyl");
+  assert.equal(getDrugProfile(game, cartel).id, "fentanyl");
+});
+
 test("a cartel that switches to a more lucrative drug genuinely earns more from traffic_shipment afterward", () => {
   const originalRandom = Math.random;
   try {

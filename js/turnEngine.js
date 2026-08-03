@@ -180,6 +180,13 @@ export const MONEY_SCALE = 10000;
 // well-documented case: the Arellano Félix organization (Tijuana) built its 1990s power on
 // cocaine transit but became notorious from the late 1990s onward for importing MDMA/ecstasy
 // from Europe into California nightclubs — a real, separate product line, not just a footnote.
+// The 2006-2015 war years saw Mexican methamphetamine production explode into industrial-scale
+// "super labs" (La Familia Michoacana built its founding mythology partly around meth even while
+// preaching against its use), a real and separate shift from the cocaine-transit trade that had
+// dominated the prior era. And the "meth/fentanyl" of the 2015-actualidad era wasn't one uniform
+// product the whole time either: fentanyl only became the dominant, far more profitable synthetic
+// from roughly 2019 onward, once Chinese precursor-chemical routes made it cheaper and easier to
+// produce than meth — cartels genuinely pivoted mid-era, not from day one.
 export const DRUG_PROFILES = {
   "guadalajara-1975-1989": [
     { id: "marijuana_heroin", name: "Marihuana y heroína", payoutMult: 0.85, heatMult: 0.9, seizureMult: 1.15 },
@@ -194,9 +201,11 @@ export const DRUG_PROFILES = {
   ],
   "fragmentacion-2006-2015": [
     { id: "cocaine_war", name: "Cocaína, bajo una guerra abierta contra el narco", payoutMult: 1.15, heatMult: 1.3, seizureMult: 1.2 },
+    { id: "methamphetamine", name: "Metanfetamina (auge de los \"súper laboratorios\")", payoutMult: 1.25, heatMult: 1.1, seizureMult: 0.95, availableFromYear: 2008 },
   ],
   "cjng-sinaloa-2015-actualidad": [
-    { id: "meth_fentanyl", name: "Metanfetamina y fentanilo", payoutMult: 1.4, heatMult: 1.4, seizureMult: 0.9 },
+    { id: "meth", name: "Metanfetamina", payoutMult: 1.4, heatMult: 1.4, seizureMult: 0.9 },
+    { id: "fentanyl", name: "Fentanilo (precursores químicos desde China)", payoutMult: 1.6, heatMult: 1.55, seizureMult: 0.8, availableFromYear: 2019 },
   ],
   "chapitos-mayiza-2024-actualidad": [
     { id: "fentanyl", name: "Fentanilo", payoutMult: 1.5, heatMult: 1.5, seizureMult: 0.85 },
