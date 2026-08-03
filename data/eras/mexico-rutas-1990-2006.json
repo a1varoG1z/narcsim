@@ -529,7 +529,8 @@
         "financeChief": "cachiros_finance_chief",
         "traffickingChief": "cachiros_trafficking_chief",
         "corruptionGovChief": "cachiros_gov_chief",
-        "corruptionPoliceChief": "cachiros_police_chief"
+        "corruptionPoliceChief": "cachiros_police_chief",
+        "productionChief": "cachiros_production_chief"
       }
     },
     {
@@ -558,7 +559,8 @@
         "financeChief": "soles_finance_chief_90",
         "traffickingChief": "soles_trafficking_chief_90",
         "corruptionGovChief": "soles_gov_chief_90",
-        "corruptionPoliceChief": "soles_police_chief_90"
+        "corruptionPoliceChief": "soles_police_chief_90",
+        "productionChief": "soles_production_chief_90"
       }
     }
   ],
@@ -2017,6 +2019,52 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, contacto dentro de los cuerpos policiales venezolanos, en paralelo a la propia corrupción castrense del Cartel de los Soles.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cachiros_production_chief",
+      "name": "Norlan Matute",
+      "sex": "M",
+      "birthYear": 1970,
+      "alive": true,
+      "cartelId": "cachiros",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 26,
+        "business": 58,
+        "charisma": 40,
+        "intrigue": 46,
+        "loyaltyInspiring": 42,
+        "stealth": 40
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de inspeccionar y reempacar los cargamentos en tránsito por los corredores hondureños de la organización de los hermanos Rivera Maradiaga.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_production_chief_90",
+      "name": "Sargento Ramón Contreras",
+      "sex": "M",
+      "birthYear": 1948,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 26,
+        "business": 55,
+        "charisma": 40,
+        "intrigue": 46,
+        "loyaltyInspiring": 42,
+        "stealth": 40
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de reempacar y verificar la calidad de los cargamentos antes de continuar su ruta a través de la frontera con La Guajira.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

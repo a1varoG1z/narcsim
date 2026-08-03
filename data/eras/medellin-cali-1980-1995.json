@@ -450,7 +450,8 @@
         "diplomatChief": "pepes_diplomat_chief",
         "traffickingChief": "pepes_trafficking_chief",
         "corruptionGovChief": "pepes_gov_chief",
-        "corruptionPoliceChief": "pepes_police_chief"
+        "corruptionPoliceChief": "pepes_police_chief",
+        "productionChief": "pepes_production_chief"
       }
     },
     {
@@ -477,7 +478,8 @@
         "diplomatChief": "urdinola_diplomat_chief",
         "traffickingChief": "urdinola_trafficking_chief",
         "corruptionGovChief": "urdinola_gov_chief",
-        "corruptionPoliceChief": "urdinola_police_chief"
+        "corruptionPoliceChief": "urdinola_police_chief",
+        "productionChief": "urdinola_production_chief"
       }
     },
     {
@@ -504,7 +506,8 @@
         "diplomatChief": "suarez_diplomat_chief",
         "financeChief": "suarez_finance_chief",
         "traffickingChief": "suarez_trafficking_chief",
-        "corruptionPoliceChief": "suarez_police_chief"
+        "corruptionPoliceChief": "suarez_police_chief",
+        "productionChief": "suarez_production_chief"
       }
     },
     {
@@ -531,7 +534,8 @@
         "financeChief": "vaticano_finance_chief",
         "traffickingChief": "vaticano_trafficking_chief",
         "corruptionGovChief": "vaticano_gov_chief",
-        "corruptionPoliceChief": "vaticano_police_chief"
+        "corruptionPoliceChief": "vaticano_police_chief",
+        "productionChief": "vaticano_production_chief"
       }
     },
     {
@@ -558,7 +562,8 @@
         "financeChief": "pdf_finance_chief",
         "traffickingChief": "pdf_trafficking_chief",
         "corruptionGovChief": "pdf_gov_chief",
-        "corruptionPoliceChief": "pdf_police_chief"
+        "corruptionPoliceChief": "pdf_police_chief",
+        "productionChief": "pdf_production_chief"
       }
     },
     {
@@ -585,7 +590,8 @@
         "financeChief": "soles_finance_chief",
         "traffickingChief": "soles_trafficking_chief",
         "corruptionGovChief": "soles_gov_chief",
-        "corruptionPoliceChief": "soles_police_chief"
+        "corruptionPoliceChief": "soles_police_chief",
+        "productionChief": "soles_production_chief"
       }
     }
   ],
@@ -2677,6 +2683,144 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, contacto dentro de los cuerpos policiales venezolanos, en paralelo a la propia corrupción castrense del Cartel de los Soles.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pepes_production_chief",
+      "name": "Orlando Zapata",
+      "sex": "M",
+      "birthYear": 1955,
+      "alive": true,
+      "cartelId": "los_pepes",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 35,
+        "business": 60,
+        "charisma": 40,
+        "intrigue": 50,
+        "loyaltyInspiring": 45,
+        "stealth": 42
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de administrar la infraestructura de producción y bodegas heredadas de antiguos socios de Cali que se sumaron a la cacería de Escobar.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "urdinola_production_chief",
+      "name": "Anibal Ceballos",
+      "sex": "M",
+      "birthYear": 1950,
+      "alive": true,
+      "cartelId": "urdinola",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 30,
+        "business": 62,
+        "charisma": 38,
+        "intrigue": 48,
+        "loyaltyInspiring": 44,
+        "stealth": 42
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de los laboratorios de procesamiento de cocaína de la organización de Iván Urdinola en el Valle del Cauca.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "suarez_production_chief",
+      "name": "Erwin Áñez",
+      "sex": "M",
+      "birthYear": 1942,
+      "alive": true,
+      "cartelId": "suarez",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 28,
+        "business": 65,
+        "charisma": 40,
+        "intrigue": 45,
+        "loyaltyInspiring": 42,
+        "stealth": 38
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de las plantaciones y laboratorios de pasta base de la organización de Roberto Suárez en el Beni, el corazón real de su operación.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "vaticano_production_chief",
+      "name": "Segundo Ríos",
+      "sex": "M",
+      "birthYear": 1948,
+      "alive": true,
+      "cartelId": "vaticano",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 28,
+        "business": 62,
+        "charisma": 38,
+        "intrigue": 45,
+        "loyaltyInspiring": 42,
+        "stealth": 38
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de los laboratorios de pasta base de la organización en el Alto Huallaga, el corazón real de la operación de 'Vaticano'.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pdf_production_chief",
+      "name": "Teniente Herminio Bravo",
+      "sex": "M",
+      "birthYear": 1952,
+      "alive": true,
+      "cartelId": "pdf_panama",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 26,
+        "business": 58,
+        "charisma": 40,
+        "intrigue": 46,
+        "loyaltyInspiring": 42,
+        "stealth": 40
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de inspeccionar y procesar la calidad de los cargamentos colombianos en tránsito por las bodegas bajo control de las Fuerzas de Defensa.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_production_chief",
+      "name": "Sargento Ramón Contreras",
+      "sex": "M",
+      "birthYear": 1955,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 26,
+        "business": 55,
+        "charisma": 40,
+        "intrigue": 46,
+        "loyaltyInspiring": 42,
+        "stealth": 40
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de reempacar y verificar la calidad de los cargamentos colombianos antes de continuar su ruta a través de la frontera con La Guajira.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

@@ -578,7 +578,8 @@
         "financeChief": "pcc_finance_chief",
         "traffickingChief": "pcc_trafficking_chief",
         "corruptionGovChief": "pcc_gov_chief",
-        "corruptionPoliceChief": "pcc_police_chief"
+        "corruptionPoliceChief": "pcc_police_chief",
+        "productionChief": "pcc_production_chief"
       }
     },
     {
@@ -607,7 +608,8 @@
         "financeChief": "choneros_finance_chief_15",
         "traffickingChief": "choneros_trafficking_chief_15",
         "corruptionGovChief": "choneros_gov_chief_15",
-        "corruptionPoliceChief": "choneros_police_chief_15"
+        "corruptionPoliceChief": "choneros_police_chief_15",
+        "productionChief": "choneros_production_chief_15"
       }
     }
   ],
@@ -1912,6 +1914,52 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, a cargo de sobornar a la policía nacional ecuatoriana en el puerto y las calles de Guayaquil.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pcc_production_chief",
+      "name": "Wagner Souza Lima",
+      "sex": "M",
+      "birthYear": 1975,
+      "alive": true,
+      "cartelId": "pcc",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 24,
+        "business": 60,
+        "charisma": 38,
+        "intrigue": 48,
+        "loyaltyInspiring": 42,
+        "stealth": 42
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de verificar la pureza y reempacar los cargamentos antes de su exportación a Europa vía el puerto de Santos.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "choneros_production_chief_15",
+      "name": "Freddy Cedeño",
+      "sex": "M",
+      "birthYear": 1982,
+      "alive": true,
+      "cartelId": "choneros",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 24,
+        "business": 58,
+        "charisma": 38,
+        "intrigue": 48,
+        "loyaltyInspiring": 42,
+        "stealth": 42
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de verificar la pureza y reempacar los cargamentos antes de su exportación hacia México vía el puerto de Guayaquil.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []
