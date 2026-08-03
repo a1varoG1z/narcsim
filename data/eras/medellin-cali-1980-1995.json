@@ -451,7 +451,8 @@
         "traffickingChief": "pepes_trafficking_chief",
         "corruptionGovChief": "pepes_gov_chief",
         "corruptionPoliceChief": "pepes_police_chief",
-        "productionChief": "pepes_production_chief"
+        "productionChief": "pepes_production_chief",
+        "prChief": "pepes_pr_chief"
       }
     },
     {
@@ -479,7 +480,8 @@
         "traffickingChief": "urdinola_trafficking_chief",
         "corruptionGovChief": "urdinola_gov_chief",
         "corruptionPoliceChief": "urdinola_police_chief",
-        "productionChief": "urdinola_production_chief"
+        "productionChief": "urdinola_production_chief",
+        "prChief": "urdinola_pr_chief"
       }
     },
     {
@@ -507,7 +509,8 @@
         "financeChief": "suarez_finance_chief",
         "traffickingChief": "suarez_trafficking_chief",
         "corruptionPoliceChief": "suarez_police_chief",
-        "productionChief": "suarez_production_chief"
+        "productionChief": "suarez_production_chief",
+        "prChief": "suarez_pr_chief"
       }
     },
     {
@@ -535,7 +538,8 @@
         "traffickingChief": "vaticano_trafficking_chief",
         "corruptionGovChief": "vaticano_gov_chief",
         "corruptionPoliceChief": "vaticano_police_chief",
-        "productionChief": "vaticano_production_chief"
+        "productionChief": "vaticano_production_chief",
+        "prChief": "vaticano_pr_chief"
       }
     },
     {
@@ -563,7 +567,8 @@
         "traffickingChief": "pdf_trafficking_chief",
         "corruptionGovChief": "pdf_gov_chief",
         "corruptionPoliceChief": "pdf_police_chief",
-        "productionChief": "pdf_production_chief"
+        "productionChief": "pdf_production_chief",
+        "prChief": "pdf_pr_chief"
       }
     },
     {
@@ -591,7 +596,8 @@
         "traffickingChief": "soles_trafficking_chief",
         "corruptionGovChief": "soles_gov_chief",
         "corruptionPoliceChief": "soles_police_chief",
-        "productionChief": "soles_production_chief"
+        "productionChief": "soles_production_chief",
+        "prChief": "soles_pr_chief"
       }
     }
   ],
@@ -2821,6 +2827,144 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, a cargo de reempacar y verificar la calidad de los cargamentos colombianos antes de continuar su ruta a través de la frontera con La Guajira.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pepes_pr_chief",
+      "name": "Adriana Botero",
+      "sex": "F",
+      "birthYear": 1958,
+      "alive": true,
+      "cartelId": "los_pepes",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 18,
+        "business": 45,
+        "charisma": 68,
+        "intrigue": 55,
+        "loyaltyInspiring": 55,
+        "stealth": 40
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de la campaña real de panfletos y propaganda de Los Pepes contra Pablo Escobar, un elemento documentado y muy visible de su guerra mediática.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "urdinola_pr_chief",
+      "name": "Beatriz Elena Cifuentes",
+      "sex": "F",
+      "birthYear": 1958,
+      "alive": true,
+      "cartelId": "urdinola",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 16,
+        "business": 45,
+        "charisma": 65,
+        "intrigue": 52,
+        "loyaltyInspiring": 52,
+        "stealth": 38
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de cultivar la imagen de benefactor comunitario de Iván Urdinola en el Valle del Cauca, un patrón real y documentado entre los grandes traficantes colombianos de la época.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "suarez_pr_chief",
+      "name": "Lourdes Áñez",
+      "sex": "F",
+      "birthYear": 1950,
+      "alive": true,
+      "cartelId": "suarez",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 14,
+        "business": 42,
+        "charisma": 68,
+        "intrigue": 50,
+        "loyaltyInspiring": 55,
+        "stealth": 36
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de cultivar la imagen pública de Roberto Suárez como benefactor regional en el Beni, reflejando su fama real y documentada de figura casi mítica entre parte de la población boliviana.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "vaticano_pr_chief",
+      "name": "Rosa Salazar",
+      "sex": "F",
+      "birthYear": 1952,
+      "alive": true,
+      "cartelId": "vaticano",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 14,
+        "business": 40,
+        "charisma": 65,
+        "intrigue": 50,
+        "loyaltyInspiring": 55,
+        "stealth": 36
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de cultivar la lealtad de los agricultores cocaleros del Alto Huallaga hacia la organización de 'Vaticano'.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pdf_pr_chief",
+      "name": "Coronel Reinaldo Guardia",
+      "sex": "M",
+      "birthYear": 1948,
+      "alive": true,
+      "cartelId": "pdf_panama",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 18,
+        "business": 45,
+        "charisma": 62,
+        "intrigue": 52,
+        "loyaltyInspiring": 52,
+        "stealth": 38
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo del aparato de propaganda oficial del régimen de Noriega, reflejando el control real y documentado de los medios estatales panameños de la época.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_pr_chief",
+      "name": "Capitana Yolanda Uzcátegui",
+      "sex": "F",
+      "birthYear": 1954,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 16,
+        "business": 45,
+        "charisma": 60,
+        "intrigue": 52,
+        "loyaltyInspiring": 50,
+        "stealth": 36
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, oficial a cargo de negar públicamente cualquier vínculo entre la Guardia Nacional y el narcotráfico, gestionando el desmentido oficial del fenómeno.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

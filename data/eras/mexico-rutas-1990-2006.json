@@ -530,7 +530,8 @@
         "traffickingChief": "cachiros_trafficking_chief",
         "corruptionGovChief": "cachiros_gov_chief",
         "corruptionPoliceChief": "cachiros_police_chief",
-        "productionChief": "cachiros_production_chief"
+        "productionChief": "cachiros_production_chief",
+        "prChief": "cachiros_pr_chief"
       }
     },
     {
@@ -560,7 +561,8 @@
         "traffickingChief": "soles_trafficking_chief_90",
         "corruptionGovChief": "soles_gov_chief_90",
         "corruptionPoliceChief": "soles_police_chief_90",
-        "productionChief": "soles_production_chief_90"
+        "productionChief": "soles_production_chief_90",
+        "prChief": "soles_pr_chief_90"
       }
     }
   ],
@@ -2065,6 +2067,52 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, a cargo de reempacar y verificar la calidad de los cargamentos antes de continuar su ruta a través de la frontera con La Guajira.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cachiros_pr_chief",
+      "name": "Suyapa Maradiaga",
+      "sex": "F",
+      "birthYear": 1972,
+      "alive": true,
+      "cartelId": "cachiros",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 14,
+        "business": 45,
+        "charisma": 65,
+        "intrigue": 50,
+        "loyaltyInspiring": 52,
+        "stealth": 36
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de cultivar la imagen de benefactores comunitarios de los hermanos Rivera Maradiaga en Olancho, financiando obras locales para ganarse el favor de la comunidad.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_pr_chief_90",
+      "name": "Capitana Yolanda Uzcátegui",
+      "sex": "F",
+      "birthYear": 1950,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 16,
+        "business": 45,
+        "charisma": 60,
+        "intrigue": 52,
+        "loyaltyInspiring": 50,
+        "stealth": 36
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, oficial a cargo de negar públicamente cualquier vínculo entre la Guardia Nacional y el narcotráfico.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

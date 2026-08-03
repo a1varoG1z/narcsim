@@ -579,7 +579,8 @@
         "traffickingChief": "pcc_trafficking_chief",
         "corruptionGovChief": "pcc_gov_chief",
         "corruptionPoliceChief": "pcc_police_chief",
-        "productionChief": "pcc_production_chief"
+        "productionChief": "pcc_production_chief",
+        "prChief": "pcc_pr_chief"
       }
     },
     {
@@ -609,7 +610,8 @@
         "traffickingChief": "choneros_trafficking_chief_15",
         "corruptionGovChief": "choneros_gov_chief_15",
         "corruptionPoliceChief": "choneros_police_chief_15",
-        "productionChief": "choneros_production_chief_15"
+        "productionChief": "choneros_production_chief_15",
+        "prChief": "choneros_pr_chief_15"
       }
     }
   ],
@@ -1960,6 +1962,52 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, a cargo de verificar la pureza y reempacar los cargamentos antes de su exportación hacia México vía el puerto de Guayaquil.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pcc_pr_chief",
+      "name": "Vanessa Aparecida Souza",
+      "sex": "F",
+      "birthYear": 1978,
+      "alive": true,
+      "cartelId": "pcc",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 14,
+        "business": 45,
+        "charisma": 62,
+        "intrigue": 55,
+        "loyaltyInspiring": 55,
+        "stealth": 38
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de sostener el papel real y documentado del PCC como autoridad de facto en algunas favelas de São Paulo, mediando conflictos vecinales e imponiendo su propio código de conducta.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "choneros_pr_chief_15",
+      "name": "Doménica Vera",
+      "sex": "F",
+      "birthYear": 1985,
+      "alive": true,
+      "cartelId": "choneros",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 14,
+        "business": 42,
+        "charisma": 60,
+        "intrigue": 52,
+        "loyaltyInspiring": 52,
+        "stealth": 36
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de cultivar la lealtad de la comunidad en los barrios de Guayaquil bajo influencia de la organización.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []
