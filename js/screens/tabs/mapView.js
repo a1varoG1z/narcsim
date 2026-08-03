@@ -14,6 +14,9 @@ import { getGeoShapes, preloadGeoShapes } from "../../geoShapes.js";
 // panned/zoomed to — it's a viewing convenience, not something worth persisting to a save file.
 let currentViewBox = null; // [vx, vy, vw, vh], mutated in place by pan/zoom
 let defaultViewBox = null;
+// Recomputed whenever the loaded game changes (new era, loaded save, etc.) — otherwise the view
+// left over from a previous game would stick around after switching without a full page reload.
+let lastGameKey = null;
 // Also a view preference, not game state: the map is the centerpiece of the game (per explicit
 // user feedback — it felt like a small tab panel, not the CK3-style focal point it should be),
 // so a fullscreen mode lets it take over the whole viewport instead of sharing space with the
@@ -27,11 +30,17 @@ export function render(container, app) {
   const geo = getGeoShapes();
   if (!geo) preloadGeoShapes().then(() => app.render());
 
-  if (geo && !currentViewBox) {
-    // The stored regional view frames Latin America — where every era's starting cartels
-    // actually are — instead of the whole world, so the map opens legible instead of showing
-    // 200+ tiny countries at once. geo.viewBox (the full world) is still reachable by zooming out.
-    defaultViewBox = geo.regionalViewBox || geo.viewBox;
+  const gameKey = `${game.eraId}:${game.playerCartelId}`;
+  if (geo && (!currentViewBox || gameKey !== lastGameKey)) {
+    lastGameKey = gameKey;
+    // Zoom to fit the player's own starting territories (with generous padding for nearby
+    // rivals/neighbors), not a fixed "all of Latin America" rectangle — an era where the player
+    // starts holding a handful of small Colombian departments needs a much tighter default than
+    // one where they start holding whole Mexican states, or the small departments render as an
+    // illegible cluster of a few pixels each (real feedback from a user screenshot). Falls back
+    // to the stored regional (Latin America) view if the player is landless for some reason.
+    // geo.viewBox (the full world) is always still reachable by zooming out.
+    defaultViewBox = computeDefaultViewBox(game, playerCartel, geo);
     currentViewBox = defaultViewBox.slice();
   }
 
@@ -83,6 +92,34 @@ export function render(container, app) {
   container.querySelectorAll("[data-view-cartel]").forEach((el) => {
     el.addEventListener("click", () => showCartelProfile(app, el.dataset.viewCartel));
   });
+}
+
+/** Bounding box of the player's own territories, padded out so nearby rivals/neighbors are
+ * visible too — not just the player's own tiles pressed against the edge of the screen. */
+function computeDefaultViewBox(game, playerCartel, geo) {
+  const ownShapes = playerCartel.territories
+    .map((id) => game.territories[id])
+    .filter((t) => t && geo.shapes[t.geo])
+    .map((t) => geo.shapes[t.geo]);
+  if (!ownShapes.length) return geo.regionalViewBox || geo.viewBox;
+
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const shape of ownShapes) {
+    if (shape.point) {
+      x0 = Math.min(x0, shape.cx); y0 = Math.min(y0, shape.cy);
+      x1 = Math.max(x1, shape.cx); y1 = Math.max(y1, shape.cy);
+    } else {
+      x0 = Math.min(x0, shape.bbox[0]); y0 = Math.min(y0, shape.bbox[1]);
+      x1 = Math.max(x1, shape.bbox[2]); y1 = Math.max(y1, shape.bbox[3]);
+    }
+  }
+  const cx = (x0 + x1) / 2;
+  const cy = (y0 + y1) / 2;
+  const PAD_FACTOR = 4.5; // wide enough to see neighboring rivals/free territory, not just your own tiles
+  const MIN_SIZE = 70; // a floor so a single small starting territory doesn't zoom in absurdly tight
+  const boxW = Math.max((x1 - x0) * PAD_FACTOR, MIN_SIZE);
+  const boxH = Math.max((y1 - y0) * PAD_FACTOR, MIN_SIZE);
+  return [cx - boxW / 2, cy - boxH / 2, boxW, boxH];
 }
 
 /** Pan (drag or one-finger touch) and zoom (wheel, +/-/reset buttons, or two-finger pinch) over
