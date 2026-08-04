@@ -155,7 +155,9 @@ export function render(container, app) {
     const result = applyAction(game, cartel.id, "intercept_shipment", { targetCartelId: btn.dataset.intercept });
     app.setGame(game);
     if (!result.ok) alert(result.message);
-    else alert(result.success ? `Interceptado con éxito: les causas ${fmtMoney(result.seized)} en pérdidas y te llevas ${fmtMoney(result.gained)}.` : "El intento termina en un tiroteo y fracasa.");
+    else alert(result.success
+      ? `Interceptado con éxito: les causas ${fmtMoney(result.seized)} en pérdidas y te llevas ${fmtMoney(result.gained)}.${result.routeDamage ? ` Además dañas su ruta comercial establecida (-${Math.round(result.routeDamage * 100)}% de su bonus permanente de envíos).` : ""}`
+      : "El intento termina en un tiroteo y fracasa.");
     app.render();
   }));
   container.querySelectorAll("[data-raid]").forEach((btn) => btn.addEventListener("click", () => {

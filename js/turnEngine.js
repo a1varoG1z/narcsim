@@ -1157,11 +1157,21 @@ export function applyAction(game, cartelId, type, payload = {}) {
         target.resources.heat = Math.min(100, target.resources.heat + randInt(8, 15));
         r.heat = Math.min(100, r.heat + randInt(8, 15));
         bumpTension(randInt(15, 25));
-        log(`${cartel.name} intercepta en tránsito un cargamento de ${target.name} valorado en ${fmtMoney(seized)}.`, "event");
-        if (game._reactiveEvents && target.id === game.playerCartelId) {
-          game._reactiveEvents.push({ type: "shipmentIntercepted", byCartelId: cartel.id, byCartelName: cartel.name, amount: seized });
+        // A route the target has actually invested in (`invest_trade_route`'s permanent bonus)
+        // isn't just an abstract number once someone starts hitting their shipments on it — a
+        // successful ambush chips away part of that established infrastructure too, not just this
+        // one shipment's cash. This is what makes a trade route something a rival can really cut
+        // into over repeated hits, instead of a number that only ever goes up.
+        let routeDamage = 0;
+        if (target.resources.tradeRouteBonus > 0) {
+          routeDamage = Math.min(target.resources.tradeRouteBonus, 0.04 + Math.random() * 0.03);
+          target.resources.tradeRouteBonus = clamp(target.resources.tradeRouteBonus - routeDamage, 0, 0.3);
         }
-        return { ok: true, success: true, seized, gained };
+        log(`${cartel.name} intercepta en tránsito un cargamento de ${target.name} valorado en ${fmtMoney(seized)}.${routeDamage > 0 ? ` El golpe daña parte de su ruta comercial establecida (bonus permanente de envíos: -${Math.round(routeDamage * 100)}%).` : ""}`, "event");
+        if (game._reactiveEvents && target.id === game.playerCartelId) {
+          game._reactiveEvents.push({ type: "shipmentIntercepted", byCartelId: cartel.id, byCartelName: cartel.name, amount: seized, routeDamage });
+        }
+        return { ok: true, success: true, seized, gained, routeDamage };
       }
       r.heat = Math.min(100, r.heat + randInt(12, 20));
       cartel.resources.armySize = Math.max(0, cartel.resources.armySize - randInt(2, 8));

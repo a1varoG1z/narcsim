@@ -154,7 +154,7 @@ const app = {
       `).join("")}
       ${interceptions.map((e, i) => `
         <div class="card tight mt-1" data-reactive-row="intercept-${i}">
-          <p class="small">${escapeHtml(e.byCartelName)} te ha interceptado un cargamento en tránsito, con pérdidas por ${fmtMoney(e.amount)}.</p>
+          <p class="small">${escapeHtml(e.byCartelName)} te ha interceptado un cargamento en tránsito, con pérdidas por ${fmtMoney(e.amount)}.${e.routeDamage ? ` El golpe también daña parte de tu ruta comercial establecida (-${Math.round(e.routeDamage * 100)}% de bonus permanente de envíos).` : ""}</p>
           <button class="danger block" data-retaliate-intercept="intercept-${i}" data-target="${e.byCartelId}">Represalia: interceptarles un cargamento (${fmtMoney(ACTION_COSTS.intercept_shipment)})</button>
         </div>
       `).join("")}
