@@ -318,11 +318,11 @@ function showProductionModal(app, game, cartel) {
   const territories = cartel.territories.map((id) => game.territories[id]).filter(Boolean);
   showModal(`
     <h2>Invertir en producción</h2>
-    <p class="small text-dim">Los territorios de mayor valor económico rinden más por la misma inversión de ${fmtMoney(ACTION_COSTS.invest_production)}.</p>
+    <p class="small text-dim">Los territorios de mayor valor económico rinden más por la misma inversión de ${fmtMoney(ACTION_COSTS.invest_production)}. Las zonas de cultivo históricas (🌱) rinden un 30% más todavía.</p>
     ${territories.map((t) => `
       <button class="block" data-territory="${t.id}">
-        ${escapeHtml(t.name)}
-        <div class="small text-dim">Valor económico: ${t.value}</div>
+        ${t.specialization === "cultivo" ? "🌱 " : ""}${escapeHtml(t.name)}
+        <div class="small text-dim">Valor económico: ${t.value}${t.specialization === "cultivo" ? " · zona de cultivo histórica" : ""}</div>
       </button>
     `).join("")}
     <button class="ghost block" id="close-btn">Cancelar</button>

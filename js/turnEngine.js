@@ -418,10 +418,15 @@ export function applyAction(game, cartelId, type, payload = {}) {
         log(`Un cargamento de ${cartel.name} es decomisado durante la producción en ${territory.name}.`, "event");
         return { ok: true, message: "Decomiso.", territoryId: territory.id };
       }
-      const payout = Math.round((90 + territory.value * 12) * MONEY_SCALE * (1.1 + Math.random() * 0.5) * drug.payoutMult * (1 + productionBonus / 50));
+      // A handful of territories carry a real, historically documented "cultivo" specialization
+      // (the actual Golden-Triangle-style growing regions of each era — Sinaloa/Durango/Chihuahua,
+      // Guerrero, Michoacán, Myanmar's Shan State, Peru's Alto Huallaga) — producing there goes
+      // further than in a territory with no particular tie to cultivation.
+      const specializationMult = territory.specialization === "cultivo" ? 1.3 : 1;
+      const payout = Math.round((90 + territory.value * 12) * MONEY_SCALE * (1.1 + Math.random() * 0.5) * drug.payoutMult * (1 + productionBonus / 50) * specializationMult);
       r.money += payout;
       r.heat = Math.min(100, r.heat + Math.round(2 * drug.heatMult));
-      log(`${cartel.name} invierte en producción en ${territory.name} y obtiene ${fmtMoney(payout)} en ganancias.`, "good");
+      log(`${cartel.name} invierte en producción en ${territory.name} y obtiene ${fmtMoney(payout)} en ganancias.${territory.specialization === "cultivo" ? " La región es una zona de cultivo histórica, y rinde más de lo normal." : ""}`, "good");
       return { ok: true, message: `+${payout}`, territoryId: territory.id };
     }
     case "traffic_shipment": {

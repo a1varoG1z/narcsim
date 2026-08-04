@@ -36,7 +36,8 @@
         "jalisco",
         "queretaro"
       ],
-      "geo": "MEX_Michoacan"
+      "geo": "MEX_Michoacan",
+      "specialization": "cultivo"
     },
     {
       "id": "guanajuato",
@@ -90,7 +91,8 @@
         "sonora",
         "texas"
       ],
-      "geo": "MEX_Chihuahua"
+      "geo": "MEX_Chihuahua",
+      "specialization": "cultivo"
     },
     {
       "id": "sinaloa_t",
@@ -104,7 +106,8 @@
         "nayarit",
         "sonora"
       ],
-      "geo": "MEX_Sinaloa"
+      "geo": "MEX_Sinaloa",
+      "specialization": "cultivo"
     },
     {
       "id": "coahuila",
@@ -177,7 +180,8 @@
         "oaxaca",
         "puebla"
       ],
-      "geo": "MEX_Guerrero"
+      "geo": "MEX_Guerrero",
+      "specialization": "cultivo"
     },
     {
       "id": "guatemala",
@@ -1644,7 +1648,8 @@
         "laos",
         "tailandia"
       ],
-      "geo": "WORLD_MYANMAR"
+      "geo": "WORLD_MYANMAR",
+      "specialization": "cultivo"
     },
     {
       "id": "tailandia",
@@ -2722,7 +2727,8 @@
         "sinaloa_t",
         "zacatecas"
       ],
-      "geo": "MEX_Durango"
+      "geo": "MEX_Durango",
+      "specialization": "cultivo"
     },
     {
       "id": "quintana_roo",

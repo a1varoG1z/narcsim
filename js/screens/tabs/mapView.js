@@ -355,6 +355,7 @@ function showTerritoryModal(app, territoryId) {
       Controlado por: ${controller ? `<a href="#" id="view-controller">${escapeHtml(controller.name)}</a>` : "Nadie (territorio libre)"}
     </p>
     <p class="small">Valor económico: ${t.value} <span class="text-dim">(genera ${fmtMoney(t.value * 10 * MONEY_SCALE)}/turno en manos de su dueño, antes de bonus de exportación)</span></p>
+    ${t.specialization === "cultivo" ? `<p class="small text-success">🌱 Zona de cultivo histórica: invertir en producción aquí rinde un 30% más que en un territorio genérico.</p>` : ""}
     ${neighborNames ? `<p class="small text-dim">Linda con: ${escapeHtml(neighborNames)}</p>` : ""}
 
     ${controller && !isMine ? `
