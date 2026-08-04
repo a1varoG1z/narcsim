@@ -13,8 +13,9 @@
       "controllerId": "chapitos",
       "value": 16,
       "adj": [
-        "sonora",
-        "california"
+        "baja_california_sur",
+        "california",
+        "sonora"
       ],
       "geo": "MEX_BajaCalifornia"
     },
@@ -24,10 +25,11 @@
       "controllerId": "chapitos",
       "value": 13,
       "adj": [
+        "arizona",
         "baja_california",
         "chihuahua",
-        "culiacan",
-        "arizona"
+        "costa_sinaloa",
+        "culiacan"
       ],
       "geo": "MEX_Sonora"
     },
@@ -37,9 +39,12 @@
       "controllerId": null,
       "value": 15,
       "adj": [
-        "sonora",
+        "coahuila",
+        "costa_sinaloa",
+        "culiacan",
         "durango",
         "new_mexico",
+        "sonora",
         "texas"
       ],
       "geo": "MEX_Chihuahua"
@@ -50,9 +55,11 @@
       "controllerId": "chapitos",
       "value": 24,
       "adj": [
-        "sonora",
+        "chihuahua",
+        "costa_sinaloa",
         "durango",
-        "costa_sinaloa"
+        "nayarit",
+        "sonora"
       ],
       "geo": "MEX_Sinaloa_Culiacan"
     },
@@ -63,9 +70,12 @@
       "value": 11,
       "adj": [
         "chihuahua",
-        "culiacan",
+        "coahuila",
         "costa_sinaloa",
-        "jalisco"
+        "culiacan",
+        "jalisco",
+        "nayarit",
+        "zacatecas"
       ],
       "geo": "MEX_Durango"
     },
@@ -75,9 +85,12 @@
       "controllerId": "mayiza",
       "value": 18,
       "adj": [
+        "chihuahua",
         "culiacan",
         "durango",
-        "jalisco"
+        "jalisco",
+        "nayarit",
+        "sonora"
       ],
       "geo": "MEX_Sinaloa_Costa"
     },
@@ -87,9 +100,14 @@
       "controllerId": "cjng",
       "value": 22,
       "adj": [
-        "durango",
+        "aguascalientes",
+        "colima",
         "costa_sinaloa",
-        "michoacan"
+        "durango",
+        "guanajuato",
+        "michoacan",
+        "nayarit",
+        "zacatecas"
       ],
       "geo": "MEX_Jalisco"
     },
@@ -99,8 +117,12 @@
       "controllerId": "cjng",
       "value": 15,
       "adj": [
+        "colima",
+        "estado_de_mexico",
+        "guanajuato",
+        "guerrero",
         "jalisco",
-        "guerrero"
+        "queretaro"
       ],
       "geo": "MEX_Michoacan"
     },
@@ -110,8 +132,12 @@
       "controllerId": "guerreros_unidos",
       "value": 12,
       "adj": [
+        "estado_de_mexico",
+        "guatemala",
         "michoacan",
-        "guatemala"
+        "morelos",
+        "oaxaca",
+        "puebla"
       ],
       "geo": "MEX_Guerrero"
     },
@@ -124,7 +150,8 @@
         "guerrero",
         "honduras",
         "el_salvador",
-        "belize"
+        "belize",
+        "chiapas"
       ],
       "geo": "COUNTRY_GTM"
     },
@@ -2600,6 +2627,325 @@
         "canada"
       ],
       "geo": "USA_RestoEEUU"
+    },
+    {
+      "id": "zacatecas",
+      "name": "Zacatecas",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "aguascalientes",
+        "coahuila",
+        "durango",
+        "guanajuato",
+        "jalisco",
+        "nayarit",
+        "nuevo_leon",
+        "san_luis_potosi"
+      ],
+      "geo": "MEX_Zacatecas"
+    },
+    {
+      "id": "chiapas",
+      "name": "Chiapas",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "oaxaca",
+        "tabasco",
+        "veracruz",
+        "guatemala"
+      ],
+      "geo": "MEX_Chiapas"
+    },
+    {
+      "id": "coahuila",
+      "name": "Coahuila",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "chihuahua",
+        "durango",
+        "nuevo_leon",
+        "san_luis_potosi",
+        "zacatecas"
+      ],
+      "geo": "MEX_Coahuila"
+    },
+    {
+      "id": "cdmx",
+      "name": "Ciudad de México",
+      "controllerId": null,
+      "value": 16,
+      "adj": [
+        "estado_de_mexico",
+        "morelos"
+      ],
+      "geo": "MEX_CDMX"
+    },
+    {
+      "id": "quintana_roo",
+      "name": "Quintana Roo",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "campeche",
+        "yucatan"
+      ],
+      "geo": "MEX_QuintanaRoo"
+    },
+    {
+      "id": "campeche",
+      "name": "Campeche",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "quintana_roo",
+        "tabasco",
+        "yucatan"
+      ],
+      "geo": "MEX_Campeche"
+    },
+    {
+      "id": "tamaulipas",
+      "name": "Tamaulipas",
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "nuevo_leon",
+        "san_luis_potosi",
+        "veracruz"
+      ],
+      "geo": "MEX_Tamaulipas"
+    },
+    {
+      "id": "morelos",
+      "name": "Morelos",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "cdmx",
+        "estado_de_mexico",
+        "guerrero",
+        "puebla"
+      ],
+      "geo": "MEX_Morelos"
+    },
+    {
+      "id": "nuevo_leon",
+      "name": "Nuevo León",
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "coahuila",
+        "san_luis_potosi",
+        "tamaulipas",
+        "zacatecas"
+      ],
+      "geo": "MEX_NuevoLeon"
+    },
+    {
+      "id": "oaxaca",
+      "name": "Oaxaca",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "chiapas",
+        "guerrero",
+        "puebla",
+        "veracruz"
+      ],
+      "geo": "MEX_Oaxaca"
+    },
+    {
+      "id": "baja_california_sur",
+      "name": "Baja California Sur",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "baja_california"
+      ],
+      "geo": "MEX_BajaCaliforniaSur"
+    },
+    {
+      "id": "tabasco",
+      "name": "Tabasco",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "campeche",
+        "chiapas",
+        "veracruz"
+      ],
+      "geo": "MEX_Tabasco"
+    },
+    {
+      "id": "estado_de_mexico",
+      "name": "Estado de México",
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "cdmx",
+        "guerrero",
+        "hidalgo",
+        "michoacan",
+        "morelos",
+        "puebla",
+        "queretaro",
+        "tlaxcala"
+      ],
+      "geo": "MEX_EstadoDeMexico"
+    },
+    {
+      "id": "yucatan",
+      "name": "Yucatán",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "campeche",
+        "quintana_roo"
+      ],
+      "geo": "MEX_Yucatan"
+    },
+    {
+      "id": "veracruz",
+      "name": "Veracruz",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "chiapas",
+        "hidalgo",
+        "oaxaca",
+        "puebla",
+        "san_luis_potosi",
+        "tabasco",
+        "tamaulipas"
+      ],
+      "geo": "MEX_Veracruz"
+    },
+    {
+      "id": "colima",
+      "name": "Colima",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "jalisco",
+        "michoacan"
+      ],
+      "geo": "MEX_Colima"
+    },
+    {
+      "id": "nayarit",
+      "name": "Nayarit",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "costa_sinaloa",
+        "culiacan",
+        "durango",
+        "jalisco",
+        "zacatecas"
+      ],
+      "geo": "MEX_Nayarit"
+    },
+    {
+      "id": "guanajuato",
+      "name": "Guanajuato",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "jalisco",
+        "michoacan",
+        "queretaro",
+        "san_luis_potosi",
+        "zacatecas"
+      ],
+      "geo": "MEX_Guanajuato"
+    },
+    {
+      "id": "hidalgo",
+      "name": "Hidalgo",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "estado_de_mexico",
+        "puebla",
+        "queretaro",
+        "san_luis_potosi",
+        "tlaxcala",
+        "veracruz"
+      ],
+      "geo": "MEX_Hidalgo"
+    },
+    {
+      "id": "tlaxcala",
+      "name": "Tlaxcala",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "estado_de_mexico",
+        "hidalgo",
+        "puebla"
+      ],
+      "geo": "MEX_Tlaxcala"
+    },
+    {
+      "id": "aguascalientes",
+      "name": "Aguascalientes",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "jalisco",
+        "zacatecas"
+      ],
+      "geo": "MEX_Aguascalientes"
+    },
+    {
+      "id": "queretaro",
+      "name": "Querétaro",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "estado_de_mexico",
+        "guanajuato",
+        "hidalgo",
+        "michoacan",
+        "san_luis_potosi"
+      ],
+      "geo": "MEX_Queretaro"
+    },
+    {
+      "id": "san_luis_potosi",
+      "name": "San Luis Potosí",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "coahuila",
+        "guanajuato",
+        "hidalgo",
+        "nuevo_leon",
+        "queretaro",
+        "tamaulipas",
+        "veracruz",
+        "zacatecas"
+      ],
+      "geo": "MEX_SanLuisPotosi"
+    },
+    {
+      "id": "puebla",
+      "name": "Puebla",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "estado_de_mexico",
+        "guerrero",
+        "hidalgo",
+        "morelos",
+        "oaxaca",
+        "tlaxcala",
+        "veracruz"
+      ],
+      "geo": "MEX_Puebla"
     }
   ],
   "cartels": [
