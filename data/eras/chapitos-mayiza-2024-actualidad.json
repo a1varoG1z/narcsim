@@ -1212,7 +1212,7 @@
     {
       "id": "turquia",
       "name": "Turquía",
-      "controllerId": null,
+      "controllerId": "peker_org",
       "value": 17,
       "adj": [
         "armenia",
@@ -2696,6 +2696,35 @@
         "productionChief": "pcc_production_chief_24",
         "prChief": "pcc_pr_chief_24"
       }
+    },
+    {
+      "id": "peker_org",
+      "name": "Red de Sedat Peker",
+      "color": "#b3701a",
+      "aiControlled": true,
+      "historicalNote": "Sedat Peker es una figura real y muy mediática del crimen organizado turco, con una larga trayectoria criminal documentada desde los años 90 (varias condenas reales) y señalado durante años en la prensa internacional como una de las figuras más influyentes del hampa de Turquía, aunque él mismo se ha presentado públicamente como empresario y ha negado ser un \"jefe mafioso\" en el sentido estricto. Desde el exilio, en 2021 publicó una serie real de vídeos en YouTube con acusaciones detalladas de narcotráfico y corrupción que salpicaban a figuras del poder turco — un fenómeno mediático real, ampliamente cubierto por medios internacionales (BBC, Reuters, entre otros), que generó una crisis política real en Turquía. El juego no toma partido sobre la veracidad de esas acusaciones concretas contra terceros, ya que siguen siendo objeto de disputa pública; se representa aquí únicamente el hecho documentado de su propia trayectoria y de la repercusión real de sus revelaciones. En el juego su destino depende de tus decisiones.",
+      "resources": {
+        "money": 120000000,
+        "armySize": 600,
+        "corruptGov": 62,
+        "corruptPolice": 55,
+        "publicImage": 45,
+        "heat": 48
+      },
+      "roles": {
+        "leader": "sp_leader",
+        "underboss": "sp_underboss",
+        "sicariosChief": "sp_sicarios_chief",
+        "intelChief": "sp_intel_chief",
+        "militaryChief": "sp_military_chief",
+        "diplomatChief": "sp_diplomat_chief",
+        "financeChief": "sp_finance_chief",
+        "traffickingChief": "sp_trafficking_chief",
+        "corruptionGovChief": "sp_gov_chief",
+        "corruptionPoliceChief": "sp_police_chief",
+        "productionChief": "sp_production_chief",
+        "prChief": "sp_pr_chief"
+      }
     }
   ],
   "characters": [
@@ -3586,6 +3615,285 @@
       },
       "traits": [],
       "notes": "Personaje ficticio, a cargo de cultivar la lealtad de la comunidad en los barrios de Guayaquil bajo influencia de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sp_leader",
+      "name": "Sedat Peker",
+      "sex": "M",
+      "birthYear": 1971,
+      "alive": true,
+      "cartelId": "peker_org",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 62,
+        "business": 80,
+        "charisma": 82,
+        "intrigue": 78,
+        "loyaltyInspiring": 65,
+        "stealth": 60
+      },
+      "traits": [
+        "mediático",
+        "fundador"
+      ],
+      "notes": "Figura real del crimen organizado turco, con una larga trayectoria criminal documentada desde los años 90. Sus vídeos reales de 2021 desde el exilio, con acusaciones de narcotráfico y corrupción, provocaron una crisis mediática y política real en Turquía. En el juego su destino depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sp_underboss",
+      "name": "Hakan Yildiz",
+      "sex": "M",
+      "birthYear": 1968,
+      "alive": true,
+      "cartelId": "peker_org",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 60,
+        "business": 68,
+        "charisma": 58,
+        "intrigue": 65,
+        "loyaltyInspiring": 60,
+        "stealth": 62
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los mandos de la organización más cercanos a Peker.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sp_sicarios_chief",
+      "name": "Cengiz Aydin",
+      "sex": "M",
+      "birthYear": 1975,
+      "alive": true,
+      "cartelId": "peker_org",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 85,
+        "business": 38,
+        "charisma": 42,
+        "intrigue": 52,
+        "loyaltyInspiring": 48,
+        "stealth": 60
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los ejecutores de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sp_intel_chief",
+      "name": "Derya Kaplan",
+      "sex": "F",
+      "birthYear": 1978,
+      "alive": true,
+      "cartelId": "peker_org",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 35,
+        "business": 55,
+        "charisma": 55,
+        "intrigue": 78,
+        "loyaltyInspiring": 48,
+        "stealth": 80
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red de información e inteligencia de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sp_military_chief",
+      "name": "Mehmet Aksoy",
+      "sex": "M",
+      "birthYear": 1970,
+      "alive": true,
+      "cartelId": "peker_org",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 75,
+        "business": 45,
+        "charisma": 48,
+        "intrigue": 55,
+        "loyaltyInspiring": 58,
+        "stealth": 52
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los mandos armados de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sp_diplomat_chief",
+      "name": "Emre Sahin",
+      "sex": "M",
+      "birthYear": 1965,
+      "alive": true,
+      "cartelId": "peker_org",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 25,
+        "business": 65,
+        "charisma": 75,
+        "intrigue": 68,
+        "loyaltyInspiring": 55,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa los canales de negociación de la organización con otras redes de la ruta balcánica.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sp_finance_chief",
+      "name": "Baris Yavuz",
+      "sex": "M",
+      "birthYear": 1972,
+      "alive": true,
+      "cartelId": "peker_org",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 82,
+        "charisma": 55,
+        "intrigue": 60,
+        "loyaltyInspiring": 45,
+        "stealth": 58
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red de empresas fachada usada para blanquear el dinero de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sp_trafficking_chief",
+      "name": "Onur Demirtas",
+      "sex": "M",
+      "birthYear": 1980,
+      "alive": true,
+      "cartelId": "peker_org",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 58,
+        "business": 68,
+        "charisma": 45,
+        "intrigue": 60,
+        "loyaltyInspiring": 48,
+        "stealth": 65
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la posición real de Turquía como corredor de tránsito de heroína afgana hacia Europa por la ruta balcánica.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sp_gov_chief",
+      "name": "Necati Aslan",
+      "sex": "M",
+      "birthYear": 1960,
+      "alive": true,
+      "cartelId": "peker_org",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 62,
+        "charisma": 68,
+        "intrigue": 75,
+        "loyaltyInspiring": 50,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red de conexiones políticas de la organización, tema central de las acusaciones reales y aún disputadas hechas públicas por Peker en 2021.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sp_police_chief",
+      "name": "Comisario Fatih Ozturk",
+      "sex": "M",
+      "birthYear": 1969,
+      "alive": true,
+      "cartelId": "peker_org",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 30,
+        "business": 50,
+        "charisma": 45,
+        "intrigue": 65,
+        "loyaltyInspiring": 42,
+        "stealth": 62
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa complicidades dentro de las fuerzas de seguridad turcas.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sp_production_chief",
+      "name": "Ilker Coskun",
+      "sex": "M",
+      "birthYear": 1974,
+      "alive": true,
+      "cartelId": "peker_org",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 38,
+        "business": 55,
+        "charisma": 40,
+        "intrigue": 48,
+        "loyaltyInspiring": 40,
+        "stealth": 52
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa las operaciones logísticas de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sp_pr_chief",
+      "name": "Aylin Demir",
+      "sex": "F",
+      "birthYear": 1982,
+      "alive": true,
+      "cartelId": "peker_org",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 50,
+        "charisma": 78,
+        "intrigue": 58,
+        "loyaltyInspiring": 55,
+        "stealth": 48
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa el manejo real, muy activo, de la imagen pública de Peker en redes sociales y medios.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []
