@@ -357,10 +357,11 @@ function showTerritoryModal(app, territoryId) {
       <div class="card tight mt-1">
         <h3>Diplomacia con ${escapeHtml(controller.name)}</h3>
         ${relStatus === "neutral" ? `<button class="block" id="map-alliance-btn">Proponer alianza</button>` : ""}
+        ${relStatus === "war" ? `<button class="block" id="map-peace-btn">Proponer paz (sin condiciones)</button>` : ""}
         <button class="block" id="map-absorb-btn" ${playerCartel.resources.money < PROPOSE_ABSORPTION_COST || !canProposeAbsorption(playerCartel, controller) ? "disabled" : ""}>
           Proponer subordinación (${fmtMoney(PROPOSE_ABSORPTION_COST)})
         </button>
-        <p class="small text-dim">Gestión completa de guerra, paz y más negociaciones en la pestaña Diplomacia.</p>
+        <p class="small text-dim">Gestión completa de guerra, paz (con cesión de territorio o indemnización) y más negociaciones en la pestaña Diplomacia.</p>
       </div>
     ` : ""}
 
@@ -470,6 +471,13 @@ function showTerritoryModal(app, territoryId) {
     closeModal();
     if (!result.ok) alert(result.message);
     else alert(result.accepted ? `${controller.name} acepta convertirse en una facción subordinada de tu cártel.` : `${controller.name} rechaza la propuesta de subordinación.`);
+    app.render();
+  });
+  document.getElementById("map-peace-btn")?.addEventListener("click", () => {
+    const result = applyAction(game, playerCartel.id, "propose_peace", { targetCartelId: controller.id });
+    app.setGame(game);
+    closeModal();
+    alert(result.accepted ? `${controller.name} acepta la paz.` : `${controller.name} rechaza tu propuesta de paz.`);
     app.render();
   });
 }
