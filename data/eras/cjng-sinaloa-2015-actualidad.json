@@ -49,7 +49,7 @@
       "value": 15,
       "adj": [
         "sonora",
-        "usa"
+        "california"
       ],
       "geo": "MEX_BajaCalifornia"
     },
@@ -62,7 +62,7 @@
         "baja_california",
         "chihuahua",
         "sinaloa_t",
-        "usa"
+        "arizona"
       ],
       "geo": "MEX_Sonora"
     },
@@ -75,7 +75,8 @@
         "sonora",
         "sinaloa_t",
         "coahuila",
-        "usa"
+        "new_mexico",
+        "texas"
       ],
       "geo": "MEX_Chihuahua"
     },
@@ -99,7 +100,7 @@
       "adj": [
         "chihuahua",
         "nuevo_leon",
-        "usa"
+        "texas"
       ],
       "geo": "MEX_Coahuila"
     },
@@ -111,7 +112,7 @@
       "adj": [
         "coahuila",
         "tamaulipas",
-        "usa"
+        "texas"
       ],
       "geo": "MEX_NuevoLeon"
     },
@@ -123,7 +124,7 @@
       "adj": [
         "nuevo_leon",
         "veracruz",
-        "usa"
+        "texas"
       ],
       "geo": "MEX_Tamaulipas"
     },
@@ -349,28 +350,12 @@
       "geo": "COUNTRY_BRA"
     },
     {
-      "id": "usa",
-      "name": "Estados Unidos",
-      "controllerId": null,
-      "value": 22,
-      "adj": [
-        "canada",
-        "baja_california",
-        "sonora",
-        "chihuahua",
-        "coahuila",
-        "nuevo_leon",
-        "tamaulipas"
-      ],
-      "geo": "WORLD_USA"
-    },
-    {
       "id": "canada",
       "name": "Canadá",
       "controllerId": null,
       "value": 18,
       "adj": [
-        "usa"
+        "resto_eeuu"
       ],
       "geo": "WORLD_CANADA"
     },
@@ -2585,6 +2570,73 @@
         "sudafrica"
       ],
       "geo": "WORLD_ESUATINI"
+    },
+    {
+      "id": "california",
+      "name": "California",
+      "controllerId": null,
+      "value": 20,
+      "adj": [
+        "arizona",
+        "resto_eeuu",
+        "baja_california"
+      ],
+      "geo": "USA_California"
+    },
+    {
+      "id": "arizona",
+      "name": "Arizona",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "california",
+        "new_mexico",
+        "resto_eeuu",
+        "sonora"
+      ],
+      "geo": "USA_Arizona"
+    },
+    {
+      "id": "new_mexico",
+      "name": "Nuevo México",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "arizona",
+        "texas",
+        "resto_eeuu",
+        "chihuahua"
+      ],
+      "geo": "USA_NewMexico"
+    },
+    {
+      "id": "texas",
+      "name": "Texas",
+      "controllerId": null,
+      "value": 20,
+      "adj": [
+        "new_mexico",
+        "resto_eeuu",
+        "chihuahua",
+        "coahuila",
+        "nuevo_leon",
+        "tamaulipas"
+      ],
+      "geo": "USA_Texas"
+    },
+    {
+      "id": "resto_eeuu",
+      "name": "Resto de Estados Unidos",
+      "controllerId": null,
+      "value": 26,
+      "adj": [
+        "california",
+        "arizona",
+        "new_mexico",
+        "texas",
+        "canada"
+      ],
+      "geo": "USA_RestoEEUU"
     }
   ],
   "cartels": [
