@@ -114,6 +114,11 @@ const WAR_FOCUS_DURATION = 4;
 const WAR_FOCUS_BONUS = 1.25;
 const WAR_FOCUS_PENALTY = 0.85;
 
+// propose_absorption: a rival cartel only ever accepts becoming a subordinate faction of yours if
+// it's genuinely overmatched (its strength score capped at 45% of yours) — this is a mechanism for
+// swallowing crippled rivals, not for two comparable cartels merging as equals.
+const ABSORPTION_MAX_RELATIVE_STRENGTH = 0.45;
+
 /** Combat power multiplier from set_war_focus: boosts a cartel's power against the one enemy it's
  * currently concentrating forces on, at the cost of fighting weaker against every other enemy it's
  * simultaneously at war with. Absent any active focus (the default for every AI cartel and any
@@ -159,12 +164,61 @@ export function getWarsForCartel(game, cartelId) {
   return (game.warHistory || []).filter((w) => w.cartelA === cartelId || w.cartelB === cartelId);
 }
 
+/** Folds a defeated/outmatched rival into the absorbing cartel: its territories, most of its
+ * remaining money and army, and every one of its living members transfer over (roles are cleared —
+ * the absorbing cartel already has its own cúpula, so former officers arrive as rank-and-file
+ * associates, exactly like a successful poach_member). The absorbed cartel itself is marked
+ * destroyed, same as any other cartel elimination, so it's skipped by every AI/upkeep/collapse loop
+ * from here on — but its `roles`/`relations` are left untouched as a historical record instead of
+ * being wiped, the same way a deceased character keeps their old `cartelId` after death. */
+function absorbCartel(game, cartel, target) {
+  for (const tId of [...target.territories]) {
+    const territory = game.territories[tId];
+    if (territory) territory.controllerId = cartel.id;
+    cartel.territories.push(tId);
+  }
+  target.territories = [];
+  cartel.resources.money += Math.round(target.resources.money * 0.7);
+  cartel.resources.armySize += Math.round(target.resources.armySize * 0.7);
+  target.resources.money = 0;
+  target.resources.armySize = 0;
+  for (const cid of [...(target.characters || [])]) {
+    const c = game.characters[cid];
+    if (!c || !c.alive) continue;
+    c.cartelId = cartel.id;
+    c.role = null;
+    c.bondWithPlayer = 50;
+    cartel.characters.push(cid);
+  }
+  target.characters = [];
+  target.destroyed = true;
+  target.absorbedBy = cartel.id;
+  closeWar(game, cartel.id, target.id, `${target.name} pasa a operar como facción subordinada de ${cartel.name}.`);
+  cartel.relations[target.id] = { status: "alliance", tension: 0 };
+  target.relations[cartel.id] = { status: "alliance", tension: 0 };
+}
+
 /** All money in the game is denominated in real dollars. Costs/income below are defined in
  * "base units" and multiplied by MONEY_SCALE so every figure — starting capital, action costs,
  * territory income, payroll — lands in a historically plausible range (a founding-era plaza
  * boss with a few hundred thousand dollars, a cartel at its peak with tens of millions) instead
  * of reading as a few hundred literal dollars. */
 export const MONEY_SCALE = 10000;
+export const PROPOSE_ABSORPTION_COST = 400 * MONEY_SCALE;
+
+/** Rough overall power score used only to gate propose_absorption — territories weighted heaviest
+ * (they're what actually matters long-term), army and money as secondary signals of how much
+ * fight is left in a cartel. Not used anywhere combat/economy actually resolves. */
+export function cartelStrengthScore(cartel) {
+  return cartel.territories.length * 8 + cartel.resources.armySize + cartel.resources.money / (500 * MONEY_SCALE);
+}
+
+/** Whether `target` is weak enough relative to `cartel` to even consider accepting subordination —
+ * shared between the propose_absorption action itself and the UI, so the button and the actual
+ * accept/reject roll never disagree about what counts as "outmatched". */
+export function canProposeAbsorption(cartel, target) {
+  return cartelStrengthScore(target) <= cartelStrengthScore(cartel) * ABSORPTION_MAX_RELATIVE_STRENGTH;
+}
 
 // Which drug(s) each era's economy really turned on, and a rough mechanical shorthand for how
 // that changed the risk/reward profile: bulkier plant-based drugs (marijuana/heroin) were harder
@@ -388,7 +442,12 @@ export function applyAction(game, cartelId, type, payload = {}) {
         log(`Un envío de ${cartel.name} con destino a ${market.name} es interceptado en la ruta.`, "event");
         return { ok: true, message: "Interceptado." };
       }
-      const partnerMultiplier = partnerStatus === "alliance" ? 1.25 : partnerStatus === "neutral" ? 1 : 0.85;
+      // War partners are already rejected above, so the only real cases left are alliance (bonus)
+      // and everything else — neutral partner or no partner/open market — at the same baseline
+      // rate. `partnerStatus` is null with no partner selected, which used to fall through to the
+      // same 0.85 penalty as a hostile relationship despite "mercado abierto" being documented (in
+      // the UI text) as the neutral default option — a real mismatch, not intended behavior.
+      const partnerMultiplier = partnerStatus === "alliance" ? 1.25 : 1;
       const payout = Math.round(cost * (1.6 + Math.random() * 1.2) * partnerMultiplier * drug.payoutMult * market.payoutMult * (1 + traffickingBonus / 50) * (1 + (r.tradeRouteBonus || 0)));
       r.money += payout;
       r.heat = Math.min(100, r.heat + Math.round(5 * drug.heatMult));
@@ -634,6 +693,39 @@ export function applyAction(game, cartelId, type, payload = {}) {
         return { ok: true, accepted: true };
       }
       log(`${target.name} rechaza la alianza propuesta por ${cartel.name}.`, "event");
+      return { ok: true, accepted: false };
+    }
+    case "propose_absorption": {
+      // Not a budgeted action, like propose_peace/propose_alliance/declare_war: this is a major
+      // diplomatic move with its own strategic weight, not routine cartel upkeep.
+      const target = game.cartels[payload.targetCartelId];
+      if (!target || target.destroyed || target.id === cartelId) return { ok: false, message: "Objetivo no válido." };
+      const cost = PROPOSE_ABSORPTION_COST;
+      if (r.money < cost) return { ok: false, message: `Hace falta ${fmtMoney(cost)} para esta propuesta.` };
+      // A rival only folds itself into you as a subordinate faction if it's genuinely outmatched —
+      // this is surrender dressed up as alliance, not a merger of equals.
+      if (!canProposeAbsorption(cartel, target)) {
+        return { ok: false, message: `${target.name} todavía es demasiado fuerte para aceptar convertirse en una facción subordinada de la tuya.` };
+      }
+      r.money -= cost;
+      const myScore = cartelStrengthScore(cartel);
+      const targetScore = cartelStrengthScore(target);
+      const relStatus = cartel.relations[target.id]?.status || "neutral";
+      const absorptionDiplomatBonus = diplomatChiefBonus(game.characters[cartel.roles.diplomatChief]);
+      let acceptChance = clamp(0.2 + (myScore - targetScore) / (myScore + targetScore + 1) * 0.5 + absorptionDiplomatBonus / 100, 0.05, 0.85);
+      // Losing a war against you makes subordination look like survival, not surrender.
+      if (relStatus === "war") acceptChance = clamp(acceptChance + 0.18, 0.05, 0.9);
+      if (payload.persuasionBoost) acceptChance = clamp(acceptChance + payload.persuasionBoost * 0.02, 0.05, 0.93);
+      if (chance(acceptChance)) {
+        absorbCartel(game, cartel, target);
+        log(`${target.name} acepta convertirse en una facción subordinada de ${cartel.name}, aportando sus territorios, su gente y lo que le quedaba en la caja.`, "good");
+        return { ok: true, accepted: true };
+      }
+      const status = relStatus === "war" ? "war" : relStatus;
+      const tension = clamp((cartel.relations[target.id]?.tension || 30) + randInt(10, 20), 0, 100);
+      cartel.relations[target.id] = { status, tension };
+      target.relations[cartelId] = { status, tension };
+      log(`${target.name} rechaza convertirse en una facción subordinada de ${cartel.name}.`, "event");
       return { ok: true, accepted: false };
     }
     case "attack_territory": {
@@ -2478,6 +2570,7 @@ function recordHistory(game) {
       heat: cartel.destroyed ? 0 : cartel.resources.heat,
       publicImage: cartel.destroyed ? 0 : cartel.resources.publicImage,
       territories: cartel.destroyed ? 0 : cartel.territories.length,
+      worldMarketShare: cartel.destroyed ? 0 : getWorldMarketShare(game, cartel),
     });
     if (h.length > 200) h.shift();
   }

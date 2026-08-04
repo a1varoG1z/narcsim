@@ -351,7 +351,7 @@ function showTrafficModal(app, game, cartel) {
 function showMarketModal(app, game, cartel, markets) {
   showModal(`
     <h2>Enviar cargamento</h2>
-    <p class="small text-dim">Elige a qué mercado internacional va destinado este envío. Cada mercado paga y arriesga distinto — y tu cuota ahí se mide solo frente a quien también traficque hacia el mismo destino.</p>
+    <p class="small text-dim">Paso 1 de 2: ¿a qué país o región de destino va este cargamento? Es una decisión de exportación real — cada mercado internacional paga un precio distinto por tu producto y tiene su propio riesgo de que las autoridades lo intercepten en el camino. Tu "cuota de mercado" en la pestaña Economía se calcula por separado en cada uno: vender mucho a Europa no te hace más fuerte en EE. UU. si nunca mandas nada allí.</p>
     ${markets.map((m) => {
       const locked = m.availableFromYear && currentYear(game) < m.availableFromYear;
       return `<button class="block" data-market="${m.id}" ${locked ? "disabled" : ""}>
@@ -373,13 +373,13 @@ function showPartnerModal(app, game, cartel, marketId) {
   const partners = Object.values(game.cartels).filter((c) => c.id !== cartel.id && !c.destroyed);
   showModal(`
     <h2>Enviar cargamento</h2>
-    <p class="small text-dim">Vender a un socio conocido cambia el resultado: los aliados pagan mejor, los rivales en guerra ni se plantean; el mercado abierto es la opción neutra de siempre.</p>
-    <button class="block primary" data-partner="">Mercado abierto (sin socio)</button>
+    <p class="small text-dim">Paso 2 de 2: ¿a quién le vendes este cargamento en concreto, una vez llega a destino? No es dónde va (eso ya lo elegiste) sino quién te lo compra allí. "Mercado abierto" es vender a compradores anónimos al precio normal, sin depender de nadie — la opción de siempre, siempre disponible. Venderle en cambio a un cártel concreto con el que ya tienes relación es un trato de distribución directo: si es tu aliado te paga de más porque confía en el trato; si estás en guerra con él, evidentemente no va a comprarte nada; si es neutral, ni sube ni baja el precio.</p>
+    <button class="block primary" data-partner="">Mercado abierto: vender a compradores anónimos al precio normal</button>
     ${partners.map((p) => {
       const status = cartel.relations[p.id]?.status || "neutral";
-      const label = status === "alliance" ? "Aliado — mejor precio" : status === "war" ? "En guerra — no disponible" : "Neutral";
+      const label = status === "alliance" ? "Aliado — te compra a mejor precio que el mercado abierto" : status === "war" ? "En guerra — no puede comprarte nada" : "Neutral — mismo precio que el mercado abierto, pero es un trato directo con ellos";
       return `<button class="block" data-partner="${p.id}" ${status === "war" ? "disabled" : ""}>
-        ${escapeHtml(p.name)}
+        Venderle directamente a ${escapeHtml(p.name)}
         <div class="small text-dim">${label}</div>
       </button>`;
     }).join("")}

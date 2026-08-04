@@ -59,20 +59,26 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-// Stale-while-revalidate: serve from cache instantly (works offline), refresh in the background.
+// Network-first, falling back to cache only when offline. The previous stale-while-revalidate
+// strategy served whatever was cached instantly and only refreshed the cache in the background
+// for the *next* load — for a single-page app that a player can keep open/reopen across many
+// real days, and a game that ships data changes constantly, that meant returning players kept
+// seeing outdated map/era data indefinitely unless the cache name itself was bumped (multiple
+// real user reports traced back to exactly this: an old map layout persisting for many sessions
+// after the underlying data had already changed). Trading a little offline snappiness for
+// players always getting current content when they actually have a connection.
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET" || !event.request.url.startsWith(self.location.origin)) return;
 
   event.respondWith(
-    caches.open(CACHE_NAME).then(async (cache) => {
-      const cached = await cache.match(event.request);
-      const network = fetch(event.request)
-        .then((response) => {
-          if (response.ok) cache.put(event.request, response.clone());
-          return response;
-        })
-        .catch(() => cached);
-      return cached || network;
-    })
+    fetch(event.request)
+      .then((response) => {
+        if (response.ok) {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+        }
+        return response;
+      })
+      .catch(() => caches.match(event.request))
   );
 });

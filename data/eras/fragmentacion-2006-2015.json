@@ -561,7 +561,7 @@
     {
       "id": "italia",
       "name": "Italia",
-      "controllerId": null,
+      "controllerId": "casalesi",
       "value": 18,
       "adj": [
         "austria",
@@ -2856,6 +2856,35 @@
         "productionChief": "nt_production_chief",
         "prChief": "nt_pr_chief"
       }
+    },
+    {
+      "id": "casalesi",
+      "name": "Clan de los Casalesi (Camorra)",
+      "color": "#3a4a2f",
+      "aiControlled": true,
+      "historicalNote": "El clan de los Casalesi, con base real en Casal di Principe (provincia de Caserta, Campania), es una de las facciones históricas de la Camorra napolitana y, según estimaciones de la fiscalía italiana de la época, una de las organizaciones criminales más ricas de Europa: además del narcotráfico, controlaba de forma real la extorsión sistemática a la construcción en la región y el vertido ilegal masivo de residuos tóxicos (el fenómeno real conocido como \"Terra dei Fuochi\"). Tras la condena real a cadena perpetua de su fundador, Francesco \"Sandokan\" Schiavone, en el histórico macroproceso \"Spartacus\" (sentencia de apelación en 2008), la organización quedó bajo el mando conjunto real de Michele Zagaria y Antonio Iovine, ambos fugitivos durante años antes de esta época. El periodista real Roberto Saviano, autor de \"Gomorra\" (2006), documentó a fondo esta organización y recibió amenazas de muerte reales del clan, viviendo desde entonces bajo escolta policial permanente. En el juego, como con el resto de figuras históricas, el destino de sus líderes depende de tus decisiones y de la simulación, no está fijado de antemano.",
+      "resources": {
+        "money": 160000000,
+        "armySize": 750,
+        "corruptGov": 60,
+        "corruptPolice": 55,
+        "publicImage": 20,
+        "heat": 40
+      },
+      "roles": {
+        "leader": "cas_leader",
+        "underboss": "cas_underboss",
+        "sicariosChief": "cas_sicarios_chief",
+        "intelChief": "cas_intel_chief",
+        "militaryChief": "cas_military_chief",
+        "diplomatChief": "cas_diplomat_chief",
+        "financeChief": "cas_finance_chief",
+        "traffickingChief": "cas_trafficking_chief",
+        "corruptionGovChief": "cas_gov_chief",
+        "corruptionPoliceChief": "cas_police_chief",
+        "productionChief": "cas_production_chief",
+        "prChief": "cas_pr_chief"
+      }
     }
   ],
   "characters": [
@@ -5000,6 +5029,284 @@
       },
       "traits": [],
       "notes": "Personaje ficticio que representa la fachada institucional de la organización de puertas afuera.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cas_leader",
+      "name": "Michele Zagaria",
+      "sex": "M",
+      "birthYear": 1958,
+      "alive": true,
+      "cartelId": "casalesi",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 85,
+        "business": 82,
+        "charisma": 55,
+        "intrigue": 88,
+        "loyaltyInspiring": 68,
+        "stealth": 92
+      },
+      "traits": [
+        "fundador"
+      ],
+      "notes": "Jefe real del clan de los Casalesi junto a Antonio Iovine tras la condena de Francesco \"Sandokan\" Schiavone. Permaneció fugitivo desde los años 90; en la vida real fue detenido en un búnker subterráneo en Casapesenna en diciembre de 2011. En el juego su destino depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cas_underboss",
+      "name": "Antonio Iovine",
+      "sex": "M",
+      "birthYear": 1964,
+      "alive": true,
+      "cartelId": "casalesi",
+      "role": "underboss",
+      "historical": true,
+      "stats": {
+        "violence": 78,
+        "business": 75,
+        "charisma": 58,
+        "intrigue": 80,
+        "loyaltyInspiring": 62,
+        "stealth": 88
+      },
+      "traits": [],
+      "notes": "Cojefe real del clan junto a Michele Zagaria, apodado \"o' Ninno\". En la vida real fue detenido en noviembre de 2010 tras años fugitivo, y posteriormente colaboró con la justicia italiana como arrepentido.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cas_sicarios_chief",
+      "name": "Giuseppe Setola",
+      "sex": "M",
+      "birthYear": 1967,
+      "alive": true,
+      "cartelId": "casalesi",
+      "role": "sicariosChief",
+      "historical": true,
+      "stats": {
+        "violence": 96,
+        "business": 35,
+        "charisma": 40,
+        "intrigue": 55,
+        "loyaltyInspiring": 45,
+        "stealth": 60
+      },
+      "traits": [],
+      "notes": "Sicario real del clan, responsable de una ola real de asesinatos en la zona de Castel Volturno en 2008 tras escapar de arresto domiciliario. En la vida real fue detenido en enero de 2009.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cas_intel_chief",
+      "name": "Franco Bidognetti",
+      "sex": "M",
+      "birthYear": 1952,
+      "alive": true,
+      "cartelId": "casalesi",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 50,
+        "business": 58,
+        "charisma": 52,
+        "intrigue": 74,
+        "loyaltyInspiring": 48,
+        "stealth": 76
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a la red de vigilancia e información interna de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cas_military_chief",
+      "name": "Rocco Schiavone",
+      "sex": "M",
+      "birthYear": 1960,
+      "alive": true,
+      "cartelId": "casalesi",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 80,
+        "business": 42,
+        "charisma": 38,
+        "intrigue": 52,
+        "loyaltyInspiring": 58,
+        "stealth": 48
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los mandos armados del clan.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cas_diplomat_chief",
+      "name": "Avv. Peppe Nocerino",
+      "sex": "M",
+      "birthYear": 1955,
+      "alive": true,
+      "cartelId": "casalesi",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 35,
+        "business": 62,
+        "charisma": 68,
+        "intrigue": 66,
+        "loyaltyInspiring": 50,
+        "stealth": 58
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa los canales reales de negociación del clan con otras facciones de la Camorra y con la política local.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cas_finance_chief",
+      "name": "Ciro Esposito",
+      "sex": "M",
+      "birthYear": 1958,
+      "alive": true,
+      "cartelId": "casalesi",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 28,
+        "business": 84,
+        "charisma": 48,
+        "intrigue": 62,
+        "loyaltyInspiring": 44,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red real de empresas de fachada en el sector de la construcción usada para blanquear el dinero del clan.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cas_trafficking_chief",
+      "name": "Vincenzo Letizia",
+      "sex": "M",
+      "birthYear": 1963,
+      "alive": true,
+      "cartelId": "casalesi",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 58,
+        "business": 70,
+        "charisma": 46,
+        "intrigue": 60,
+        "loyaltyInspiring": 48,
+        "stealth": 64
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red real de distribución de cocaína del clan en el centro y sur de Italia.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cas_gov_chief",
+      "name": "On. Aldo Fusco",
+      "sex": "M",
+      "birthYear": 1950,
+      "alive": true,
+      "cartelId": "casalesi",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 65,
+        "charisma": 70,
+        "intrigue": 72,
+        "loyaltyInspiring": 46,
+        "stealth": 62
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red real de complicidades políticas locales documentadas en distintos procesos contra el clan, especialmente en torno a la adjudicación de obra pública.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cas_police_chief",
+      "name": "Maresciallo Enzo Diana",
+      "sex": "M",
+      "birthYear": 1957,
+      "alive": true,
+      "cartelId": "casalesi",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 30,
+        "business": 52,
+        "charisma": 48,
+        "intrigue": 66,
+        "loyaltyInspiring": 44,
+        "stealth": 68
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red real de complicidades dentro de las fuerzas del orden de la región de Caserta.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cas_production_chief",
+      "name": "Aniello Bardellino",
+      "sex": "M",
+      "birthYear": 1961,
+      "alive": true,
+      "cartelId": "casalesi",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 40,
+        "business": 60,
+        "charisma": 38,
+        "intrigue": 48,
+        "loyaltyInspiring": 40,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa el negocio real del vertido ilegal de residuos tóxicos que hizo del clan una de las organizaciones más ricas de Europa (el fenómeno real conocido como \"Terra dei Fuochi\").",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cas_pr_chief",
+      "name": "Don Gennaro Verde",
+      "sex": "M",
+      "birthYear": 1948,
+      "alive": true,
+      "cartelId": "casalesi",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 25,
+        "business": 48,
+        "charisma": 62,
+        "intrigue": 50,
+        "loyaltyInspiring": 58,
+        "stealth": 50
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa el manejo real de la legitimidad social del clan dentro de su comunidad de origen, en fuerte contraste con la exposición mediática real que le supuso el libro \"Gomorra\" de Roberto Saviano.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

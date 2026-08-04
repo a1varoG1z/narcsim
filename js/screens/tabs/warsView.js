@@ -1,6 +1,6 @@
 import { getPlayerCartel } from "../../state.js";
 import { escapeHtml, portraitImg, roleLabel } from "../../ui/components.js";
-import { applyAction, getWarsForCartel, ACTION_COSTS, getActionsRemaining, isAttackable, MONEY_SCALE } from "../../turnEngine.js";
+import { applyAction, getWarsForCartel, ACTION_COSTS, getActionsRemaining, isAttackable, MONEY_SCALE, canProposeAbsorption, PROPOSE_ABSORPTION_COST } from "../../turnEngine.js";
 import { showModal, closeModal } from "../../ui/modal.js";
 import { showCartelProfile } from "./cartelProfile.js";
 import { fmtMoney } from "../../utils/text.js";
@@ -27,7 +27,7 @@ export function render(container, app) {
   container.innerHTML = `
     <div class="card">
       <h2>Relaciones exteriores</h2>
-      <p class="text-dim small">Declarar guerra, atacar, ocupar, proponer paz/alianza y concentrar fuerzas en un frente no gastan acciones. Ordenar un atentado, sabotear, hacer una redada, intimidar, reclutar informantes, reclutar a un miembro rival e interceptar un cargamento sí (te quedan ${getActionsRemaining(game)}).</p>
+      <p class="text-dim small">Declarar guerra, atacar, ocupar, proponer paz/alianza/subordinación y concentrar fuerzas en un frente no gastan acciones. Ordenar un atentado, sabotear, hacer una redada, intimidar, reclutar informantes, reclutar a un miembro rival e interceptar un cargamento sí (te quedan ${getActionsRemaining(game)}).</p>
       ${others.map((o) => {
         const rel = cartel.relations[o.id] || { status: "neutral", tension: 0 };
         return `
@@ -45,6 +45,7 @@ export function render(container, app) {
             ${rel.status === "war" ? (cartel.warFocus?.targetCartelId === o.id
               ? `<button data-clear-focus="${o.id}">Quitar foco</button>`
               : `<button data-focus="${o.id}">Concentrar fuerzas aquí</button>`) : ""}
+            <button data-absorb="${o.id}" ${cartel.resources.money < PROPOSE_ABSORPTION_COST || !canProposeAbsorption(cartel, o) ? "disabled" : ""}>Proponer subordinación</button>
             <button class="danger" data-assassinate="${o.id}" ${cartel.resources.money < ACTION_COSTS.assassinate_rival || noActionsLeft ? "disabled" : ""}>Ordenar un atentado</button>
             <button class="danger" data-sabotage="${o.id}" ${cartel.resources.money < ACTION_COSTS.sabotage_rival || noActionsLeft ? "disabled" : ""}>Sabotear</button>
             <button class="danger" data-intercept="${o.id}" ${cartel.resources.money < ACTION_COSTS.intercept_shipment || noActionsLeft ? "disabled" : ""}>Interceptar un cargamento</button>
@@ -83,6 +84,9 @@ export function render(container, app) {
   }));
   container.querySelectorAll("[data-alliance]").forEach((btn) => btn.addEventListener("click", () => {
     showAllianceModal(app, game, cartel, btn.dataset.alliance);
+  }));
+  container.querySelectorAll("[data-absorb]").forEach((btn) => btn.addEventListener("click", () => {
+    showAbsorptionModal(app, game, cartel, btn.dataset.absorb);
   }));
   container.querySelectorAll("[data-focus]").forEach((btn) => btn.addEventListener("click", () => {
     applyAction(game, cartel.id, "set_war_focus", { targetCartelId: btn.dataset.focus });
@@ -619,6 +623,36 @@ function showAllianceModal(app, game, cartel, targetCartelId) {
   document.querySelectorAll("[data-gift]").forEach((btn) => {
     btn.addEventListener("click", () => send("gift", Number(btn.dataset.gift)));
   });
+}
+
+function showAbsorptionModal(app, game, cartel, targetCartelId) {
+  const target = game.cartels[targetCartelId];
+  const relStatus = cartel.relations[targetCartelId]?.status || "neutral";
+
+  const send = () => {
+    const res = applyAction(game, cartel.id, "propose_absorption", { targetCartelId });
+    app.setGame(game);
+    closeModal();
+    if (!res.ok) {
+      alert(res.message);
+    } else if (res.accepted) {
+      alert(`${target.name} acepta convertirse en una facción subordinada de ${cartel.name}: sus territorios, su gente y lo que quedaba en su caja pasan a tu cártel.`);
+    } else {
+      alert(`${target.name} rechaza la propuesta de subordinación.`);
+    }
+    app.render();
+  };
+
+  showModal(`
+    <h2>Proponer subordinación a ${escapeHtml(target.name)}</h2>
+    <p class="small text-dim">Coste: ${fmtMoney(PROPOSE_ABSORPTION_COST)}. No es una alianza entre iguales: le ofreces integrarse como facción subordinada de tu cártel — todos sus territorios pasan a ser tuyos, la mayor parte de su dinero y de su ejército se suman a los tuyos, y su gente se incorpora a tu cúpula como asociados (sin cargo directivo, ya que los tuyos siguen ocupando los puestos). Solo aceptan si están claramente por debajo de ti en fuerza (territorios, ejército y dinero combinados)${relStatus === "war" ? "; estar en guerra contigo y perdiendo hace mucho más probable que acepten, como forma de sobrevivir" : ""}.</p>
+    <div class="btn-row mt-2">
+      <button class="primary block" id="send-absorption">Enviar propuesta</button>
+      <button class="ghost block" id="close-btn">Cancelar</button>
+    </div>
+  `);
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.getElementById("send-absorption").addEventListener("click", send);
 }
 
 function showPeaceModal(app, game, cartel, targetCartelId) {

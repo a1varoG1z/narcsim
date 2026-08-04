@@ -4,6 +4,7 @@ import { showModal, closeModal } from "../../ui/modal.js";
 import {
   applyAction, isAttackable, getMarketProfiles, getRegionalMarketShare,
   estimateConquestDifficulty, estimateOccupyChance, getActionsRemaining, ACTION_COSTS, MONEY_SCALE,
+  canProposeAbsorption, PROPOSE_ABSORPTION_COST,
 } from "../../turnEngine.js";
 import { fmtMoney } from "../../utils/text.js";
 import { showCartelProfile } from "./cartelProfile.js";
@@ -335,6 +336,7 @@ function showTerritoryModal(app, territoryId) {
   const difficulty = attackable ? estimateConquestDifficulty(game, playerCartel, t) : null;
   const occupyChance = occupiable ? estimateOccupyChance(game, playerCartel, t) : null;
   const actionsLeft = getActionsRemaining(game);
+  const relStatus = controller ? (playerCartel.relations[controller.id]?.status || "neutral") : null;
 
   showModal(`
     <h2>${escapeHtml(t.name)}</h2>
@@ -351,6 +353,14 @@ function showTerritoryModal(app, territoryId) {
           <p class="small">Dificultad estimada: <strong>${difficulty.label}</strong> <span class="text-dim">(fuerza relativa ${(difficulty.ratio * 100).toFixed(0)}%)</span></p>
           <button class="danger block" id="attack-btn">Atacar y disputar este territorio</button>
         ` : `<p class="small text-dim">No tienes ningún territorio colindante: no puedes atacarlo directamente todavía.</p>`}
+      </div>
+      <div class="card tight mt-1">
+        <h3>Diplomacia con ${escapeHtml(controller.name)}</h3>
+        ${relStatus === "neutral" ? `<button class="block" id="map-alliance-btn">Proponer alianza</button>` : ""}
+        <button class="block" id="map-absorb-btn" ${playerCartel.resources.money < PROPOSE_ABSORPTION_COST || !canProposeAbsorption(playerCartel, controller) ? "disabled" : ""}>
+          Proponer subordinación (${fmtMoney(PROPOSE_ABSORPTION_COST)})
+        </button>
+        <p class="small text-dim">Gestión completa de guerra, paz y más negociaciones en la pestaña Diplomacia.</p>
       </div>
     ` : ""}
 
@@ -443,6 +453,23 @@ function showTerritoryModal(app, territoryId) {
     app.setGame(game);
     closeModal();
     if (!result.ok) alert(result.message);
+    app.render();
+  });
+  document.getElementById("map-alliance-btn")?.addEventListener("click", () => {
+    const result = applyAction(game, playerCartel.id, "propose_alliance", { targetCartelId: controller.id, approach: "business" });
+    app.setGame(game);
+    closeModal();
+    if (!result.ok) alert(result.message);
+    else alert(result.accepted ? `${controller.name} acepta la alianza.` : `${controller.name} rechaza tu propuesta de alianza.`);
+    app.render();
+  });
+  document.getElementById("map-absorb-btn")?.addEventListener("click", () => {
+    if (!confirm(`¿Proponer a ${controller.name} que se convierta en una facción subordinada de tu cártel por ${fmtMoney(PROPOSE_ABSORPTION_COST)}? Solo aceptarán si están claramente por debajo de ti en fuerza.`)) return;
+    const result = applyAction(game, playerCartel.id, "propose_absorption", { targetCartelId: controller.id });
+    app.setGame(game);
+    closeModal();
+    if (!result.ok) alert(result.message);
+    else alert(result.accepted ? `${controller.name} acepta convertirse en una facción subordinada de tu cártel.` : `${controller.name} rechaza la propuesta de subordinación.`);
     app.render();
   });
 }
