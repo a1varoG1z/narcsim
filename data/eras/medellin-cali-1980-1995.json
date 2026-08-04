@@ -13,9 +13,14 @@
       "controllerId": "medellin",
       "value": 22,
       "adj": [
-        "magdalena_medio",
+        "bolivar",
+        "boyaca",
+        "caribe_atlantico",
+        "choco",
+        "cordoba",
         "eje_cafetero",
-        "caribe_atlantico"
+        "magdalena_medio",
+        "santander"
       ],
       "geo": "COL_Antioquia"
     },
@@ -39,6 +44,8 @@
       "value": 12,
       "adj": [
         "caribe_atlantico",
+        "cesar",
+        "magdalena",
         "venezuela"
       ],
       "geo": "COL_LaGuajira"
@@ -60,8 +67,10 @@
       "controllerId": "los_pepes",
       "value": 13,
       "adj": [
-        "la_guajira",
         "antioquia",
+        "bolivar",
+        "la_guajira",
+        "magdalena",
         "magdalena_medio",
         "panama"
       ],
@@ -84,9 +93,12 @@
       "controllerId": "cali",
       "value": 22,
       "adj": [
-        "norte_del_valle",
+        "cauca",
+        "choco",
         "eje_cafetero",
-        "narino_putumayo"
+        "narino_putumayo",
+        "norte_del_valle",
+        "tolima"
       ],
       "geo": "COL_ValleCauca_Resto"
     },
@@ -96,8 +108,11 @@
       "controllerId": "urdinola",
       "value": 13,
       "adj": [
-        "valle_cauca",
-        "eje_cafetero"
+        "cauca",
+        "choco",
+        "eje_cafetero",
+        "tolima",
+        "valle_cauca"
       ],
       "geo": "COL_ValleCauca_Norte"
     },
@@ -107,8 +122,11 @@
       "controllerId": null,
       "value": 18,
       "adj": [
+        "cundinamarca",
+        "eje_cafetero",
+        "huila",
         "magdalena_medio",
-        "eje_cafetero"
+        "meta"
       ],
       "geo": "COL_Bogota"
     },
@@ -118,11 +136,14 @@
       "controllerId": null,
       "value": 10,
       "adj": [
-        "valle_cauca",
-        "eje_cafetero",
+        "amazonas",
         "bolivia",
+        "caqueta",
+        "cauca",
+        "ecuador",
+        "eje_cafetero",
         "peru",
-        "ecuador"
+        "valle_cauca"
       ],
       "geo": "COL_NarinoPutumayo"
     },
@@ -293,11 +314,15 @@
       "value": 9,
       "adj": [
         "antioquia",
-        "magdalena_medio",
-        "valle_cauca",
-        "norte_del_valle",
         "bogota",
-        "narino_putumayo"
+        "boyaca",
+        "choco",
+        "cundinamarca",
+        "magdalena_medio",
+        "narino_putumayo",
+        "norte_del_valle",
+        "tolima",
+        "valle_cauca"
       ],
       "geo": "COL_EjeCafetero"
     },
@@ -3007,6 +3032,321 @@
         "veracruz"
       ],
       "geo": "MEX_Puebla"
+    },
+    {
+      "id": "amazonas",
+      "name": "Amazonas",
+      "controllerId": null,
+      "value": 4,
+      "adj": [
+        "caqueta",
+        "narino_putumayo",
+        "vaupes"
+      ],
+      "geo": "COL_Amazonas"
+    },
+    {
+      "id": "arauca",
+      "name": "Arauca",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "boyaca",
+        "casanare",
+        "vichada"
+      ],
+      "geo": "COL_Arauca"
+    },
+    {
+      "id": "bolivar",
+      "name": "Bolívar",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "antioquia",
+        "caribe_atlantico",
+        "cesar",
+        "cordoba",
+        "magdalena",
+        "santander",
+        "sucre"
+      ],
+      "geo": "COL_Bolivar"
+    },
+    {
+      "id": "boyaca",
+      "name": "Boyacá",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "antioquia",
+        "arauca",
+        "casanare",
+        "cundinamarca",
+        "eje_cafetero",
+        "meta",
+        "norte_santander",
+        "santander"
+      ],
+      "geo": "COL_Boyaca"
+    },
+    {
+      "id": "caqueta",
+      "name": "Caquetá",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "amazonas",
+        "cauca",
+        "guaviare",
+        "huila",
+        "meta",
+        "narino_putumayo",
+        "vaupes"
+      ],
+      "geo": "COL_Caqueta"
+    },
+    {
+      "id": "casanare",
+      "name": "Casanare",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "arauca",
+        "boyaca",
+        "cundinamarca",
+        "meta",
+        "vichada"
+      ],
+      "geo": "COL_Casanare"
+    },
+    {
+      "id": "cauca",
+      "name": "Cauca",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "caqueta",
+        "huila",
+        "narino_putumayo",
+        "norte_del_valle",
+        "tolima",
+        "valle_cauca"
+      ],
+      "geo": "COL_Cauca"
+    },
+    {
+      "id": "cesar",
+      "name": "Cesar",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "bolivar",
+        "la_guajira",
+        "magdalena",
+        "norte_santander",
+        "santander"
+      ],
+      "geo": "COL_Cesar"
+    },
+    {
+      "id": "choco",
+      "name": "Chocó",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "antioquia",
+        "eje_cafetero",
+        "norte_del_valle",
+        "valle_cauca"
+      ],
+      "geo": "COL_Choco"
+    },
+    {
+      "id": "cordoba",
+      "name": "Córdoba",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "antioquia",
+        "bolivar",
+        "sucre"
+      ],
+      "geo": "COL_Cordoba"
+    },
+    {
+      "id": "cundinamarca",
+      "name": "Cundinamarca",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "bogota",
+        "boyaca",
+        "casanare",
+        "eje_cafetero",
+        "huila",
+        "meta",
+        "tolima"
+      ],
+      "geo": "COL_Cundinamarca"
+    },
+    {
+      "id": "guainia",
+      "name": "Guainía",
+      "controllerId": null,
+      "value": 4,
+      "adj": [
+        "guaviare",
+        "vaupes",
+        "vichada"
+      ],
+      "geo": "COL_Guainia"
+    },
+    {
+      "id": "guaviare",
+      "name": "Guaviare",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "caqueta",
+        "guainia",
+        "meta",
+        "vaupes",
+        "vichada"
+      ],
+      "geo": "COL_Guaviare"
+    },
+    {
+      "id": "huila",
+      "name": "Huila",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "bogota",
+        "caqueta",
+        "cauca",
+        "cundinamarca",
+        "meta",
+        "tolima"
+      ],
+      "geo": "COL_Huila"
+    },
+    {
+      "id": "magdalena",
+      "name": "Magdalena",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "bolivar",
+        "caribe_atlantico",
+        "cesar",
+        "la_guajira"
+      ],
+      "geo": "COL_Magdalena"
+    },
+    {
+      "id": "meta",
+      "name": "Meta",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "bogota",
+        "boyaca",
+        "caqueta",
+        "casanare",
+        "cundinamarca",
+        "guaviare",
+        "huila",
+        "vichada"
+      ],
+      "geo": "COL_Meta"
+    },
+    {
+      "id": "norte_santander",
+      "name": "Norte de Santander",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "boyaca",
+        "cesar",
+        "santander"
+      ],
+      "geo": "COL_NorteSantander"
+    },
+    {
+      "id": "san_andres",
+      "name": "San Andrés y Providencia",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "COL_SanAndres"
+    },
+    {
+      "id": "santander",
+      "name": "Santander",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "antioquia",
+        "bolivar",
+        "boyaca",
+        "cesar",
+        "norte_santander"
+      ],
+      "geo": "COL_Santander"
+    },
+    {
+      "id": "sucre",
+      "name": "Sucre",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "bolivar",
+        "cordoba"
+      ],
+      "geo": "COL_Sucre"
+    },
+    {
+      "id": "tolima",
+      "name": "Tolima",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "cauca",
+        "cundinamarca",
+        "eje_cafetero",
+        "huila",
+        "norte_del_valle",
+        "valle_cauca"
+      ],
+      "geo": "COL_Tolima"
+    },
+    {
+      "id": "vichada",
+      "name": "Vichada",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "arauca",
+        "casanare",
+        "guainia",
+        "guaviare",
+        "meta"
+      ],
+      "geo": "COL_Vichada"
+    },
+    {
+      "id": "vaupes",
+      "name": "Vaupés",
+      "controllerId": null,
+      "value": 4,
+      "adj": [
+        "amazonas",
+        "caqueta",
+        "guainia",
+        "guaviare"
+      ],
+      "geo": "COL_Vaupes"
     }
   ],
   "cartels": [
