@@ -762,8 +762,12 @@ export function applyAction(game, cartelId, type, payload = {}) {
         territory.controllerId = cartelId;
         cartel.territories.push(territory.id);
         r.heat = Math.min(100, r.heat + 5);
-        log(`${cartel.name} ocupa el territorio libre de ${territory.name}.`, "good");
-        return { ok: true, success: true };
+        // Smaller than a real conquest's haul (no defeated army to absorb, just local recruits
+        // drawn in once the territory has an owner).
+        const recruitsGained = Math.round(territory.value * randInt(1, 3));
+        r.armySize += recruitsGained;
+        log(`${cartel.name} ocupa el territorio libre de ${territory.name}, sumando ${recruitsGained} hombres a su ejército.`, "good");
+        return { ok: true, success: true, recruitsGained };
       }
       const casualties = Math.round(r.armySize * randInt(2, 8) / 100);
       r.armySize = Math.max(0, r.armySize - casualties);
@@ -1499,12 +1503,18 @@ function resolveBattle(game, attacker, defender, territory) {
   }
 
   const surpriseNote = hasSurpriseBonus ? " El factor sorpresa de su reciente declaración de guerra les da ventaja." : "";
+  let recruitsGained = 0;
   if (attackerWins) {
     territory.controllerId = attacker.id;
     attacker.territories.push(territory.id);
     defender.territories = defender.territories.filter((t) => t !== territory.id);
     war.territoryChanges.push({ year: currentYear(game), territoryName: territory.name, to: attacker.id });
-    log(`${attacker.name} conquista ${territory.name} tras derrotar a ${defender.name}.${surpriseNote}`, "event");
+    // Taking a plaza brings in local muscle, not just ground: gunmen who switch sides rather than
+    // flee, plus fresh recruits drawn by the winner's now-larger local presence — scaled to the
+    // territory's own value, so a rich, well-developed plaza yields more manpower than a poor one.
+    recruitsGained = Math.round(territory.value * randInt(3, 6));
+    attacker.resources.armySize += recruitsGained;
+    log(`${attacker.name} conquista ${territory.name} tras derrotar a ${defender.name}, sumando ${recruitsGained} hombres de la plaza a su ejército.${surpriseNote}`, "event");
     if (game._reactiveEvents && defender.id === game.playerCartelId) {
       game._reactiveEvents.push({ type: "territoryLost", territoryId: territory.id, territoryName: territory.name, toCartelId: attacker.id, toCartelName: attacker.name });
     }
@@ -1525,7 +1535,7 @@ function resolveBattle(game, attacker, defender, territory) {
     }
   }
 
-  return { attackerWins, casualtiesAtk, casualtiesDef };
+  return { attackerWins, casualtiesAtk, casualtiesDef, recruitsGained };
 }
 
 /** A display-only preview of attack odds for the map's territory modal — reuses the exact same

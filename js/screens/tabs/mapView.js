@@ -407,7 +407,7 @@ function showTerritoryModal(app, territoryId) {
     showModal(`
       <h2>${result.attackerWins ? "¡Victoria!" : "Derrota"}</h2>
       <p>${result.attackerWins ? `Tu cártel ha conquistado ${escapeHtml(t.name)}.` : `El ataque a ${escapeHtml(t.name)} ha fracasado.`}</p>
-      <p class="small text-dim">Bajas propias: ${result.casualtiesAtk} · Bajas enemigas: ${result.casualtiesDef}</p>
+      <p class="small text-dim">Bajas propias: ${result.casualtiesAtk} · Bajas enemigas: ${result.casualtiesDef}${result.attackerWins ? ` · Refuerzos ganados en la plaza: +${result.recruitsGained}` : ""}</p>
       <button class="primary block" id="ok-btn">Aceptar</button>
     `);
     document.getElementById("ok-btn").addEventListener("click", () => {
@@ -427,6 +427,7 @@ function showTerritoryModal(app, territoryId) {
     showModal(`
       <h2>${result.success ? "¡Territorio ocupado!" : "Expedición fallida"}</h2>
       <p>${result.success ? `Tu cártel ha extendido su influencia sobre ${escapeHtml(t.name)}.` : `El intento de ocupar ${escapeHtml(t.name)} no ha salido bien ante la resistencia local.`}</p>
+      ${result.success && result.recruitsGained ? `<p class="small text-dim">Refuerzos ganados en la plaza: +${result.recruitsGained}</p>` : ""}
       ${!result.success && result.casualties ? `<p class="small text-dim">Bajas propias: ${result.casualties}</p>` : ""}
       <button class="primary block" id="ok-btn">Aceptar</button>
     `);
