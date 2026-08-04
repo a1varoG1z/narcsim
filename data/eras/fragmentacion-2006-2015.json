@@ -955,7 +955,7 @@
     {
       "id": "albania",
       "name": "Albania",
-      "controllerId": null,
+      "controllerId": "kompania_bello",
       "value": 8,
       "adj": [
         "grecia",
@@ -2798,6 +2798,35 @@
         "productionChief": "sm_production_chief",
         "prChief": "sm_pr_chief"
       }
+    },
+    {
+      "id": "kompania_bello",
+      "name": "Kompania Bello (Dritan Rexhepi)",
+      "color": "#c23b3b",
+      "aiControlled": true,
+      "historicalNote": "Bajo el mando real de Dritan Rexhepi, la red apodada por investigadores italianos y españoles \"Kompania Bello\" conectaba el tráfico de cocaína sudamericana (con una base real de operaciones en Ecuador) con el mercado europeo, sobre todo a través de España e Italia — parte del fenómeno real, muy documentado, del creciente papel de redes albanesas como intermediarias mayoristas de cocaína en Europa desde los años 2000. El episodio real más notorio de Rexhepi ocurrió precisamente dentro de esta época: en noviembre de 2013 se fugó de la prisión de Rebibbia, en Roma, en un helicóptero secuestrado por un cómplice que se hizo pasar por técnico de mantenimiento, una fuga ampliamente cubierta por la prensa internacional. Fue recapturado tiempo después. En el juego su destino depende de tus decisiones.",
+      "resources": {
+        "money": 85000000,
+        "armySize": 480,
+        "corruptGov": 50,
+        "corruptPolice": 55,
+        "publicImage": 25,
+        "heat": 60
+      },
+      "roles": {
+        "leader": "dr_leader",
+        "underboss": "dr_underboss",
+        "sicariosChief": "dr_sicarios_chief",
+        "intelChief": "dr_intel_chief",
+        "militaryChief": "dr_military_chief",
+        "diplomatChief": "dr_diplomat_chief",
+        "financeChief": "dr_finance_chief",
+        "traffickingChief": "dr_trafficking_chief",
+        "corruptionGovChief": "dr_gov_chief",
+        "corruptionPoliceChief": "dr_police_chief",
+        "productionChief": "dr_production_chief",
+        "prChief": "dr_pr_chief"
+      }
     }
   ],
   "characters": [
@@ -4387,6 +4416,285 @@
       },
       "traits": [],
       "notes": "Personaje ficticio que representa la fachada empresarial legítima que la organización cultivaba de puertas afuera.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "dr_leader",
+      "name": "Dritan Rexhepi",
+      "sex": "M",
+      "birthYear": 1978,
+      "alive": true,
+      "cartelId": "kompania_bello",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 65,
+        "business": 78,
+        "charisma": 60,
+        "intrigue": 82,
+        "loyaltyInspiring": 58,
+        "stealth": 75
+      },
+      "traits": [
+        "fugitivo",
+        "fundador"
+      ],
+      "notes": "Figura real del crimen organizado albanés. En la vida real protagonizó una fuga de prisión en helicóptero desde Rebibbia (Roma) en noviembre de 2013, ampliamente cubierta por la prensa internacional, y fue recapturado tiempo después. En el juego su destino depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "dr_underboss",
+      "name": "Agron Berisha",
+      "sex": "M",
+      "birthYear": 1975,
+      "alive": true,
+      "cartelId": "kompania_bello",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 62,
+        "business": 65,
+        "charisma": 52,
+        "intrigue": 68,
+        "loyaltyInspiring": 55,
+        "stealth": 65
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los mandos de la organización más cercanos a Rexhepi.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "dr_sicarios_chief",
+      "name": "Ilir Krasniqi",
+      "sex": "M",
+      "birthYear": 1980,
+      "alive": true,
+      "cartelId": "kompania_bello",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 82,
+        "business": 35,
+        "charisma": 40,
+        "intrigue": 50,
+        "loyaltyInspiring": 45,
+        "stealth": 62
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los ejecutores de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "dr_intel_chief",
+      "name": "Vjosa Hoxha",
+      "sex": "F",
+      "birthYear": 1982,
+      "alive": true,
+      "cartelId": "kompania_bello",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 35,
+        "business": 55,
+        "charisma": 50,
+        "intrigue": 75,
+        "loyaltyInspiring": 45,
+        "stealth": 78
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red de información e inteligencia de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "dr_military_chief",
+      "name": "Blerim Shala",
+      "sex": "M",
+      "birthYear": 1976,
+      "alive": true,
+      "cartelId": "kompania_bello",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 75,
+        "business": 42,
+        "charisma": 45,
+        "intrigue": 52,
+        "loyaltyInspiring": 55,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los mandos armados de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "dr_diplomat_chief",
+      "name": "Genc Mustafa",
+      "sex": "M",
+      "birthYear": 1970,
+      "alive": true,
+      "cartelId": "kompania_bello",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 28,
+        "business": 62,
+        "charisma": 70,
+        "intrigue": 60,
+        "loyaltyInspiring": 50,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa los canales de negociación con proveedores sudamericanos y otras redes europeas.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "dr_finance_chief",
+      "name": "Arben Gashi",
+      "sex": "M",
+      "birthYear": 1974,
+      "alive": true,
+      "cartelId": "kompania_bello",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 78,
+        "charisma": 50,
+        "intrigue": 58,
+        "loyaltyInspiring": 42,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa el blanqueo de dinero de la organización a través de negocios en Europa.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "dr_trafficking_chief",
+      "name": "Fatmir Doda",
+      "sex": "M",
+      "birthYear": 1979,
+      "alive": true,
+      "cartelId": "kompania_bello",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 55,
+        "business": 70,
+        "charisma": 42,
+        "intrigue": 62,
+        "loyaltyInspiring": 46,
+        "stealth": 68
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la ruta real de cocaína desde Ecuador hacia España e Italia operada por la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "dr_gov_chief",
+      "name": "Petrit Buja",
+      "sex": "M",
+      "birthYear": 1965,
+      "alive": true,
+      "cartelId": "kompania_bello",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 58,
+        "charisma": 62,
+        "intrigue": 68,
+        "loyaltyInspiring": 45,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa complicidades políticas locales.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "dr_police_chief",
+      "name": "Comisario Adnan Curri",
+      "sex": "M",
+      "birthYear": 1968,
+      "alive": true,
+      "cartelId": "kompania_bello",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 30,
+        "business": 48,
+        "charisma": 42,
+        "intrigue": 62,
+        "loyaltyInspiring": 40,
+        "stealth": 60
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa complicidades policiales locales.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "dr_production_chief",
+      "name": "Xhevdet Meta",
+      "sex": "M",
+      "birthYear": 1981,
+      "alive": true,
+      "cartelId": "kompania_bello",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 35,
+        "business": 52,
+        "charisma": 35,
+        "intrigue": 45,
+        "loyaltyInspiring": 38,
+        "stealth": 50
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la logística de almacenamiento y distribución de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "dr_pr_chief",
+      "name": "Elira Krasniqi",
+      "sex": "F",
+      "birthYear": 1984,
+      "alive": true,
+      "cartelId": "kompania_bello",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 18,
+        "business": 45,
+        "charisma": 60,
+        "intrigue": 48,
+        "loyaltyInspiring": 50,
+        "stealth": 45
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la fachada empresarial de la organización de puertas afuera.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []
