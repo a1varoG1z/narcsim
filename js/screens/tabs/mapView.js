@@ -60,13 +60,13 @@ export function render(container, app) {
         ` : ""}
       </div>
       <p class="text-dim small mt-1">Arrastra para mover el mapa, usa la rueda del ratón o pellizca con dos dedos para hacer zoom. El botón ⛶ lo pone a pantalla completa.</p>
+      ${getMarketProfiles(game).some((m) => geo?.shapes[MARKET_LOCATIONS[m.id]]) ? `<p class="text-dim small">Las líneas hacia ${escapeHtml(getMarketProfiles(game).map((m) => m.name.split(" (")[0]).join(", "))} son tus rutas comerciales internacionales: sólidas y de tu color donde ya has vendido de verdad, discontinuas donde el mercado sigue sin explotar. Aléjate del todo para verlas completas.</p>` : ""}
       <div class="grid auto mt-1">
         ${Object.values(game.cartels).filter((c) => !c.destroyed).map((c) => `
           <div class="small" data-view-cartel="${c.id}" style="cursor:pointer"><span style="display:inline-block;width:10px;height:10px;background:${c.color};border-radius:2px;margin-right:4px"></span>${escapeHtml(c.name)}</div>
         `).join("")}
       </div>
     </div>
-    ${renderTradeRoutes(game, playerCartel)}
   `;
 
   if (geo) setupMapInteraction(container, app, geo);
@@ -240,6 +240,16 @@ function setupMapInteraction(container, app, geo) {
   });
 }
 
+// Real geographic anchor points for each destination market, reusing shapes that already exist
+// in shapes.json regardless of whether that country is wired in as a playable territory in the
+// current era — the market is a real place even in eras where it's just backdrop. Picked to match
+// each market's own flavor text (e.g. "asia_pacifico" calls out Australia by name).
+const MARKET_LOCATIONS = {
+  us: "WORLD_USA",
+  europa: "WORLD_HOLANDA",
+  asia_pacifico: "WORLD_AUSTRALIA",
+};
+
 /** Real administrative-boundary shapes (see js/geoShapes.js) instead of schematic rectangles —
  * every territory maps to a real country/state/department polygon, or (for the handful of
  * historically meaningful but administratively informal areas, like a specific border plaza or a
@@ -275,52 +285,48 @@ function renderGeoMap(game, playerCartel, geo) {
         const shape = geo.shapes[t.geo];
         return `<circle class="target-marker" pointer-events="none" cx="${shape.cx}" cy="${shape.cy}" r="2.4" fill="none" stroke="#ff3b3b" stroke-width="0.7" stroke-dasharray="1.1,0.8"><title>Objetivo marcado: ${escapeHtml(t.name)}</title></circle>`;
       }).join("")}
+      ${renderTradeRouteOverlay(game, playerCartel, geo)}
     </svg>
   `;
 }
 
-/** A schematic routes diagram (not the geographic territory map, which already has its own
- * coordinate system) showing your cartel's real destination markets as concrete lines instead of
- * an abstract percentage — active routes (ones you've actually shipped through) are drawn solid
- * and colored in your cartel's color, unused ones are a faint dashed line, so "having a market"
- * and "actually working that route" read differently at a glance. */
-function renderTradeRoutes(game, playerCartel) {
-  const markets = getMarketProfiles(game);
-  if (markets.length <= 1) return "";
+/** Trade routes overlaid on the real geographic map itself — replaces the old separate schematic
+ * diagram (a circle-of-nodes drawing with its own made-up coordinate system) with actual lines
+ * from your own territory to each destination market's real location, in the same coordinate
+ * space as the territory shapes. Solid + your cartel's color for markets you've actually shipped
+ * through; faint dashed gray for markets you haven't worked yet — same "have it" vs. "use it"
+ * distinction the old diagram drew, just anchored to the real map instead of a standalone circle. */
+function renderTradeRouteOverlay(game, playerCartel, geo) {
+  const markets = getMarketProfiles(game).filter((m) => geo.shapes[MARKET_LOCATIONS[m.id]]);
+  if (!markets.length) return "";
 
-  const cx = 100;
-  const cy = 100;
-  const radius = 78;
-  const nodes = markets.map((m, i) => {
-    const angle = (Math.PI * 2 * i) / markets.length - Math.PI / 2;
-    const x = cx + radius * Math.cos(angle);
-    const y = cy + radius * Math.sin(angle);
+  const ownShapes = playerCartel.territories
+    .map((id) => game.territories[id])
+    .filter((t) => t && geo.shapes[t.geo])
+    .map((t) => geo.shapes[t.geo]);
+  if (!ownShapes.length) return "";
+  const originX = ownShapes.reduce((sum, s) => sum + s.cx, 0) / ownShapes.length;
+  const originY = ownShapes.reduce((sum, s) => sum + s.cy, 0) / ownShapes.length;
+
+  const nodes = markets.map((m) => {
+    const shape = geo.shapes[MARKET_LOCATIONS[m.id]];
     const active = !!playerCartel.resources.distributionVolumeByMarket?.[m.id];
     const share = getRegionalMarketShare(game, playerCartel, m.id);
-    return { ...m, x, y, active, share };
+    return { ...m, x: shape.cx, y: shape.cy, active, share };
   });
 
   return `
-    <div class="card">
-      <h3>Rutas comerciales internacionales</h3>
-      <p class="text-dim small">Cada envío ("Enviar cargamento", pestaña Decisiones) elige un destino real. Las líneas sólidas son rutas que ya has trabajado de verdad; las discontinuas, mercados todavía sin explotar.</p>
-      <svg viewBox="0 0 200 200" style="width:100%;max-width:360px;display:block;margin:0 auto" role="img" aria-label="Diagrama de rutas comerciales internacionales">
-        ${nodes.map((n) => `
-          <line x1="${cx}" y1="${cy}" x2="${n.x}" y2="${n.y}"
-            stroke="${n.active ? playerCartel.color : "#666"}"
-            stroke-width="${n.active ? 2.5 : 1.5}"
-            stroke-dasharray="${n.active ? "" : "4,4"}"
-            opacity="${n.active ? 0.9 : 0.4}" />
-        `).join("")}
-        <circle cx="${cx}" cy="${cy}" r="14" fill="${playerCartel.color}" />
-        <text x="${cx}" y="${cy + 4}" text-anchor="middle" font-size="8" fill="#fff">Tú</text>
-        ${nodes.map((n) => `
-          <circle cx="${n.x}" cy="${n.y}" r="11" fill="${n.active ? playerCartel.color : "#2a2420"}" opacity="${n.active ? 1 : 0.6}" />
-          <text x="${n.x}" y="${n.y - 16}" text-anchor="middle" font-size="7" fill="currentColor">${escapeHtml(n.name.split(" (")[0])}</text>
-          ${n.active ? `<text x="${n.x}" y="${n.y + 4}" text-anchor="middle" font-size="7" fill="#fff">${n.share.toFixed(0)}%</text>` : ""}
-        `).join("")}
-      </svg>
-    </div>
+    ${nodes.map((n) => `
+      <line pointer-events="none" x1="${originX}" y1="${originY}" x2="${n.x}" y2="${n.y}"
+        stroke="${n.active ? playerCartel.color : "#888"}"
+        stroke-width="${n.active ? 1 : 0.5}"
+        stroke-dasharray="${n.active ? "" : "2.5,2"}"
+        opacity="${n.active ? 0.85 : 0.45}" />
+    `).join("")}
+    ${nodes.map((n) => `
+      <circle class="trade-route-marker" pointer-events="none" cx="${n.x}" cy="${n.y}" r="3" fill="${n.active ? playerCartel.color : "#2a2420"}" stroke="#fff" stroke-width="0.4" opacity="${n.active ? 1 : 0.7}"><title>${escapeHtml(n.name)}${n.active ? ` — tu cuota: ${n.share.toFixed(0)}%` : " (sin explotar todavía)"}</title></circle>
+      <text x="${n.x}" y="${n.y - 4}" text-anchor="middle" font-size="3" fill="#fff" style="pointer-events:none;text-shadow:0 0 2px #000">${escapeHtml(n.name.split(" (")[0])}${n.active ? ` (${n.share.toFixed(0)}%)` : ""}</text>
+    `).join("")}
   `;
 }
 
