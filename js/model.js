@@ -73,6 +73,7 @@ export function makeCartel({
   id, name, color = "#8a2c2c", eraId, territories = [],
   resources = null, roles = {}, characters = [],
   relations = {}, aiControlled = true, historicalNote = "",
+  targetTerritoryIds = [],
 } = {}) {
   return {
     id: id || uid("cartel"),
@@ -80,6 +81,7 @@ export function makeCartel({
     color,
     eraId,
     territories,
+    targetTerritoryIds,
     resources: resources || {
       money: 100,
       armySize: 100,

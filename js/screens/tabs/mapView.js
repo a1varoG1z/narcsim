@@ -271,6 +271,10 @@ function renderGeoMap(game, playerCartel, geo) {
         if ((bx1 - bx0) * (by1 - by0) < LABEL_MIN_AREA) return "";
         return `<text x="${shape.cx}" y="${shape.cy}" text-anchor="middle" font-size="3.2" fill="#fff" style="pointer-events:none;text-shadow:0 0 2px #000" >${escapeHtml(t.name)}</text>`;
       }).join("")}
+      ${territories.filter((t) => (playerCartel.targetTerritoryIds || []).includes(t.id)).map((t) => {
+        const shape = geo.shapes[t.geo];
+        return `<circle class="target-marker" pointer-events="none" cx="${shape.cx}" cy="${shape.cy}" r="2.4" fill="none" stroke="#ff3b3b" stroke-width="0.7" stroke-dasharray="1.1,0.8"><title>Objetivo marcado: ${escapeHtml(t.name)}</title></circle>`;
+      }).join("")}
     </svg>
   `;
 }
@@ -337,6 +341,7 @@ function showTerritoryModal(app, territoryId) {
   const occupyChance = occupiable ? estimateOccupyChance(game, playerCartel, t) : null;
   const actionsLeft = getActionsRemaining(game);
   const relStatus = controller ? (playerCartel.relations[controller.id]?.status || "neutral") : null;
+  const isTarget = (playerCartel.targetTerritoryIds || []).includes(t.id);
 
   showModal(`
     <h2>${escapeHtml(t.name)}</h2>
@@ -353,6 +358,8 @@ function showTerritoryModal(app, territoryId) {
           <p class="small">Dificultad estimada: <strong>${difficulty.label}</strong> <span class="text-dim">(fuerza relativa ${(difficulty.ratio * 100).toFixed(0)}%)</span></p>
           <button class="danger block" id="attack-btn">Atacar y disputar este territorio</button>
         ` : `<p class="small text-dim">No tienes ningún territorio colindante: no puedes atacarlo directamente todavía.</p>`}
+        <button class="ghost block" id="toggle-target-btn">${isTarget ? "Quitar de objetivos marcados" : "Marcar como objetivo"}</button>
+        <p class="small text-dim">${isTarget ? "Aparece señalado en el mapa y en la lista de objetivos de la pestaña Diplomacia." : "Márcalo para verlo señalado en el mapa y seguirlo desde la pestaña Diplomacia, aunque todavía no puedas atacarlo."}</p>
       </div>
       <div class="card tight mt-1">
         <h3>Diplomacia con ${escapeHtml(controller.name)}</h3>
@@ -399,6 +406,12 @@ function showTerritoryModal(app, territoryId) {
     e.preventDefault();
     closeModal();
     showCartelProfile(app, controller.id);
+  });
+  document.getElementById("toggle-target-btn")?.addEventListener("click", () => {
+    applyAction(game, playerCartel.id, "toggle_target_territory", { territoryId });
+    app.setGame(game);
+    app.render();
+    showTerritoryModal(app, territoryId);
   });
   document.getElementById("attack-btn")?.addEventListener("click", () => {
     const result = applyAction(game, playerCartel.id, "attack_territory", { territoryId });

@@ -728,6 +728,20 @@ export function applyAction(game, cartelId, type, payload = {}) {
       log(`${target.name} rechaza convertirse en una facción subordinada de ${cartel.name}.`, "event");
       return { ok: true, accepted: false };
     }
+    case "toggle_target_territory": {
+      // Pure bookkeeping for the player — marking a rival territory as a target doesn't move any
+      // army or spend any money, so it isn't budgeted like a real diplomatic or military move.
+      const territory = game.territories[payload.territoryId];
+      if (!territory) return { ok: false, message: "Territorio no válido." };
+      cartel.targetTerritoryIds = cartel.targetTerritoryIds || [];
+      const idx = cartel.targetTerritoryIds.indexOf(territory.id);
+      if (idx === -1) {
+        cartel.targetTerritoryIds.push(territory.id);
+        return { ok: true, marked: true };
+      }
+      cartel.targetTerritoryIds.splice(idx, 1);
+      return { ok: true, marked: false };
+    }
     case "attack_territory": {
       const territory = game.territories[payload.territoryId];
       const defenderId = territory.controllerId;

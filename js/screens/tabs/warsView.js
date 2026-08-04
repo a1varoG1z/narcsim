@@ -1,6 +1,6 @@
 import { getPlayerCartel } from "../../state.js";
 import { escapeHtml, portraitImg, roleLabel } from "../../ui/components.js";
-import { applyAction, getWarsForCartel, ACTION_COSTS, getActionsRemaining, isAttackable, MONEY_SCALE, canProposeAbsorption, PROPOSE_ABSORPTION_COST } from "../../turnEngine.js";
+import { applyAction, getWarsForCartel, ACTION_COSTS, getActionsRemaining, isAttackable, MONEY_SCALE, canProposeAbsorption, PROPOSE_ABSORPTION_COST, estimateConquestDifficulty } from "../../turnEngine.js";
 import { showModal, closeModal } from "../../ui/modal.js";
 import { showCartelProfile } from "./cartelProfile.js";
 import { fmtMoney } from "../../utils/text.js";
@@ -24,7 +24,33 @@ export function render(container, app) {
     .map((id) => game.characters[id])
     .filter((c) => c && c.alive);
 
+  const targetTerritories = (cartel.targetTerritoryIds || []).map((tId) => game.territories[tId]).filter(Boolean);
+
   container.innerHTML = `
+    ${targetTerritories.length ? `
+    <div class="card">
+      <h2>Objetivos marcados</h2>
+      <p class="text-dim small">Territorios que has marcado desde el mapa para seguirlos y coordinar tu siguiente movimiento contra ellos.</p>
+      ${targetTerritories.map((t) => {
+        const owner = t.controllerId ? game.cartels[t.controllerId] : null;
+        const isMine = t.controllerId === cartel.id;
+        const attackable = !isMine && owner && isAttackable(game, cartel.id, t.id);
+        const difficulty = attackable ? estimateConquestDifficulty(game, cartel, t) : null;
+        return `
+        <div class="card tight mt-1">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <h3>${escapeHtml(t.name)}</h3>
+            ${isMine ? `<span class="badge">Ya es tuyo</span>` : owner ? `<span style="display:inline-block;width:10px;height:10px;background:${owner.color};border-radius:2px"></span>` : `<span class="badge">Libre</span>`}
+          </div>
+          <p class="small text-dim">${isMine ? "Ya lo controlas — puedes quitarlo de tus objetivos." : owner ? `Controlado por ${escapeHtml(owner.name)}${attackable ? ` · dificultad estimada: ${difficulty.label} (${(difficulty.ratio * 100).toFixed(0)}%)` : " · sin frontera con tus dominios todavía"}` : "Territorio libre."}</p>
+          <div class="btn-row">
+            ${attackable ? `<button class="danger" data-target-attack="${t.id}">Atacar ahora</button>` : ""}
+            <button data-target-untag="${t.id}">Quitar objetivo</button>
+          </div>
+        </div>`;
+      }).join("")}
+    </div>
+    ` : ""}
     <div class="card">
       <h2>Relaciones exteriores</h2>
       <p class="text-dim small">Declarar guerra, atacar, ocupar, proponer paz/alianza/subordinación y concentrar fuerzas en un frente no gastan acciones. Ordenar un atentado, sabotear, hacer una redada, intimidar, reclutar informantes, reclutar a un miembro rival e interceptar un cargamento sí (te quedan ${getActionsRemaining(game)}).</p>
@@ -76,6 +102,20 @@ export function render(container, app) {
     </div>
   `;
 
+  container.querySelectorAll("[data-target-untag]").forEach((btn) => btn.addEventListener("click", () => {
+    applyAction(game, cartel.id, "toggle_target_territory", { territoryId: btn.dataset.targetUntag });
+    app.setGame(game);
+    app.render();
+  }));
+  container.querySelectorAll("[data-target-attack]").forEach((btn) => btn.addEventListener("click", () => {
+    const territory = game.territories[btn.dataset.targetAttack];
+    const result = applyAction(game, cartel.id, "attack_territory", { territoryId: territory.id });
+    app.setGame(game);
+    alert(result.attackerWins
+      ? `Conquistas ${territory.name}, sumando ${result.recruitsGained} hombres a tu ejército.`
+      : `El ataque a ${territory.name} fracasa (bajas propias: ${result.casualtiesAtk}, bajas enemigas: ${result.casualtiesDef}).`);
+    app.render();
+  }));
   container.querySelectorAll("[data-war]").forEach((btn) => btn.addEventListener("click", () => {
     showDeclareWarModal(app, game, cartel, btn.dataset.war);
   }));
