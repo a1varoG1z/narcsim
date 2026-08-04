@@ -1,5 +1,5 @@
 import { getPlayerCartel, currentYear } from "../../state.js";
-import { applyAction, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, MONEY_SCALE, getDrugProfile, getDrugProfiles, getMarketProfiles } from "../../turnEngine.js";
+import { applyAction, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, MONEY_SCALE, getDrugProfile, getDrugProfiles, getMarketProfiles, getMarketPriceIndex } from "../../turnEngine.js";
 import { showModal, closeModal } from "../../ui/modal.js";
 import { escapeHtml } from "../../ui/components.js";
 import { fmtMoney } from "../../utils/text.js";
@@ -351,12 +351,16 @@ function showTrafficModal(app, game, cartel) {
 function showMarketModal(app, game, cartel, markets) {
   showModal(`
     <h2>Enviar cargamento</h2>
-    <p class="small text-dim">Paso 1 de 2: ¿a qué país o región de destino va este cargamento? Es una decisión de exportación real — cada mercado internacional paga un precio distinto por tu producto y tiene su propio riesgo de que las autoridades lo intercepten en el camino. Tu "cuota de mercado" en la pestaña Economía se calcula por separado en cada uno: vender mucho a Europa no te hace más fuerte en EE. UU. si nunca mandas nada allí.</p>
+    <p class="small text-dim">Paso 1 de 2: ¿a qué país o región de destino va este cargamento? Es una decisión de exportación real — cada mercado internacional paga un precio distinto por tu producto y tiene su propio riesgo de que las autoridades lo intercepten en el camino. El precio además fluctúa de verdad con lo que TODOS los cárteles llevan enviando allí últimamente, no solo tú: un mercado saturado de envíos recientes paga peor, uno tranquilo paga mejor — 📈/📉 lo indican. Tu "cuota de mercado" en la pestaña Economía se calcula por separado en cada uno: vender mucho a Europa no te hace más fuerte en EE. UU. si nunca mandas nada allí.</p>
     ${markets.map((m) => {
       const locked = m.availableFromYear && currentYear(game) < m.availableFromYear;
+      const priceIndex = getMarketPriceIndex(game, m.id);
+      const priceNote = priceIndex > 1.05 ? `📈 precio actual alto (×${priceIndex.toFixed(2)}, mercado poco trabajado últimamente)`
+        : priceIndex < 0.95 ? `📉 precio actual bajo (×${priceIndex.toFixed(2)}, mercado saturado de envíos recientes)`
+        : `precio actual normal (×${priceIndex.toFixed(2)})`;
       return `<button class="block" data-market="${m.id}" ${locked ? "disabled" : ""}>
         ${escapeHtml(m.name)}
-        <div class="small text-dim">${locked ? `Ruta todavía no establecida (no antes de ${m.availableFromYear}).` : `Rendimiento ×${m.payoutMult.toFixed(2)}, riesgo de decomiso ${m.seizureMult > 1 ? "más alto" : m.seizureMult < 1 ? "más bajo" : "normal"} que el habitual.`}</div>
+        <div class="small text-dim">${locked ? `Ruta todavía no establecida (no antes de ${m.availableFromYear}).` : `Rendimiento base ×${m.payoutMult.toFixed(2)} · ${priceNote} · riesgo de decomiso ${m.seizureMult > 1 ? "más alto" : m.seizureMult < 1 ? "más bajo" : "normal"} que el habitual.`}</div>
       </button>`;
     }).join("")}
     <button class="ghost block" id="close-btn">Cancelar</button>

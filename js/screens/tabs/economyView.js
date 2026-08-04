@@ -1,7 +1,7 @@
 import { getPlayerCartel } from "../../state.js";
 import { escapeHtml } from "../../ui/components.js";
 import { fmtMoney, fmtNum } from "../../utils/text.js";
-import { getIncomeBreakdown, getWorldMarketShare, getRegionalMarketShare, getDrugProfile, getDrugProfiles, getMarketProfiles } from "../../turnEngine.js";
+import { getIncomeBreakdown, getWorldMarketShare, getRegionalMarketShare, getDrugProfile, getDrugProfiles, getMarketProfiles, getMarketPriceIndex } from "../../turnEngine.js";
 
 export function render(container, app) {
   const game = app.game;
@@ -21,6 +21,7 @@ export function render(container, app) {
     name: m.name,
     share: getRegionalMarketShare(game, cartel, m.id),
     hasVolume: !!cartel.resources.distributionVolumeByMarket?.[m.id],
+    priceIndex: getMarketPriceIndex(game, m.id),
   }));
   const multiMarketEra = regionalShares.length > 1;
 
@@ -67,11 +68,15 @@ export function render(container, app) {
     ${multiMarketEra ? `
     <div class="card">
       <h3>Mercados de destino</h3>
-      <p class="text-dim small">El comercio internacional no es un único mercado global: cada destino ("Enviar cargamento" te deja elegir uno) tiene su propia cuota, calculada por separado frente a quien también trafique hacia ese mismo destino.</p>
+      <p class="text-dim small">El comercio internacional no es un único mercado global: cada destino ("Enviar cargamento" te deja elegir uno) tiene su propia cuota, calculada por separado frente a quien también trafique hacia ese mismo destino. El precio de cada uno también fluctúa de verdad con lo que TODOS los cárteles llevan enviando allí últimamente: un mercado saturado paga peor, uno tranquilo paga mejor.</p>
       <table style="width:100%;border-collapse:collapse" class="small">
-        <tr class="text-dim"><th style="text-align:left">Mercado</th><th>Tu cuota</th></tr>
+        <tr class="text-dim"><th style="text-align:left">Mercado</th><th>Tu cuota</th><th>Precio actual</th></tr>
         ${regionalShares.map((m) => `
-          <tr><td>${escapeHtml(m.name)}</td><td class="center">${m.hasVolume ? `${m.share.toFixed(1)}%` : `<span class="text-dim">Sin envíos aún</span>`}</td></tr>
+          <tr>
+            <td>${escapeHtml(m.name)}</td>
+            <td class="center">${m.hasVolume ? `${m.share.toFixed(1)}%` : `<span class="text-dim">Sin envíos aún</span>`}</td>
+            <td class="center">${m.priceIndex > 1.05 ? `<span class="text-success">📈 ×${m.priceIndex.toFixed(2)}</span>` : m.priceIndex < 0.95 ? `<span class="text-danger">📉 ×${m.priceIndex.toFixed(2)}</span>` : `<span class="text-dim">normal</span>`}</td>
+          </tr>
         `).join("")}
       </table>
     </div>

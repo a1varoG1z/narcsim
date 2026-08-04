@@ -333,6 +333,44 @@ export function getMarketProfile(game, marketId) {
   return profiles[0];
 }
 
+/** Live, self-calibrating supply/demand signal per market — on top of `payoutMult` (the fixed
+ * structural quality of a market, e.g. Europe pays more than a saturated US), the *current* price
+ * also moves with how much every cartel (not just the player) has actually been shipping there
+ * lately. `recent` is a fast-decaying tally of real payouts to that market; `baseline` is a slower
+ * moving average that represents "what normal traffic to this market looks like" for whatever
+ * scale this particular game has reached — no hardcoded expected volume to calibrate per era, it
+ * just measures itself against its own recent history. */
+function updateMarketState(game, marketId, payout) {
+  if (!game.marketState) game.marketState = {};
+  const s = game.marketState[marketId];
+  if (!s) {
+    game.marketState[marketId] = { recent: payout, baseline: payout };
+    return;
+  }
+  s.recent += payout;
+}
+
+/** Called once per turn: `recent` fades fast (only very recent shipments count as live supply
+ * pressure), `baseline` drifts slowly toward wherever `recent` has been sitting, so the market's
+ * own notion of "normal" adapts over the course of a long game. */
+function decayMarketPrices(game) {
+  if (!game.marketState) return;
+  for (const s of Object.values(game.marketState)) {
+    s.baseline = s.baseline * 0.95 + s.recent * 0.05;
+    s.recent *= 0.6;
+  }
+}
+
+/** A market that's been getting hit with heavy volume lately (relative to its own recent normal)
+ * pays worse — oversupply; one that's gone quiet pays better — scarcity. Bounded so it nudges the
+ * fixed `payoutMult` rather than swallowing it. */
+export function getMarketPriceIndex(game, marketId) {
+  const s = game.marketState?.[marketId];
+  if (!s || s.baseline <= 0) return 1;
+  const ratio = s.recent / s.baseline;
+  return clamp(1 / Math.pow(ratio || 0.05, 0.4), 0.75, 1.3);
+}
+
 export const ACTION_COSTS = {
   invest_production: 150 * MONEY_SCALE,
   traffic_shipment: 250 * MONEY_SCALE,
@@ -453,7 +491,11 @@ export function applyAction(game, cartelId, type, payload = {}) {
       // same 0.85 penalty as a hostile relationship despite "mercado abierto" being documented (in
       // the UI text) as the neutral default option — a real mismatch, not intended behavior.
       const partnerMultiplier = partnerStatus === "alliance" ? 1.25 : 1;
-      const payout = Math.round(cost * (1.6 + Math.random() * 1.2) * partnerMultiplier * drug.payoutMult * market.payoutMult * (1 + traffickingBonus / 50) * (1 + (r.tradeRouteBonus || 0)));
+      // priceIndex is the live supply/demand signal (see getMarketPriceIndex) layered on top of
+      // the market's fixed structural payoutMult — heavy recent traffic to this exact market
+      // (from any cartel, not just this one) depresses it; a quiet market pays a premium.
+      const priceIndex = getMarketPriceIndex(game, market.id);
+      const payout = Math.round(cost * (1.6 + Math.random() * 1.2) * partnerMultiplier * drug.payoutMult * market.payoutMult * priceIndex * (1 + traffickingBonus / 50) * (1 + (r.tradeRouteBonus || 0)));
       r.money += payout;
       r.heat = Math.min(100, r.heat + Math.round(5 * drug.heatMult));
       // Tracked for getWorldMarketShare/getRegionalMarketShare — every cartel's cumulative
@@ -466,6 +508,7 @@ export function applyAction(game, cartelId, type, payload = {}) {
       r.distributionVolumeByDrug[drug.id] = (r.distributionVolumeByDrug[drug.id] || 0) + payout;
       if (!r.distributionVolumeByMarket) r.distributionVolumeByMarket = {};
       r.distributionVolumeByMarket[market.id] = (r.distributionVolumeByMarket[market.id] || 0) + payout;
+      updateMarketState(game, market.id, payout);
       if (partner) {
         partner.resources.money = Math.round(partner.resources.money + payout * 0.15);
         const tensionDelta = partnerStatus === "alliance" ? -5 : -2;
@@ -2262,6 +2305,7 @@ export function endTurn(game) {
   decayInformants(game);
   decayWarFocus(game);
   decayVendettas(game);
+  decayMarketPrices(game);
 
   let pendingSuccession = null;
   let pendingRegentChoice = null;
