@@ -538,7 +538,7 @@
     {
       "id": "reino_unido",
       "name": "Reino Unido",
-      "controllerId": null,
+      "controllerId": "curtis_warren_org",
       "value": 19,
       "adj": [
         "irlanda"
@@ -3166,6 +3166,36 @@
         "productionChief": "dc_production_chief",
         "prChief": "dc_pr_chief"
       }
+    },
+    {
+      "id": "curtis_warren_org",
+      "name": "Organización de Curtis Warren",
+      "color": "#3a5a40",
+      "aiControlled": true,
+      "historicalNote": "Curtis Francis Warren, apodado real \"Cocky\", nacido en Toxteth (Liverpool) en 1963, construyó desde finales de los 80 una red real de contrabando que conectaba a los cárteles colombianos con el Reino Unido y el resto de Europa, operando desde 1996 desde una granja en Sassenheim (Países Bajos). Un operativo conjunto policial y aduanero británico-neerlandés asaltó su villa el 24 de octubre de 1996, incautando 400 kg de cocaína, 100 kg de heroína, más de 1.000 kg de cannabis y 50 kg de éxtasis; fue condenado en los Países Bajos en 1997. Llegó a encabezar la lista real \"Target One\" de Interpol y fue el único criminal incluido alguna vez en el Sunday Times Rich List; un tribunal le ordenó devolver 198 millones de libras. En la vida real salió de prisión en los Países Bajos hacia 2007 y, ya fuera del rango de esta época (1990-2006), fue condenado de nuevo en Jersey en 2009 a 13 años por una conspiración para introducir cannabis en la isla, saliendo finalmente de prisión en 2022. En el juego, como con el resto de figuras históricas, su destino depende de tus decisiones.",
+      "resources": {
+        "money": 130000000,
+        "armySize": 180,
+        "corruptGov": 15,
+        "corruptPolice": 25,
+        "publicImage": 20,
+        "heat": 60
+      },
+      "supplyChainRole": "distribuidor",
+      "roles": {
+        "leader": "curtis_warren",
+        "traffickingChief": "brian_charrington",
+        "sicariosChief": "cw_sicarios_chief",
+        "intelChief": "cw_intel_chief",
+        "militaryChief": "cw_military_chief",
+        "diplomatChief": "cw_diplomat_chief",
+        "financeChief": "cw_finance_chief",
+        "underboss": "cw_underboss",
+        "corruptionGovChief": "cw_gov_chief",
+        "corruptionPoliceChief": "cw_police_chief",
+        "productionChief": "cw_production_chief",
+        "prChief": "cw_pr_chief"
+      }
     }
   ],
   "characters": [
@@ -5272,6 +5302,307 @@
       },
       "traits": [],
       "notes": "Personaje ficticio que representa el manejo de la notoriedad pública de la organización, que en la vida real se disparó tras los atentados de 1993.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "curtis_warren",
+      "name": "Curtis Francis Warren \"Cocky\"",
+      "sex": "M",
+      "birthYear": 1963,
+      "alive": true,
+      "cartelId": "curtis_warren_org",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 60,
+        "business": 90,
+        "charisma": 70,
+        "intrigue": 82,
+        "loyaltyInspiring": 65,
+        "stealth": 68
+      },
+      "traits": [
+        "fundador",
+        "empresario",
+        "esquivo"
+      ],
+      "notes": "Nacido en Toxteth, Liverpool, en 1963; de gorila de discoteca y peleador callejero a coordinar en la vida real una cadena de suministro multinacional entre los cárteles colombianos y el Reino Unido/Europa desde una granja en Sassenheim (Países Bajos). Encabezó la lista \"Target One\" de Interpol y fue el único criminal incluido alguna vez en el Sunday Times Rich List. Detenido el 24 de octubre de 1996 en una redada conjunta británico-neerlandesa; condenado en 1997. En el juego su destino depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "brian_charrington",
+      "name": "Brian Charrington",
+      "sex": "M",
+      "birthYear": 1948,
+      "alive": true,
+      "cartelId": "curtis_warren_org",
+      "role": "traffickingChief",
+      "historical": true,
+      "stats": {
+        "violence": 30,
+        "business": 78,
+        "charisma": 60,
+        "intrigue": 75,
+        "loyaltyInspiring": 45,
+        "stealth": 55
+      },
+      "traits": [
+        "contrabandista",
+        "doble juego"
+      ],
+      "notes": "Empresario real de un concesionario de coches en Middlesbrough y socio de Warren desde finales de los 80, con una red que llegó a Alemania, Francia, España y Austria. En septiembre de 1991 viajó con Warren a Venezuela para acordar con cárteles colombianos el contrabando de cocaína oculta en lingotes de plomo; fue detenido junto a Warren y otras 26 personas a comienzos de 1992 tras la incautación real de un cargamento de 907 kg. El caso se complicó judicialmente porque Charrington era, en la vida real, confidente del North-East Regional Crime Squad, lo que generó una disputa real sobre la admisibilidad de las pruebas en su contra. En el juego su destino depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cw_sicarios_chief",
+      "name": "Danny Rourke",
+      "sex": "M",
+      "birthYear": 1965,
+      "alive": true,
+      "cartelId": "curtis_warren_org",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 82,
+        "business": 35,
+        "charisma": 40,
+        "intrigue": 55,
+        "loyaltyInspiring": 58,
+        "stealth": 62
+      },
+      "traits": [
+        "intimidante"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cw_intel_chief",
+      "name": "Sandra Kelly",
+      "sex": "F",
+      "birthYear": 1966,
+      "alive": true,
+      "cartelId": "curtis_warren_org",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 25,
+        "business": 55,
+        "charisma": 55,
+        "intrigue": 80,
+        "loyaltyInspiring": 48,
+        "stealth": 75
+      },
+      "traits": [
+        "observadora"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cw_military_chief",
+      "name": "Gary Fenwick",
+      "sex": "M",
+      "birthYear": 1960,
+      "alive": true,
+      "cartelId": "curtis_warren_org",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 78,
+        "business": 45,
+        "charisma": 42,
+        "intrigue": 58,
+        "loyaltyInspiring": 60,
+        "stealth": 55
+      },
+      "traits": [
+        "veterano"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cw_diplomat_chief",
+      "name": "Michael Doyle",
+      "sex": "M",
+      "birthYear": 1958,
+      "alive": true,
+      "cartelId": "curtis_warren_org",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 70,
+        "charisma": 75,
+        "intrigue": 62,
+        "loyaltyInspiring": 50,
+        "stealth": 48
+      },
+      "traits": [
+        "negociador"
+      ],
+      "notes": "Personaje ficticio, enlace con los proveedores colombianos.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cw_finance_chief",
+      "name": "Patricia Ellwood",
+      "sex": "F",
+      "birthYear": 1962,
+      "alive": true,
+      "cartelId": "curtis_warren_org",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 10,
+        "business": 85,
+        "charisma": 55,
+        "intrigue": 65,
+        "loyaltyInspiring": 45,
+        "stealth": 50
+      },
+      "traits": [
+        "contable"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cw_underboss",
+      "name": "Tommy Ashcroft",
+      "sex": "M",
+      "birthYear": 1961,
+      "alive": true,
+      "cartelId": "curtis_warren_org",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 65,
+        "business": 68,
+        "charisma": 55,
+        "intrigue": 60,
+        "loyaltyInspiring": 62,
+        "stealth": 52
+      },
+      "traits": [
+        "leal"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cw_gov_chief",
+      "name": "Robert Sinclair",
+      "sex": "M",
+      "birthYear": 1950,
+      "alive": true,
+      "cartelId": "curtis_warren_org",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 60,
+        "charisma": 68,
+        "intrigue": 72,
+        "loyaltyInspiring": 40,
+        "stealth": 58
+      },
+      "traits": [
+        "conectado"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cw_police_chief",
+      "name": "Alan Metcalfe",
+      "sex": "M",
+      "birthYear": 1955,
+      "alive": true,
+      "cartelId": "curtis_warren_org",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 25,
+        "business": 50,
+        "charisma": 52,
+        "intrigue": 70,
+        "loyaltyInspiring": 45,
+        "stealth": 60
+      },
+      "traits": [
+        "infiltrado"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cw_production_chief",
+      "name": "Frank Doran",
+      "sex": "M",
+      "birthYear": 1959,
+      "alive": true,
+      "cartelId": "curtis_warren_org",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 30,
+        "business": 55,
+        "charisma": 40,
+        "intrigue": 48,
+        "loyaltyInspiring": 50,
+        "stealth": 50
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cw_pr_chief",
+      "name": "Diane Foster",
+      "sex": "F",
+      "birthYear": 1964,
+      "alive": true,
+      "cartelId": "curtis_warren_org",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 10,
+        "business": 58,
+        "charisma": 72,
+        "intrigue": 50,
+        "loyaltyInspiring": 52,
+        "stealth": 42
+      },
+      "traits": [
+        "relaciones públicas"
+      ],
+      "notes": "Personaje ficticio.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []
