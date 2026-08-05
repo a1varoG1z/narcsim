@@ -226,7 +226,7 @@ export const SCRIPTED_EVENTS = {
       },
     },
   ],
-  "narcotrafico-gallego-1975-1994": [
+  "narcotrafico-gallego-1975-1995": [
     {
       id: "operacion-necora-1990",
       year: 1990,
@@ -280,6 +280,21 @@ export const SCRIPTED_EVENTS = {
           c.resources.armySize += randInt(10, 20);
           addLog("La organización pasa a la clandestinidad y refuerza su aparato de seguridad. La cacería en su contra será implacable, pero por ahora nadie cae preso.", "death");
         }
+      },
+    },
+    {
+      id: "asesinato-baulo-1994",
+      year: 1994,
+      run(game, addLog) {
+        const c = game.cartels.clan_galego;
+        if (!c || c.destroyed) return [];
+        c.resources.heat = Math.min(100, c.resources.heat + 15);
+        c.resources.corruptPolice = Math.max(0, c.resources.corruptPolice - 10);
+        addLog(
+          "Manuel Baúlo, confidente real del juez Garzón contra el clan Charlín, muere tiroteado en su casa de Cambados por tres sicarios colombianos -- un ajuste de cuentas que nunca se resuelve del todo en los tribunales, pero que pone otra vez el foco de la prensa y la policía sobre el narcotráfico gallego.",
+          "event"
+        );
+        return [];
       },
     },
   ],

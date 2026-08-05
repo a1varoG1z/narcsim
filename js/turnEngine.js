@@ -315,7 +315,7 @@ export const MARKET_PROFILES = {
     { id: "us", name: "Estados Unidos", payoutMult: 1, seizureMult: 1 },
     { id: "europa", name: "Europa (mercado del fentanilo aún incipiente)", payoutMult: 1.1, seizureMult: 1.15 },
   ],
-  "narcotrafico-gallego-1975-1994": [
+  "narcotrafico-gallego-1975-1995": [
     { id: "espana", name: "España (distribución interna)", payoutMult: 1, seizureMult: 1 },
     { id: "centroeuropa", name: "Centroeuropa (red de Ámsterdam y Róterdam)", payoutMult: 1.3, seizureMult: 1.2 },
     { id: "reino_unido", name: "Reino Unido e Irlanda", payoutMult: 1.4, seizureMult: 1.3, availableFromYear: 1984 },

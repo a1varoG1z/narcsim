@@ -40,7 +40,7 @@ const PRECACHE_URLS = [
   "./data/eras/medellin-cali-1980-1995.json",
   "./data/eras/mexico-rutas-1990-2006.json",
   "./data/eras/chapitos-mayiza-2024-actualidad.json",
-  "./data/eras/narcotrafico-gallego-1975-1994.json",
+  "./data/eras/narcotrafico-gallego-1975-1995.json",
   "./data/geo/shapes.json",
   "./js/geoShapes.js",
   "./assets/icon.svg",
