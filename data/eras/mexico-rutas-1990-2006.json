@@ -778,7 +778,7 @@
     {
       "id": "polonia",
       "name": "Polonia",
-      "controllerId": null,
+      "controllerId": "pruszkow",
       "value": 15,
       "adj": [
         "bielorrusia",
@@ -3225,6 +3225,36 @@
         "corruptionPoliceChief": "ha_police_chief",
         "productionChief": "ha_production_chief",
         "prChief": "ha_pr_chief"
+      }
+    },
+    {
+      "id": "pruszkow",
+      "name": "Mafia de Pruszków",
+      "color": "#5a3a7a",
+      "aiControlled": true,
+      "historicalNote": "La mafia de Pruszków, con origen real en 1990 en la localidad del mismo nombre cerca de Varsovia, nació de la unión entre veteranos criminales de la época comunista y una generación más joven que aprovechó el vacío de la transición democrática polaca; en pocos años dominaba Varsovia y, hacia el final de la década de los 90, buena parte del crimen organizado de toda Polonia. Andrzej Kolikowski, apodado real \"Pershing\", nacido el 19 de enero de 1954, fue jefe mafioso y estrecho colaborador de esta organización, descrito por fuentes periodísticas como el gánster polaco más conocido de los años 90. En la vida real fue asesinado a tiros en Zakopane el 5 de diciembre de 1999, mientras estaba de vacaciones, dentro del rango de esta época. En el juego, como con el resto de figuras históricas, su destino depende de tus decisiones. Los cargos secundarios del organigrama, sin figura pública documentada en ese rol específico, son ficticios.",
+      "resources": {
+        "money": 55000000,
+        "armySize": 260,
+        "corruptGov": 25,
+        "corruptPolice": 30,
+        "publicImage": 22,
+        "heat": 45
+      },
+      "supplyChainRole": "distribuidor",
+      "roles": {
+        "leader": "andrzej_kolikowski",
+        "underboss": "pk_underboss",
+        "sicariosChief": "pk_sicarios_chief",
+        "intelChief": "pk_intel_chief",
+        "militaryChief": "pk_military_chief",
+        "diplomatChief": "pk_diplomat_chief",
+        "financeChief": "pk_finance_chief",
+        "traffickingChief": "pk_trafficking_chief",
+        "corruptionGovChief": "pk_gov_chief",
+        "corruptionPoliceChief": "pk_police_chief",
+        "productionChief": "pk_production_chief",
+        "prChief": "pk_pr_chief"
       }
     }
   ],
@@ -5918,6 +5948,305 @@
       "birthYear": 1963,
       "alive": true,
       "cartelId": "hells_angels_qc",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 10,
+        "business": 55,
+        "charisma": 68,
+        "intrigue": 48,
+        "loyaltyInspiring": 50,
+        "stealth": 40
+      },
+      "traits": [
+        "relaciones públicas"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "andrzej_kolikowski",
+      "name": "Andrzej Kolikowski \"Pershing\"",
+      "sex": "M",
+      "birthYear": 1954,
+      "alive": true,
+      "cartelId": "pruszkow",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 78,
+        "business": 68,
+        "charisma": 65,
+        "intrigue": 72,
+        "loyaltyInspiring": 60,
+        "stealth": 50
+      },
+      "traits": [
+        "veterano",
+        "temido"
+      ],
+      "notes": "Nacido el 19 de enero de 1954, jefe mafioso real y estrecho colaborador de la mafia de Pruszków, considerado el gánster polaco más conocido de los años 90. En la vida real fue asesinado a tiros en Zakopane el 5 de diciembre de 1999, mientras estaba de vacaciones. En el juego su destino depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pk_underboss",
+      "name": "Tomasz Wysocki",
+      "sex": "M",
+      "birthYear": 1958,
+      "alive": true,
+      "cartelId": "pruszkow",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 70,
+        "business": 60,
+        "charisma": 52,
+        "intrigue": 62,
+        "loyaltyInspiring": 58,
+        "stealth": 48
+      },
+      "traits": [
+        "leal"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pk_sicarios_chief",
+      "name": "Rafał Kamiński",
+      "sex": "M",
+      "birthYear": 1962,
+      "alive": true,
+      "cartelId": "pruszkow",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 88,
+        "business": 30,
+        "charisma": 35,
+        "intrigue": 50,
+        "loyaltyInspiring": 55,
+        "stealth": 55
+      },
+      "traits": [
+        "sanguinario"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pk_intel_chief",
+      "name": "Ewa Zielińska",
+      "sex": "F",
+      "birthYear": 1965,
+      "alive": true,
+      "cartelId": "pruszkow",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 25,
+        "business": 55,
+        "charisma": 55,
+        "intrigue": 78,
+        "loyaltyInspiring": 45,
+        "stealth": 72
+      },
+      "traits": [
+        "observadora"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pk_military_chief",
+      "name": "Grzegorz Nowak",
+      "sex": "M",
+      "birthYear": 1956,
+      "alive": true,
+      "cartelId": "pruszkow",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 80,
+        "business": 42,
+        "charisma": 40,
+        "intrigue": 55,
+        "loyaltyInspiring": 58,
+        "stealth": 48
+      },
+      "traits": [
+        "veterano"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pk_diplomat_chief",
+      "name": "Marek Wójcik",
+      "sex": "M",
+      "birthYear": 1953,
+      "alive": true,
+      "cartelId": "pruszkow",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 35,
+        "business": 68,
+        "charisma": 70,
+        "intrigue": 60,
+        "loyaltyInspiring": 48,
+        "stealth": 45
+      },
+      "traits": [
+        "negociador"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pk_finance_chief",
+      "name": "Anna Kowalska",
+      "sex": "F",
+      "birthYear": 1960,
+      "alive": true,
+      "cartelId": "pruszkow",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 82,
+        "charisma": 50,
+        "intrigue": 62,
+        "loyaltyInspiring": 42,
+        "stealth": 48
+      },
+      "traits": [
+        "contable"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pk_trafficking_chief",
+      "name": "Piotr Lewandowski",
+      "sex": "M",
+      "birthYear": 1959,
+      "alive": true,
+      "cartelId": "pruszkow",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 55,
+        "business": 72,
+        "charisma": 48,
+        "intrigue": 58,
+        "loyaltyInspiring": 50,
+        "stealth": 55
+      },
+      "traits": [
+        "logístico"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pk_gov_chief",
+      "name": "Krzysztof Dąbrowski",
+      "sex": "M",
+      "birthYear": 1948,
+      "alive": true,
+      "cartelId": "pruszkow",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 55,
+        "charisma": 62,
+        "intrigue": 65,
+        "loyaltyInspiring": 38,
+        "stealth": 52
+      },
+      "traits": [
+        "conectado"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pk_police_chief",
+      "name": "Wojciech Szymański",
+      "sex": "M",
+      "birthYear": 1954,
+      "alive": true,
+      "cartelId": "pruszkow",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 25,
+        "business": 45,
+        "charisma": 48,
+        "intrigue": 68,
+        "loyaltyInspiring": 42,
+        "stealth": 60
+      },
+      "traits": [
+        "infiltrado"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pk_production_chief",
+      "name": "Michał Woźniak",
+      "sex": "M",
+      "birthYear": 1961,
+      "alive": true,
+      "cartelId": "pruszkow",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 25,
+        "business": 55,
+        "charisma": 38,
+        "intrigue": 45,
+        "loyaltyInspiring": 48,
+        "stealth": 50
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pk_pr_chief",
+      "name": "Magdalena Jankowska",
+      "sex": "F",
+      "birthYear": 1963,
+      "alive": true,
+      "cartelId": "pruszkow",
       "role": "prChief",
       "historical": false,
       "stats": {
