@@ -654,7 +654,7 @@
     {
       "id": "holanda",
       "name": "Países Bajos",
-      "controllerId": null,
+      "controllerId": "bruinsma_org",
       "value": 15,
       "adj": [
         "belgica",
@@ -3069,6 +3069,36 @@
         "productionChief": "ks_production_chief",
         "prChief": "ks_pr_chief"
       }
+    },
+    {
+      "id": "bruinsma_org",
+      "name": "Organización de Klaas Bruinsma",
+      "color": "#c96f2f",
+      "aiControlled": true,
+      "historicalNote": "Klaas Bruinsma, apodado real \"de Lange\" (\"el Largo\") y tratado por la prensa neerlandesa de la época como \"el padrino de Ámsterdam\", construyó desde finales de los 70 el mayor imperio real de importación de hachís de los Países Bajos a través del puerto de Róterdam, y desde mediados de los 80 amplió el negocio a la cocaína colombiana, aprovechando la posición real de Róterdam y Ámsterdam como una de las principales puertas de entrada de la droga sudamericana a Europa (la misma ruta que, del otro lado del Atlántico, conectaba con las redes gallegas ya documentadas en el juego). En esta época concreta (1975-1989) su organización está todavía en plena fase de ascenso: domina ya el hachís marroquí y está apenas empezando a moverse hacia la cocaína colombiana en los últimos años de esta época. Aunque fue detenido y condenado en varias ocasiones por delitos menores, la fiscalía neerlandesa nunca logró una condena firme por sus operaciones de mayor escala. En la vida real fue asesinado a tiros a la salida de un hotel de Ámsterdam en junio de 1991, ya fuera del rango de esta época, en un caso que permaneció sin resolver formalmente durante años. En el juego, como con el resto de figuras históricas, su destino depende de tus decisiones y de la simulación, no está fijado de antemano.",
+      "resources": {
+        "money": 70000000,
+        "armySize": 280,
+        "corruptGov": 28,
+        "corruptPolice": 38,
+        "publicImage": 25,
+        "heat": 32
+      },
+      "supplyChainRole": "distribuidor",
+      "roles": {
+        "leader": "kb_leader",
+        "underboss": "kb_underboss",
+        "sicariosChief": "kb_sicarios_chief",
+        "intelChief": "kb_intel_chief",
+        "militaryChief": "kb_military_chief",
+        "diplomatChief": "kb_diplomat_chief",
+        "financeChief": "kb_finance_chief",
+        "traffickingChief": "kb_trafficking_chief",
+        "corruptionGovChief": "kb_gov_chief",
+        "corruptionPoliceChief": "kb_police_chief",
+        "productionChief": "kb_production_chief",
+        "prChief": "kb_pr_chief"
+      }
     }
   ],
   "characters": [
@@ -3997,6 +4027,284 @@
       },
       "traits": [],
       "notes": "Personaje ficticio que representa la legitimidad real que Khun Sa cultivaba ante la población Shan al presentar su causa como una lucha por la independencia.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "kb_leader",
+      "name": "Klaas Bruinsma",
+      "sex": "M",
+      "birthYear": 1953,
+      "alive": true,
+      "cartelId": "bruinsma_org",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 65,
+        "business": 86,
+        "charisma": 70,
+        "intrigue": 76,
+        "loyaltyInspiring": 60,
+        "stealth": 56
+      },
+      "traits": [
+        "fundador"
+      ],
+      "notes": "Jefe real del mayor imperio neerlandés de hachís, en plena fase de ascenso durante esta época y empezando a moverse hacia la cocaína colombiana en sus últimos años. Tratado por la prensa de la época como \"el padrino de Ámsterdam\". En la vida real fue asesinado a tiros en junio de 1991, ya fuera del rango de esta época, en un caso que quedó oficialmente sin resolver. En el juego su destino depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "kb_underboss",
+      "name": "Thomas van der Bijl",
+      "sex": [],
+      "birthYear": 1951,
+      "alive": true,
+      "cartelId": "bruinsma_org",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 52,
+        "business": 74,
+        "charisma": 58,
+        "intrigue": 66,
+        "loyaltyInspiring": 53,
+        "stealth": 60
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a la cúpula operativa cercana de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "kb_sicarios_chief",
+      "name": "Dick Wolters",
+      "sex": [],
+      "birthYear": 1957,
+      "alive": true,
+      "cartelId": "bruinsma_org",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 80,
+        "business": 32,
+        "charisma": 38,
+        "intrigue": 46,
+        "loyaltyInspiring": 46,
+        "stealth": 52
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa el brazo armado de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "kb_intel_chief",
+      "name": "Peter Hagen",
+      "sex": [],
+      "birthYear": 1955,
+      "alive": true,
+      "cartelId": "bruinsma_org",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 38,
+        "business": 52,
+        "charisma": 48,
+        "intrigue": 72,
+        "loyaltyInspiring": 44,
+        "stealth": 70
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red de vigilancia e información interna de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "kb_military_chief",
+      "name": "Ronnie Task",
+      "sex": [],
+      "birthYear": 1954,
+      "alive": true,
+      "cartelId": "bruinsma_org",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 68,
+        "business": 40,
+        "charisma": 36,
+        "intrigue": 46,
+        "loyaltyInspiring": 52,
+        "stealth": 46
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los mandos de seguridad de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "kb_diplomat_chief",
+      "name": "Mr. Frank Steenkamp",
+      "sex": [],
+      "birthYear": 1948,
+      "alive": true,
+      "cartelId": "bruinsma_org",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 28,
+        "business": 58,
+        "charisma": 64,
+        "intrigue": 60,
+        "loyaltyInspiring": 48,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa los canales reales de negociación de la organización, todavía centrados sobre todo en proveedores de hachís marroquí en esta época temprana.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "kb_finance_chief",
+      "name": "Wim Oosterveen",
+      "sex": [],
+      "birthYear": 1950,
+      "alive": true,
+      "cartelId": "bruinsma_org",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 22,
+        "business": 78,
+        "charisma": 45,
+        "intrigue": 56,
+        "loyaltyInspiring": 42,
+        "stealth": 52
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red real de empresas navieras y de importación usadas para blanquear el dinero de la organización a través del puerto de Róterdam.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "kb_trafficking_chief",
+      "name": "Cornelis de Groot",
+      "sex": [],
+      "birthYear": 1952,
+      "alive": true,
+      "cartelId": "bruinsma_org",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 50,
+        "business": 70,
+        "charisma": 42,
+        "intrigue": 58,
+        "loyaltyInspiring": 46,
+        "stealth": 62
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red real de importación de hachís marroquí a través del puerto de Róterdam, uno de los mayores puertos de contenedores del mundo.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "kb_gov_chief",
+      "name": "Mr. Henk Bakker",
+      "sex": [],
+      "birthYear": 1946,
+      "alive": true,
+      "cartelId": "bruinsma_org",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 12,
+        "business": 56,
+        "charisma": 62,
+        "intrigue": 64,
+        "loyaltyInspiring": 43,
+        "stealth": 56
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red de complicidades políticas locales de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "kb_police_chief",
+      "name": "Inspecteur Gerrit Mulder",
+      "sex": [],
+      "birthYear": 1949,
+      "alive": true,
+      "cartelId": "bruinsma_org",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 26,
+        "business": 46,
+        "charisma": 42,
+        "intrigue": 60,
+        "loyaltyInspiring": 40,
+        "stealth": 64
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red de complicidades dentro de las fuerzas del orden neerlandesas de la época.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "kb_production_chief",
+      "name": "Aad Kok",
+      "sex": [],
+      "birthYear": 1956,
+      "alive": true,
+      "cartelId": "bruinsma_org",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 32,
+        "business": 50,
+        "charisma": 32,
+        "intrigue": 42,
+        "loyaltyInspiring": 36,
+        "stealth": 46
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la logística real de almacenaje y distribución portuaria de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "kb_pr_chief",
+      "name": "Mevrouw Ineke Prins",
+      "sex": "F",
+      "birthYear": 1958,
+      "alive": true,
+      "cartelId": "bruinsma_org",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 16,
+        "business": 40,
+        "charisma": 55,
+        "intrigue": 44,
+        "loyaltyInspiring": 52,
+        "stealth": 42
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa el manejo de la imagen pública de la organización, todavía discreta en esta época temprana frente a la notoriedad mediática que Bruinsma alcanzaría después.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []
