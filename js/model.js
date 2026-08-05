@@ -73,7 +73,7 @@ export function makeCartel({
   id, name, color = "#8a2c2c", eraId, territories = [],
   resources = null, roles = {}, characters = [],
   relations = {}, aiControlled = true, historicalNote = "",
-  targetTerritoryIds = [],
+  targetTerritoryIds = [], supplyChainRole = null,
 } = {}) {
   return {
     id: id || uid("cartel"),
@@ -82,6 +82,13 @@ export function makeCartel({
     eraId,
     territories,
     targetTerritoryIds,
+    // Optional real-world supply-chain role — "productor" (grows/refines but relies on others to
+    // move it, e.g. Roberto Suárez supplying Colombian traffickers rather than exporting himself),
+    // "transportista" (a logistics corridor, e.g. Panama under Noriega), "distribuidor" (moves
+    // already-produced product to end markets without producing anything, e.g. Klaas Bruinsma). No
+    // role (null) is the historical norm for most cartels in this game: they do the whole chain
+    // themselves, same as before this existed.
+    supplyChainRole,
     resources: resources || {
       money: 100,
       armySize: 100,

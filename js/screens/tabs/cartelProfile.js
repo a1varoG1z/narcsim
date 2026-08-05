@@ -5,6 +5,12 @@ import { fmtMoney, fmtNum, heatLabel } from "../../utils/text.js";
 import { showCharacterProfile } from "./characterProfile.js";
 import { MONEY_SCALE } from "../../turnEngine.js";
 
+const SUPPLY_CHAIN_ROLE_LABEL = {
+  productor: "🌱 Rol en la cadena: Productor — produce materia prima, pero depende de otros para venderla en el mercado abierto (+25% al invertir en producción, -15% al vender directamente sin socio; vender a través de un socio no tiene esa penalización).",
+  transportista: "🚚 Rol en la cadena: Transportista — no produce ni vende su propia mercancía, pero cobra un peaje real por mover la de otros (comisión del 25% en vez del 15% habitual al actuar de socio en el envío de otro cártel).",
+  distribuidor: "📦 Rol en la cadena: Distribuidor — no produce nada propio (no puede invertir en producción), pero mueve mercancía ya producida a mercados finales mejor que nadie (+25% de rendimiento en cada envío).",
+};
+
 export function showCartelProfile(app, cartelId) {
   const game = app.game;
   const cartel = game.cartels[cartelId];
@@ -15,6 +21,7 @@ export function showCartelProfile(app, cartelId) {
   showModal(`
     <h2><span style="display:inline-block;width:12px;height:12px;background:${cartel.color};border-radius:2px;margin-right:6px"></span>${escapeHtml(cartel.name)}${isPlayer ? " (tú)" : ""}</h2>
     <p class="small text-dim">${escapeHtml(cartel.historicalNote || "")}</p>
+    ${cartel.supplyChainRole ? `<p class="small text-success">${SUPPLY_CHAIN_ROLE_LABEL[cartel.supplyChainRole]}</p>` : ""}
     ${statBar("Dinero", Math.min(100, r.money / (50 * MONEY_SCALE)))}<div class="small text-dim" style="margin-top:-8px">${fmtMoney(r.money)}</div>
     ${statBar("Ejército", Math.min(100, r.armySize / 40))}<div class="small text-dim" style="margin-top:-8px">${fmtNum(r.armySize)} hombres</div>
     ${statBar("Corrupción gob.", r.corruptGov)}

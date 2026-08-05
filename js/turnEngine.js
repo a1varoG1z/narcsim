@@ -439,6 +439,12 @@ export function applyAction(game, cartelId, type, payload = {}) {
   const result = (function runAction() {
   switch (type) {
     case "invest_production": {
+      // A cartel whose real historical role in the chain was pure distribution (see
+      // supplyChainRole below — Klaas Bruinsma's real business was moving product already produced
+      // by others, never growing or refining anything himself) has nothing to produce.
+      if (cartel.supplyChainRole === "distribuidor") {
+        return { ok: false, message: `${cartel.name} no produce nada propio: su negocio real es distribuir lo que ya llega producido de otros. Compra el envío directamente ("Enviar cargamento") o negocia con un productor.` };
+      }
       const cost = ACTION_COSTS.invest_production;
       if (r.money < cost) return { ok: false, message: "No hay dinero suficiente." };
       const owned = cartel.territories.map((id) => game.territories[id]).filter(Boolean);
@@ -459,9 +465,13 @@ export function applyAction(game, cartelId, type, payload = {}) {
       // A handful of territories carry a real, historically documented "cultivo" specialization
       // (the actual Golden-Triangle-style growing regions of each era — Sinaloa/Durango/Chihuahua,
       // Guerrero, Michoacán, Myanmar's Shan State, Peru's Alto Huallaga) — producing there goes
-      // further than in a territory with no particular tie to cultivation.
+      // further than in a territory with no particular tie to cultivation. A "productor"-role
+      // cartel (see supplyChainRole below — Roberto Suárez/Vaticano supplying raw product to
+      // Colombian traffickers rather than exporting it themselves) is likewise better at this end
+      // of the chain than a generalist.
       const specializationMult = territory.specialization === "cultivo" ? 1.3 : 1;
-      const payout = Math.round((90 + territory.value * 12) * MONEY_SCALE * (1.1 + Math.random() * 0.5) * drug.payoutMult * (1 + productionBonus / 50) * specializationMult);
+      const roleMult = cartel.supplyChainRole === "productor" ? 1.25 : 1;
+      const payout = Math.round((90 + territory.value * 12) * MONEY_SCALE * (1.1 + Math.random() * 0.5) * drug.payoutMult * (1 + productionBonus / 50) * specializationMult * roleMult);
       r.money += payout;
       r.heat = Math.min(100, r.heat + Math.round(2 * drug.heatMult));
       log(`${cartel.name} invierte en producción en ${territory.name} y obtiene ${fmtMoney(payout)} en ganancias.${territory.specialization === "cultivo" ? " La región es una zona de cultivo histórica, y rinde más de lo normal." : ""}`, "good");
@@ -495,7 +505,15 @@ export function applyAction(game, cartelId, type, payload = {}) {
       // the market's fixed structural payoutMult — heavy recent traffic to this exact market
       // (from any cartel, not just this one) depresses it; a quiet market pays a premium.
       const priceIndex = getMarketPriceIndex(game, market.id);
-      const payout = Math.round(cost * (1.6 + Math.random() * 1.2) * partnerMultiplier * drug.payoutMult * market.payoutMult * priceIndex * (1 + traffickingBonus / 50) * (1 + (r.tradeRouteBonus || 0)));
+      // supplyChainRole (see model.js): a "distribuidor" (Bruinsma's real business — moving
+      // already-produced product to end markets) is simply better at this than a generalist. A
+      // "productor" (Suárez/Vaticano, who really did sell raw product on to Colombian traffickers
+      // rather than exporting it themselves) is worse specifically at reaching the open market
+      // directly — selling to a partner instead, delegating that final leg, has no such penalty.
+      const roleMult = cartel.supplyChainRole === "distribuidor" ? 1.25
+        : cartel.supplyChainRole === "productor" && !partner ? 0.85
+        : 1;
+      const payout = Math.round(cost * (1.6 + Math.random() * 1.2) * partnerMultiplier * drug.payoutMult * market.payoutMult * priceIndex * roleMult * (1 + traffickingBonus / 50) * (1 + (r.tradeRouteBonus || 0)));
       r.money += payout;
       r.heat = Math.min(100, r.heat + Math.round(5 * drug.heatMult));
       // Tracked for getWorldMarketShare/getRegionalMarketShare — every cartel's cumulative
@@ -510,7 +528,11 @@ export function applyAction(game, cartelId, type, payload = {}) {
       r.distributionVolumeByMarket[market.id] = (r.distributionVolumeByMarket[market.id] || 0) + payout;
       updateMarketState(game, market.id, payout);
       if (partner) {
-        partner.resources.money = Math.round(partner.resources.money + payout * 0.15);
+        // A "transportista" (Panama under Noriega's real business — a paid transit corridor for
+        // other cartels' shipments, not their own product) takes a real cut when it acts as the
+        // buyer/partner on someone else's shipment, not the smaller finder's-fee everyone else gets.
+        const partnerCut = partner.supplyChainRole === "transportista" ? 0.25 : 0.15;
+        partner.resources.money = Math.round(partner.resources.money + payout * partnerCut);
         const tensionDelta = partnerStatus === "alliance" ? -5 : -2;
         cartel.relations[partner.id].tension = clamp(cartel.relations[partner.id].tension + tensionDelta, 0, 100);
         partner.relations[cartel.id].tension = cartel.relations[partner.id].tension;

@@ -58,10 +58,11 @@ export function render(container, app) {
       ${ACTIONS.map((a) => {
         const cost = ACTION_COSTS[a.type] || 0;
         const noTerritories = a.type === "extort_territory" && !cartel.territories.length;
+        const noProduction = a.type === "invest_production" && cartel.supplyChainRole === "distribuidor";
         return `
-        <button class="block" data-action="${a.type}" ${cartel.resources.money < cost || exhausted || noTerritories ? "disabled" : ""}>
+        <button class="block" data-action="${a.type}" ${cartel.resources.money < cost || exhausted || noTerritories || noProduction ? "disabled" : ""}>
           <strong>${a.label}</strong> ${cost ? `— ${fmtMoney(cost)}` : ""}
-          <div class="small text-dim">${a.desc}</div>
+          <div class="small text-dim">${noProduction ? "Tu organización no produce nada propio: es puramente distribuidora. Compra el producto ya hecho enviando un cargamento." : a.desc}</div>
         </button>
       `;
       }).join("")}

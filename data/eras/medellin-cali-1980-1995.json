@@ -3554,7 +3554,8 @@
         "corruptionPoliceChief": "suarez_police_chief",
         "productionChief": "suarez_production_chief",
         "prChief": "suarez_pr_chief"
-      }
+      },
+      "supplyChainRole": "productor"
     },
     {
       "id": "vaticano",
@@ -3583,7 +3584,8 @@
         "corruptionPoliceChief": "vaticano_police_chief",
         "productionChief": "vaticano_production_chief",
         "prChief": "vaticano_pr_chief"
-      }
+      },
+      "supplyChainRole": "productor"
     },
     {
       "id": "pdf_panama",
@@ -3612,7 +3614,8 @@
         "corruptionPoliceChief": "pdf_police_chief",
         "productionChief": "pdf_production_chief",
         "prChief": "pdf_pr_chief"
-      }
+      },
+      "supplyChainRole": "transportista"
     },
     {
       "id": "soles",
@@ -3699,7 +3702,8 @@
         "corruptionPoliceChief": "kb_police_chief",
         "productionChief": "kb_production_chief",
         "prChief": "kb_pr_chief"
-      }
+      },
+      "supplyChainRole": "distribuidor"
     }
   ],
   "characters": [
