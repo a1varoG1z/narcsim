@@ -35,6 +35,7 @@ export function render(container, app) {
         <tr style="border-top:1px solid var(--border)"><td><strong>Ingreso total</strong></td><td class="center"><strong>${fmtMoney(b.territoryIncome)}</strong></td></tr>
         ${b.propertyIncome ? `<tr><td>Propiedades</td><td class="center text-success">+${fmtMoney(b.propertyIncome)}</td></tr>` : ""}
         ${b.businessIncome ? `<tr><td>Negocios de fachada</td><td class="center text-success">+${fmtMoney(b.businessIncome)}</td></tr>` : ""}
+        ${b.marketDominanceIncome ? `<tr><td>Dominio del comercio mundial (${b.marketShare.toFixed(1)}% de cuota agregada)</td><td class="center text-success">+${fmtMoney(b.marketDominanceIncome)}</td></tr>` : ""}
         <tr><td>Mantenimiento del ejército (${fmtNum(r.armySize)} hombres)</td><td class="center text-danger">-${fmtMoney(b.upkeep)}</td></tr>
         <tr style="border-top:1px solid var(--border)"><td><strong>Balance neto por turno</strong></td><td class="center ${b.net >= 0 ? "text-success" : "text-danger"}"><strong>${b.net >= 0 ? "+" : ""}${fmtMoney(b.net)}</strong></td></tr>
       </table>
@@ -56,6 +57,7 @@ export function render(container, app) {
       <p class="text-dim small">Cuota estimada del mercado mundial de ${escapeHtml(drug.name.toLowerCase())}: el volumen acumulado de tus envíos ("Enviar cargamento") frente al de todos los demás cárteles que trafican con lo mismo — un cálculo de suma cero, no una cifra propia que solo puede subir.</p>
       <p class="small">Tu cuota de este mercado: <strong>${marketShare.toFixed(1)}%</strong></p>
       ${multiDrugEra ? `<p class="small text-dim">Cuota agregada de todas las drogas de la partida: ${aggregateShare.toFixed(1)}%</p>` : ""}
+      <p class="small text-dim">Dominar el comercio es un eje de poder real, no solo una estadística: tu cuota agregada ya genera ingresos propios cada turno (ver "Dominio del comercio mundial" en Finanzas), aunque tengas pocos territorios propios.</p>
       ${r.tradeRouteBonus ? `<p class="small text-success">Rutas comerciales internacionales propias: +${Math.round(r.tradeRouteBonus * 100)}% de rendimiento en cada envío futuro.</p>` : `<p class="small text-dim">Sin rutas comerciales propias todavía — invierte en ellas desde la pestaña Decisiones.</p>`}
       ${rivalShares.length ? `
         <p class="small text-dim mt-1">Mayores rivales en este mercado:</p>

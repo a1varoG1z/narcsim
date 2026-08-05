@@ -2089,11 +2089,19 @@ export function getIncomeBreakdown(game, cartel) {
   const territoryIncome = baseIncome + exportBonus;
   const propertyIncome = cartel.resources.propertyIncome || 0;
   const businessIncome = cartel.resources.businessIncome || 0;
-  const passiveIncome = propertyIncome + businessIncome;
+  // Real, ongoing income from dominating the world trade of your product — independent of how
+  // much territory you hold. This is what makes market share a genuine second axis of power
+  // instead of a percentage buried in a stats screen: a cartel with only one or two territories
+  // but a commanding share of global volume (the Escobar-vs-Cali case the game is explicitly
+  // built to represent) draws real money from that dominance every turn, the same way a
+  // territory-heavy rival draws money from their map.
+  const marketShare = getWorldMarketShare(game, cartel);
+  const marketDominanceIncome = Math.round(marketShare * 8 * MONEY_SCALE);
+  const passiveIncome = propertyIncome + businessIncome + marketDominanceIncome;
   const upkeep = Math.round(cartel.resources.armySize * 0.45 * MONEY_SCALE);
   return {
     perTerritory, baseIncome, exportBonusRate, exportBonus, territoryIncome,
-    propertyIncome, businessIncome, passiveIncome, upkeep,
+    propertyIncome, businessIncome, marketShare, marketDominanceIncome, passiveIncome, upkeep,
     net: territoryIncome + passiveIncome - upkeep,
   };
 }
