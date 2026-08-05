@@ -7,6 +7,13 @@
     "blurb": "El Cártel de Guadalajara controla gran parte del tráfico en México y sirve de puente para la cocaína colombiana hacia Estados Unidos."
   },
   {
+    "id": "narcotrafico-gallego-1975-1994",
+    "file": "narcotrafico-gallego-1975-1994.json",
+    "name": "Narcotráfico gallego",
+    "period": "1975 – 1994",
+    "blurb": "De contrabandistas de tabaco en las rías gallegas a la puerta de entrada de la cocaína colombiana a Europa, hasta que la Operación Nécora de 1990 lo cambia todo."
+  },
+  {
     "id": "medellin-cali-1980-1995",
     "file": "medellin-cali-1980-1995.json",
     "name": "Medellín vs Cali",

@@ -19,6 +19,7 @@ const eraFiles = [
   "fragmentacion-2006-2015.json",
   "cjng-sinaloa-2015-actualidad.json",
   "chapitos-mayiza-2024-actualidad.json",
+  "narcotrafico-gallego-1975-1994.json",
 ];
 
 function playerTurnPolicy(game) {

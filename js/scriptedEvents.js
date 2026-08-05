@@ -226,6 +226,63 @@ export const SCRIPTED_EVENTS = {
       },
     },
   ],
+  "narcotrafico-gallego-1975-1994": [
+    {
+      id: "operacion-necora-1990",
+      year: 1990,
+      interactive: true,
+      cartelId: "clan_galego",
+      title: "Operación Nécora",
+      description:
+        "La Guardia Civil desata la Operación Nécora: cerca de 350 agentes de la Brigada Central de Estupefacientes, instruida por el juez Baltasar Garzón, golpean de golpe a las redes de contrabando y narcotráfico de las Rías Baixas. Unas 54 personas son detenidas y, por primera vez, toda España descubre el alcance del narcotráfico gallego. ¿Cómo respondes?",
+      options: [
+        { id: "negotiate", label: "Buscar abogados y pactar una estrategia legal conjunta" },
+        { id: "deny", label: "Negarlo todo y proteger la red de corrupción a toda costa" },
+        { id: "flee", label: "Pasar a la clandestinidad y reorganizar el negocio desde la sombra" },
+      ],
+      applyDefault(game, addLog) {
+        const c = game.cartels.clan_galego;
+        if (!c || c.destroyed) return;
+        c.resources.heat = Math.min(100, c.resources.heat + 40);
+        c.resources.corruptPolice = Math.max(0, c.resources.corruptPolice - 20);
+        addLog(
+          "La Operación Nécora golpea de golpe a las redes de contrabando y narcotráfico de las Rías Baixas: unas 54 personas detenidas y el narcotráfico gallego, en primera plana nacional.",
+          "event"
+        );
+      },
+      applyChoice(game, addLog, optionId) {
+        const c = game.cartels.clan_galego;
+        if (!c || c.destroyed) return;
+        if (optionId === "negotiate") {
+          c.resources.heat = Math.min(100, c.resources.heat + 20);
+          c.resources.corruptGov = Math.max(0, c.resources.corruptGov - 5);
+          const oubina = game.characters.laureano_oubina;
+          if (oubina && oubina.alive && !oubina.imprisoned) {
+            oubina.imprisoned = { sinceTurn: game.turn, releaseTurn: game.turn + randInt(10, 18), lifeSentence: false };
+            addLog(`${oubina.name} negocia con sus abogados y es condenado a una pena con fecha de salida. La organización sobrevive, tocada pero en pie.`, "event");
+          } else {
+            addLog("Los abogados de la organización logran una estrategia conjunta que limita el daño inmediato.", "event");
+          }
+        } else if (optionId === "deny") {
+          c.resources.heat = Math.min(100, c.resources.heat + 30);
+          c.resources.corruptGov = Math.max(0, c.resources.corruptGov - 20);
+          c.resources.corruptPolice = Math.max(0, c.resources.corruptPolice - 15);
+          const oubina = game.characters.laureano_oubina;
+          if (oubina && oubina.alive && !oubina.imprisoned) {
+            oubina.imprisoned = { sinceTurn: game.turn, releaseTurn: null, lifeSentence: false };
+            addLog(`${oubina.name} lo niega todo ante el juez Garzón, pero acaba igualmente condenado. La red de corrupción queda muy dañada tratando de contener el escándalo.`, "event");
+          } else {
+            addLog("La organización lo niega todo ante el juez Garzón, quemando buena parte de su red de corrupción para contener el escándalo.", "event");
+          }
+        } else {
+          c.resources.heat = Math.min(100, c.resources.heat + 50);
+          c.resources.publicImage = Math.max(0, c.resources.publicImage - 15);
+          c.resources.armySize += randInt(10, 20);
+          addLog("La organización pasa a la clandestinidad y refuerza su aparato de seguridad. La cacería en su contra será implacable, pero por ahora nadie cae preso.", "death");
+        }
+      },
+    },
+  ],
   "mexico-rutas-1990-2006": [
     {
       id: "posadas-ocampo-1993",
