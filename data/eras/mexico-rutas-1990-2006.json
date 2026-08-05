@@ -345,7 +345,7 @@
     {
       "id": "canada",
       "name": "Canadá",
-      "controllerId": null,
+      "controllerId": "hells_angels_qc",
       "value": 18,
       "adj": [
         "resto_eeuu"
@@ -3196,6 +3196,36 @@
         "productionChief": "cw_production_chief",
         "prChief": "cw_pr_chief"
       }
+    },
+    {
+      "id": "hells_angels_qc",
+      "name": "Hells Angels Quebec (Nomads)",
+      "color": "#7a1414",
+      "aiControlled": true,
+      "historicalNote": "Bajo el mando real de Maurice \"Mom\" Boucher, nacido en Causapscal (Quebec) en 1953, el capítulo Nomads de los Hells Angels que él mismo fundó hacia 1995 lideró la real \"Guerra de los Motociclistas de Quebec\" (1994-2002) contra el rival Rock Machine (liderado por Salvatore Cazzetta, antiguo compañero de Boucher en el club supremacista blanco SS de los años 80, antes de que ambos tomaran caminos separados) por el control del narcomenudeo en Montreal y el resto de Quebec — un conflicto real que causó más de 160 muertos, más de 200 heridos y unos 80 atentados con bomba documentados. En 2002 (dentro de esta época), Boucher fue condenado por asesinato en primer grado por ordenar en 1997 el asesinato de dos guardias de la prisión de Quebec, Diane Lavigne y Pierre Rondeau, elegidos al azar para desestabilizar el sistema judicial; recibió cadena perpetua sin posibilidad de libertad condicional antes de 25 años. Murió de cáncer en prisión en julio de 2022, ya muy fuera del rango de esta época. En el juego, como con el resto de figuras históricas, su destino depende de tus decisiones.",
+      "resources": {
+        "money": 60000000,
+        "armySize": 250,
+        "corruptGov": 10,
+        "corruptPolice": 15,
+        "publicImage": 20,
+        "heat": 55
+      },
+      "supplyChainRole": "distribuidor",
+      "roles": {
+        "leader": "maurice_boucher",
+        "underboss": "ha_underboss",
+        "sicariosChief": "ha_sicarios_chief",
+        "intelChief": "ha_intel_chief",
+        "militaryChief": "ha_military_chief",
+        "diplomatChief": "ha_diplomat_chief",
+        "financeChief": "ha_finance_chief",
+        "traffickingChief": "ha_trafficking_chief",
+        "corruptionGovChief": "ha_gov_chief",
+        "corruptionPoliceChief": "ha_police_chief",
+        "productionChief": "ha_production_chief",
+        "prChief": "ha_pr_chief"
+      }
     }
   ],
   "characters": [
@@ -5598,6 +5628,305 @@
         "intrigue": 50,
         "loyaltyInspiring": 52,
         "stealth": 42
+      },
+      "traits": [
+        "relaciones públicas"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "maurice_boucher",
+      "name": "Maurice \"Mom\" Boucher",
+      "sex": "M",
+      "birthYear": 1953,
+      "alive": true,
+      "cartelId": "hells_angels_qc",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 88,
+        "business": 65,
+        "charisma": 62,
+        "intrigue": 70,
+        "loyaltyInspiring": 68,
+        "stealth": 50
+      },
+      "traits": [
+        "fundador",
+        "implacable"
+      ],
+      "notes": "Nacido en Causapscal (Quebec) en 1953, de infancia marcada por un padre alcohólico y abusivo. Cofundó a comienzos de los 80 el club supremacista blanco SS junto a Salvatore Cazzetta; tras su disolución, Boucher se unió a los Hells Angels y Cazzetta acabaría fundando el rival Rock Machine. En 1995 fundó el capítulo Nomads, con el que lideró la Guerra de los Motociclistas de Quebec (1994-2002). En 2002 fue condenado por ordenar el asesinato de dos guardias de prisión en 1997; en el juego su destino depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "ha_underboss",
+      "name": "Denis Lacroix",
+      "sex": "M",
+      "birthYear": 1958,
+      "alive": true,
+      "cartelId": "hells_angels_qc",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 75,
+        "business": 55,
+        "charisma": 50,
+        "intrigue": 58,
+        "loyaltyInspiring": 62,
+        "stealth": 48
+      },
+      "traits": [
+        "leal"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "ha_sicarios_chief",
+      "name": "Marc Tremblay",
+      "sex": "M",
+      "birthYear": 1960,
+      "alive": true,
+      "cartelId": "hells_angels_qc",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 90,
+        "business": 30,
+        "charisma": 35,
+        "intrigue": 50,
+        "loyaltyInspiring": 55,
+        "stealth": 58
+      },
+      "traits": [
+        "sanguinario"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "ha_intel_chief",
+      "name": "Julie Bergeron",
+      "sex": "F",
+      "birthYear": 1965,
+      "alive": true,
+      "cartelId": "hells_angels_qc",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 30,
+        "business": 55,
+        "charisma": 52,
+        "intrigue": 78,
+        "loyaltyInspiring": 45,
+        "stealth": 72
+      },
+      "traits": [
+        "observadora"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "ha_military_chief",
+      "name": "Pierre Gagnon",
+      "sex": "M",
+      "birthYear": 1956,
+      "alive": true,
+      "cartelId": "hells_angels_qc",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 80,
+        "business": 42,
+        "charisma": 40,
+        "intrigue": 55,
+        "loyaltyInspiring": 58,
+        "stealth": 50
+      },
+      "traits": [
+        "veterano"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "ha_diplomat_chief",
+      "name": "André Fortin",
+      "sex": "M",
+      "birthYear": 1954,
+      "alive": true,
+      "cartelId": "hells_angels_qc",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 35,
+        "business": 68,
+        "charisma": 70,
+        "intrigue": 60,
+        "loyaltyInspiring": 48,
+        "stealth": 45
+      },
+      "traits": [
+        "negociador"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "ha_finance_chief",
+      "name": "Sylvie Roy",
+      "sex": "F",
+      "birthYear": 1962,
+      "alive": true,
+      "cartelId": "hells_angels_qc",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 82,
+        "charisma": 50,
+        "intrigue": 62,
+        "loyaltyInspiring": 42,
+        "stealth": 48
+      },
+      "traits": [
+        "contable"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "ha_trafficking_chief",
+      "name": "Michel Dubois",
+      "sex": "M",
+      "birthYear": 1959,
+      "alive": true,
+      "cartelId": "hells_angels_qc",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 55,
+        "business": 72,
+        "charisma": 48,
+        "intrigue": 58,
+        "loyaltyInspiring": 50,
+        "stealth": 55
+      },
+      "traits": [
+        "logístico"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "ha_gov_chief",
+      "name": "Robert Bélanger",
+      "sex": "M",
+      "birthYear": 1950,
+      "alive": true,
+      "cartelId": "hells_angels_qc",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 55,
+        "charisma": 62,
+        "intrigue": 65,
+        "loyaltyInspiring": 38,
+        "stealth": 52
+      },
+      "traits": [
+        "conectado"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "ha_police_chief",
+      "name": "Daniel Girard",
+      "sex": "M",
+      "birthYear": 1955,
+      "alive": true,
+      "cartelId": "hells_angels_qc",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 25,
+        "business": 45,
+        "charisma": 48,
+        "intrigue": 68,
+        "loyaltyInspiring": 42,
+        "stealth": 60
+      },
+      "traits": [
+        "infiltrado"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "ha_production_chief",
+      "name": "Luc Morin",
+      "sex": "M",
+      "birthYear": 1961,
+      "alive": true,
+      "cartelId": "hells_angels_qc",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 25,
+        "business": 55,
+        "charisma": 38,
+        "intrigue": 45,
+        "loyaltyInspiring": 48,
+        "stealth": 50
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "ha_pr_chief",
+      "name": "Nathalie Côté",
+      "sex": "F",
+      "birthYear": 1963,
+      "alive": true,
+      "cartelId": "hells_angels_qc",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 10,
+        "business": 55,
+        "charisma": 68,
+        "intrigue": 48,
+        "loyaltyInspiring": 50,
+        "stealth": 40
       },
       "traits": [
         "relaciones públicas"
