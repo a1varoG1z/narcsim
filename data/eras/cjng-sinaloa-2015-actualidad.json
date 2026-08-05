@@ -1779,7 +1779,7 @@
     {
       "id": "australia",
       "name": "Australia",
-      "controllerId": null,
+      "controllerId": "comancheros_au",
       "value": 17,
       "adj": [
         "papua_nueva_guinea"
@@ -3198,6 +3198,36 @@
         "corruptionPoliceChief": "ba_police_chief",
         "productionChief": "ba_production_chief",
         "prChief": "ba_pr_chief"
+      }
+    },
+    {
+      "id": "comancheros_au",
+      "name": "Comancheros (Australia)",
+      "color": "#8a2e2e",
+      "aiControlled": true,
+      "historicalNote": "El Comanchero Motorcycle Club, uno de los principales clubes de motociclistas fuera de la ley de Australia, profundizó desde mediados de la década de 2010 su implicación real en la importación y distribución de metanfetamina y cocaína, aprovechando que Australia es, según fuentes policiales, uno de los mercados de metanfetamina más caros del mundo (la misma 'ruta de Asia-Pacífico' ya citada en el sistema de mercados internacionales del juego). Mahmoud \"Mick\" Hawi, nacido en Beirut (Líbano) en 1980 y emigrado a Sídney en 1985, llegó a ser el segundo presidente nacional real (\"supreme commander\") del club antes de cumplir los treinta años. En 2009 protagonizó una pelea real en el aeropuerto de Sídney contra los Hells Angels en la que murió Anthony Zervas; condenado por asesinato en 2012 (condena luego anulada en apelación, se declaró culpable de homicidio y salió de prisión en 2015, justo al inicio de esta época). La presidencia nacional del club pasó por varios líderes reales durante estos años (entre ellos Mark Buddle desde 2011). En el juego, como con el resto de figuras históricas, el destino de Hawi depende de tus decisiones. Marcado `supplyChainRole: \"distribuidor\"`: el negocio real del club es mover y vender metanfetamina y cocaína ya producidas en otros lugares, no fabricarlas ellos mismos. Los cargos secundarios sin figura pública documentada en ese rol específico son ficticios.",
+      "resources": {
+        "money": 70000000,
+        "armySize": 200,
+        "corruptGov": 10,
+        "corruptPolice": 15,
+        "publicImage": 15,
+        "heat": 50
+      },
+      "supplyChainRole": "distribuidor",
+      "roles": {
+        "leader": "mick_hawi",
+        "underboss": "cm_underboss",
+        "sicariosChief": "cm_sicarios_chief",
+        "intelChief": "cm_intel_chief",
+        "militaryChief": "cm_military_chief",
+        "diplomatChief": "cm_diplomat_chief",
+        "financeChief": "cm_finance_chief",
+        "traffickingChief": "cm_trafficking_chief",
+        "corruptionGovChief": "cm_gov_chief",
+        "corruptionPoliceChief": "cm_police_chief",
+        "productionChief": "cm_production_chief",
+        "prChief": "cm_pr_chief"
       }
     }
   ],
@@ -5148,6 +5178,305 @@
       },
       "traits": [],
       "notes": "Personaje ficticio que representa la fachada social/empresarial de la célula de puertas afuera.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "mick_hawi",
+      "name": "Mahmoud \"Mick\" Hawi",
+      "sex": "M",
+      "birthYear": 1980,
+      "alive": true,
+      "cartelId": "comancheros_au",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 82,
+        "business": 62,
+        "charisma": 68,
+        "intrigue": 60,
+        "loyaltyInspiring": 65,
+        "stealth": 45
+      },
+      "traits": [
+        "fundador",
+        "violento"
+      ],
+      "notes": "Nacido en Beirut (Líbano) en 1980, emigró con su familia a Sídney en 1985. Llegó a ser el segundo presidente nacional real (\"supreme commander\") de los Comancheros. Protagonizó la pelea real del aeropuerto de Sídney en 2009 (murió Anthony Zervas); condenado por asesinato en 2012, condena anulada en apelación, se declaró culpable de homicidio y salió de prisión en 2015. En la vida real fue tiroteado y muerto frente a un gimnasio de Sídney el 14 de febrero de 2018. En el juego su destino depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cm_underboss",
+      "name": "Steve Kalajzich",
+      "sex": "M",
+      "birthYear": 1978,
+      "alive": true,
+      "cartelId": "comancheros_au",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 70,
+        "business": 58,
+        "charisma": 52,
+        "intrigue": 60,
+        "loyaltyInspiring": 60,
+        "stealth": 48
+      },
+      "traits": [
+        "leal"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cm_sicarios_chief",
+      "name": "Brendan Kelly",
+      "sex": "M",
+      "birthYear": 1982,
+      "alive": true,
+      "cartelId": "comancheros_au",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 88,
+        "business": 30,
+        "charisma": 35,
+        "intrigue": 50,
+        "loyaltyInspiring": 55,
+        "stealth": 55
+      },
+      "traits": [
+        "sanguinario"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cm_intel_chief",
+      "name": "Rachel Nguyen",
+      "sex": "F",
+      "birthYear": 1985,
+      "alive": true,
+      "cartelId": "comancheros_au",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 25,
+        "business": 55,
+        "charisma": 55,
+        "intrigue": 78,
+        "loyaltyInspiring": 45,
+        "stealth": 72
+      },
+      "traits": [
+        "observadora"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cm_military_chief",
+      "name": "Wayne Carter",
+      "sex": "M",
+      "birthYear": 1976,
+      "alive": true,
+      "cartelId": "comancheros_au",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 80,
+        "business": 42,
+        "charisma": 40,
+        "intrigue": 55,
+        "loyaltyInspiring": 58,
+        "stealth": 48
+      },
+      "traits": [
+        "veterano"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cm_diplomat_chief",
+      "name": "Anthony Russo",
+      "sex": "M",
+      "birthYear": 1979,
+      "alive": true,
+      "cartelId": "comancheros_au",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 35,
+        "business": 68,
+        "charisma": 70,
+        "intrigue": 60,
+        "loyaltyInspiring": 48,
+        "stealth": 45
+      },
+      "traits": [
+        "negociador"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cm_finance_chief",
+      "name": "Melissa Wright",
+      "sex": "F",
+      "birthYear": 1983,
+      "alive": true,
+      "cartelId": "comancheros_au",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 82,
+        "charisma": 50,
+        "intrigue": 62,
+        "loyaltyInspiring": 42,
+        "stealth": 48
+      },
+      "traits": [
+        "contable"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cm_trafficking_chief",
+      "name": "Daniel Petrovic",
+      "sex": "M",
+      "birthYear": 1980,
+      "alive": true,
+      "cartelId": "comancheros_au",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 55,
+        "business": 72,
+        "charisma": 48,
+        "intrigue": 58,
+        "loyaltyInspiring": 50,
+        "stealth": 55
+      },
+      "traits": [
+        "logístico"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cm_gov_chief",
+      "name": "Ian Fletcher",
+      "sex": "M",
+      "birthYear": 1965,
+      "alive": true,
+      "cartelId": "comancheros_au",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 55,
+        "charisma": 62,
+        "intrigue": 65,
+        "loyaltyInspiring": 38,
+        "stealth": 52
+      },
+      "traits": [
+        "conectado"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cm_police_chief",
+      "name": "Grant Robinson",
+      "sex": "M",
+      "birthYear": 1970,
+      "alive": true,
+      "cartelId": "comancheros_au",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 25,
+        "business": 45,
+        "charisma": 48,
+        "intrigue": 68,
+        "loyaltyInspiring": 42,
+        "stealth": 60
+      },
+      "traits": [
+        "infiltrado"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cm_production_chief",
+      "name": "Craig Mitchell",
+      "sex": "M",
+      "birthYear": 1981,
+      "alive": true,
+      "cartelId": "comancheros_au",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 25,
+        "business": 55,
+        "charisma": 38,
+        "intrigue": 45,
+        "loyaltyInspiring": 48,
+        "stealth": 50
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cm_pr_chief",
+      "name": "Jessica Bell",
+      "sex": "F",
+      "birthYear": 1984,
+      "alive": true,
+      "cartelId": "comancheros_au",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 10,
+        "business": 55,
+        "charisma": 68,
+        "intrigue": 48,
+        "loyaltyInspiring": 50,
+        "stealth": 40
+      },
+      "traits": [
+        "relaciones públicas"
+      ],
+      "notes": "Personaje ficticio.",
       "parents": [],
       "spouseId": null,
       "childrenIds": []

@@ -691,6 +691,18 @@ export const SCRIPTED_EVENTS = {
         return [];
       },
     },
+    {
+      id: "muerte-mick-hawi-2018",
+      year: 2018,
+      run(game, addLog) {
+        return killScriptedCharacter(
+          game,
+          "mick_hawi",
+          addLog,
+          "un tiroteo frente a un gimnasio de Sídney, un ajuste de cuentas que la policía australiana nunca resolvió del todo"
+        );
+      },
+    },
   ],
 };
 
