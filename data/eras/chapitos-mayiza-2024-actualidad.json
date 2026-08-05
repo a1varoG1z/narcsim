@@ -227,7 +227,7 @@
         "venezuela",
         "ecuador",
         "peru",
-        "brasil"
+        "resto_brasil"
       ],
       "geo": "COUNTRY_COL"
     },
@@ -238,7 +238,7 @@
       "value": 12,
       "adj": [
         "colombia",
-        "brasil",
+        "resto_brasil",
         "guyana"
       ],
       "geo": "COUNTRY_VEN"
@@ -251,7 +251,7 @@
       "adj": [
         "ecuador",
         "colombia",
-        "brasil",
+        "resto_brasil",
         "bolivia",
         "chile"
       ],
@@ -264,7 +264,7 @@
       "value": 10,
       "adj": [
         "peru",
-        "brasil",
+        "resto_brasil",
         "paraguay",
         "argentina",
         "chile"
@@ -273,9 +273,19 @@
     },
     {
       "id": "brasil",
-      "name": "Brasil",
+      "name": "São Paulo (Brasil)",
       "controllerId": "pcc",
       "value": 15,
+      "adj": [
+        "resto_brasil"
+      ],
+      "geo": "BRA_SaoPaulo"
+    },
+    {
+      "id": "resto_brasil",
+      "name": "Resto de Brasil",
+      "controllerId": null,
+      "value": 14,
       "adj": [
         "colombia",
         "venezuela",
@@ -285,9 +295,10 @@
         "uruguay",
         "francia",
         "guyana",
-        "suriname"
+        "suriname",
+        "brasil"
       ],
-      "geo": "COUNTRY_BRA"
+      "geo": "BRA_Resto"
     },
     {
       "id": "paraguay",
@@ -296,7 +307,7 @@
       "value": 8,
       "adj": [
         "bolivia",
-        "brasil",
+        "resto_brasil",
         "argentina"
       ],
       "geo": "COUNTRY_PRY"
@@ -320,7 +331,7 @@
       "controllerId": null,
       "value": 8,
       "adj": [
-        "brasil",
+        "resto_brasil",
         "argentina"
       ],
       "geo": "COUNTRY_URY"
@@ -486,7 +497,7 @@
       "controllerId": null,
       "value": 9,
       "adj": [
-        "brasil",
+        "resto_brasil",
         "suriname",
         "venezuela"
       ],
@@ -498,7 +509,7 @@
       "controllerId": null,
       "value": 8,
       "adj": [
-        "brasil",
+        "resto_brasil",
         "francia",
         "guyana"
       ],
@@ -512,7 +523,7 @@
       "adj": [
         "andorra",
         "belgica",
-        "brasil",
+        "resto_brasil",
         "suiza",
         "alemania",
         "espana",
