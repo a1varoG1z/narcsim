@@ -264,6 +264,9 @@ export const DRUG_PROFILES = {
   "chapitos-mayiza-2024-actualidad": [
     { id: "fentanyl", name: "Fentanilo", payoutMult: 1.5, heatMult: 1.5, seizureMult: 0.85 },
   ],
+  "ley-seca-1925-1933": [
+    { id: "alcohol", name: "Alcohol de contrabando", payoutMult: 1.2, heatMult: 0.9, seizureMult: 0.85 },
+  ],
 };
 const DEFAULT_DRUG_PROFILE = { id: "generic", name: "Narcóticos diversos", payoutMult: 1, heatMult: 1, seizureMult: 1 };
 

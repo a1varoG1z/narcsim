@@ -20,6 +20,7 @@ const eraFiles = [
   "cjng-sinaloa-2015-actualidad.json",
   "chapitos-mayiza-2024-actualidad.json",
   "narcotrafico-gallego-1975-1995.json",
+  "ley-seca-1925-1933.json",
 ];
 
 function playerTurnPolicy(game) {

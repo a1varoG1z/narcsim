@@ -76,6 +76,65 @@ function closeWarEntry(game, aId, bId) {
 }
 
 export const SCRIPTED_EVENTS = {
+  "ley-seca-1925-1933": [
+    {
+      id: "masacre-san-valentin-1929",
+      year: 1929,
+      interactive: true,
+      cartelId: "chicago_outfit",
+      title: "La Masacre de San Valentín",
+      description:
+        'Tus hombres, disfrazados de policías, tienen a siete miembros del North Side Gang de Bugs Moran alineados contra la pared de un garaje. Es la oportunidad de acabar de un solo golpe con la banda rival. ¿Cómo actúas?',
+      options: [
+        { id: "full_massacre", label: "Ametrallarlos a todos, sin dejar testigos" },
+        { id: "spare_some", label: "Limitar el golpe a los cabecillas presentes" },
+        { id: "call_off", label: "Abortar la operación en el último momento" },
+      ],
+      applyDefault(game, addLog) {
+        const c = game.cartels.chicago_outfit;
+        if (!c || c.destroyed) return;
+        c.resources.heat = Math.min(100, c.resources.heat + randInt(35, 50));
+        c.resources.publicImage = Math.max(0, c.resources.publicImage - randInt(15, 25));
+        addLog(
+          'Siete hombres del North Side Gang mueren ametrallados contra la pared de un garaje. La "Masacre de San Valentín" conmociona al país entero y pone a la organización bajo el foco de la prensa nacional.',
+          "death"
+        );
+      },
+      applyChoice(game, addLog, optionId) {
+        const c = game.cartels.chicago_outfit;
+        if (!c || c.destroyed) return;
+        if (optionId === "full_massacre") {
+          c.resources.heat = Math.min(100, c.resources.heat + randInt(40, 55));
+          c.resources.publicImage = Math.max(0, c.resources.publicImage - randInt(20, 30));
+          addLog(
+            'Ordenas que no quede nadie con vida en el garaje. Siete hombres del North Side Gang mueren ametrallados. El golpe es devastador para Moran, pero la "Masacre de San Valentín" pone a la organización en la portada de todo el país.',
+            "death"
+          );
+        } else if (optionId === "spare_some") {
+          c.resources.heat = Math.min(100, c.resources.heat + randInt(25, 35));
+          c.resources.publicImage = Math.max(0, c.resources.publicImage - randInt(10, 15));
+          addLog("Limitas el golpe a los cabecillas presentes. El North Side Gang queda tocado, pero el escándalo público es algo menor que el de la masacre completa.", "event");
+        } else {
+          c.resources.heat = Math.min(100, c.resources.heat + randInt(5, 10));
+          addLog("Abortas la operación en el último momento. Moran vive para seguir siendo un problema, pero evitas el escándalo que en la vida real marcó para siempre la reputación de la organización.", "event");
+        }
+      },
+    },
+    {
+      id: "condena-capone-1931",
+      year: 1931,
+      run(game, addLog) {
+        const arrests = imprisonScriptedCharacter(
+          game,
+          "al_capone",
+          addLog,
+          "un juicio federal por 22 cargos de evasión de impuestos, un delito que ni la Prohibición ni la propia policía de Chicago pudieron nunca imputarle",
+          { lifeSentence: false }
+        );
+        return { deaths: [], arrests };
+      },
+    },
+  ],
   "guadalajara-1975-1989": [
     {
       id: "camarena-1985",
