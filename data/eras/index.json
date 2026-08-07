@@ -7,6 +7,13 @@
     "blurb": "Chicago bajo la Prohibición: un joven Al Capone hereda el imperio de cerveceras clandestinas y protección política de Johnny Torrio, y libra una guerra abierta contra el North Side Gang de Bugs Moran."
   },
   {
+    "id": "la-comision-1931-1958",
+    "file": "la-comision-1931-1958.json",
+    "name": "La Comisión",
+    "period": "1931 – 1958",
+    "blurb": "Nueva York: Lucky Luciano funda la Comisión tras la Guerra de Castellammarese, repartiendo el poder entre familias -- un equilibrio que la ambición interna y una redada policial en 1957 pondrán a prueba."
+  },
+  {
     "id": "guadalajara-1975-1989",
     "file": "guadalajara-1975-1989.json",
     "name": "El Cártel de Guadalajara",

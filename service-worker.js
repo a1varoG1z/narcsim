@@ -1,4 +1,4 @@
-const CACHE_NAME = "narcosim-cache-v4";
+const CACHE_NAME = "narcosim-cache-v5";
 
 const PRECACHE_URLS = [
   "./",
@@ -42,6 +42,7 @@ const PRECACHE_URLS = [
   "./data/eras/chapitos-mayiza-2024-actualidad.json",
   "./data/eras/narcotrafico-gallego-1975-1995.json",
   "./data/eras/ley-seca-1925-1933.json",
+  "./data/eras/la-comision-1931-1958.json",
   "./data/geo/shapes.json",
   "./js/geoShapes.js",
   "./assets/icon.svg",

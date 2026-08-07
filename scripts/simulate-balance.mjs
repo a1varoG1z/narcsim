@@ -21,6 +21,7 @@ const eraFiles = [
   "chapitos-mayiza-2024-actualidad.json",
   "narcotrafico-gallego-1975-1995.json",
   "ley-seca-1925-1933.json",
+  "la-comision-1931-1958.json",
 ];
 
 function playerTurnPolicy(game) {

@@ -134,6 +134,78 @@ export const SCRIPTED_EVENTS = {
       },
     },
   ],
+  "la-comision-1931-1958": [
+    {
+      id: "condena-luciano-1936",
+      year: 1936,
+      run(game, addLog) {
+        const arrests = imprisonScriptedCharacter(
+          game,
+          "lucky_luciano",
+          addLog,
+          "un juicio real impulsado por el fiscal Thomas Dewey por cargos de proxenetismo, condenado a entre 30 y 50 años de prisión"
+        );
+        return { deaths: [], arrests };
+      },
+    },
+    {
+      id: "tiroteo-costello-1957",
+      year: 1957,
+      run(game, addLog) {
+        const c = game.cartels.familia_luciano;
+        if (!c || c.destroyed) return [];
+        c.resources.heat = Math.min(100, c.resources.heat + randInt(15, 25));
+        c.resources.corruptGov = Math.max(0, c.resources.corruptGov - randInt(10, 15));
+        addLog(
+          "Vito Genovese ordena un atentado contra Frank Costello a manos de Vincent Gigante -- la bala solo le roza el cráneo, pero el mensaje es claro. La organización queda visiblemente dividida por dentro justo cuando más necesita presentar un frente unido.",
+          "event"
+        );
+        return [];
+      },
+    },
+    {
+      id: "reunion-apalachin-1957",
+      year: 1957,
+      interactive: true,
+      cartelId: "familia_luciano",
+      title: "La redada de Apalachin",
+      description:
+        'Docenas de jefes de familias de todo el país se han reunido en la granja de Joseph Barbara, en Apalachin (norte del estado de Nueva York), para una cumbre nacional que debía sellar el nuevo reparto de poder tras el atentado contra Costello. La policía estatal ha rodeado la zona sin previo aviso. ¿Cómo reaccionas?',
+      options: [
+        { id: "flee", label: "Huir a través de los bosques, a pie" },
+        { id: "bluff", label: "Quedarse y presentarse como una reunión de negocios cualquiera" },
+        { id: "confront", label: "Enfrentar a los agentes abiertamente" },
+      ],
+      applyDefault(game, addLog) {
+        const c = game.cartels.familia_luciano;
+        if (!c || c.destroyed) return;
+        c.resources.heat = Math.min(100, c.resources.heat + randInt(30, 45));
+        c.resources.publicImage = Math.max(0, c.resources.publicImage - randInt(15, 25));
+        addLog(
+          "La redada de Apalachin obliga a decenas de jefes mafiosos a huir a pie por el bosque, algunos todavía con traje y zapatos de vestir. La existencia de una red mafiosa nacional coordinada queda expuesta ante la opinión pública por primera vez.",
+          "event"
+        );
+      },
+      applyChoice(game, addLog, optionId) {
+        const c = game.cartels.familia_luciano;
+        if (!c || c.destroyed) return;
+        if (optionId === "flee") {
+          c.resources.heat = Math.min(100, c.resources.heat + randInt(20, 30));
+          c.resources.publicImage = Math.max(0, c.resources.publicImage - randInt(10, 15));
+          addLog("Escapas a pie por el bosque, como decenas de jefes más. Evitas el arresto inmediato, pero la imagen de mafiosos de traje huyendo entre los árboles recorre todo el país.", "event");
+        } else if (optionId === "bluff") {
+          c.resources.heat = Math.min(100, c.resources.heat + randInt(35, 50));
+          c.resources.corruptPolice = Math.max(0, c.resources.corruptPolice - randInt(10, 20));
+          addLog("Te quedas e intentas presentar la reunión como algo inocente. Nadie te cree: la policía retiene e identifica a todos los presentes, exponiendo la red al completo ante la prensa.", "event");
+        } else {
+          c.resources.heat = Math.min(100, c.resources.heat + randInt(45, 60));
+          c.resources.armySize = Math.max(0, c.resources.armySize - randInt(5, 15));
+          c.resources.publicImage = Math.max(0, c.resources.publicImage - randInt(20, 30));
+          addLog("Ordenas plantar cara a los agentes. El enfrentamiento abierto con la policía estatal es un desastre de imagen y atrae una atención federal sin precedentes sobre la organización.", "death");
+        }
+      },
+    },
+  ],
   "guadalajara-1975-1989": [
     {
       id: "camarena-1985",

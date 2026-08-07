@@ -267,6 +267,9 @@ export const DRUG_PROFILES = {
   "ley-seca-1925-1933": [
     { id: "alcohol", name: "Alcohol de contrabando", payoutMult: 1.2, heatMult: 0.9, seizureMult: 0.85 },
   ],
+  "la-comision-1931-1958": [
+    { id: "protection", name: "Extorsión, juego y usura", payoutMult: 1.15, heatMult: 0.95, seizureMult: 0.8 },
+  ],
 };
 const DEFAULT_DRUG_PROFILE = { id: "generic", name: "Narcóticos diversos", payoutMult: 1, heatMult: 1, seizureMult: 1 };
 
