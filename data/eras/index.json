@@ -14,6 +14,13 @@
     "blurb": "Nueva York: Lucky Luciano funda la Comisión tras la Guerra de Castellammarese, repartiendo el poder entre familias -- un equilibrio que la ambición interna y una redada policial en 1957 pondrán a prueba."
   },
   {
+    "id": "yakuza-japon-1960-1993",
+    "file": "yakuza-japon-1960-1993.json",
+    "name": "Yamaguchi-gumi",
+    "period": "1960 – 1993",
+    "blurb": "Kobe, Japón: Kazuo Taoka hace de la Yamaguchi-gumi el mayor sindicato yakuza del país, hasta que su muerte desata una guerra de sucesión interna y una nueva ley antibandas cambia las reglas del juego en 1992."
+  },
+  {
     "id": "guadalajara-1975-1989",
     "file": "guadalajara-1975-1989.json",
     "name": "El Cártel de Guadalajara",

@@ -206,6 +206,64 @@ export const SCRIPTED_EVENTS = {
       },
     },
   ],
+  "yakuza-japon-1960-1993": [
+    {
+      id: "atentado-taoka-1978",
+      year: 1978,
+      run(game, addLog) {
+        const c = game.cartels.yamaguchi_gumi;
+        if (!c || c.destroyed) return [];
+        c.resources.heat = Math.min(100, c.resources.heat + randInt(10, 20));
+        c.resources.armySize = Math.max(0, c.resources.armySize - randInt(5, 15));
+        addLog(
+          "Un miembro del Matsuda-gumi dispara contra Kazuo Taoka durante una exhibición de limbo en un club nocturno de Kioto. La bala le roza el cuello, pero sobrevive. La organización responde con una purga interna de posibles cómplices.",
+          "event"
+        );
+        return [];
+      },
+    },
+    {
+      id: "muerte-taoka-1981",
+      year: 1981,
+      run(game, addLog) {
+        const deaths = killScriptedCharacter(game, "kazuo_taoka", addLog, "un infarto en Amagasaki");
+        return { deaths, arrests: [] };
+      },
+    },
+    {
+      id: "asesinato-takenaka-1985",
+      year: 1985,
+      run(game, addLog) {
+        const c = game.cartels.yamaguchi_gumi;
+        const deaths = killScriptedCharacter(game, "masahisa_takenaka", addLog, "un tiroteo en Osaka a manos de la facción disidente Ichiwa-kai");
+        if (c && !c.destroyed) {
+          c.resources.heat = Math.min(100, c.resources.heat + randInt(20, 30));
+          c.resources.armySize = Math.max(0, c.resources.armySize - randInt(20, 40));
+          addLog(
+            "El asesinato desata la Guerra Yama-Ichi contra la Ichiwa-kai: años de tiroteos en las calles de todo el país que desangran a la organización por dentro.",
+            "event"
+          );
+        }
+        return { deaths, arrests: [] };
+      },
+    },
+    {
+      id: "ley-antibandas-1992",
+      year: 1992,
+      run(game, addLog) {
+        const c = game.cartels.yamaguchi_gumi;
+        if (!c || c.destroyed) return [];
+        c.resources.heat = Math.min(100, c.resources.heat + randInt(15, 25));
+        c.resources.corruptGov = Math.max(0, c.resources.corruptGov - randInt(10, 20));
+        c.resources.corruptPolice = Math.max(0, c.resources.corruptPolice - randInt(10, 20));
+        addLog(
+          "Entra en vigor la Ley contra las Bandas (Boryokudan Boutai Ho): la extorsión abierta y el cobro de protección se vuelven mucho más arriesgados, y decenas de sindicatos yakuza más pequeños en todo el país empiezan a disolverse bajo la nueva presión legal.",
+          "event"
+        );
+        return [];
+      },
+    },
+  ],
   "guadalajara-1975-1989": [
     {
       id: "camarena-1985",

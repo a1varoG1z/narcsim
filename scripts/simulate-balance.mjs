@@ -22,6 +22,7 @@ const eraFiles = [
   "narcotrafico-gallego-1975-1995.json",
   "ley-seca-1925-1933.json",
   "la-comision-1931-1958.json",
+  "yakuza-japon-1960-1993.json",
 ];
 
 function playerTurnPolicy(game) {

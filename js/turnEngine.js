@@ -270,6 +270,9 @@ export const DRUG_PROFILES = {
   "la-comision-1931-1958": [
     { id: "protection", name: "Extorsión, juego y usura", payoutMult: 1.15, heatMult: 0.95, seizureMult: 0.8 },
   ],
+  "yakuza-japon-1960-1993": [
+    { id: "protection", name: "Extorsión, construcción y apuestas", payoutMult: 1.1, heatMult: 0.9, seizureMult: 0.75 },
+  ],
 };
 const DEFAULT_DRUG_PROFILE = { id: "generic", name: "Narcóticos diversos", payoutMult: 1, heatMult: 1, seizureMult: 1 };
 
