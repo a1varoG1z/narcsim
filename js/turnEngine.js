@@ -273,6 +273,10 @@ export const DRUG_PROFILES = {
   "yakuza-japon-1960-1993": [
     { id: "protection", name: "Extorsión, construcción y apuestas", payoutMult: 1.1, heatMult: 0.9, seizureMult: 0.75 },
   ],
+  "triadas-hongkong-1950-1998": [
+    { id: "protection", name: "Extorsión, juego y opio", payoutMult: 1.1, heatMult: 0.95, seizureMult: 0.8 },
+    { id: "heroin", name: "Heroína del Triángulo de Oro", payoutMult: 1.35, heatMult: 1.15, seizureMult: 1.1 },
+  ],
 };
 const DEFAULT_DRUG_PROFILE = { id: "generic", name: "Narcóticos diversos", payoutMult: 1, heatMult: 1, seizureMult: 1 };
 

@@ -264,6 +264,67 @@ export const SCRIPTED_EVENTS = {
       },
     },
   ],
+  "triadas-hongkong-1950-1998": [
+    {
+      id: "muerte-kot-1953",
+      year: 1953,
+      run(game, addLog) {
+        const deaths = killScriptedCharacter(game, "kot_siu_wong", addLog, "circunstancias no ampliamente documentadas en 1953");
+        const c = game.cartels.triada_14k;
+        if (c && !c.destroyed) {
+          c.resources.heat = Math.min(100, c.resources.heat + randInt(10, 20));
+          addLog(
+            "Sin un mando único claro, los lugartenientes de la 14K se disputan el control de las rutas y negocios más lucrativos de la organización -- el arranque real de la estructura descentralizada de facciones autónomas que define a la 14K hasta hoy.",
+            "event"
+          );
+        }
+        return { deaths, arrests: [] };
+      },
+    },
+    {
+      id: "fundacion-icac-1974",
+      year: 1974,
+      run(game, addLog) {
+        const c = game.cartels.triada_14k;
+        if (!c || c.destroyed) return [];
+        c.resources.corruptPolice = Math.max(0, c.resources.corruptPolice - randInt(15, 25));
+        c.resources.heat = Math.min(100, c.resources.heat + randInt(10, 20));
+        addLog(
+          "El gobierno colonial crea la Comisión Independiente contra la Corrupción (ICAC), con poderes reales sin precedentes para investigar a la policía y a los funcionarios. La red de protección construida durante décadas empieza a resquebrajarse.",
+          "event"
+        );
+        return [];
+      },
+    },
+    {
+      id: "arresto-ng-sikho-1974",
+      year: 1974,
+      run(game, addLog) {
+        const arrests = imprisonScriptedCharacter(
+          game,
+          "ng_sik_ho",
+          addLog,
+          "una operación real contra el contrabando de 20 toneladas de opio y morfina desde Tailandia, condenado en 1975 a 30 años de prisión -- la pena más larga impuesta hasta entonces por un tribunal de Hong Kong"
+        );
+        return { deaths: [], arrests };
+      },
+    },
+    {
+      id: "traspaso-hongkong-1997",
+      year: 1997,
+      run(game, addLog) {
+        const c = game.cartels.triada_14k;
+        if (!c || c.destroyed) return [];
+        c.resources.heat = Math.min(100, c.resources.heat + randInt(10, 20));
+        c.resources.corruptGov = Math.max(0, c.resources.corruptGov - randInt(10, 20));
+        addLog(
+          "El 1 de julio de 1997, el Reino Unido traspasa realmente la soberanía de Hong Kong a China tras más de 150 años de dominio colonial británico. La transición de autoridades y de marco legal obliga a renegociar buena parte de la red de contactos y protección construida bajo el régimen anterior.",
+          "event"
+        );
+        return [];
+      },
+    },
+  ],
   "guadalajara-1975-1989": [
     {
       id: "camarena-1985",

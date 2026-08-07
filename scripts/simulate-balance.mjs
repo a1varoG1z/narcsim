@@ -23,6 +23,7 @@ const eraFiles = [
   "ley-seca-1925-1933.json",
   "la-comision-1931-1958.json",
   "yakuza-japon-1960-1993.json",
+  "triadas-hongkong-1950-1998.json",
 ];
 
 function playerTurnPolicy(game) {

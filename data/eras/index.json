@@ -21,6 +21,13 @@
     "blurb": "Kobe, Japón: Kazuo Taoka hace de la Yamaguchi-gumi el mayor sindicato yakuza del país, hasta que su muerte desata una guerra de sucesión interna y una nueva ley antibandas cambia las reglas del juego en 1992."
   },
   {
+    "id": "triadas-hongkong-1950-1998",
+    "file": "triadas-hongkong-1950-1998.json",
+    "name": "Tríadas de Hong Kong",
+    "period": "1950 – 1998",
+    "blurb": "Hong Kong colonial: la Tríada 14K crece desde el juego y la extorsión hasta el tráfico de heroína del Triángulo de Oro con Ng Sik-ho, hasta que la ICAC en 1974 y la retrocesión a China en 1997 cambian las reglas del juego."
+  },
+  {
     "id": "guadalajara-1975-1989",
     "file": "guadalajara-1975-1989.json",
     "name": "El Cártel de Guadalajara",
