@@ -26,6 +26,7 @@ const eraFiles = [
   "triadas-hongkong-1950-1998.json",
   "clan-del-golfo-2006-2022.json",
   "cabezas-de-serpiente-1984-2001.json",
+  "mafia-rusa-1991-2000.json",
 ];
 
 function playerTurnPolicy(game) {

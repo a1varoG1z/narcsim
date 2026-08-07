@@ -283,6 +283,10 @@ export const DRUG_PROFILES = {
   "cabezas-de-serpiente-1984-2001": [
     { id: "human_smuggling", name: "Contrabando de personas desde Fuzhou", payoutMult: 1.4, heatMult: 1.05, seizureMult: 0.7 },
   ],
+  "mafia-rusa-1991-2000": [
+    { id: "protection", name: "Extorsión, apuestas y protección", payoutMult: 1.1, heatMult: 0.9, seizureMult: 0.75 },
+    { id: "arms_trafficking", name: "Tráfico de armas del antiguo arsenal soviético", payoutMult: 1.3, heatMult: 1.2, seizureMult: 1.05 },
+  ],
 };
 const DEFAULT_DRUG_PROFILE = { id: "generic", name: "Narcóticos diversos", payoutMult: 1, heatMult: 1, seizureMult: 1 };
 

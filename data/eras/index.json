@@ -35,6 +35,13 @@
     "blurb": "El Cártel de Guadalajara controla gran parte del tráfico en México y sirve de puente para la cocaína colombiana hacia Estados Unidos."
   },
   {
+    "id": "mafia-rusa-1991-2000",
+    "file": "mafia-rusa-1991-2000.json",
+    "name": "La mafia rusa",
+    "period": "1991 – 2000",
+    "blurb": "Moscú, tras la caída de la URSS: Sergei Mikhailov y Viktor Averin convierten a la Hermandad de Solntsevo en una red criminal global, capaz de sobrevivir incluso a un arresto real en Suiza que pudo haber acabado con todo."
+  },
+  {
     "id": "narcotrafico-gallego-1975-1995",
     "file": "narcotrafico-gallego-1975-1995.json",
     "name": "Narcotráfico gallego",

@@ -545,6 +545,62 @@ export const SCRIPTED_EVENTS = {
       },
     },
   ],
+  "mafia-rusa-1991-2000": [
+    {
+      id: "fiesta-averin-1995",
+      year: 1995,
+      run(game, addLog) {
+        const c = game.cartels.hermandad_solntsevo;
+        if (!c || c.destroyed) return [];
+        c.resources.heat = Math.min(100, c.resources.heat + randInt(10, 18));
+        addLog(
+          "Una fiesta real de cumpleaños de Viktor Averin en Praga es asaltada por la policía checa -- el episodio corre por la prensa internacional y pone a la organización, hasta entonces discreta fuera de la antigua URSS, bajo el radar de varias policías europeas a la vez.",
+          "event"
+        );
+        return [];
+      },
+    },
+    {
+      id: "arresto-mikhailov-1996",
+      year: 1996,
+      run(game, addLog) {
+        // lifeSentence: false is essential here — a companion release event
+        // (excarcelacion-mikhailov-1998) undoes it, matching what really happened: Swiss
+        // prosecutors never secured a conviction, only two years of pretrial detention.
+        const arrests = imprisonScriptedCharacter(
+          game,
+          "sergei_mikhailov",
+          addLog,
+          "un arresto real en Ginebra en octubre de 1996 por pertenencia a organización criminal",
+          { lifeSentence: false }
+        );
+        return { deaths: [], arrests };
+      },
+    },
+    {
+      id: "excarcelacion-mikhailov-1998",
+      year: 1998,
+      run(game, addLog) {
+        const c = game.characters.sergei_mikhailov;
+        if (!c || !c.alive || !c.imprisoned || c.imprisoned.lifeSentence) return [];
+        c.imprisoned = null;
+        const cartel = game.cartels[c.cartelId];
+        if (cartel) {
+          cartel.resources.corruptGov = Math.max(0, cartel.resources.corruptGov - randInt(5, 15));
+          if (cartel.imprisonedLeaderId === c.id) {
+            cartel.roles.leader = c.id;
+            c.role = "leader";
+            cartel.imprisonedLeaderId = null;
+          }
+        }
+        addLog(
+          `${c.name} queda en libertad en diciembre de 1998 -- el gobierno ruso nunca aportó pruebas clave y un testigo previsto para el juicio apareció asesinado en Holanda. Los fiscales suizos no logran una condena.`,
+          "good"
+        );
+        return [];
+      },
+    },
+  ],
   "narcotrafico-gallego-1975-1995": [
     {
       id: "operacion-necora-1990",

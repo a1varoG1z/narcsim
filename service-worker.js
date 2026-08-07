@@ -1,4 +1,4 @@
-const CACHE_NAME = "narcosim-cache-v9";
+const CACHE_NAME = "narcosim-cache-v10";
 
 const PRECACHE_URLS = [
   "./",
@@ -47,6 +47,7 @@ const PRECACHE_URLS = [
   "./data/eras/triadas-hongkong-1950-1998.json",
   "./data/eras/clan-del-golfo-2006-2022.json",
   "./data/eras/cabezas-de-serpiente-1984-2001.json",
+  "./data/eras/mafia-rusa-1991-2000.json",
   "./data/geo/shapes.json",
   "./js/geoShapes.js",
   "./assets/icon.svg",

@@ -1,0 +1,3290 @@
+{
+  "id": "mafia-rusa-1991-2000",
+  "name": "La mafia rusa",
+  "period": "1991 – 2000",
+  "startYear": 1991,
+  "endYear": 2000,
+  "turnMonths": 6,
+  "description": "Moscú, tras la caída de la URSS. Sergei Mikhailov y Viktor Averin construyen la Hermandad de Solntsevo desde finales de los 80, hasta convertirla en una de las organizaciones criminales más grandes y mejor conectadas del mundo -- extorsión, apuestas, tráfico de armas y de personas, lavado internacional -- capaz de sobrevivir incluso a un arresto real en Suiza que pudo haber acabado con todo.",
+  "territories": [
+    {
+      "id": "baja_california",
+      "name": "Baja California",
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "baja_california_sur",
+        "california",
+        "sonora"
+      ],
+      "geo": "MEX_BajaCalifornia"
+    },
+    {
+      "id": "sonora",
+      "name": "Sonora",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "arizona",
+        "baja_california",
+        "chihuahua",
+        "sinaloa"
+      ],
+      "geo": "MEX_Sonora"
+    },
+    {
+      "id": "chihuahua",
+      "name": "Chihuahua",
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "coahuila",
+        "durango",
+        "new_mexico",
+        "nuevo_leon",
+        "ojinaga",
+        "sinaloa",
+        "sonora",
+        "texas"
+      ],
+      "geo": "MEX_Chihuahua",
+      "specialization": "cultivo"
+    },
+    {
+      "id": "ojinaga",
+      "name": "Plaza de Ojinaga",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "chihuahua"
+      ],
+      "geo": "MEX_Ojinaga_Point"
+    },
+    {
+      "id": "sinaloa",
+      "name": "Sinaloa",
+      "controllerId": null,
+      "value": 18,
+      "adj": [
+        "chihuahua",
+        "durango",
+        "jalisco",
+        "nayarit",
+        "sonora"
+      ],
+      "geo": "MEX_Sinaloa",
+      "specialization": "cultivo"
+    },
+    {
+      "id": "durango",
+      "name": "Durango",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "chihuahua",
+        "coahuila",
+        "jalisco",
+        "nayarit",
+        "nuevo_leon",
+        "sinaloa",
+        "zacatecas"
+      ],
+      "geo": "MEX_Durango",
+      "specialization": "cultivo"
+    },
+    {
+      "id": "zacatecas",
+      "name": "Zacatecas",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "aguascalientes",
+        "coahuila",
+        "durango",
+        "guanajuato",
+        "jalisco",
+        "nayarit",
+        "nuevo_leon",
+        "san_luis_potosi"
+      ],
+      "geo": "MEX_Zacatecas"
+    },
+    {
+      "id": "nuevo_leon",
+      "name": "Nuevo León",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "chihuahua",
+        "coahuila",
+        "durango",
+        "san_luis_potosi",
+        "tamaulipas",
+        "texas",
+        "zacatecas"
+      ],
+      "geo": "MEX_NuevoLeon"
+    },
+    {
+      "id": "tamaulipas",
+      "name": "Tamaulipas",
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "nuevo_leon",
+        "san_luis_potosi",
+        "texas",
+        "veracruz"
+      ],
+      "geo": "MEX_Tamaulipas"
+    },
+    {
+      "id": "jalisco",
+      "name": "Jalisco",
+      "controllerId": null,
+      "value": 20,
+      "adj": [
+        "aguascalientes",
+        "colima",
+        "durango",
+        "guanajuato",
+        "michoacan",
+        "nayarit",
+        "sinaloa",
+        "zacatecas"
+      ],
+      "geo": "MEX_Jalisco"
+    },
+    {
+      "id": "michoacan",
+      "name": "Michoacán",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "colima",
+        "estado_de_mexico",
+        "guanajuato",
+        "guerrero",
+        "jalisco",
+        "queretaro"
+      ],
+      "geo": "MEX_Michoacan",
+      "specialization": "cultivo"
+    },
+    {
+      "id": "guerrero",
+      "name": "Guerrero",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "estado_de_mexico",
+        "michoacan",
+        "morelos",
+        "oaxaca",
+        "puebla"
+      ],
+      "geo": "MEX_Guerrero",
+      "specialization": "cultivo"
+    },
+    {
+      "id": "oaxaca",
+      "name": "Oaxaca",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "chiapas",
+        "guerrero",
+        "puebla",
+        "veracruz"
+      ],
+      "geo": "MEX_Oaxaca"
+    },
+    {
+      "id": "chiapas",
+      "name": "Chiapas",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "guatemala",
+        "oaxaca",
+        "tabasco",
+        "veracruz"
+      ],
+      "geo": "MEX_Chiapas"
+    },
+    {
+      "id": "guatemala",
+      "name": "Guatemala",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "chiapas",
+        "honduras",
+        "belize"
+      ],
+      "geo": "COUNTRY_GTM"
+    },
+    {
+      "id": "honduras",
+      "name": "Honduras",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "guatemala",
+        "el_salvador",
+        "nicaragua"
+      ],
+      "geo": "COUNTRY_HND"
+    },
+    {
+      "id": "el_salvador",
+      "name": "El Salvador",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "honduras"
+      ],
+      "geo": "COUNTRY_SLV"
+    },
+    {
+      "id": "nicaragua",
+      "name": "Nicaragua",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "honduras",
+        "costa_rica"
+      ],
+      "geo": "COUNTRY_NIC"
+    },
+    {
+      "id": "costa_rica",
+      "name": "Costa Rica",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "nicaragua",
+        "panama"
+      ],
+      "geo": "COUNTRY_CRI"
+    },
+    {
+      "id": "panama",
+      "name": "Panamá",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "costa_rica",
+        "colombia"
+      ],
+      "geo": "COUNTRY_PAN"
+    },
+    {
+      "id": "colombia",
+      "name": "Colombia",
+      "controllerId": null,
+      "value": 16,
+      "adj": [
+        "panama",
+        "venezuela",
+        "ecuador",
+        "peru",
+        "brasil"
+      ],
+      "geo": "COUNTRY_COL"
+    },
+    {
+      "id": "venezuela",
+      "name": "Venezuela",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "colombia",
+        "brasil",
+        "guyana"
+      ],
+      "geo": "COUNTRY_VEN"
+    },
+    {
+      "id": "ecuador",
+      "name": "Ecuador",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "colombia",
+        "peru"
+      ],
+      "geo": "COUNTRY_ECU"
+    },
+    {
+      "id": "peru",
+      "name": "Perú",
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "ecuador",
+        "colombia",
+        "brasil",
+        "bolivia",
+        "chile"
+      ],
+      "geo": "COUNTRY_PER"
+    },
+    {
+      "id": "bolivia",
+      "name": "Bolivia",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "peru",
+        "brasil",
+        "paraguay",
+        "argentina",
+        "chile"
+      ],
+      "geo": "COUNTRY_BOL"
+    },
+    {
+      "id": "brasil",
+      "name": "Brasil",
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "colombia",
+        "venezuela",
+        "peru",
+        "bolivia",
+        "paraguay",
+        "uruguay",
+        "francia",
+        "guyana",
+        "suriname"
+      ],
+      "geo": "COUNTRY_BRA"
+    },
+    {
+      "id": "paraguay",
+      "name": "Paraguay",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "bolivia",
+        "brasil",
+        "argentina"
+      ],
+      "geo": "COUNTRY_PRY"
+    },
+    {
+      "id": "argentina",
+      "name": "Argentina",
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "bolivia",
+        "paraguay",
+        "uruguay",
+        "chile"
+      ],
+      "geo": "COUNTRY_ARG"
+    },
+    {
+      "id": "uruguay",
+      "name": "Uruguay",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "brasil",
+        "argentina"
+      ],
+      "geo": "COUNTRY_URY"
+    },
+    {
+      "id": "chile",
+      "name": "Chile",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "peru",
+        "bolivia",
+        "argentina"
+      ],
+      "geo": "COUNTRY_CHL"
+    },
+    {
+      "id": "canada",
+      "name": "Canadá",
+      "controllerId": null,
+      "value": 18,
+      "adj": [
+        "resto_eeuu"
+      ],
+      "geo": "WORLD_CANADA"
+    },
+    {
+      "id": "belize",
+      "name": "Belice",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "guatemala"
+      ],
+      "geo": "WORLD_BELIZE"
+    },
+    {
+      "id": "cuba",
+      "name": "Cuba",
+      "controllerId": null,
+      "value": 12,
+      "adj": [],
+      "geo": "WORLD_CUBA"
+    },
+    {
+      "id": "jamaica",
+      "name": "Jamaica",
+      "controllerId": null,
+      "value": 10,
+      "adj": [],
+      "geo": "WORLD_JAMAICA"
+    },
+    {
+      "id": "haiti",
+      "name": "Haití",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "republica_dominicana"
+      ],
+      "geo": "WORLD_HAITI"
+    },
+    {
+      "id": "republica_dominicana",
+      "name": "República Dominicana",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "haiti"
+      ],
+      "geo": "WORLD_REPUBLICA_DOMINICANA"
+    },
+    {
+      "id": "bahamas",
+      "name": "Bahamas",
+      "controllerId": null,
+      "value": 8,
+      "adj": [],
+      "geo": "WORLD_BAHAMAS"
+    },
+    {
+      "id": "trinidad_tobago",
+      "name": "Trinidad y Tobago",
+      "controllerId": null,
+      "value": 9,
+      "adj": [],
+      "geo": "WORLD_TRINIDAD_TOBAGO"
+    },
+    {
+      "id": "barbados",
+      "name": "Barbados",
+      "controllerId": null,
+      "value": 7,
+      "adj": [],
+      "geo": "WORLD_BARBADOS"
+    },
+    {
+      "id": "antigua_barbuda",
+      "name": "Antigua y Barbuda",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_ANTIGUA_BARBUDA"
+    },
+    {
+      "id": "dominica",
+      "name": "Dominica",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_DOMINICA"
+    },
+    {
+      "id": "grenada",
+      "name": "Granada",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "san_vicente_granadinas"
+      ],
+      "geo": "WORLD_GRENADA"
+    },
+    {
+      "id": "san_cristobal_nieves",
+      "name": "San Cristóbal y Nieves",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_SAN_CRISTOBAL_NIEVES"
+    },
+    {
+      "id": "santa_lucia",
+      "name": "Santa Lucía",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_SANTA_LUCIA"
+    },
+    {
+      "id": "san_vicente_granadinas",
+      "name": "San Vicente y las Granadinas",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "grenada"
+      ],
+      "geo": "WORLD_SAN_VICENTE_GRANADINAS"
+    },
+    {
+      "id": "guyana",
+      "name": "Guyana",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "brasil",
+        "suriname",
+        "venezuela"
+      ],
+      "geo": "WORLD_GUYANA"
+    },
+    {
+      "id": "suriname",
+      "name": "Surinam",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "brasil",
+        "francia",
+        "guyana"
+      ],
+      "geo": "WORLD_SURINAME"
+    },
+    {
+      "id": "francia",
+      "name": "Francia",
+      "controllerId": null,
+      "value": 20,
+      "adj": [
+        "andorra",
+        "belgica",
+        "brasil",
+        "suiza",
+        "alemania",
+        "espana",
+        "italia",
+        "luxemburgo",
+        "monaco",
+        "suriname"
+      ],
+      "geo": "WORLD_FRANCIA"
+    },
+    {
+      "id": "alemania",
+      "name": "Alemania",
+      "controllerId": null,
+      "value": 20,
+      "adj": [
+        "austria",
+        "belgica",
+        "suiza",
+        "chequia",
+        "dinamarca",
+        "francia",
+        "luxemburgo",
+        "holanda",
+        "polonia"
+      ],
+      "geo": "WORLD_ALEMANIA"
+    },
+    {
+      "id": "reino_unido",
+      "name": "Reino Unido",
+      "controllerId": null,
+      "value": 19,
+      "adj": [
+        "irlanda"
+      ],
+      "geo": "WORLD_REINO_UNIDO"
+    },
+    {
+      "id": "italia",
+      "name": "Italia",
+      "controllerId": null,
+      "value": 18,
+      "adj": [
+        "austria",
+        "suiza",
+        "francia",
+        "san_marino",
+        "eslovenia",
+        "vaticano"
+      ],
+      "geo": "WORLD_ITALIA"
+    },
+    {
+      "id": "espana",
+      "name": "España",
+      "controllerId": null,
+      "value": 16,
+      "adj": [
+        "andorra",
+        "francia",
+        "marruecos",
+        "portugal"
+      ],
+      "geo": "WORLD_ESPANA"
+    },
+    {
+      "id": "portugal",
+      "name": "Portugal",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "espana"
+      ],
+      "geo": "WORLD_PORTUGAL"
+    },
+    {
+      "id": "holanda",
+      "name": "Países Bajos",
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "belgica",
+        "alemania"
+      ],
+      "geo": "WORLD_HOLANDA"
+    },
+    {
+      "id": "belgica",
+      "name": "Bélgica",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "alemania",
+        "francia",
+        "luxemburgo",
+        "holanda"
+      ],
+      "geo": "WORLD_BELGICA"
+    },
+    {
+      "id": "luxemburgo",
+      "name": "Luxemburgo",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "belgica",
+        "alemania",
+        "francia"
+      ],
+      "geo": "WORLD_LUXEMBURGO"
+    },
+    {
+      "id": "suiza",
+      "name": "Suiza",
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "austria",
+        "alemania",
+        "francia",
+        "italia",
+        "liechtenstein"
+      ],
+      "geo": "WORLD_SUIZA"
+    },
+    {
+      "id": "austria",
+      "name": "Austria",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "suiza",
+        "chequia",
+        "alemania",
+        "hungria",
+        "italia",
+        "liechtenstein",
+        "eslovaquia",
+        "eslovenia"
+      ],
+      "geo": "WORLD_AUSTRIA"
+    },
+    {
+      "id": "irlanda",
+      "name": "Irlanda",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "reino_unido"
+      ],
+      "geo": "WORLD_IRLANDA"
+    },
+    {
+      "id": "monaco",
+      "name": "Mónaco",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "francia"
+      ],
+      "geo": "WORLD_MONACO"
+    },
+    {
+      "id": "andorra",
+      "name": "Andorra",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "espana",
+        "francia"
+      ],
+      "geo": "WORLD_ANDORRA"
+    },
+    {
+      "id": "liechtenstein",
+      "name": "Liechtenstein",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "austria",
+        "suiza"
+      ],
+      "geo": "WORLD_LIECHTENSTEIN"
+    },
+    {
+      "id": "san_marino",
+      "name": "San Marino",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "italia"
+      ],
+      "geo": "WORLD_SAN_MARINO"
+    },
+    {
+      "id": "vaticano",
+      "name": "Vaticano",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "italia"
+      ],
+      "geo": "WORLD_VATICANO"
+    },
+    {
+      "id": "malta",
+      "name": "Malta",
+      "controllerId": null,
+      "value": 7,
+      "adj": [],
+      "geo": "WORLD_MALTA"
+    },
+    {
+      "id": "dinamarca",
+      "name": "Dinamarca",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "alemania",
+        "suecia"
+      ],
+      "geo": "WORLD_DINAMARCA"
+    },
+    {
+      "id": "suecia",
+      "name": "Suecia",
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "dinamarca",
+        "finlandia",
+        "noruega"
+      ],
+      "geo": "WORLD_SUECIA"
+    },
+    {
+      "id": "noruega",
+      "name": "Noruega",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "finlandia",
+        "rusia",
+        "suecia"
+      ],
+      "geo": "WORLD_NORUEGA"
+    },
+    {
+      "id": "finlandia",
+      "name": "Finlandia",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "noruega",
+        "rusia",
+        "suecia"
+      ],
+      "geo": "WORLD_FINLANDIA"
+    },
+    {
+      "id": "islandia",
+      "name": "Islandia",
+      "controllerId": null,
+      "value": 7,
+      "adj": [],
+      "geo": "WORLD_ISLANDIA"
+    },
+    {
+      "id": "polonia",
+      "name": "Polonia",
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "bielorrusia",
+        "chequia",
+        "alemania",
+        "lituania",
+        "rusia",
+        "eslovaquia",
+        "ucrania"
+      ],
+      "geo": "WORLD_POLONIA"
+    },
+    {
+      "id": "chequia",
+      "name": "Chequia",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "austria",
+        "alemania",
+        "polonia",
+        "eslovaquia"
+      ],
+      "geo": "WORLD_CHEQUIA"
+    },
+    {
+      "id": "eslovaquia",
+      "name": "Eslovaquia",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "austria",
+        "chequia",
+        "hungria",
+        "polonia",
+        "ucrania"
+      ],
+      "geo": "WORLD_ESLOVAQUIA"
+    },
+    {
+      "id": "hungria",
+      "name": "Hungría",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "austria",
+        "croacia",
+        "rumania",
+        "serbia",
+        "eslovaquia",
+        "eslovenia",
+        "ucrania"
+      ],
+      "geo": "WORLD_HUNGRIA"
+    },
+    {
+      "id": "rumania",
+      "name": "Rumanía",
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "bulgaria",
+        "hungria",
+        "moldavia",
+        "serbia",
+        "ucrania"
+      ],
+      "geo": "WORLD_RUMANIA"
+    },
+    {
+      "id": "bulgaria",
+      "name": "Bulgaria",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "grecia",
+        "macedonia_norte",
+        "rumania",
+        "serbia",
+        "turquia"
+      ],
+      "geo": "WORLD_BULGARIA"
+    },
+    {
+      "id": "ucrania",
+      "name": "Ucrania",
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "bielorrusia",
+        "hungria",
+        "moldavia",
+        "polonia",
+        "rumania",
+        "rusia",
+        "eslovaquia"
+      ],
+      "geo": "WORLD_UCRANIA"
+    },
+    {
+      "id": "bielorrusia",
+      "name": "Bielorrusia",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "lituania",
+        "letonia",
+        "polonia",
+        "rusia",
+        "ucrania"
+      ],
+      "geo": "WORLD_BIELORRUSIA"
+    },
+    {
+      "id": "moldavia",
+      "name": "Moldavia",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "rumania",
+        "ucrania"
+      ],
+      "geo": "WORLD_MOLDAVIA"
+    },
+    {
+      "id": "rusia",
+      "name": "Rusia",
+      "controllerId": "hermandad_solntsevo",
+      "value": 22,
+      "adj": [
+        "azerbaiyan",
+        "bielorrusia",
+        "china",
+        "estonia",
+        "finlandia",
+        "georgia",
+        "kazajistan",
+        "lituania",
+        "letonia",
+        "mongolia",
+        "noruega",
+        "polonia",
+        "corea_norte",
+        "ucrania"
+      ],
+      "geo": "WORLD_RUSIA"
+    },
+    {
+      "id": "grecia",
+      "name": "Grecia",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "albania",
+        "bulgaria",
+        "macedonia_norte",
+        "turquia"
+      ],
+      "geo": "WORLD_GRECIA"
+    },
+    {
+      "id": "albania",
+      "name": "Albania",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "grecia",
+        "kosovo",
+        "macedonia_norte",
+        "montenegro"
+      ],
+      "geo": "WORLD_ALBANIA"
+    },
+    {
+      "id": "serbia",
+      "name": "Serbia",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "bulgaria",
+        "bosnia",
+        "croacia",
+        "hungria",
+        "kosovo",
+        "macedonia_norte",
+        "montenegro",
+        "rumania"
+      ],
+      "geo": "WORLD_SERBIA"
+    },
+    {
+      "id": "croacia",
+      "name": "Croacia",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "bosnia",
+        "hungria",
+        "montenegro",
+        "serbia",
+        "eslovenia"
+      ],
+      "geo": "WORLD_CROACIA"
+    },
+    {
+      "id": "bosnia",
+      "name": "Bosnia y Herzegovina",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "croacia",
+        "montenegro",
+        "serbia"
+      ],
+      "geo": "WORLD_BOSNIA"
+    },
+    {
+      "id": "montenegro",
+      "name": "Montenegro",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "albania",
+        "bosnia",
+        "croacia",
+        "kosovo",
+        "serbia"
+      ],
+      "geo": "WORLD_MONTENEGRO"
+    },
+    {
+      "id": "macedonia_norte",
+      "name": "Macedonia del Norte",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "albania",
+        "bulgaria",
+        "grecia",
+        "kosovo",
+        "serbia"
+      ],
+      "geo": "WORLD_MACEDONIA_NORTE"
+    },
+    {
+      "id": "eslovenia",
+      "name": "Eslovenia",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "austria",
+        "croacia",
+        "hungria",
+        "italia"
+      ],
+      "geo": "WORLD_ESLOVENIA"
+    },
+    {
+      "id": "kosovo",
+      "name": "Kosovo",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "albania",
+        "macedonia_norte",
+        "montenegro",
+        "serbia"
+      ],
+      "geo": "WORLD_KOSOVO"
+    },
+    {
+      "id": "chipre",
+      "name": "Chipre",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "chipre_norte"
+      ],
+      "geo": "WORLD_CHIPRE"
+    },
+    {
+      "id": "chipre_norte",
+      "name": "Chipre del Norte",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "chipre"
+      ],
+      "geo": "WORLD_CHIPRE_NORTE"
+    },
+    {
+      "id": "lituania",
+      "name": "Lituania",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "bielorrusia",
+        "letonia",
+        "polonia",
+        "rusia"
+      ],
+      "geo": "WORLD_LITUANIA"
+    },
+    {
+      "id": "letonia",
+      "name": "Letonia",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "bielorrusia",
+        "estonia",
+        "lituania",
+        "rusia"
+      ],
+      "geo": "WORLD_LETONIA"
+    },
+    {
+      "id": "estonia",
+      "name": "Estonia",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "letonia",
+        "rusia"
+      ],
+      "geo": "WORLD_ESTONIA"
+    },
+    {
+      "id": "georgia",
+      "name": "Georgia",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "armenia",
+        "azerbaiyan",
+        "rusia",
+        "turquia"
+      ],
+      "geo": "WORLD_GEORGIA"
+    },
+    {
+      "id": "armenia",
+      "name": "Armenia",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "azerbaiyan",
+        "georgia",
+        "iran",
+        "turquia"
+      ],
+      "geo": "WORLD_ARMENIA"
+    },
+    {
+      "id": "azerbaiyan",
+      "name": "Azerbaiyán",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "armenia",
+        "georgia",
+        "iran",
+        "rusia",
+        "turquia"
+      ],
+      "geo": "WORLD_AZERBAIYAN"
+    },
+    {
+      "id": "kazajistan",
+      "name": "Kazajistán",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "china",
+        "kirguistan",
+        "rusia",
+        "turkmenistan",
+        "uzbekistan"
+      ],
+      "geo": "WORLD_KAZAJISTAN"
+    },
+    {
+      "id": "uzbekistan",
+      "name": "Uzbekistán",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "afganistan",
+        "kazajistan",
+        "kirguistan",
+        "tayikistan",
+        "turkmenistan"
+      ],
+      "geo": "WORLD_UZBEKISTAN"
+    },
+    {
+      "id": "turkmenistan",
+      "name": "Turkmenistán",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "afganistan",
+        "iran",
+        "kazajistan",
+        "uzbekistan"
+      ],
+      "geo": "WORLD_TURKMENISTAN"
+    },
+    {
+      "id": "tayikistan",
+      "name": "Tayikistán",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "afganistan",
+        "china",
+        "kirguistan",
+        "uzbekistan"
+      ],
+      "geo": "WORLD_TAYIKISTAN"
+    },
+    {
+      "id": "kirguistan",
+      "name": "Kirguistán",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "china",
+        "kazajistan",
+        "tayikistan",
+        "uzbekistan"
+      ],
+      "geo": "WORLD_KIRGUISTAN"
+    },
+    {
+      "id": "mongolia",
+      "name": "Mongolia",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "china",
+        "rusia"
+      ],
+      "geo": "WORLD_MONGOLIA"
+    },
+    {
+      "id": "turquia",
+      "name": "Turquía",
+      "controllerId": null,
+      "value": 17,
+      "adj": [
+        "armenia",
+        "azerbaiyan",
+        "bulgaria",
+        "georgia",
+        "grecia",
+        "iran",
+        "irak",
+        "siria"
+      ],
+      "geo": "WORLD_TURQUIA"
+    },
+    {
+      "id": "siria",
+      "name": "Siria",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "irak",
+        "israel",
+        "jordania",
+        "libano",
+        "turquia"
+      ],
+      "geo": "WORLD_SIRIA"
+    },
+    {
+      "id": "libano",
+      "name": "Líbano",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "israel",
+        "siria"
+      ],
+      "geo": "WORLD_LIBANO"
+    },
+    {
+      "id": "israel",
+      "name": "Israel",
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "egipto",
+        "jordania",
+        "libano",
+        "palestina",
+        "siria"
+      ],
+      "geo": "WORLD_ISRAEL"
+    },
+    {
+      "id": "palestina",
+      "name": "Palestina",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "egipto",
+        "israel",
+        "jordania"
+      ],
+      "geo": "WORLD_PALESTINA"
+    },
+    {
+      "id": "jordania",
+      "name": "Jordania",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "irak",
+        "israel",
+        "palestina",
+        "arabia_saudita",
+        "siria"
+      ],
+      "geo": "WORLD_JORDANIA"
+    },
+    {
+      "id": "irak",
+      "name": "Irak",
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "iran",
+        "jordania",
+        "kuwait",
+        "arabia_saudita",
+        "siria",
+        "turquia"
+      ],
+      "geo": "WORLD_IRAK"
+    },
+    {
+      "id": "iran",
+      "name": "Irán",
+      "controllerId": null,
+      "value": 17,
+      "adj": [
+        "afganistan",
+        "armenia",
+        "azerbaiyan",
+        "irak",
+        "pakistan",
+        "turkmenistan",
+        "turquia"
+      ],
+      "geo": "WORLD_IRAN"
+    },
+    {
+      "id": "arabia_saudita",
+      "name": "Arabia Saudita",
+      "controllerId": null,
+      "value": 16,
+      "adj": [
+        "emiratos_arabes",
+        "irak",
+        "jordania",
+        "kuwait",
+        "oman",
+        "qatar",
+        "yemen"
+      ],
+      "geo": "WORLD_ARABIA_SAUDITA"
+    },
+    {
+      "id": "yemen",
+      "name": "Yemen",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "oman",
+        "arabia_saudita"
+      ],
+      "geo": "WORLD_YEMEN"
+    },
+    {
+      "id": "oman",
+      "name": "Omán",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "emiratos_arabes",
+        "arabia_saudita",
+        "yemen"
+      ],
+      "geo": "WORLD_OMAN"
+    },
+    {
+      "id": "emiratos_arabes",
+      "name": "Emiratos Árabes Unidos",
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "oman",
+        "arabia_saudita"
+      ],
+      "geo": "WORLD_EMIRATOS_ARABES"
+    },
+    {
+      "id": "qatar",
+      "name": "Catar",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "bahrein",
+        "arabia_saudita"
+      ],
+      "geo": "WORLD_QATAR"
+    },
+    {
+      "id": "kuwait",
+      "name": "Kuwait",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "irak",
+        "arabia_saudita"
+      ],
+      "geo": "WORLD_KUWAIT"
+    },
+    {
+      "id": "bahrein",
+      "name": "Baréin",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "qatar"
+      ],
+      "geo": "WORLD_BAHREIN"
+    },
+    {
+      "id": "afganistan",
+      "name": "Afganistán",
+      "controllerId": null,
+      "value": 16,
+      "adj": [
+        "china",
+        "iran",
+        "pakistan",
+        "tayikistan",
+        "turkmenistan",
+        "uzbekistan"
+      ],
+      "geo": "WORLD_AFGANISTAN"
+    },
+    {
+      "id": "pakistan",
+      "name": "Pakistán",
+      "controllerId": null,
+      "value": 18,
+      "adj": [
+        "afganistan",
+        "china",
+        "india",
+        "iran"
+      ],
+      "geo": "WORLD_PAKISTAN"
+    },
+    {
+      "id": "india",
+      "name": "India",
+      "controllerId": null,
+      "value": 22,
+      "adj": [
+        "bangladesh",
+        "bhutan",
+        "china",
+        "myanmar",
+        "nepal",
+        "pakistan"
+      ],
+      "geo": "WORLD_INDIA"
+    },
+    {
+      "id": "nepal",
+      "name": "Nepal",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "china",
+        "india"
+      ],
+      "geo": "WORLD_NEPAL"
+    },
+    {
+      "id": "bhutan",
+      "name": "Bután",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "china",
+        "india"
+      ],
+      "geo": "WORLD_BHUTAN"
+    },
+    {
+      "id": "bangladesh",
+      "name": "Bangladés",
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "india",
+        "myanmar"
+      ],
+      "geo": "WORLD_BANGLADESH"
+    },
+    {
+      "id": "sri_lanka",
+      "name": "Sri Lanka",
+      "controllerId": null,
+      "value": 10,
+      "adj": [],
+      "geo": "WORLD_SRI_LANKA"
+    },
+    {
+      "id": "maldivas",
+      "name": "Maldivas",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_MALDIVAS"
+    },
+    {
+      "id": "china",
+      "name": "China",
+      "controllerId": null,
+      "value": 22,
+      "adj": [
+        "afganistan",
+        "bhutan",
+        "hong_kong",
+        "india",
+        "kazajistan",
+        "kirguistan",
+        "laos",
+        "macao",
+        "myanmar",
+        "mongolia",
+        "nepal",
+        "pakistan",
+        "corea_norte",
+        "rusia",
+        "tayikistan",
+        "vietnam"
+      ],
+      "geo": "WORLD_CHINA"
+    },
+    {
+      "id": "corea_norte",
+      "name": "Corea del Norte",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "china",
+        "corea_sur",
+        "rusia"
+      ],
+      "geo": "WORLD_COREA_NORTE"
+    },
+    {
+      "id": "corea_sur",
+      "name": "Corea del Sur",
+      "controllerId": null,
+      "value": 17,
+      "adj": [
+        "corea_norte"
+      ],
+      "geo": "WORLD_COREA_SUR"
+    },
+    {
+      "id": "japon",
+      "name": "Japón",
+      "controllerId": null,
+      "value": 19,
+      "adj": [],
+      "geo": "WORLD_JAPON"
+    },
+    {
+      "id": "taiwan",
+      "name": "Taiwán",
+      "controllerId": null,
+      "value": 13,
+      "adj": [],
+      "geo": "WORLD_TAIWAN"
+    },
+    {
+      "id": "hong_kong",
+      "name": "Hong Kong",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "china"
+      ],
+      "geo": "WORLD_HONG_KONG"
+    },
+    {
+      "id": "macao",
+      "name": "Macao",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "china"
+      ],
+      "geo": "WORLD_MACAO"
+    },
+    {
+      "id": "myanmar",
+      "name": "Birmania",
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "bangladesh",
+        "china",
+        "india",
+        "laos",
+        "tailandia"
+      ],
+      "geo": "WORLD_MYANMAR",
+      "specialization": "cultivo"
+    },
+    {
+      "id": "tailandia",
+      "name": "Tailandia",
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "camboya",
+        "laos",
+        "myanmar",
+        "malasia"
+      ],
+      "geo": "WORLD_TAILANDIA"
+    },
+    {
+      "id": "laos",
+      "name": "Laos",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "china",
+        "camboya",
+        "myanmar",
+        "tailandia",
+        "vietnam"
+      ],
+      "geo": "WORLD_LAOS"
+    },
+    {
+      "id": "vietnam",
+      "name": "Vietnam",
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "china",
+        "camboya",
+        "laos"
+      ],
+      "geo": "WORLD_VIETNAM"
+    },
+    {
+      "id": "camboya",
+      "name": "Camboya",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "laos",
+        "tailandia",
+        "vietnam"
+      ],
+      "geo": "WORLD_CAMBOYA"
+    },
+    {
+      "id": "malasia",
+      "name": "Malasia",
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "brunei",
+        "indonesia",
+        "singapur",
+        "tailandia"
+      ],
+      "geo": "WORLD_MALASIA"
+    },
+    {
+      "id": "singapur",
+      "name": "Singapur",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "malasia"
+      ],
+      "geo": "WORLD_SINGAPUR"
+    },
+    {
+      "id": "indonesia",
+      "name": "Indonesia",
+      "controllerId": null,
+      "value": 19,
+      "adj": [
+        "malasia",
+        "papua_nueva_guinea",
+        "timor_oriental"
+      ],
+      "geo": "WORLD_INDONESIA"
+    },
+    {
+      "id": "filipinas",
+      "name": "Filipinas",
+      "controllerId": null,
+      "value": 15,
+      "adj": [],
+      "geo": "WORLD_FILIPINAS"
+    },
+    {
+      "id": "brunei",
+      "name": "Brunéi",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "malasia"
+      ],
+      "geo": "WORLD_BRUNEI"
+    },
+    {
+      "id": "timor_oriental",
+      "name": "Timor Oriental",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "indonesia"
+      ],
+      "geo": "WORLD_TIMOR_ORIENTAL"
+    },
+    {
+      "id": "australia",
+      "name": "Australia",
+      "controllerId": null,
+      "value": 17,
+      "adj": [
+        "papua_nueva_guinea"
+      ],
+      "geo": "WORLD_AUSTRALIA"
+    },
+    {
+      "id": "nueva_zelanda",
+      "name": "Nueva Zelanda",
+      "controllerId": null,
+      "value": 11,
+      "adj": [],
+      "geo": "WORLD_NUEVA_ZELANDA"
+    },
+    {
+      "id": "papua_nueva_guinea",
+      "name": "Papúa Nueva Guinea",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "australia",
+        "indonesia"
+      ],
+      "geo": "WORLD_PAPUA_NUEVA_GUINEA"
+    },
+    {
+      "id": "fiyi",
+      "name": "Fiyi",
+      "controllerId": null,
+      "value": 7,
+      "adj": [],
+      "geo": "WORLD_FIYI"
+    },
+    {
+      "id": "islas_salomon",
+      "name": "Islas Salomón",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_ISLAS_SALOMON"
+    },
+    {
+      "id": "vanuatu",
+      "name": "Vanuatu",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_VANUATU"
+    },
+    {
+      "id": "samoa",
+      "name": "Samoa",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_SAMOA"
+    },
+    {
+      "id": "kiribati",
+      "name": "Kiribati",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_KIRIBATI"
+    },
+    {
+      "id": "tonga",
+      "name": "Tonga",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_TONGA"
+    },
+    {
+      "id": "micronesia",
+      "name": "Micronesia",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_MICRONESIA"
+    },
+    {
+      "id": "islas_marshall",
+      "name": "Islas Marshall",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_ISLAS_MARSHALL"
+    },
+    {
+      "id": "palaos",
+      "name": "Palaos",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_PALAOS"
+    },
+    {
+      "id": "nauru",
+      "name": "Nauru",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_NAURU"
+    },
+    {
+      "id": "tuvalu",
+      "name": "Tuvalu",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_TUVALU"
+    },
+    {
+      "id": "marruecos",
+      "name": "Marruecos",
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "argelia",
+        "sahara_occidental",
+        "espana",
+        "mauritania"
+      ],
+      "geo": "WORLD_MARRUECOS"
+    },
+    {
+      "id": "sahara_occidental",
+      "name": "Sáhara Occidental",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "argelia",
+        "marruecos",
+        "mauritania"
+      ],
+      "geo": "WORLD_SAHARA_OCCIDENTAL"
+    },
+    {
+      "id": "argelia",
+      "name": "Argelia",
+      "controllerId": null,
+      "value": 16,
+      "adj": [
+        "sahara_occidental",
+        "libia",
+        "marruecos",
+        "mali",
+        "mauritania",
+        "niger",
+        "tunez"
+      ],
+      "geo": "WORLD_ARGELIA"
+    },
+    {
+      "id": "tunez",
+      "name": "Túnez",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "argelia",
+        "libia"
+      ],
+      "geo": "WORLD_TUNEZ"
+    },
+    {
+      "id": "libia",
+      "name": "Libia",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "argelia",
+        "egipto",
+        "niger",
+        "sudan",
+        "chad",
+        "tunez"
+      ],
+      "geo": "WORLD_LIBIA"
+    },
+    {
+      "id": "egipto",
+      "name": "Egipto",
+      "controllerId": null,
+      "value": 18,
+      "adj": [
+        "israel",
+        "libia",
+        "palestina",
+        "sudan"
+      ],
+      "geo": "WORLD_EGIPTO"
+    },
+    {
+      "id": "sudan",
+      "name": "Sudán",
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "republica_centroafricana",
+        "egipto",
+        "eritrea",
+        "etiopia",
+        "libia",
+        "sudan_sur",
+        "chad"
+      ],
+      "geo": "WORLD_SUDAN"
+    },
+    {
+      "id": "sudan_sur",
+      "name": "Sudán del Sur",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "republica_centroafricana",
+        "congo_kinshasa",
+        "etiopia",
+        "kenia",
+        "sudan",
+        "uganda"
+      ],
+      "geo": "WORLD_SUDAN_SUR"
+    },
+    {
+      "id": "mauritania",
+      "name": "Mauritania",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "argelia",
+        "sahara_occidental",
+        "marruecos",
+        "mali",
+        "senegal"
+      ],
+      "geo": "WORLD_MAURITANIA"
+    },
+    {
+      "id": "senegal",
+      "name": "Senegal",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "guinea",
+        "gambia",
+        "guinea_bisau",
+        "mali",
+        "mauritania"
+      ],
+      "geo": "WORLD_SENEGAL"
+    },
+    {
+      "id": "gambia",
+      "name": "Gambia",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "senegal"
+      ],
+      "geo": "WORLD_GAMBIA"
+    },
+    {
+      "id": "guinea_bisau",
+      "name": "Guinea-Bisáu",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "guinea",
+        "senegal"
+      ],
+      "geo": "WORLD_GUINEA_BISAU"
+    },
+    {
+      "id": "guinea",
+      "name": "Guinea",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "costa_marfil",
+        "guinea_bisau",
+        "liberia",
+        "mali",
+        "senegal",
+        "sierra_leona"
+      ],
+      "geo": "WORLD_GUINEA"
+    },
+    {
+      "id": "sierra_leona",
+      "name": "Sierra Leona",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "guinea",
+        "liberia"
+      ],
+      "geo": "WORLD_SIERRA_LEONA"
+    },
+    {
+      "id": "liberia",
+      "name": "Liberia",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "costa_marfil",
+        "guinea",
+        "sierra_leona"
+      ],
+      "geo": "WORLD_LIBERIA"
+    },
+    {
+      "id": "costa_marfil",
+      "name": "Costa de Marfil",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "burkina_faso",
+        "ghana",
+        "guinea",
+        "liberia",
+        "mali"
+      ],
+      "geo": "WORLD_COSTA_MARFIL"
+    },
+    {
+      "id": "mali",
+      "name": "Malí",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "burkina_faso",
+        "costa_marfil",
+        "argelia",
+        "guinea",
+        "mauritania",
+        "niger",
+        "senegal"
+      ],
+      "geo": "WORLD_MALI"
+    },
+    {
+      "id": "burkina_faso",
+      "name": "Burkina Faso",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "benin",
+        "costa_marfil",
+        "ghana",
+        "mali",
+        "niger",
+        "togo"
+      ],
+      "geo": "WORLD_BURKINA_FASO"
+    },
+    {
+      "id": "ghana",
+      "name": "Ghana",
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "burkina_faso",
+        "costa_marfil",
+        "togo"
+      ],
+      "geo": "WORLD_GHANA"
+    },
+    {
+      "id": "togo",
+      "name": "Togo",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "benin",
+        "burkina_faso",
+        "ghana"
+      ],
+      "geo": "WORLD_TOGO"
+    },
+    {
+      "id": "benin",
+      "name": "Benín",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "burkina_faso",
+        "niger",
+        "nigeria",
+        "togo"
+      ],
+      "geo": "WORLD_BENIN"
+    },
+    {
+      "id": "niger",
+      "name": "Níger",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "benin",
+        "burkina_faso",
+        "argelia",
+        "libia",
+        "mali",
+        "nigeria",
+        "chad"
+      ],
+      "geo": "WORLD_NIGER"
+    },
+    {
+      "id": "nigeria",
+      "name": "Nigeria",
+      "controllerId": null,
+      "value": 20,
+      "adj": [
+        "benin",
+        "camerun",
+        "niger",
+        "chad"
+      ],
+      "geo": "WORLD_NIGERIA"
+    },
+    {
+      "id": "cabo_verde",
+      "name": "Cabo Verde",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_CABO_VERDE"
+    },
+    {
+      "id": "camerun",
+      "name": "Camerún",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "republica_centroafricana",
+        "congo_brazzaville",
+        "gabon",
+        "guinea_ecuatorial",
+        "nigeria",
+        "chad"
+      ],
+      "geo": "WORLD_CAMERUN"
+    },
+    {
+      "id": "chad",
+      "name": "Chad",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "republica_centroafricana",
+        "camerun",
+        "libia",
+        "niger",
+        "nigeria",
+        "sudan"
+      ],
+      "geo": "WORLD_CHAD"
+    },
+    {
+      "id": "republica_centroafricana",
+      "name": "República Centroafricana",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "camerun",
+        "congo_kinshasa",
+        "congo_brazzaville",
+        "sudan",
+        "sudan_sur",
+        "chad"
+      ],
+      "geo": "WORLD_REPUBLICA_CENTROAFRICANA"
+    },
+    {
+      "id": "guinea_ecuatorial",
+      "name": "Guinea Ecuatorial",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "camerun",
+        "gabon"
+      ],
+      "geo": "WORLD_GUINEA_ECUATORIAL"
+    },
+    {
+      "id": "gabon",
+      "name": "Gabón",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "camerun",
+        "congo_brazzaville",
+        "guinea_ecuatorial"
+      ],
+      "geo": "WORLD_GABON"
+    },
+    {
+      "id": "congo_brazzaville",
+      "name": "República del Congo",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "angola",
+        "republica_centroafricana",
+        "camerun",
+        "congo_kinshasa",
+        "gabon"
+      ],
+      "geo": "WORLD_CONGO_BRAZZAVILLE"
+    },
+    {
+      "id": "congo_kinshasa",
+      "name": "República Democrática del Congo",
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "angola",
+        "burundi",
+        "republica_centroafricana",
+        "congo_brazzaville",
+        "ruanda",
+        "sudan_sur",
+        "tanzania",
+        "uganda",
+        "zambia"
+      ],
+      "geo": "WORLD_CONGO_KINSHASA"
+    },
+    {
+      "id": "santo_tome_principe",
+      "name": "Santo Tomé y Príncipe",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_SANTO_TOME_PRINCIPE"
+    },
+    {
+      "id": "etiopia",
+      "name": "Etiopía",
+      "controllerId": null,
+      "value": 16,
+      "adj": [
+        "yibuti",
+        "eritrea",
+        "kenia",
+        "sudan",
+        "somalia",
+        "somalilandia",
+        "sudan_sur"
+      ],
+      "geo": "WORLD_ETIOPIA"
+    },
+    {
+      "id": "eritrea",
+      "name": "Eritrea",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "yibuti",
+        "etiopia",
+        "sudan"
+      ],
+      "geo": "WORLD_ERITREA"
+    },
+    {
+      "id": "yibuti",
+      "name": "Yibuti",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "eritrea",
+        "etiopia",
+        "somalilandia"
+      ],
+      "geo": "WORLD_YIBUTI"
+    },
+    {
+      "id": "somalia",
+      "name": "Somalia",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "etiopia",
+        "kenia",
+        "somalilandia"
+      ],
+      "geo": "WORLD_SOMALIA"
+    },
+    {
+      "id": "somalilandia",
+      "name": "Somalilandia",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "yibuti",
+        "etiopia",
+        "somalia"
+      ],
+      "geo": "WORLD_SOMALILANDIA"
+    },
+    {
+      "id": "kenia",
+      "name": "Kenia",
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "etiopia",
+        "somalia",
+        "sudan_sur",
+        "tanzania",
+        "uganda"
+      ],
+      "geo": "WORLD_KENIA"
+    },
+    {
+      "id": "uganda",
+      "name": "Uganda",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "congo_kinshasa",
+        "kenia",
+        "ruanda",
+        "sudan_sur",
+        "tanzania"
+      ],
+      "geo": "WORLD_UGANDA"
+    },
+    {
+      "id": "ruanda",
+      "name": "Ruanda",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "burundi",
+        "congo_kinshasa",
+        "tanzania",
+        "uganda"
+      ],
+      "geo": "WORLD_RUANDA"
+    },
+    {
+      "id": "burundi",
+      "name": "Burundi",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "congo_kinshasa",
+        "ruanda",
+        "tanzania"
+      ],
+      "geo": "WORLD_BURUNDI"
+    },
+    {
+      "id": "tanzania",
+      "name": "Tanzania",
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "burundi",
+        "congo_kinshasa",
+        "kenia",
+        "mozambique",
+        "malaui",
+        "ruanda",
+        "uganda",
+        "zambia"
+      ],
+      "geo": "WORLD_TANZANIA"
+    },
+    {
+      "id": "mozambique",
+      "name": "Mozambique",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "malaui",
+        "esuatini",
+        "tanzania",
+        "sudafrica",
+        "zambia",
+        "zimbabue"
+      ],
+      "geo": "WORLD_MOZAMBIQUE"
+    },
+    {
+      "id": "malaui",
+      "name": "Malaui",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "mozambique",
+        "tanzania",
+        "zambia"
+      ],
+      "geo": "WORLD_MALAUI"
+    },
+    {
+      "id": "zambia",
+      "name": "Zambia",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "angola",
+        "botsuana",
+        "congo_kinshasa",
+        "mozambique",
+        "malaui",
+        "namibia",
+        "tanzania",
+        "zimbabue"
+      ],
+      "geo": "WORLD_ZAMBIA"
+    },
+    {
+      "id": "madagascar",
+      "name": "Madagascar",
+      "controllerId": null,
+      "value": 10,
+      "adj": [],
+      "geo": "WORLD_MADAGASCAR"
+    },
+    {
+      "id": "comoras",
+      "name": "Comoras",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_COMORAS"
+    },
+    {
+      "id": "mauricio",
+      "name": "Mauricio",
+      "controllerId": null,
+      "value": 7,
+      "adj": [],
+      "geo": "WORLD_MAURICIO"
+    },
+    {
+      "id": "seychelles",
+      "name": "Seychelles",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_SEYCHELLES"
+    },
+    {
+      "id": "angola",
+      "name": "Angola",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "congo_kinshasa",
+        "congo_brazzaville",
+        "namibia",
+        "zambia"
+      ],
+      "geo": "WORLD_ANGOLA"
+    },
+    {
+      "id": "namibia",
+      "name": "Namibia",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "angola",
+        "botsuana",
+        "sudafrica",
+        "zambia",
+        "zimbabue"
+      ],
+      "geo": "WORLD_NAMIBIA"
+    },
+    {
+      "id": "botsuana",
+      "name": "Botsuana",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "namibia",
+        "sudafrica",
+        "zambia",
+        "zimbabue"
+      ],
+      "geo": "WORLD_BOTSUANA"
+    },
+    {
+      "id": "zimbabue",
+      "name": "Zimbabue",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "botsuana",
+        "mozambique",
+        "namibia",
+        "sudafrica",
+        "zambia"
+      ],
+      "geo": "WORLD_ZIMBABUE"
+    },
+    {
+      "id": "sudafrica",
+      "name": "Sudáfrica",
+      "controllerId": null,
+      "value": 18,
+      "adj": [
+        "botsuana",
+        "lesoto",
+        "mozambique",
+        "namibia",
+        "esuatini",
+        "zimbabue"
+      ],
+      "geo": "WORLD_SUDAFRICA"
+    },
+    {
+      "id": "lesoto",
+      "name": "Lesoto",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "sudafrica"
+      ],
+      "geo": "WORLD_LESOTO"
+    },
+    {
+      "id": "esuatini",
+      "name": "Esuatini",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "mozambique",
+        "sudafrica"
+      ],
+      "geo": "WORLD_ESUATINI"
+    },
+    {
+      "id": "california",
+      "name": "California",
+      "controllerId": null,
+      "value": 20,
+      "adj": [
+        "arizona",
+        "resto_eeuu",
+        "baja_california"
+      ],
+      "geo": "USA_California"
+    },
+    {
+      "id": "arizona",
+      "name": "Arizona",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "california",
+        "new_mexico",
+        "resto_eeuu",
+        "sonora"
+      ],
+      "geo": "USA_Arizona"
+    },
+    {
+      "id": "new_mexico",
+      "name": "Nuevo México",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "arizona",
+        "texas",
+        "resto_eeuu",
+        "chihuahua"
+      ],
+      "geo": "USA_NewMexico"
+    },
+    {
+      "id": "texas",
+      "name": "Texas",
+      "controllerId": null,
+      "value": 20,
+      "adj": [
+        "new_mexico",
+        "resto_eeuu",
+        "chihuahua",
+        "nuevo_leon",
+        "tamaulipas"
+      ],
+      "geo": "USA_Texas"
+    },
+    {
+      "id": "resto_eeuu",
+      "name": "Resto de Estados Unidos",
+      "controllerId": null,
+      "value": 26,
+      "adj": [
+        "california",
+        "arizona",
+        "new_mexico",
+        "texas",
+        "canada"
+      ],
+      "geo": "USA_RestoEEUU"
+    },
+    {
+      "id": "coahuila",
+      "name": "Coahuila",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "chihuahua",
+        "durango",
+        "nuevo_leon",
+        "san_luis_potosi",
+        "zacatecas"
+      ],
+      "geo": "MEX_Coahuila"
+    },
+    {
+      "id": "cdmx",
+      "name": "Ciudad de México",
+      "controllerId": null,
+      "value": 16,
+      "adj": [
+        "estado_de_mexico",
+        "morelos"
+      ],
+      "geo": "MEX_CDMX"
+    },
+    {
+      "id": "quintana_roo",
+      "name": "Quintana Roo",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "campeche",
+        "yucatan"
+      ],
+      "geo": "MEX_QuintanaRoo"
+    },
+    {
+      "id": "campeche",
+      "name": "Campeche",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "quintana_roo",
+        "tabasco",
+        "yucatan"
+      ],
+      "geo": "MEX_Campeche"
+    },
+    {
+      "id": "morelos",
+      "name": "Morelos",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "cdmx",
+        "estado_de_mexico",
+        "guerrero",
+        "puebla"
+      ],
+      "geo": "MEX_Morelos"
+    },
+    {
+      "id": "baja_california_sur",
+      "name": "Baja California Sur",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "baja_california"
+      ],
+      "geo": "MEX_BajaCaliforniaSur"
+    },
+    {
+      "id": "tabasco",
+      "name": "Tabasco",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "campeche",
+        "chiapas",
+        "veracruz"
+      ],
+      "geo": "MEX_Tabasco"
+    },
+    {
+      "id": "estado_de_mexico",
+      "name": "Estado de México",
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "cdmx",
+        "guerrero",
+        "hidalgo",
+        "michoacan",
+        "morelos",
+        "puebla",
+        "queretaro",
+        "tlaxcala"
+      ],
+      "geo": "MEX_EstadoDeMexico"
+    },
+    {
+      "id": "yucatan",
+      "name": "Yucatán",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "campeche",
+        "quintana_roo"
+      ],
+      "geo": "MEX_Yucatan"
+    },
+    {
+      "id": "veracruz",
+      "name": "Veracruz",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "chiapas",
+        "hidalgo",
+        "oaxaca",
+        "puebla",
+        "san_luis_potosi",
+        "tabasco",
+        "tamaulipas"
+      ],
+      "geo": "MEX_Veracruz"
+    },
+    {
+      "id": "colima",
+      "name": "Colima",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "jalisco",
+        "michoacan"
+      ],
+      "geo": "MEX_Colima"
+    },
+    {
+      "id": "nayarit",
+      "name": "Nayarit",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "durango",
+        "jalisco",
+        "sinaloa",
+        "zacatecas"
+      ],
+      "geo": "MEX_Nayarit"
+    },
+    {
+      "id": "guanajuato",
+      "name": "Guanajuato",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "jalisco",
+        "michoacan",
+        "queretaro",
+        "san_luis_potosi",
+        "zacatecas"
+      ],
+      "geo": "MEX_Guanajuato"
+    },
+    {
+      "id": "hidalgo",
+      "name": "Hidalgo",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "estado_de_mexico",
+        "puebla",
+        "queretaro",
+        "san_luis_potosi",
+        "tlaxcala",
+        "veracruz"
+      ],
+      "geo": "MEX_Hidalgo"
+    },
+    {
+      "id": "tlaxcala",
+      "name": "Tlaxcala",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "estado_de_mexico",
+        "hidalgo",
+        "puebla"
+      ],
+      "geo": "MEX_Tlaxcala"
+    },
+    {
+      "id": "aguascalientes",
+      "name": "Aguascalientes",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "jalisco",
+        "zacatecas"
+      ],
+      "geo": "MEX_Aguascalientes"
+    },
+    {
+      "id": "queretaro",
+      "name": "Querétaro",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "estado_de_mexico",
+        "guanajuato",
+        "hidalgo",
+        "michoacan",
+        "san_luis_potosi"
+      ],
+      "geo": "MEX_Queretaro"
+    },
+    {
+      "id": "san_luis_potosi",
+      "name": "San Luis Potosí",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "coahuila",
+        "guanajuato",
+        "hidalgo",
+        "nuevo_leon",
+        "queretaro",
+        "tamaulipas",
+        "veracruz",
+        "zacatecas"
+      ],
+      "geo": "MEX_SanLuisPotosi"
+    },
+    {
+      "id": "puebla",
+      "name": "Puebla",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "estado_de_mexico",
+        "guerrero",
+        "hidalgo",
+        "morelos",
+        "oaxaca",
+        "tlaxcala",
+        "veracruz"
+      ],
+      "geo": "MEX_Puebla"
+    }
+  ],
+  "cartels": [
+    {
+      "id": "hermandad_solntsevo",
+      "name": "Hermandad de Solntsevo",
+      "color": "#5a1f1f",
+      "aiControlled": false,
+      "historicalNote": "Sergei Mikhailov, exmarero real convertido en criminal tras cumplir condena por fraude a mediados de los 80, fundó realmente el grupo de Solntsevo a finales de esa década junto a Viktor Averin, exboxeador y compañero real de prisión. Con la caída de la URSS en 1991, la organización se expandió realmente a una escala internacional -- extorsión, apuestas ilegales, tráfico de armas y de personas, blancapeo de capitales -- hasta convertirse en una de las mayores redes del crimen organizado postsoviético. Otras organizaciones reales y bien documentadas de la misma época, como la Izmailovskaya (también con base en Moscú) y la Tambovskaya (con base en San Petersburgo, ligada realmente a Semión Mogilévich, ya presente en el juego como facción menor en la época \"La guerra y la fragmentación\"), existen aquí solo como contexto histórico y no como facciones jugables independientes, ya que Rusia es un único territorio en el mapa. Los cargos secundarios del organigrama sin figura pública documentada en ese rol específico son ficticios.",
+      "resources": {
+        "money": 55000000,
+        "armySize": 650,
+        "corruptGov": 55,
+        "corruptPolice": 60,
+        "publicImage": 32,
+        "heat": 32
+      },
+      "roles": {
+        "leader": "sergei_mikhailov",
+        "underboss": "viktor_averin",
+        "sicariosChief": "sol_sicarios_chief",
+        "intelChief": "sol_intel_chief",
+        "militaryChief": "sol_military_chief",
+        "diplomatChief": "sol_diplomat_chief",
+        "financeChief": "sol_finance_chief",
+        "traffickingChief": "sol_trafficking_chief",
+        "corruptionGovChief": "sol_gov_chief",
+        "corruptionPoliceChief": "sol_police_chief",
+        "productionChief": "sol_production_chief",
+        "prChief": "sol_pr_chief"
+      }
+    }
+  ],
+  "characters": [
+    {
+      "id": "sergei_mikhailov",
+      "name": "Sergei Mikhailov \"Mikhas\"",
+      "sex": "M",
+      "birthYear": 1958,
+      "alive": true,
+      "cartelId": "hermandad_solntsevo",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 62,
+        "business": 90,
+        "charisma": 78,
+        "intrigue": 85,
+        "loyaltyInspiring": 70,
+        "stealth": 68
+      },
+      "traits": [
+        "fundador",
+        "empresario"
+      ],
+      "notes": "Nacido el 7 de febrero de 1958. Camarero antes de cumplir condena real por fraude a mediados de los años 80; en prisión conoció a Viktor Averin, con quien fundó realmente el grupo de Solntsevo a finales de esa década. En la vida real fue detenido en Ginebra en octubre de 1996 y pasó dos años en prisión preventiva antes de ser juzgado -- el gobierno ruso se negó a aportar pruebas clave y un testigo previsto para el juicio apareció asesinado en Holanda, así que los fiscales suizos no lograron una condena y quedó en libertad en diciembre de 1998. En el juego su destino depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "viktor_averin",
+      "name": "Viktor Averin",
+      "sex": "M",
+      "birthYear": 1955,
+      "alive": true,
+      "cartelId": "hermandad_solntsevo",
+      "role": "underboss",
+      "historical": true,
+      "stats": {
+        "violence": 70,
+        "business": 68,
+        "charisma": 60,
+        "intrigue": 65,
+        "loyaltyInspiring": 62,
+        "stealth": 55
+      },
+      "traits": [
+        "exboxeador",
+        "leal"
+      ],
+      "notes": "Cofundador real del grupo de Solntsevo junto a Mikhailov, a quien conoció en prisión; año de nacimiento sin confirmar en fuentes públicas (aproximado). En la vida real, una fiesta de cumpleaños suya en Praga en mayo de 1995 fue asaltada por la policía checa, un episodio que atrajo atención internacional sobre la organización. En el juego su destino depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sol_sicarios_chief",
+      "name": "Igor Volkov",
+      "sex": "M",
+      "birthYear": 1962,
+      "alive": true,
+      "cartelId": "hermandad_solntsevo",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 88,
+        "business": 30,
+        "charisma": 38,
+        "intrigue": 52,
+        "loyaltyInspiring": 55,
+        "stealth": 60
+      },
+      "traits": [
+        "sanguinario"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sol_intel_chief",
+      "name": "Nadia Orlova",
+      "sex": "F",
+      "birthYear": 1965,
+      "alive": true,
+      "cartelId": "hermandad_solntsevo",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 22,
+        "business": 55,
+        "charisma": 55,
+        "intrigue": 84,
+        "loyaltyInspiring": 44,
+        "stealth": 80
+      },
+      "traits": [
+        "observadora"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sol_military_chief",
+      "name": "Dmitri Sokolov",
+      "sex": "M",
+      "birthYear": 1959,
+      "alive": true,
+      "cartelId": "hermandad_solntsevo",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 82,
+        "business": 45,
+        "charisma": 42,
+        "intrigue": 58,
+        "loyaltyInspiring": 60,
+        "stealth": 48
+      },
+      "traits": [
+        "veterano"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sol_diplomat_chief",
+      "name": "Andrei Volin",
+      "sex": "M",
+      "birthYear": 1957,
+      "alive": true,
+      "cartelId": "hermandad_solntsevo",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 28,
+        "business": 62,
+        "charisma": 76,
+        "intrigue": 60,
+        "loyaltyInspiring": 48,
+        "stealth": 46
+      },
+      "traits": [
+        "negociador"
+      ],
+      "notes": "Personaje ficticio, enlace habitual con otros grupos criminales postsoviéticos.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sol_finance_chief",
+      "name": "Elena Kuznetsova",
+      "sex": "F",
+      "birthYear": 1963,
+      "alive": true,
+      "cartelId": "hermandad_solntsevo",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 10,
+        "business": 88,
+        "charisma": 50,
+        "intrigue": 65,
+        "loyaltyInspiring": 42,
+        "stealth": 50
+      },
+      "traits": [
+        "contable"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sol_trafficking_chief",
+      "name": "Pavel Morozov",
+      "sex": "M",
+      "birthYear": 1960,
+      "alive": true,
+      "cartelId": "hermandad_solntsevo",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 55,
+        "business": 72,
+        "charisma": 46,
+        "intrigue": 60,
+        "loyaltyInspiring": 48,
+        "stealth": 62
+      },
+      "traits": [
+        "logístico"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sol_gov_chief",
+      "name": "Oleg Zaitsev",
+      "sex": "M",
+      "birthYear": 1950,
+      "alive": true,
+      "cartelId": "hermandad_solntsevo",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 18,
+        "business": 65,
+        "charisma": 72,
+        "intrigue": 70,
+        "loyaltyInspiring": 46,
+        "stealth": 52
+      },
+      "traits": [
+        "conectado"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sol_police_chief",
+      "name": "Roman Belov",
+      "sex": "M",
+      "birthYear": 1956,
+      "alive": true,
+      "cartelId": "hermandad_solntsevo",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 26,
+        "business": 48,
+        "charisma": 50,
+        "intrigue": 66,
+        "loyaltyInspiring": 44,
+        "stealth": 68
+      },
+      "traits": [
+        "infiltrado"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sol_production_chief",
+      "name": "Anton Gusev",
+      "sex": "M",
+      "birthYear": 1961,
+      "alive": true,
+      "cartelId": "hermandad_solntsevo",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 22,
+        "business": 58,
+        "charisma": 38,
+        "intrigue": 46,
+        "loyaltyInspiring": 46,
+        "stealth": 48
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sol_pr_chief",
+      "name": "Irina Sorokina",
+      "sex": "F",
+      "birthYear": 1966,
+      "alive": true,
+      "cartelId": "hermandad_solntsevo",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 8,
+        "business": 52,
+        "charisma": 76,
+        "intrigue": 44,
+        "loyaltyInspiring": 50,
+        "stealth": 40
+      },
+      "traits": [
+        "relaciones públicas"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    }
+  ],
+  "newCartelTerritories": [
+    "ucrania",
+    "bielorrusia"
+  ]
+}
