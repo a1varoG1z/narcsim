@@ -517,7 +517,12 @@ export function applyAction(game, cartelId, type, payload = {}) {
       const drug = getDrugProfile(game, cartel);
       const market = getMarketProfile(game, payload.marketId);
       const traffickingBonus = traffickingChiefBonus(game.characters[cartel.roles.traffickingChief]);
-      const interdictChance = clamp(clamp(r.heat / 220, 0.05, 0.5) * drug.seizureMult * market.seizureMult - traffickingBonus / 100, 0.03, 0.65);
+      // A "distribuidor" (Bruinsma, Laureano Oubiña) never touches production, so their real
+      // exposure was lower than a cartel that runs the whole chain end to end — the same "menos
+      // margen, pero también menos riesgo" trade-off already reflected in roleMult's profit side
+      // below applies here too, on the seizure/interdiction side.
+      const roleRiskMult = cartel.supplyChainRole === "distribuidor" ? 0.85 : 1;
+      const interdictChance = clamp(clamp(r.heat / 220, 0.05, 0.5) * drug.seizureMult * market.seizureMult * roleRiskMult - traffickingBonus / 100, 0.03, 0.65);
       if (chance(interdictChance)) {
         r.heat = Math.min(100, r.heat + Math.round(randInt(6, 14) * drug.heatMult));
         log(`Un envío de ${cartel.name} con destino a ${market.name} es interceptado en la ruta.`, "event");
