@@ -128,8 +128,7 @@ export const SCRIPTED_EVENTS = {
           game,
           "al_capone",
           addLog,
-          "un juicio federal por 22 cargos de evasión de impuestos, un delito que ni la Prohibición ni la propia policía de Chicago pudieron nunca imputarle",
-          { lifeSentence: false }
+          "un juicio federal por 22 cargos de evasión de impuestos, un delito que ni la Prohibición ni la propia policía de Chicago pudieron nunca imputarle"
         );
         return { deaths: [], arrests };
       },
