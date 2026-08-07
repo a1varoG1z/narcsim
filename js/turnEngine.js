@@ -280,6 +280,9 @@ export const DRUG_PROFILES = {
   "clan-del-golfo-2006-2022": [
     { id: "cocaine_inherited", name: "Cocaína, sobre rutas heredadas de las AUC", payoutMult: 1.25, heatMult: 1.1, seizureMult: 1 },
   ],
+  "cabezas-de-serpiente-1984-2001": [
+    { id: "human_smuggling", name: "Contrabando de personas desde Fuzhou", payoutMult: 1.4, heatMult: 1.05, seizureMult: 0.7 },
+  ],
 };
 const DEFAULT_DRUG_PROFILE = { id: "generic", name: "Narcóticos diversos", payoutMult: 1, heatMult: 1, seizureMult: 1 };
 

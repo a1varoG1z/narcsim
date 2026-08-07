@@ -475,6 +475,76 @@ export const SCRIPTED_EVENTS = {
       },
     },
   ],
+  "cabezas-de-serpiente-1984-2001": [
+    {
+      id: "hundimiento-golden-venture-1993",
+      year: 1993,
+      interactive: true,
+      cartelId: "cabezas_de_serpiente",
+      title: "El hundimiento del Golden Venture",
+      description:
+        'El Golden Venture, un carguero destartalado con casi 300 migrantes a bordo, ha encallado de madrugada frente a Queens -- sin nadie al mando desde que Ah Kay huyó a China. Varios pasajeros ya se han ahogado intentando llegar a nado a la orilla, y las cámaras de televisión están en la playa antes que la policía. ¿Cómo respondes?',
+      options: [
+        { id: "flee", label: "Cortar cualquier rastro con el barco y desaparecer una temporada" },
+        { id: "bribe", label: "Sobornar a fondo para frenar la investigación antes de que llegue a ti" },
+        { id: "double_down", label: "Seguir operando igual, confiando en que no puedan probar nada" },
+      ],
+      applyDefault(game, addLog) {
+        const c = game.cartels.cabezas_de_serpiente;
+        if (!c || c.destroyed) return;
+        c.resources.heat = Math.min(100, c.resources.heat + randInt(30, 45));
+        c.resources.publicImage = Math.max(0, c.resources.publicImage - randInt(20, 30));
+        addLog(
+          "El hundimiento real del Golden Venture frente a Queens, con al menos diez migrantes ahogados o muertos de hipotermia, pone al mundo entero a mirar el negocio de los \"cabezas de serpiente\" por primera vez.",
+          "event"
+        );
+      },
+      applyChoice(game, addLog, optionId) {
+        const c = game.cartels.cabezas_de_serpiente;
+        if (!c || c.destroyed) return;
+        if (optionId === "flee") {
+          c.resources.heat = Math.min(100, c.resources.heat + randInt(15, 25));
+          c.resources.armySize = Math.max(0, c.resources.armySize - randInt(10, 20));
+          addLog("Cortas todo contacto con la operación del barco y te mantienes fuera de la vista una temporada. La red pierde fuelle, pero evitas quedar directamente señalado.", "event");
+        } else if (optionId === "bribe") {
+          c.resources.corruptGov = Math.max(0, c.resources.corruptGov - randInt(15, 25));
+          c.resources.heat = Math.min(100, c.resources.heat + randInt(25, 35));
+          c.resources.money = Math.max(0, c.resources.money - Math.round(c.resources.money * 0.08));
+          addLog("Vuelcas una fortuna en abogados y contactos para frenar la investigación. Ralentizas el proceso, pero el gasto es enorme y la atención federal no desaparece.", "event");
+        } else {
+          c.resources.heat = Math.min(100, c.resources.heat + randInt(40, 55));
+          c.resources.publicImage = Math.max(0, c.resources.publicImage - randInt(25, 35));
+          addLog("Sigues operando como si nada. La prensa y el FBI ya tienen nombres y caras -- la decisión te deja mucho más expuesto de lo que crees.", "death");
+        }
+      },
+    },
+    {
+      id: "arresto-ah-kay-1993",
+      year: 1993,
+      run(game, addLog) {
+        const arrests = imprisonScriptedCharacter(
+          game,
+          "ah_kay",
+          addLog,
+          "una detención real en Hong Kong tras su huida -- se declaró culpable de asesinato y crimen organizado y cooperó después con el FBI"
+        );
+        return { deaths: [], arrests };
+      },
+    },
+    {
+      id: "arresto-sister-ping-2000",
+      year: 2000,
+      run(game, addLog) {
+        const arrests = imprisonScriptedCharacter(
+          game,
+          "sister_ping",
+          addLog,
+          "una detención real en el aeropuerto de Chek Lap Kok, Hong Kong, en junio de 2000, tras años de investigación federal -- extraditada después a EE. UU."
+        );
+        return { deaths: [], arrests };
+      },
+    },
+  ],
   "narcotrafico-gallego-1975-1995": [
     {
       id: "operacion-necora-1990",
