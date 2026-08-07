@@ -49,6 +49,13 @@
     "blurb": "El Cártel de Medellín, liderado por Pablo Escobar, y el Cártel de Cali dominan el mercado mundial de cocaína."
   },
   {
+    "id": "clan-del-golfo-2006-2022",
+    "file": "clan-del-golfo-2006-2022.json",
+    "name": "Clan del Golfo",
+    "period": "2006 – 2022",
+    "blurb": "Urabá, Colombia: tras la desmovilización de las AUC, Don Mario y los hermanos Úsuga fundan los Urabeños, que con el tiempo se convierten en el Clan del Golfo -- la mayor y más duradera de las bandas criminales colombianas -- hasta la captura de Otoniel en 2021."
+  },
+  {
     "id": "mexico-rutas-1990-2006",
     "file": "mexico-rutas-1990-2006.json",
     "name": "Los herederos de las rutas",

@@ -664,6 +664,55 @@ export const SCRIPTED_EVENTS = {
       },
     },
   ],
+  "clan-del-golfo-2006-2022": [
+    {
+      id: "captura-don-mario-2009",
+      year: 2009,
+      run(game, addLog) {
+        const arrests = imprisonScriptedCharacter(
+          game,
+          "don_mario",
+          addLog,
+          "una operación real de 315 agentes que lo localizó escondido en la selva el 15 de abril de 2009 -- extraditado después a EE. UU., donde admitió haber traficado más de 80 toneladas de cocaína"
+        );
+        return { deaths: [], arrests };
+      },
+    },
+    {
+      id: "muerte-giovanni-2012",
+      year: 2012,
+      run(game, addLog) {
+        const deaths = killScriptedCharacter(
+          game,
+          "giovanni",
+          addLog,
+          "una redada real de las fuerzas de seguridad contra su rancho en Chocó, en la madrugada del 1 de enero de 2012"
+        );
+        const c = game.cartels.clan_del_golfo;
+        if (c && !c.destroyed) {
+          c.resources.heat = Math.min(100, c.resources.heat + randInt(15, 25));
+          addLog(
+            "La organización declara un \"paro armado\" en represalia por la muerte de Giovanni, ofreciendo recompensas por cada policía asesinado en Antioquia -- una demostración real de fuerza que atrae aún más atención de las autoridades.",
+            "event"
+          );
+        }
+        return { deaths, arrests: [] };
+      },
+    },
+    {
+      id: "captura-otoniel-2021",
+      year: 2021,
+      run(game, addLog) {
+        const arrests = imprisonScriptedCharacter(
+          game,
+          "otoniel",
+          addLog,
+          "una operación real con más de 500 miembros de fuerzas especiales y 22 helicópteros el 23 de octubre de 2021 -- el propio presidente colombiano comparó su caída con la de Pablo Escobar"
+        );
+        return { deaths: [], arrests };
+      },
+    },
+  ],
   "fragmentacion-2006-2015": [
     {
       id: "arresto-mochomo-2008",

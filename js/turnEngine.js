@@ -277,6 +277,9 @@ export const DRUG_PROFILES = {
     { id: "protection", name: "Extorsión, juego y opio", payoutMult: 1.1, heatMult: 0.95, seizureMult: 0.8 },
     { id: "heroin", name: "Heroína del Triángulo de Oro", payoutMult: 1.35, heatMult: 1.15, seizureMult: 1.1 },
   ],
+  "clan-del-golfo-2006-2022": [
+    { id: "cocaine_inherited", name: "Cocaína, sobre rutas heredadas de las AUC", payoutMult: 1.25, heatMult: 1.1, seizureMult: 1 },
+  ],
 };
 const DEFAULT_DRUG_PROFILE = { id: "generic", name: "Narcóticos diversos", payoutMult: 1, heatMult: 1, seizureMult: 1 };
 
