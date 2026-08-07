@@ -56,7 +56,7 @@ export function render(container, app) {
       <h3>Comercio internacional</h3>
       <p class="text-dim small">Cuota estimada del mercado mundial de ${escapeHtml(drug.name.toLowerCase())}: el volumen acumulado de tus envíos ("Enviar cargamento") frente al de todos los demás cárteles que trafican con lo mismo — un cálculo de suma cero, no una cifra propia que solo puede subir.</p>
       <p class="small">Tu cuota de este mercado: <strong>${marketShare.toFixed(1)}%</strong></p>
-      ${multiDrugEra ? `<p class="small text-dim">Cuota agregada de todas las drogas de la partida: ${aggregateShare.toFixed(1)}%</p>` : ""}
+      ${multiDrugEra ? `<p class="small text-dim">Cuota agregada de todos los productos/negocios de la partida: ${aggregateShare.toFixed(1)}%</p>` : ""}
       <p class="small text-dim">Dominar el comercio es un eje de poder real, no solo una estadística: tu cuota agregada ya genera ingresos propios cada turno (ver "Dominio del comercio mundial" en Finanzas), aunque tengas pocos territorios propios.</p>
       ${r.tradeRouteBonus ? `<p class="small text-success">Rutas comerciales internacionales propias: +${Math.round(r.tradeRouteBonus * 100)}% de rendimiento en cada envío futuro.</p>` : `<p class="small text-dim">Sin rutas comerciales propias todavía — invierte en ellas desde la pestaña Decisiones.</p>`}
       ${rivalShares.length ? `

@@ -52,7 +52,7 @@ export function render(container, app) {
         const locked = d.availableFromYear && currentYear(game) < d.availableFromYear;
         return `<button class="block tight" data-switch-drug="${d.id}" ${locked || cartel.resources.money < switchCost ? "disabled" : ""}>
           Establecer conexión: ${escapeHtml(d.name)} — ${fmtMoney(switchCost)}
-          <div class="small text-dim">${locked ? `Todavía no hay una conexión real para esto (no antes de ${d.availableFromYear}).` : "Cambia de qué droga se dedica tu cártel de ahora en adelante."}</div>
+          <div class="small text-dim">${locked ? `Todavía no hay una conexión real para esto (no antes de ${d.availableFromYear}).` : "Cambia a qué negocio se dedica tu cártel de ahora en adelante."}</div>
         </button>`;
       }).join("") : ""}
       ${ACTIONS.map((a) => {
