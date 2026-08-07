@@ -39,7 +39,7 @@ export function render(container, app) {
             ${portraitImg(c)}
             <div class="info">
               <div class="name">${escapeHtml(c.name)}${c.historical ? " · histórico" : ""}</div>
-              <div class="role">${c.role ? roleLabel(c.role) : "Sin cargo"}${cartel ? ` · ${escapeHtml(cartel.name)}` : ""}</div>
+              <div class="role">${c.role ? roleLabel(c.role, cartel) : "Sin cargo"}${cartel ? ` · ${escapeHtml(cartel.name)}` : ""}</div>
               <div class="small text-dim">Falleció en ${c.deathYear ?? "?"}${age !== null ? ` (${age} años)` : ""}</div>
               ${c.deathCause ? `<div class="small text-dim">Causa: ${escapeHtml(c.deathCause)}</div>` : ""}
             </div>

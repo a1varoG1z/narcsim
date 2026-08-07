@@ -2978,6 +2978,11 @@
         "corruptionPoliceChief": "hk50_police_chief",
         "productionChief": "hk50_production_chief",
         "prChief": "hk50_pr_chief"
+      },
+      "roleLabels": {
+        "leader": "Líder de la tríada",
+        "traffickingChief": "Jefe de rutas y contrabando",
+        "productionChief": "Jefe de negocios y apuestas"
       }
     }
   ],

@@ -73,7 +73,7 @@ export function makeCartel({
   id, name, color = "#8a2c2c", eraId, territories = [],
   resources = null, roles = {}, characters = [],
   relations = {}, aiControlled = true, historicalNote = "",
-  targetTerritoryIds = [], supplyChainRole = null,
+  targetTerritoryIds = [], supplyChainRole = null, roleLabels = {},
 } = {}) {
   return {
     id: id || uid("cartel"),
@@ -98,6 +98,10 @@ export function makeCartel({
       heat: 10,
     },
     roles,
+    // Optional per-role display-label overrides (e.g. a bootlegging outfit calling its
+    // traffickingChief "Jefe de rutas de contrabando" instead of the drug-specific default) —
+    // see roleLabel() in ui/components.js, which checks this before falling back to ROLES.
+    roleLabels,
     characters,
     relations,
     aiControlled,

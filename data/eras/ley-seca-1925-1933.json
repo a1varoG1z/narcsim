@@ -2989,6 +2989,10 @@
         "corruptionPoliceChief": "co_police_chief",
         "productionChief": "co_production_chief",
         "prChief": "co_pr_chief"
+      },
+      "roleLabels": {
+        "leader": "Líder de la organización",
+        "traffickingChief": "Jefe de rutas de contrabando"
       }
     }
   ],

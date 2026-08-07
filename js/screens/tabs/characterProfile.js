@@ -50,7 +50,7 @@ export function showCharacterProfile(app, characterId) {
       ${portraitImg(c, "lg")}
       <div>
         <h2>${escapeHtml(c.name)}</h2>
-        <div class="text-dim small">${c.alive ? age(c, year) : age(c, c.deathYear)} años · ${c.role ? roleLabel(c.role) : "Sin cargo"} · ${escapeHtml(cartel?.name || "")}</div>
+        <div class="text-dim small">${c.alive ? age(c, year) : age(c, c.deathYear)} años · ${c.role ? roleLabel(c.role, cartel) : "Sin cargo"} · ${escapeHtml(cartel?.name || "")}</div>
         <div class="small">${status}</div>
         ${vendettaCartel ? `<div class="small text-danger">🔪 Jura venganza contra ${escapeHtml(vendettaCartel.name)}</div>` : ""}
       </div>

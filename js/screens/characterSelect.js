@@ -42,7 +42,7 @@ function renderCartelChoice(eraData, cartel) {
               ${portraitImg(char)}
               <div class="info">
                 <div class="name">${escapeHtml(char.name)}</div>
-                <div class="role">${escapeHtml(roleLabel(role))}</div>
+                <div class="role">${escapeHtml(roleLabel(role, cartel))}</div>
               </div>
             </div>
           </button>

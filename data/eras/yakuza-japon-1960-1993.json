@@ -2978,6 +2978,11 @@
         "corruptionPoliceChief": "yg60_police_chief",
         "productionChief": "yg60_production_chief",
         "prChief": "yg60_pr_chief"
+      },
+      "roleLabels": {
+        "leader": "Líder del clan",
+        "traffickingChief": "Jefe de operaciones y rutas",
+        "productionChief": "Jefe de construcción y negocios"
       }
     }
   ],

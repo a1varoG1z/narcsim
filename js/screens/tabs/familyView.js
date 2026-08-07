@@ -35,7 +35,7 @@ export function render(container, app) {
     <div class="card">
       <h2>Tu familia</h2>
       <div class="grid auto">
-        ${[...familyMembers].map((id) => renderFamilyCard(game.characters[id], player.id)).join("")}
+        ${[...familyMembers].map((id) => renderFamilyCard(game, game.characters[id], player.id)).join("")}
       </div>
       ${player.spouseId ? statBar("Relación con tu pareja", player.marriageBond ?? 70) : ""}
       ${!player.spouseId ? `<button class="block mt-1" id="seek-romance">Buscar pareja</button>` : ""}
@@ -58,7 +58,7 @@ export function render(container, app) {
             ${portraitImg(m)}
             <div class="info">
               <div class="name">${escapeHtml(m.name)}</div>
-              <div class="role">${roleLabel(m.role)}</div>
+              <div class="role">${roleLabel(m.role, cartel)}</div>
               ${statBar("Vínculo", bond)}
             </div>
           </div>
@@ -344,7 +344,7 @@ function renderSuccessionCard(game) {
       ${heir
         ? `<div class="person-row" style="border:none;padding:0;cursor:pointer" data-view="${heir.id}">
             ${portraitImg(heir)}
-            <div class="info"><div class="name">${escapeHtml(heir.name)}</div><div class="role">${heir.role ? roleLabel(heir.role) : "Familiar"}</div></div>
+            <div class="info"><div class="name">${escapeHtml(heir.name)}</div><div class="role">${heir.role ? roleLabel(heir.role, game.cartels[heir.cartelId]) : "Familiar"}</div></div>
           </div>`
         : `<p class="small text-dim">No has designado a ningún heredero todavía.</p>`}
       <div style="display:flex;gap:.5rem;flex-wrap:wrap" class="mt-1">
@@ -369,7 +369,7 @@ function renderMarriageAllianceCard(game, familyMemberIds, player, year) {
         <div class="person-row">
           <div style="display:flex;gap:.6rem;flex:1;min-width:0">
             ${portraitImg(c)}
-            <div class="info"><div class="name">${escapeHtml(c.name)}</div><div class="role">${c.role ? roleLabel(c.role) : "Familiar"}</div></div>
+            <div class="info"><div class="name">${escapeHtml(c.name)}</div><div class="role">${c.role ? roleLabel(c.role, game.cartels[c.cartelId]) : "Familiar"}</div></div>
           </div>
           <button class="tight" data-arrange-marriage="${c.id}">Arreglar matrimonio</button>
         </div>
@@ -410,7 +410,7 @@ function showHeirModal(app, game) {
       <button class="block" data-heir-pick="${c.id}">
         <div class="person-row" style="border:none;padding:0">
           ${portraitImg(c)}
-          <div class="info"><div class="name">${escapeHtml(c.name)}</div><div class="role">${c.role ? roleLabel(c.role) : "Familiar"}</div></div>
+          <div class="info"><div class="name">${escapeHtml(c.name)}</div><div class="role">${c.role ? roleLabel(c.role, game.cartels[c.cartelId]) : "Familiar"}</div></div>
         </div>
       </button>
     `).join("") : `<p class="small text-dim">No hay candidatos disponibles ahora mismo.</p>`}
@@ -427,14 +427,14 @@ function showHeirModal(app, game) {
   });
 }
 
-function renderFamilyCard(c, playerId) {
+function renderFamilyCard(game, c, playerId) {
   if (!c) return "";
   return `<div class="card tight" data-view="${c.id}" style="cursor:pointer">
     <div style="display:flex;gap:.5rem;align-items:center">
       ${portraitImg(c)}
       <div>
         <div class="name">${escapeHtml(c.name)}${c.id === playerId ? " (tú)" : ""}</div>
-        <div class="small text-dim">${c.role ? roleLabel(c.role) : "Sin cargo"}${!c.alive ? " · ✝" : ""}</div>
+        <div class="small text-dim">${c.role ? roleLabel(c.role, game.cartels[c.cartelId]) : "Sin cargo"}${!c.alive ? " · ✝" : ""}</div>
       </div>
     </div>
   </div>`;

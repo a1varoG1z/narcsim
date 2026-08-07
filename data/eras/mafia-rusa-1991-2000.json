@@ -2978,6 +2978,11 @@
         "corruptionPoliceChief": "sol_police_chief",
         "productionChief": "sol_production_chief",
         "prChief": "sol_pr_chief"
+      },
+      "roleLabels": {
+        "leader": "Líder de la hermandad",
+        "traffickingChief": "Jefe de tráfico y rutas",
+        "productionChief": "Jefe de negocios y protección"
       }
     }
   ],

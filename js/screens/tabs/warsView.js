@@ -90,7 +90,7 @@ export function render(container, app) {
         <div class="person-row">
           <div style="display:flex;gap:.6rem;flex:1;min-width:0;align-items:center">
             ${portraitImg(m)}
-            <div class="info"><div class="name">${escapeHtml(m.name)}</div><div class="role">${m.role ? roleLabel(m.role) : "Sin cargo"}</div></div>
+            <div class="info"><div class="name">${escapeHtml(m.name)}</div><div class="role">${m.role ? roleLabel(m.role, cartel) : "Sin cargo"}</div></div>
           </div>
           <button class="danger" data-purge="${m.id}" ${cartel.resources.money < ACTION_COSTS.assassinate_rival || noActionsLeft ? "disabled" : ""}>Ordenar un atentado</button>
         </div>
@@ -191,7 +191,7 @@ function showPoachModal(app, game, cartel, targetCartelId) {
       <button class="block" data-target="${c.id}">
         <div class="person-row" style="border:none;padding:0">
           ${portraitImg(c)}
-          <div class="info"><div class="name">${escapeHtml(c.name)}</div><div class="role">${c.role ? roleLabel(c.role) : "Sin cargo"}</div></div>
+          <div class="info"><div class="name">${escapeHtml(c.name)}</div><div class="role">${c.role ? roleLabel(c.role, target) : "Sin cargo"}</div></div>
         </div>
       </button>
     `).join("") : `<p class="small text-dim">No hay objetivos disponibles en este cártel.</p>`}
@@ -299,7 +299,7 @@ function showInformantModal(app, game, cartel, targetCartelId) {
       <button class="block" data-target="${c.id}">
         <div class="person-row" style="border:none;padding:0">
           ${portraitImg(c)}
-          <div class="info"><div class="name">${escapeHtml(c.name)}</div><div class="role">${c.role ? roleLabel(c.role) : "Sin cargo"}</div></div>
+          <div class="info"><div class="name">${escapeHtml(c.name)}</div><div class="role">${c.role ? roleLabel(c.role, target) : "Sin cargo"}</div></div>
         </div>
       </button>
     `).join("") : `<p class="small text-dim">No hay objetivos disponibles en este cártel.</p>`}
@@ -492,7 +492,7 @@ function showAssassinateModal(app, game, cartel, targetCartelId) {
       <button class="block" data-target="${c.id}">
         <div class="person-row" style="border:none;padding:0">
           ${portraitImg(c)}
-          <div class="info"><div class="name">${escapeHtml(c.name)}</div><div class="role">${c.role ? roleLabel(c.role) : "Sin cargo"}</div></div>
+          <div class="info"><div class="name">${escapeHtml(c.name)}</div><div class="role">${c.role ? roleLabel(c.role, target) : "Sin cargo"}</div></div>
         </div>
       </button>
     `).join("") : `<p class="small text-dim">No hay objetivos disponibles en este cártel.</p>`}

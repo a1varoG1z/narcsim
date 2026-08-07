@@ -98,7 +98,7 @@ export function render(container, app) {
             ${portraitImg(c)}
             <div class="info">
               <div class="name">${escapeHtml(c.name)}</div>
-              <div class="role">${roleLabel(c.role)}</div>
+              <div class="role">${roleLabel(c.role, playerCartel)}</div>
             </div>
           </div>
         </div>

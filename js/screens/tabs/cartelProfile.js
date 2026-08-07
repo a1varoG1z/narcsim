@@ -34,10 +34,10 @@ export function showCartelProfile(app, cartelId) {
     <h3 class="mt-2">Organigrama</h3>
     ${ROLE_ORDER.map((role) => {
       const holder = game.characters[cartel.roles[role]];
-      if (!holder) return `<div class="person-row"><div class="info"><div class="name text-dim">Vacante</div><div class="role">${roleLabel(role)}</div></div></div>`;
+      if (!holder) return `<div class="person-row"><div class="info"><div class="name text-dim">Vacante</div><div class="role">${roleLabel(role, cartel)}</div></div></div>`;
       return `<div class="person-row" data-view-char="${holder.id}" style="cursor:pointer">
         ${portraitImg(holder)}
-        <div class="info"><div class="name">${escapeHtml(holder.name)}</div><div class="role">${roleLabel(role)}</div></div>
+        <div class="info"><div class="name">${escapeHtml(holder.name)}</div><div class="role">${roleLabel(role, cartel)}</div></div>
       </div>`;
     }).join("")}
     <button class="ghost block mt-2" id="close-btn">Cerrar</button>

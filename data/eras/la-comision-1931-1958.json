@@ -2989,6 +2989,11 @@
         "corruptionPoliceChief": "lc_police_chief",
         "productionChief": "lc_production_chief",
         "prChief": "lc_pr_chief"
+      },
+      "roleLabels": {
+        "leader": "Jefe de familia",
+        "traffickingChief": "Jefe de operaciones y rutas",
+        "productionChief": "Jefe de negocios y sindicatos"
       }
     }
   ],

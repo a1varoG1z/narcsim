@@ -1,5 +1,5 @@
-import { escapeHtml, portraitImg } from "../../ui/components.js";
-import { STATS, STAT_ORDER, ROLE_ORDER, ROLES } from "../../model.js";
+import { escapeHtml, portraitImg, roleLabel } from "../../ui/components.js";
+import { STATS, STAT_ORDER, ROLE_ORDER } from "../../model.js";
 import { exportGameToFile, exportJSONFile, importGameFromFile, deleteSaveSlot, readImageAsDataURL } from "../../utils/storage.js";
 import { defaultConceptionDialogue, defaultPoachDialogue, defaultInformantDialogue, isValidDialogueTree } from "../../dialogues.js";
 import { getGithubToken, setGithubToken, saveGameToGist, loadGameFromGist } from "../../utils/github.js";
@@ -207,7 +207,7 @@ export function render(container, app) {
       <label>Año de nacimiento</label><input id="cf-birth" type="number" value="${c.birthYear}">
       <label>Vivo</label><select id="cf-alive"><option value="1" ${c.alive ? "selected" : ""}>Sí</option><option value="0" ${!c.alive ? "selected" : ""}>No</option></select>
       <label>Cargo</label>
-      <select id="cf-role"><option value="">Sin cargo</option>${ROLE_ORDER.map((r) => `<option value="${r}" ${c.role === r ? "selected" : ""}>${ROLES[r]}</option>`).join("")}</select>
+      <select id="cf-role"><option value="">Sin cargo</option>${ROLE_ORDER.map((r) => `<option value="${r}" ${c.role === r ? "selected" : ""}>${roleLabel(r, game.cartels[c.cartelId])}</option>`).join("")}</select>
       ${STAT_ORDER.map((k) => `<label>${STATS[k]}</label><input type="number" min="1" max="100" id="cf-stat-${k}" value="${c.stats[k]}">`).join("")}
       <h4 class="mt-1">Familia</h4>
       <label>Pareja</label>

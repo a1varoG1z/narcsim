@@ -41,8 +41,13 @@ export function personRow(character, roleLabel) {
   </div>`;
 }
 
-export function roleLabel(role) {
-  return ROLES[role] || role;
+/** Falls back to the generic narco-flavored label when a cartel doesn't override it — most
+ * organizations (any narcotrafficking cartel) never set `roleLabels`, so this is a no-op for
+ * them. Non-narco organizations (Ley Seca, La Comisión, Yakuza, etc.) set era-appropriate
+ * overrides on their cartel object for the handful of roles that read oddly outside a drug
+ * context (e.g. "Jefe de narcotráfico y rutas" for a bootlegging outfit). */
+export function roleLabel(role, cartel) {
+  return cartel?.roleLabels?.[role] || ROLES[role] || role;
 }
 
 /** Lightens colors that would be unreadable as text on this app's dark background. */
