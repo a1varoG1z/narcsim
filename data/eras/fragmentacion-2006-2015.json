@@ -1,0 +1,5977 @@
+{
+  "id": "fragmentacion-2006-2015",
+  "name": "La guerra y la fragmentación",
+  "period": "2006 – 2015",
+  "startYear": 2006,
+  "endYear": 2015,
+  "turnMonths": 6,
+  "description": "El presidente Felipe Calderón lanza una ofensiva militar contra el narcotráfico en 2006, desatando una espiral de violencia sin precedentes. Los Zetas rompen con el Cártel del Golfo en 2010 y se convierten en la organización más sanguinaria del país. La Familia Michoacana (y su escisión, los Caballeros Templarios) y la Organización Beltrán Leyva (escindida de Sinaloa en 2008) añaden más frentes de guerra. En medio del caos, el Cártel de Sinaloa logra mantener y hasta expandir su influencia.",
+  "territories": [
+    {
+      "id": "baja_california",
+      "name": "Baja California",
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "baja_california_sur",
+        "california",
+        "sonora"
+      ],
+      "geo": "MEX_BajaCalifornia"
+    },
+    {
+      "id": "sonora",
+      "name": "Sonora",
+      "controllerId": "sinaloa",
+      "value": 12,
+      "adj": [
+        "arizona",
+        "baja_california",
+        "chihuahua",
+        "sinaloa_t"
+      ],
+      "geo": "MEX_Sonora"
+    },
+    {
+      "id": "chihuahua",
+      "name": "Chihuahua",
+      "controllerId": "juarez",
+      "value": 16,
+      "adj": [
+        "coahuila",
+        "durango",
+        "new_mexico",
+        "sinaloa_t",
+        "sonora",
+        "texas"
+      ],
+      "geo": "MEX_Chihuahua",
+      "specialization": "cultivo"
+    },
+    {
+      "id": "coahuila",
+      "name": "Coahuila",
+      "controllerId": "zetas",
+      "value": 11,
+      "adj": [
+        "chihuahua",
+        "durango",
+        "nuevo_leon",
+        "san_luis_potosi",
+        "texas",
+        "zacatecas"
+      ],
+      "geo": "MEX_Coahuila"
+    },
+    {
+      "id": "nuevo_leon",
+      "name": "Nuevo León",
+      "controllerId": "zetas",
+      "value": 14,
+      "adj": [
+        "coahuila",
+        "san_luis_potosi",
+        "tamaulipas",
+        "texas",
+        "zacatecas"
+      ],
+      "geo": "MEX_NuevoLeon"
+    },
+    {
+      "id": "tamaulipas",
+      "name": "Tamaulipas",
+      "controllerId": "golfo",
+      "value": 15,
+      "adj": [
+        "nuevo_leon",
+        "san_luis_potosi",
+        "texas",
+        "veracruz"
+      ],
+      "geo": "MEX_Tamaulipas"
+    },
+    {
+      "id": "veracruz",
+      "name": "Veracruz",
+      "controllerId": "zetas",
+      "value": 16,
+      "adj": [
+        "chiapas",
+        "guatemala",
+        "hidalgo",
+        "oaxaca",
+        "puebla",
+        "san_luis_potosi",
+        "tabasco",
+        "tamaulipas"
+      ],
+      "geo": "MEX_Veracruz"
+    },
+    {
+      "id": "guatemala",
+      "name": "Zacapa (Guatemala)",
+      "controllerId": "lorenzana",
+      "value": 14,
+      "adj": [
+        "veracruz",
+        "honduras",
+        "belize",
+        "chiapas"
+      ],
+      "geo": "COUNTRY_GTM"
+    },
+    {
+      "id": "sinaloa_t",
+      "name": "Sinaloa",
+      "controllerId": "sinaloa",
+      "value": 20,
+      "adj": [
+        "chihuahua",
+        "durango",
+        "jalisco",
+        "nayarit",
+        "sonora"
+      ],
+      "geo": "MEX_Sinaloa",
+      "specialization": "cultivo"
+    },
+    {
+      "id": "durango",
+      "name": "Durango",
+      "controllerId": "sinaloa",
+      "value": 10,
+      "adj": [
+        "chihuahua",
+        "coahuila",
+        "jalisco",
+        "nayarit",
+        "sinaloa_t",
+        "zacatecas"
+      ],
+      "geo": "MEX_Durango",
+      "specialization": "cultivo"
+    },
+    {
+      "id": "jalisco",
+      "name": "Jalisco",
+      "controllerId": null,
+      "value": 19,
+      "adj": [
+        "aguascalientes",
+        "colima",
+        "durango",
+        "guanajuato",
+        "michoacan",
+        "nayarit",
+        "sinaloa_t",
+        "zacatecas"
+      ],
+      "geo": "MEX_Jalisco"
+    },
+    {
+      "id": "michoacan",
+      "name": "Michoacán",
+      "controllerId": "familia_michoacana",
+      "value": 14,
+      "adj": [
+        "colima",
+        "estado_de_mexico",
+        "guanajuato",
+        "guerrero",
+        "jalisco",
+        "queretaro"
+      ],
+      "geo": "MEX_Michoacan",
+      "specialization": "cultivo"
+    },
+    {
+      "id": "guerrero",
+      "name": "Guerrero",
+      "controllerId": "beltran_leyva",
+      "value": 13,
+      "adj": [
+        "estado_de_mexico",
+        "michoacan",
+        "morelos",
+        "oaxaca",
+        "puebla"
+      ],
+      "geo": "MEX_Guerrero",
+      "specialization": "cultivo"
+    },
+    {
+      "id": "honduras",
+      "name": "Honduras",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "guatemala",
+        "nicaragua"
+      ],
+      "geo": "COUNTRY_HND"
+    },
+    {
+      "id": "nicaragua",
+      "name": "Nicaragua",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "honduras",
+        "costa_rica"
+      ],
+      "geo": "COUNTRY_NIC"
+    },
+    {
+      "id": "costa_rica",
+      "name": "Costa Rica",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "nicaragua",
+        "panama"
+      ],
+      "geo": "COUNTRY_CRI"
+    },
+    {
+      "id": "panama",
+      "name": "Panamá",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "costa_rica",
+        "colombia"
+      ],
+      "geo": "COUNTRY_PAN"
+    },
+    {
+      "id": "colombia",
+      "name": "Colombia",
+      "controllerId": null,
+      "value": 16,
+      "adj": [
+        "panama",
+        "venezuela",
+        "ecuador",
+        "peru",
+        "brasil"
+      ],
+      "geo": "COUNTRY_COL"
+    },
+    {
+      "id": "venezuela",
+      "name": "Venezuela",
+      "controllerId": "soles",
+      "value": 12,
+      "adj": [
+        "colombia",
+        "brasil",
+        "guyana"
+      ],
+      "geo": "COUNTRY_VEN"
+    },
+    {
+      "id": "ecuador",
+      "name": "Ecuador",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "colombia",
+        "peru"
+      ],
+      "geo": "COUNTRY_ECU"
+    },
+    {
+      "id": "peru",
+      "name": "Perú",
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "ecuador",
+        "colombia",
+        "brasil",
+        "bolivia",
+        "chile"
+      ],
+      "geo": "COUNTRY_PER"
+    },
+    {
+      "id": "bolivia",
+      "name": "Bolivia",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "peru",
+        "brasil",
+        "paraguay",
+        "argentina",
+        "chile"
+      ],
+      "geo": "COUNTRY_BOL"
+    },
+    {
+      "id": "brasil",
+      "name": "Brasil",
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "colombia",
+        "venezuela",
+        "peru",
+        "bolivia",
+        "paraguay",
+        "uruguay",
+        "francia",
+        "guyana",
+        "suriname"
+      ],
+      "geo": "COUNTRY_BRA"
+    },
+    {
+      "id": "paraguay",
+      "name": "Paraguay",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "bolivia",
+        "brasil",
+        "argentina"
+      ],
+      "geo": "COUNTRY_PRY"
+    },
+    {
+      "id": "argentina",
+      "name": "Argentina",
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "bolivia",
+        "paraguay",
+        "uruguay",
+        "chile"
+      ],
+      "geo": "COUNTRY_ARG"
+    },
+    {
+      "id": "uruguay",
+      "name": "Uruguay",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "brasil",
+        "argentina"
+      ],
+      "geo": "COUNTRY_URY"
+    },
+    {
+      "id": "chile",
+      "name": "Chile",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "peru",
+        "bolivia",
+        "argentina"
+      ],
+      "geo": "COUNTRY_CHL"
+    },
+    {
+      "id": "canada",
+      "name": "Canadá",
+      "controllerId": null,
+      "value": 18,
+      "adj": [
+        "resto_eeuu"
+      ],
+      "geo": "WORLD_CANADA"
+    },
+    {
+      "id": "belize",
+      "name": "Belice",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "guatemala"
+      ],
+      "geo": "WORLD_BELIZE"
+    },
+    {
+      "id": "cuba",
+      "name": "Cuba",
+      "controllerId": null,
+      "value": 12,
+      "adj": [],
+      "geo": "WORLD_CUBA"
+    },
+    {
+      "id": "jamaica",
+      "name": "Jamaica",
+      "controllerId": null,
+      "value": 10,
+      "adj": [],
+      "geo": "WORLD_JAMAICA"
+    },
+    {
+      "id": "haiti",
+      "name": "Haití",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "republica_dominicana"
+      ],
+      "geo": "WORLD_HAITI"
+    },
+    {
+      "id": "republica_dominicana",
+      "name": "República Dominicana",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "haiti"
+      ],
+      "geo": "WORLD_REPUBLICA_DOMINICANA"
+    },
+    {
+      "id": "bahamas",
+      "name": "Bahamas",
+      "controllerId": null,
+      "value": 8,
+      "adj": [],
+      "geo": "WORLD_BAHAMAS"
+    },
+    {
+      "id": "trinidad_tobago",
+      "name": "Trinidad y Tobago",
+      "controllerId": null,
+      "value": 9,
+      "adj": [],
+      "geo": "WORLD_TRINIDAD_TOBAGO"
+    },
+    {
+      "id": "barbados",
+      "name": "Barbados",
+      "controllerId": null,
+      "value": 7,
+      "adj": [],
+      "geo": "WORLD_BARBADOS"
+    },
+    {
+      "id": "antigua_barbuda",
+      "name": "Antigua y Barbuda",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_ANTIGUA_BARBUDA"
+    },
+    {
+      "id": "dominica",
+      "name": "Dominica",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_DOMINICA"
+    },
+    {
+      "id": "grenada",
+      "name": "Granada",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "san_vicente_granadinas"
+      ],
+      "geo": "WORLD_GRENADA"
+    },
+    {
+      "id": "san_cristobal_nieves",
+      "name": "San Cristóbal y Nieves",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_SAN_CRISTOBAL_NIEVES"
+    },
+    {
+      "id": "santa_lucia",
+      "name": "Santa Lucía",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_SANTA_LUCIA"
+    },
+    {
+      "id": "san_vicente_granadinas",
+      "name": "San Vicente y las Granadinas",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "grenada"
+      ],
+      "geo": "WORLD_SAN_VICENTE_GRANADINAS"
+    },
+    {
+      "id": "guyana",
+      "name": "Guyana",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "brasil",
+        "suriname",
+        "venezuela"
+      ],
+      "geo": "WORLD_GUYANA"
+    },
+    {
+      "id": "suriname",
+      "name": "Surinam",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "brasil",
+        "francia",
+        "guyana"
+      ],
+      "geo": "WORLD_SURINAME"
+    },
+    {
+      "id": "francia",
+      "name": "Francia",
+      "controllerId": null,
+      "value": 20,
+      "adj": [
+        "andorra",
+        "belgica",
+        "brasil",
+        "suiza",
+        "alemania",
+        "espana",
+        "italia",
+        "luxemburgo",
+        "monaco",
+        "suriname"
+      ],
+      "geo": "WORLD_FRANCIA"
+    },
+    {
+      "id": "alemania",
+      "name": "Alemania",
+      "controllerId": null,
+      "value": 20,
+      "adj": [
+        "austria",
+        "belgica",
+        "suiza",
+        "chequia",
+        "dinamarca",
+        "francia",
+        "luxemburgo",
+        "holanda",
+        "polonia"
+      ],
+      "geo": "WORLD_ALEMANIA"
+    },
+    {
+      "id": "reino_unido",
+      "name": "Reino Unido",
+      "controllerId": null,
+      "value": 19,
+      "adj": [
+        "irlanda"
+      ],
+      "geo": "WORLD_REINO_UNIDO"
+    },
+    {
+      "id": "italia",
+      "name": "Italia",
+      "controllerId": "casalesi",
+      "value": 18,
+      "adj": [
+        "austria",
+        "suiza",
+        "francia",
+        "san_marino",
+        "eslovenia",
+        "vaticano"
+      ],
+      "geo": "WORLD_ITALIA"
+    },
+    {
+      "id": "espana",
+      "name": "España",
+      "controllerId": null,
+      "value": 16,
+      "adj": [
+        "andorra",
+        "francia",
+        "marruecos",
+        "portugal"
+      ],
+      "geo": "WORLD_ESPANA"
+    },
+    {
+      "id": "portugal",
+      "name": "Portugal",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "espana"
+      ],
+      "geo": "WORLD_PORTUGAL"
+    },
+    {
+      "id": "holanda",
+      "name": "Países Bajos",
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "belgica",
+        "alemania"
+      ],
+      "geo": "WORLD_HOLANDA"
+    },
+    {
+      "id": "belgica",
+      "name": "Bélgica",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "alemania",
+        "francia",
+        "luxemburgo",
+        "holanda"
+      ],
+      "geo": "WORLD_BELGICA"
+    },
+    {
+      "id": "luxemburgo",
+      "name": "Luxemburgo",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "belgica",
+        "alemania",
+        "francia"
+      ],
+      "geo": "WORLD_LUXEMBURGO"
+    },
+    {
+      "id": "suiza",
+      "name": "Suiza",
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "austria",
+        "alemania",
+        "francia",
+        "italia",
+        "liechtenstein"
+      ],
+      "geo": "WORLD_SUIZA"
+    },
+    {
+      "id": "austria",
+      "name": "Austria",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "suiza",
+        "chequia",
+        "alemania",
+        "hungria",
+        "italia",
+        "liechtenstein",
+        "eslovaquia",
+        "eslovenia"
+      ],
+      "geo": "WORLD_AUSTRIA"
+    },
+    {
+      "id": "irlanda",
+      "name": "Irlanda",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "reino_unido"
+      ],
+      "geo": "WORLD_IRLANDA"
+    },
+    {
+      "id": "monaco",
+      "name": "Mónaco",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "francia"
+      ],
+      "geo": "WORLD_MONACO"
+    },
+    {
+      "id": "andorra",
+      "name": "Andorra",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "espana",
+        "francia"
+      ],
+      "geo": "WORLD_ANDORRA"
+    },
+    {
+      "id": "liechtenstein",
+      "name": "Liechtenstein",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "austria",
+        "suiza"
+      ],
+      "geo": "WORLD_LIECHTENSTEIN"
+    },
+    {
+      "id": "san_marino",
+      "name": "San Marino",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "italia"
+      ],
+      "geo": "WORLD_SAN_MARINO"
+    },
+    {
+      "id": "vaticano",
+      "name": "Vaticano",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "italia"
+      ],
+      "geo": "WORLD_VATICANO"
+    },
+    {
+      "id": "malta",
+      "name": "Malta",
+      "controllerId": null,
+      "value": 7,
+      "adj": [],
+      "geo": "WORLD_MALTA"
+    },
+    {
+      "id": "dinamarca",
+      "name": "Dinamarca",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "alemania",
+        "suecia"
+      ],
+      "geo": "WORLD_DINAMARCA"
+    },
+    {
+      "id": "suecia",
+      "name": "Suecia",
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "dinamarca",
+        "finlandia",
+        "noruega"
+      ],
+      "geo": "WORLD_SUECIA"
+    },
+    {
+      "id": "noruega",
+      "name": "Noruega",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "finlandia",
+        "rusia",
+        "suecia"
+      ],
+      "geo": "WORLD_NORUEGA"
+    },
+    {
+      "id": "finlandia",
+      "name": "Finlandia",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "noruega",
+        "rusia",
+        "suecia"
+      ],
+      "geo": "WORLD_FINLANDIA"
+    },
+    {
+      "id": "islandia",
+      "name": "Islandia",
+      "controllerId": null,
+      "value": 7,
+      "adj": [],
+      "geo": "WORLD_ISLANDIA"
+    },
+    {
+      "id": "polonia",
+      "name": "Polonia",
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "bielorrusia",
+        "chequia",
+        "alemania",
+        "lituania",
+        "rusia",
+        "eslovaquia",
+        "ucrania"
+      ],
+      "geo": "WORLD_POLONIA"
+    },
+    {
+      "id": "chequia",
+      "name": "Chequia",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "austria",
+        "alemania",
+        "polonia",
+        "eslovaquia"
+      ],
+      "geo": "WORLD_CHEQUIA"
+    },
+    {
+      "id": "eslovaquia",
+      "name": "Eslovaquia",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "austria",
+        "chequia",
+        "hungria",
+        "polonia",
+        "ucrania"
+      ],
+      "geo": "WORLD_ESLOVAQUIA"
+    },
+    {
+      "id": "hungria",
+      "name": "Hungría",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "austria",
+        "croacia",
+        "rumania",
+        "serbia",
+        "eslovaquia",
+        "eslovenia",
+        "ucrania"
+      ],
+      "geo": "WORLD_HUNGRIA"
+    },
+    {
+      "id": "rumania",
+      "name": "Rumanía",
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "bulgaria",
+        "hungria",
+        "moldavia",
+        "serbia",
+        "ucrania"
+      ],
+      "geo": "WORLD_RUMANIA"
+    },
+    {
+      "id": "bulgaria",
+      "name": "Bulgaria",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "grecia",
+        "macedonia_norte",
+        "rumania",
+        "serbia",
+        "turquia"
+      ],
+      "geo": "WORLD_BULGARIA"
+    },
+    {
+      "id": "ucrania",
+      "name": "Ucrania",
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "bielorrusia",
+        "hungria",
+        "moldavia",
+        "polonia",
+        "rumania",
+        "rusia",
+        "eslovaquia"
+      ],
+      "geo": "WORLD_UCRANIA"
+    },
+    {
+      "id": "bielorrusia",
+      "name": "Bielorrusia",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "lituania",
+        "letonia",
+        "polonia",
+        "rusia",
+        "ucrania"
+      ],
+      "geo": "WORLD_BIELORRUSIA"
+    },
+    {
+      "id": "moldavia",
+      "name": "Moldavia",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "rumania",
+        "ucrania"
+      ],
+      "geo": "WORLD_MOLDAVIA"
+    },
+    {
+      "id": "rusia",
+      "name": "Rusia",
+      "controllerId": "mogilevich_org",
+      "value": 22,
+      "adj": [
+        "azerbaiyan",
+        "bielorrusia",
+        "china",
+        "estonia",
+        "finlandia",
+        "georgia",
+        "kazajistan",
+        "lituania",
+        "letonia",
+        "mongolia",
+        "noruega",
+        "polonia",
+        "corea_norte",
+        "ucrania"
+      ],
+      "geo": "WORLD_RUSIA"
+    },
+    {
+      "id": "grecia",
+      "name": "Grecia",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "albania",
+        "bulgaria",
+        "macedonia_norte",
+        "turquia"
+      ],
+      "geo": "WORLD_GRECIA"
+    },
+    {
+      "id": "albania",
+      "name": "Albania",
+      "controllerId": "kompania_bello",
+      "value": 8,
+      "adj": [
+        "grecia",
+        "kosovo",
+        "macedonia_norte",
+        "montenegro"
+      ],
+      "geo": "WORLD_ALBANIA"
+    },
+    {
+      "id": "serbia",
+      "name": "Serbia",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "bulgaria",
+        "bosnia",
+        "croacia",
+        "hungria",
+        "kosovo",
+        "macedonia_norte",
+        "montenegro",
+        "rumania"
+      ],
+      "geo": "WORLD_SERBIA"
+    },
+    {
+      "id": "croacia",
+      "name": "Croacia",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "bosnia",
+        "hungria",
+        "montenegro",
+        "serbia",
+        "eslovenia"
+      ],
+      "geo": "WORLD_CROACIA"
+    },
+    {
+      "id": "bosnia",
+      "name": "Bosnia y Herzegovina",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "croacia",
+        "montenegro",
+        "serbia"
+      ],
+      "geo": "WORLD_BOSNIA"
+    },
+    {
+      "id": "montenegro",
+      "name": "Montenegro",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "albania",
+        "bosnia",
+        "croacia",
+        "kosovo",
+        "serbia"
+      ],
+      "geo": "WORLD_MONTENEGRO"
+    },
+    {
+      "id": "macedonia_norte",
+      "name": "Macedonia del Norte",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "albania",
+        "bulgaria",
+        "grecia",
+        "kosovo",
+        "serbia"
+      ],
+      "geo": "WORLD_MACEDONIA_NORTE"
+    },
+    {
+      "id": "eslovenia",
+      "name": "Eslovenia",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "austria",
+        "croacia",
+        "hungria",
+        "italia"
+      ],
+      "geo": "WORLD_ESLOVENIA"
+    },
+    {
+      "id": "kosovo",
+      "name": "Kosovo",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "albania",
+        "macedonia_norte",
+        "montenegro",
+        "serbia"
+      ],
+      "geo": "WORLD_KOSOVO"
+    },
+    {
+      "id": "chipre",
+      "name": "Chipre",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "chipre_norte"
+      ],
+      "geo": "WORLD_CHIPRE"
+    },
+    {
+      "id": "chipre_norte",
+      "name": "Chipre del Norte",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "chipre"
+      ],
+      "geo": "WORLD_CHIPRE_NORTE"
+    },
+    {
+      "id": "lituania",
+      "name": "Lituania",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "bielorrusia",
+        "letonia",
+        "polonia",
+        "rusia"
+      ],
+      "geo": "WORLD_LITUANIA"
+    },
+    {
+      "id": "letonia",
+      "name": "Letonia",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "bielorrusia",
+        "estonia",
+        "lituania",
+        "rusia"
+      ],
+      "geo": "WORLD_LETONIA"
+    },
+    {
+      "id": "estonia",
+      "name": "Estonia",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "letonia",
+        "rusia"
+      ],
+      "geo": "WORLD_ESTONIA"
+    },
+    {
+      "id": "georgia",
+      "name": "Georgia",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "armenia",
+        "azerbaiyan",
+        "rusia",
+        "turquia"
+      ],
+      "geo": "WORLD_GEORGIA"
+    },
+    {
+      "id": "armenia",
+      "name": "Armenia",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "azerbaiyan",
+        "georgia",
+        "iran",
+        "turquia"
+      ],
+      "geo": "WORLD_ARMENIA"
+    },
+    {
+      "id": "azerbaiyan",
+      "name": "Azerbaiyán",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "armenia",
+        "georgia",
+        "iran",
+        "rusia",
+        "turquia"
+      ],
+      "geo": "WORLD_AZERBAIYAN"
+    },
+    {
+      "id": "kazajistan",
+      "name": "Kazajistán",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "china",
+        "kirguistan",
+        "rusia",
+        "turkmenistan",
+        "uzbekistan"
+      ],
+      "geo": "WORLD_KAZAJISTAN"
+    },
+    {
+      "id": "uzbekistan",
+      "name": "Uzbekistán",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "afganistan",
+        "kazajistan",
+        "kirguistan",
+        "tayikistan",
+        "turkmenistan"
+      ],
+      "geo": "WORLD_UZBEKISTAN"
+    },
+    {
+      "id": "turkmenistan",
+      "name": "Turkmenistán",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "afganistan",
+        "iran",
+        "kazajistan",
+        "uzbekistan"
+      ],
+      "geo": "WORLD_TURKMENISTAN"
+    },
+    {
+      "id": "tayikistan",
+      "name": "Tayikistán",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "afganistan",
+        "china",
+        "kirguistan",
+        "uzbekistan"
+      ],
+      "geo": "WORLD_TAYIKISTAN"
+    },
+    {
+      "id": "kirguistan",
+      "name": "Kirguistán",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "china",
+        "kazajistan",
+        "tayikistan",
+        "uzbekistan"
+      ],
+      "geo": "WORLD_KIRGUISTAN"
+    },
+    {
+      "id": "mongolia",
+      "name": "Mongolia",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "china",
+        "rusia"
+      ],
+      "geo": "WORLD_MONGOLIA"
+    },
+    {
+      "id": "turquia",
+      "name": "Turquía",
+      "controllerId": null,
+      "value": 17,
+      "adj": [
+        "armenia",
+        "azerbaiyan",
+        "bulgaria",
+        "georgia",
+        "grecia",
+        "iran",
+        "irak",
+        "siria"
+      ],
+      "geo": "WORLD_TURQUIA"
+    },
+    {
+      "id": "siria",
+      "name": "Siria",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "irak",
+        "israel",
+        "jordania",
+        "libano",
+        "turquia"
+      ],
+      "geo": "WORLD_SIRIA"
+    },
+    {
+      "id": "libano",
+      "name": "Líbano",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "israel",
+        "siria"
+      ],
+      "geo": "WORLD_LIBANO"
+    },
+    {
+      "id": "israel",
+      "name": "Israel",
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "egipto",
+        "jordania",
+        "libano",
+        "palestina",
+        "siria"
+      ],
+      "geo": "WORLD_ISRAEL"
+    },
+    {
+      "id": "palestina",
+      "name": "Palestina",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "egipto",
+        "israel",
+        "jordania"
+      ],
+      "geo": "WORLD_PALESTINA"
+    },
+    {
+      "id": "jordania",
+      "name": "Jordania",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "irak",
+        "israel",
+        "palestina",
+        "arabia_saudita",
+        "siria"
+      ],
+      "geo": "WORLD_JORDANIA"
+    },
+    {
+      "id": "irak",
+      "name": "Irak",
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "iran",
+        "jordania",
+        "kuwait",
+        "arabia_saudita",
+        "siria",
+        "turquia"
+      ],
+      "geo": "WORLD_IRAK"
+    },
+    {
+      "id": "iran",
+      "name": "Irán",
+      "controllerId": null,
+      "value": 17,
+      "adj": [
+        "afganistan",
+        "armenia",
+        "azerbaiyan",
+        "irak",
+        "pakistan",
+        "turkmenistan",
+        "turquia"
+      ],
+      "geo": "WORLD_IRAN"
+    },
+    {
+      "id": "arabia_saudita",
+      "name": "Arabia Saudita",
+      "controllerId": null,
+      "value": 16,
+      "adj": [
+        "emiratos_arabes",
+        "irak",
+        "jordania",
+        "kuwait",
+        "oman",
+        "qatar",
+        "yemen"
+      ],
+      "geo": "WORLD_ARABIA_SAUDITA"
+    },
+    {
+      "id": "yemen",
+      "name": "Yemen",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "oman",
+        "arabia_saudita"
+      ],
+      "geo": "WORLD_YEMEN"
+    },
+    {
+      "id": "oman",
+      "name": "Omán",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "emiratos_arabes",
+        "arabia_saudita",
+        "yemen"
+      ],
+      "geo": "WORLD_OMAN"
+    },
+    {
+      "id": "emiratos_arabes",
+      "name": "Emiratos Árabes Unidos",
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "oman",
+        "arabia_saudita"
+      ],
+      "geo": "WORLD_EMIRATOS_ARABES"
+    },
+    {
+      "id": "qatar",
+      "name": "Catar",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "bahrein",
+        "arabia_saudita"
+      ],
+      "geo": "WORLD_QATAR"
+    },
+    {
+      "id": "kuwait",
+      "name": "Kuwait",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "irak",
+        "arabia_saudita"
+      ],
+      "geo": "WORLD_KUWAIT"
+    },
+    {
+      "id": "bahrein",
+      "name": "Baréin",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "qatar"
+      ],
+      "geo": "WORLD_BAHREIN"
+    },
+    {
+      "id": "afganistan",
+      "name": "Afganistán",
+      "controllerId": null,
+      "value": 16,
+      "adj": [
+        "china",
+        "iran",
+        "pakistan",
+        "tayikistan",
+        "turkmenistan",
+        "uzbekistan"
+      ],
+      "geo": "WORLD_AFGANISTAN"
+    },
+    {
+      "id": "pakistan",
+      "name": "Pakistán",
+      "controllerId": null,
+      "value": 18,
+      "adj": [
+        "afganistan",
+        "china",
+        "india",
+        "iran"
+      ],
+      "geo": "WORLD_PAKISTAN"
+    },
+    {
+      "id": "india",
+      "name": "India",
+      "controllerId": null,
+      "value": 22,
+      "adj": [
+        "bangladesh",
+        "bhutan",
+        "china",
+        "myanmar",
+        "nepal",
+        "pakistan"
+      ],
+      "geo": "WORLD_INDIA"
+    },
+    {
+      "id": "nepal",
+      "name": "Nepal",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "china",
+        "india"
+      ],
+      "geo": "WORLD_NEPAL"
+    },
+    {
+      "id": "bhutan",
+      "name": "Bután",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "china",
+        "india"
+      ],
+      "geo": "WORLD_BHUTAN"
+    },
+    {
+      "id": "bangladesh",
+      "name": "Bangladés",
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "india",
+        "myanmar"
+      ],
+      "geo": "WORLD_BANGLADESH"
+    },
+    {
+      "id": "sri_lanka",
+      "name": "Sri Lanka",
+      "controllerId": null,
+      "value": 10,
+      "adj": [],
+      "geo": "WORLD_SRI_LANKA"
+    },
+    {
+      "id": "maldivas",
+      "name": "Maldivas",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_MALDIVAS"
+    },
+    {
+      "id": "china",
+      "name": "China",
+      "controllerId": null,
+      "value": 22,
+      "adj": [
+        "afganistan",
+        "bhutan",
+        "hong_kong",
+        "india",
+        "kazajistan",
+        "kirguistan",
+        "laos",
+        "macao",
+        "myanmar",
+        "mongolia",
+        "nepal",
+        "pakistan",
+        "corea_norte",
+        "rusia",
+        "tayikistan",
+        "vietnam"
+      ],
+      "geo": "WORLD_CHINA"
+    },
+    {
+      "id": "corea_norte",
+      "name": "Corea del Norte",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "china",
+        "corea_sur",
+        "rusia"
+      ],
+      "geo": "WORLD_COREA_NORTE"
+    },
+    {
+      "id": "corea_sur",
+      "name": "Corea del Sur",
+      "controllerId": null,
+      "value": 17,
+      "adj": [
+        "corea_norte"
+      ],
+      "geo": "WORLD_COREA_SUR"
+    },
+    {
+      "id": "japon",
+      "name": "Japón",
+      "controllerId": null,
+      "value": 19,
+      "adj": [],
+      "geo": "WORLD_JAPON"
+    },
+    {
+      "id": "taiwan",
+      "name": "Taiwán",
+      "controllerId": null,
+      "value": 13,
+      "adj": [],
+      "geo": "WORLD_TAIWAN"
+    },
+    {
+      "id": "hong_kong",
+      "name": "Hong Kong",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "china"
+      ],
+      "geo": "WORLD_HONG_KONG"
+    },
+    {
+      "id": "macao",
+      "name": "Macao",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "china"
+      ],
+      "geo": "WORLD_MACAO"
+    },
+    {
+      "id": "myanmar",
+      "name": "Birmania",
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "bangladesh",
+        "china",
+        "india",
+        "laos",
+        "tailandia"
+      ],
+      "geo": "WORLD_MYANMAR",
+      "specialization": "cultivo"
+    },
+    {
+      "id": "tailandia",
+      "name": "Tailandia",
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "camboya",
+        "laos",
+        "myanmar",
+        "malasia"
+      ],
+      "geo": "WORLD_TAILANDIA"
+    },
+    {
+      "id": "laos",
+      "name": "Laos",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "china",
+        "camboya",
+        "myanmar",
+        "tailandia",
+        "vietnam"
+      ],
+      "geo": "WORLD_LAOS"
+    },
+    {
+      "id": "vietnam",
+      "name": "Vietnam",
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "china",
+        "camboya",
+        "laos"
+      ],
+      "geo": "WORLD_VIETNAM"
+    },
+    {
+      "id": "camboya",
+      "name": "Camboya",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "laos",
+        "tailandia",
+        "vietnam"
+      ],
+      "geo": "WORLD_CAMBOYA"
+    },
+    {
+      "id": "malasia",
+      "name": "Malasia",
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "brunei",
+        "indonesia",
+        "singapur",
+        "tailandia"
+      ],
+      "geo": "WORLD_MALASIA"
+    },
+    {
+      "id": "singapur",
+      "name": "Singapur",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "malasia"
+      ],
+      "geo": "WORLD_SINGAPUR"
+    },
+    {
+      "id": "indonesia",
+      "name": "Indonesia",
+      "controllerId": null,
+      "value": 19,
+      "adj": [
+        "malasia",
+        "papua_nueva_guinea",
+        "timor_oriental"
+      ],
+      "geo": "WORLD_INDONESIA"
+    },
+    {
+      "id": "filipinas",
+      "name": "Filipinas",
+      "controllerId": null,
+      "value": 15,
+      "adj": [],
+      "geo": "WORLD_FILIPINAS"
+    },
+    {
+      "id": "brunei",
+      "name": "Brunéi",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "malasia"
+      ],
+      "geo": "WORLD_BRUNEI"
+    },
+    {
+      "id": "timor_oriental",
+      "name": "Timor Oriental",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "indonesia"
+      ],
+      "geo": "WORLD_TIMOR_ORIENTAL"
+    },
+    {
+      "id": "australia",
+      "name": "Australia",
+      "controllerId": null,
+      "value": 17,
+      "adj": [
+        "papua_nueva_guinea"
+      ],
+      "geo": "WORLD_AUSTRALIA"
+    },
+    {
+      "id": "nueva_zelanda",
+      "name": "Nueva Zelanda",
+      "controllerId": null,
+      "value": 11,
+      "adj": [],
+      "geo": "WORLD_NUEVA_ZELANDA"
+    },
+    {
+      "id": "papua_nueva_guinea",
+      "name": "Papúa Nueva Guinea",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "australia",
+        "indonesia"
+      ],
+      "geo": "WORLD_PAPUA_NUEVA_GUINEA"
+    },
+    {
+      "id": "fiyi",
+      "name": "Fiyi",
+      "controllerId": null,
+      "value": 7,
+      "adj": [],
+      "geo": "WORLD_FIYI"
+    },
+    {
+      "id": "islas_salomon",
+      "name": "Islas Salomón",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_ISLAS_SALOMON"
+    },
+    {
+      "id": "vanuatu",
+      "name": "Vanuatu",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_VANUATU"
+    },
+    {
+      "id": "samoa",
+      "name": "Samoa",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_SAMOA"
+    },
+    {
+      "id": "kiribati",
+      "name": "Kiribati",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_KIRIBATI"
+    },
+    {
+      "id": "tonga",
+      "name": "Tonga",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_TONGA"
+    },
+    {
+      "id": "micronesia",
+      "name": "Micronesia",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_MICRONESIA"
+    },
+    {
+      "id": "islas_marshall",
+      "name": "Islas Marshall",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_ISLAS_MARSHALL"
+    },
+    {
+      "id": "palaos",
+      "name": "Palaos",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_PALAOS"
+    },
+    {
+      "id": "nauru",
+      "name": "Nauru",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_NAURU"
+    },
+    {
+      "id": "tuvalu",
+      "name": "Tuvalu",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_TUVALU"
+    },
+    {
+      "id": "marruecos",
+      "name": "Marruecos",
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "argelia",
+        "sahara_occidental",
+        "espana",
+        "mauritania"
+      ],
+      "geo": "WORLD_MARRUECOS"
+    },
+    {
+      "id": "sahara_occidental",
+      "name": "Sáhara Occidental",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "argelia",
+        "marruecos",
+        "mauritania"
+      ],
+      "geo": "WORLD_SAHARA_OCCIDENTAL"
+    },
+    {
+      "id": "argelia",
+      "name": "Argelia",
+      "controllerId": null,
+      "value": 16,
+      "adj": [
+        "sahara_occidental",
+        "libia",
+        "marruecos",
+        "mali",
+        "mauritania",
+        "niger",
+        "tunez"
+      ],
+      "geo": "WORLD_ARGELIA"
+    },
+    {
+      "id": "tunez",
+      "name": "Túnez",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "argelia",
+        "libia"
+      ],
+      "geo": "WORLD_TUNEZ"
+    },
+    {
+      "id": "libia",
+      "name": "Libia",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "argelia",
+        "egipto",
+        "niger",
+        "sudan",
+        "chad",
+        "tunez"
+      ],
+      "geo": "WORLD_LIBIA"
+    },
+    {
+      "id": "egipto",
+      "name": "Egipto",
+      "controllerId": null,
+      "value": 18,
+      "adj": [
+        "israel",
+        "libia",
+        "palestina",
+        "sudan"
+      ],
+      "geo": "WORLD_EGIPTO"
+    },
+    {
+      "id": "sudan",
+      "name": "Sudán",
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "republica_centroafricana",
+        "egipto",
+        "eritrea",
+        "etiopia",
+        "libia",
+        "sudan_sur",
+        "chad"
+      ],
+      "geo": "WORLD_SUDAN"
+    },
+    {
+      "id": "sudan_sur",
+      "name": "Sudán del Sur",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "republica_centroafricana",
+        "congo_kinshasa",
+        "etiopia",
+        "kenia",
+        "sudan",
+        "uganda"
+      ],
+      "geo": "WORLD_SUDAN_SUR"
+    },
+    {
+      "id": "mauritania",
+      "name": "Mauritania",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "argelia",
+        "sahara_occidental",
+        "marruecos",
+        "mali",
+        "senegal"
+      ],
+      "geo": "WORLD_MAURITANIA"
+    },
+    {
+      "id": "senegal",
+      "name": "Senegal",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "guinea",
+        "gambia",
+        "guinea_bisau",
+        "mali",
+        "mauritania"
+      ],
+      "geo": "WORLD_SENEGAL"
+    },
+    {
+      "id": "gambia",
+      "name": "Gambia",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "senegal"
+      ],
+      "geo": "WORLD_GAMBIA"
+    },
+    {
+      "id": "guinea_bisau",
+      "name": "Guinea-Bisáu",
+      "controllerId": "na_tchuto_network",
+      "value": 7,
+      "adj": [
+        "guinea",
+        "senegal"
+      ],
+      "geo": "WORLD_GUINEA_BISAU"
+    },
+    {
+      "id": "guinea",
+      "name": "Guinea",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "costa_marfil",
+        "guinea_bisau",
+        "liberia",
+        "mali",
+        "senegal",
+        "sierra_leona"
+      ],
+      "geo": "WORLD_GUINEA"
+    },
+    {
+      "id": "sierra_leona",
+      "name": "Sierra Leona",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "guinea",
+        "liberia"
+      ],
+      "geo": "WORLD_SIERRA_LEONA"
+    },
+    {
+      "id": "liberia",
+      "name": "Liberia",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "costa_marfil",
+        "guinea",
+        "sierra_leona"
+      ],
+      "geo": "WORLD_LIBERIA"
+    },
+    {
+      "id": "costa_marfil",
+      "name": "Costa de Marfil",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "burkina_faso",
+        "ghana",
+        "guinea",
+        "liberia",
+        "mali"
+      ],
+      "geo": "WORLD_COSTA_MARFIL"
+    },
+    {
+      "id": "mali",
+      "name": "Malí",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "burkina_faso",
+        "costa_marfil",
+        "argelia",
+        "guinea",
+        "mauritania",
+        "niger",
+        "senegal"
+      ],
+      "geo": "WORLD_MALI"
+    },
+    {
+      "id": "burkina_faso",
+      "name": "Burkina Faso",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "benin",
+        "costa_marfil",
+        "ghana",
+        "mali",
+        "niger",
+        "togo"
+      ],
+      "geo": "WORLD_BURKINA_FASO"
+    },
+    {
+      "id": "ghana",
+      "name": "Ghana",
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "burkina_faso",
+        "costa_marfil",
+        "togo"
+      ],
+      "geo": "WORLD_GHANA"
+    },
+    {
+      "id": "togo",
+      "name": "Togo",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "benin",
+        "burkina_faso",
+        "ghana"
+      ],
+      "geo": "WORLD_TOGO"
+    },
+    {
+      "id": "benin",
+      "name": "Benín",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "burkina_faso",
+        "niger",
+        "nigeria",
+        "togo"
+      ],
+      "geo": "WORLD_BENIN"
+    },
+    {
+      "id": "niger",
+      "name": "Níger",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "benin",
+        "burkina_faso",
+        "argelia",
+        "libia",
+        "mali",
+        "nigeria",
+        "chad"
+      ],
+      "geo": "WORLD_NIGER"
+    },
+    {
+      "id": "nigeria",
+      "name": "Nigeria",
+      "controllerId": null,
+      "value": 20,
+      "adj": [
+        "benin",
+        "camerun",
+        "niger",
+        "chad"
+      ],
+      "geo": "WORLD_NIGERIA"
+    },
+    {
+      "id": "cabo_verde",
+      "name": "Cabo Verde",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_CABO_VERDE"
+    },
+    {
+      "id": "camerun",
+      "name": "Camerún",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "republica_centroafricana",
+        "congo_brazzaville",
+        "gabon",
+        "guinea_ecuatorial",
+        "nigeria",
+        "chad"
+      ],
+      "geo": "WORLD_CAMERUN"
+    },
+    {
+      "id": "chad",
+      "name": "Chad",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "republica_centroafricana",
+        "camerun",
+        "libia",
+        "niger",
+        "nigeria",
+        "sudan"
+      ],
+      "geo": "WORLD_CHAD"
+    },
+    {
+      "id": "republica_centroafricana",
+      "name": "República Centroafricana",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "camerun",
+        "congo_kinshasa",
+        "congo_brazzaville",
+        "sudan",
+        "sudan_sur",
+        "chad"
+      ],
+      "geo": "WORLD_REPUBLICA_CENTROAFRICANA"
+    },
+    {
+      "id": "guinea_ecuatorial",
+      "name": "Guinea Ecuatorial",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "camerun",
+        "gabon"
+      ],
+      "geo": "WORLD_GUINEA_ECUATORIAL"
+    },
+    {
+      "id": "gabon",
+      "name": "Gabón",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "camerun",
+        "congo_brazzaville",
+        "guinea_ecuatorial"
+      ],
+      "geo": "WORLD_GABON"
+    },
+    {
+      "id": "congo_brazzaville",
+      "name": "República del Congo",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "angola",
+        "republica_centroafricana",
+        "camerun",
+        "congo_kinshasa",
+        "gabon"
+      ],
+      "geo": "WORLD_CONGO_BRAZZAVILLE"
+    },
+    {
+      "id": "congo_kinshasa",
+      "name": "República Democrática del Congo",
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "angola",
+        "burundi",
+        "republica_centroafricana",
+        "congo_brazzaville",
+        "ruanda",
+        "sudan_sur",
+        "tanzania",
+        "uganda",
+        "zambia"
+      ],
+      "geo": "WORLD_CONGO_KINSHASA"
+    },
+    {
+      "id": "santo_tome_principe",
+      "name": "Santo Tomé y Príncipe",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_SANTO_TOME_PRINCIPE"
+    },
+    {
+      "id": "etiopia",
+      "name": "Etiopía",
+      "controllerId": null,
+      "value": 16,
+      "adj": [
+        "yibuti",
+        "eritrea",
+        "kenia",
+        "sudan",
+        "somalia",
+        "somalilandia",
+        "sudan_sur"
+      ],
+      "geo": "WORLD_ETIOPIA"
+    },
+    {
+      "id": "eritrea",
+      "name": "Eritrea",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "yibuti",
+        "etiopia",
+        "sudan"
+      ],
+      "geo": "WORLD_ERITREA"
+    },
+    {
+      "id": "yibuti",
+      "name": "Yibuti",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "eritrea",
+        "etiopia",
+        "somalilandia"
+      ],
+      "geo": "WORLD_YIBUTI"
+    },
+    {
+      "id": "somalia",
+      "name": "Somalia",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "etiopia",
+        "kenia",
+        "somalilandia"
+      ],
+      "geo": "WORLD_SOMALIA"
+    },
+    {
+      "id": "somalilandia",
+      "name": "Somalilandia",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "yibuti",
+        "etiopia",
+        "somalia"
+      ],
+      "geo": "WORLD_SOMALILANDIA"
+    },
+    {
+      "id": "kenia",
+      "name": "Kenia",
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "etiopia",
+        "somalia",
+        "sudan_sur",
+        "tanzania",
+        "uganda"
+      ],
+      "geo": "WORLD_KENIA"
+    },
+    {
+      "id": "uganda",
+      "name": "Uganda",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "congo_kinshasa",
+        "kenia",
+        "ruanda",
+        "sudan_sur",
+        "tanzania"
+      ],
+      "geo": "WORLD_UGANDA"
+    },
+    {
+      "id": "ruanda",
+      "name": "Ruanda",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "burundi",
+        "congo_kinshasa",
+        "tanzania",
+        "uganda"
+      ],
+      "geo": "WORLD_RUANDA"
+    },
+    {
+      "id": "burundi",
+      "name": "Burundi",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "congo_kinshasa",
+        "ruanda",
+        "tanzania"
+      ],
+      "geo": "WORLD_BURUNDI"
+    },
+    {
+      "id": "tanzania",
+      "name": "Tanzania",
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "burundi",
+        "congo_kinshasa",
+        "kenia",
+        "mozambique",
+        "malaui",
+        "ruanda",
+        "uganda",
+        "zambia"
+      ],
+      "geo": "WORLD_TANZANIA"
+    },
+    {
+      "id": "mozambique",
+      "name": "Mozambique",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "malaui",
+        "esuatini",
+        "tanzania",
+        "sudafrica",
+        "zambia",
+        "zimbabue"
+      ],
+      "geo": "WORLD_MOZAMBIQUE"
+    },
+    {
+      "id": "malaui",
+      "name": "Malaui",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "mozambique",
+        "tanzania",
+        "zambia"
+      ],
+      "geo": "WORLD_MALAUI"
+    },
+    {
+      "id": "zambia",
+      "name": "Zambia",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "angola",
+        "botsuana",
+        "congo_kinshasa",
+        "mozambique",
+        "malaui",
+        "namibia",
+        "tanzania",
+        "zimbabue"
+      ],
+      "geo": "WORLD_ZAMBIA"
+    },
+    {
+      "id": "madagascar",
+      "name": "Madagascar",
+      "controllerId": null,
+      "value": 10,
+      "adj": [],
+      "geo": "WORLD_MADAGASCAR"
+    },
+    {
+      "id": "comoras",
+      "name": "Comoras",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_COMORAS"
+    },
+    {
+      "id": "mauricio",
+      "name": "Mauricio",
+      "controllerId": null,
+      "value": 7,
+      "adj": [],
+      "geo": "WORLD_MAURICIO"
+    },
+    {
+      "id": "seychelles",
+      "name": "Seychelles",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_SEYCHELLES"
+    },
+    {
+      "id": "angola",
+      "name": "Angola",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "congo_kinshasa",
+        "congo_brazzaville",
+        "namibia",
+        "zambia"
+      ],
+      "geo": "WORLD_ANGOLA"
+    },
+    {
+      "id": "namibia",
+      "name": "Namibia",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "angola",
+        "botsuana",
+        "sudafrica",
+        "zambia",
+        "zimbabue"
+      ],
+      "geo": "WORLD_NAMIBIA"
+    },
+    {
+      "id": "botsuana",
+      "name": "Botsuana",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "namibia",
+        "sudafrica",
+        "zambia",
+        "zimbabue"
+      ],
+      "geo": "WORLD_BOTSUANA"
+    },
+    {
+      "id": "zimbabue",
+      "name": "Zimbabue",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "botsuana",
+        "mozambique",
+        "namibia",
+        "sudafrica",
+        "zambia"
+      ],
+      "geo": "WORLD_ZIMBABUE"
+    },
+    {
+      "id": "sudafrica",
+      "name": "Sudáfrica",
+      "controllerId": "palazzolo_org",
+      "value": 18,
+      "adj": [
+        "botsuana",
+        "lesoto",
+        "mozambique",
+        "namibia",
+        "esuatini",
+        "zimbabue"
+      ],
+      "geo": "WORLD_SUDAFRICA"
+    },
+    {
+      "id": "lesoto",
+      "name": "Lesoto",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "sudafrica"
+      ],
+      "geo": "WORLD_LESOTO"
+    },
+    {
+      "id": "esuatini",
+      "name": "Esuatini",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "mozambique",
+        "sudafrica"
+      ],
+      "geo": "WORLD_ESUATINI"
+    },
+    {
+      "id": "california",
+      "name": "California",
+      "controllerId": null,
+      "value": 20,
+      "adj": [
+        "arizona",
+        "resto_eeuu",
+        "baja_california"
+      ],
+      "geo": "USA_California"
+    },
+    {
+      "id": "arizona",
+      "name": "Arizona",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "california",
+        "new_mexico",
+        "resto_eeuu",
+        "sonora"
+      ],
+      "geo": "USA_Arizona"
+    },
+    {
+      "id": "new_mexico",
+      "name": "Nuevo México",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "arizona",
+        "texas",
+        "resto_eeuu",
+        "chihuahua"
+      ],
+      "geo": "USA_NewMexico"
+    },
+    {
+      "id": "texas",
+      "name": "Texas",
+      "controllerId": null,
+      "value": 20,
+      "adj": [
+        "new_mexico",
+        "resto_eeuu",
+        "chihuahua",
+        "coahuila",
+        "nuevo_leon",
+        "tamaulipas"
+      ],
+      "geo": "USA_Texas"
+    },
+    {
+      "id": "resto_eeuu",
+      "name": "Resto de Estados Unidos",
+      "controllerId": null,
+      "value": 26,
+      "adj": [
+        "california",
+        "arizona",
+        "new_mexico",
+        "texas",
+        "canada"
+      ],
+      "geo": "USA_RestoEEUU"
+    },
+    {
+      "id": "zacatecas",
+      "name": "Zacatecas",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "aguascalientes",
+        "coahuila",
+        "durango",
+        "guanajuato",
+        "jalisco",
+        "nayarit",
+        "nuevo_leon",
+        "san_luis_potosi"
+      ],
+      "geo": "MEX_Zacatecas"
+    },
+    {
+      "id": "chiapas",
+      "name": "Chiapas",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "oaxaca",
+        "tabasco",
+        "veracruz",
+        "guatemala"
+      ],
+      "geo": "MEX_Chiapas"
+    },
+    {
+      "id": "cdmx",
+      "name": "Ciudad de México",
+      "controllerId": null,
+      "value": 16,
+      "adj": [
+        "estado_de_mexico",
+        "morelos"
+      ],
+      "geo": "MEX_CDMX"
+    },
+    {
+      "id": "quintana_roo",
+      "name": "Quintana Roo",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "campeche",
+        "yucatan"
+      ],
+      "geo": "MEX_QuintanaRoo"
+    },
+    {
+      "id": "campeche",
+      "name": "Campeche",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "quintana_roo",
+        "tabasco",
+        "yucatan"
+      ],
+      "geo": "MEX_Campeche"
+    },
+    {
+      "id": "morelos",
+      "name": "Morelos",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "cdmx",
+        "estado_de_mexico",
+        "guerrero",
+        "puebla"
+      ],
+      "geo": "MEX_Morelos"
+    },
+    {
+      "id": "oaxaca",
+      "name": "Oaxaca",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "chiapas",
+        "guerrero",
+        "puebla",
+        "veracruz"
+      ],
+      "geo": "MEX_Oaxaca"
+    },
+    {
+      "id": "baja_california_sur",
+      "name": "Baja California Sur",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "baja_california"
+      ],
+      "geo": "MEX_BajaCaliforniaSur"
+    },
+    {
+      "id": "tabasco",
+      "name": "Tabasco",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "campeche",
+        "chiapas",
+        "veracruz"
+      ],
+      "geo": "MEX_Tabasco"
+    },
+    {
+      "id": "estado_de_mexico",
+      "name": "Estado de México",
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "cdmx",
+        "guerrero",
+        "hidalgo",
+        "michoacan",
+        "morelos",
+        "puebla",
+        "queretaro",
+        "tlaxcala"
+      ],
+      "geo": "MEX_EstadoDeMexico"
+    },
+    {
+      "id": "yucatan",
+      "name": "Yucatán",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "campeche",
+        "quintana_roo"
+      ],
+      "geo": "MEX_Yucatan"
+    },
+    {
+      "id": "colima",
+      "name": "Colima",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "jalisco",
+        "michoacan"
+      ],
+      "geo": "MEX_Colima"
+    },
+    {
+      "id": "nayarit",
+      "name": "Nayarit",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "durango",
+        "jalisco",
+        "sinaloa_t",
+        "zacatecas"
+      ],
+      "geo": "MEX_Nayarit"
+    },
+    {
+      "id": "guanajuato",
+      "name": "Guanajuato",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "jalisco",
+        "michoacan",
+        "queretaro",
+        "san_luis_potosi",
+        "zacatecas"
+      ],
+      "geo": "MEX_Guanajuato"
+    },
+    {
+      "id": "hidalgo",
+      "name": "Hidalgo",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "estado_de_mexico",
+        "puebla",
+        "queretaro",
+        "san_luis_potosi",
+        "tlaxcala",
+        "veracruz"
+      ],
+      "geo": "MEX_Hidalgo"
+    },
+    {
+      "id": "tlaxcala",
+      "name": "Tlaxcala",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "estado_de_mexico",
+        "hidalgo",
+        "puebla"
+      ],
+      "geo": "MEX_Tlaxcala"
+    },
+    {
+      "id": "aguascalientes",
+      "name": "Aguascalientes",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "jalisco",
+        "zacatecas"
+      ],
+      "geo": "MEX_Aguascalientes"
+    },
+    {
+      "id": "queretaro",
+      "name": "Querétaro",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "estado_de_mexico",
+        "guanajuato",
+        "hidalgo",
+        "michoacan",
+        "san_luis_potosi"
+      ],
+      "geo": "MEX_Queretaro"
+    },
+    {
+      "id": "san_luis_potosi",
+      "name": "San Luis Potosí",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "coahuila",
+        "guanajuato",
+        "hidalgo",
+        "nuevo_leon",
+        "queretaro",
+        "tamaulipas",
+        "veracruz",
+        "zacatecas"
+      ],
+      "geo": "MEX_SanLuisPotosi"
+    },
+    {
+      "id": "puebla",
+      "name": "Puebla",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "estado_de_mexico",
+        "guerrero",
+        "hidalgo",
+        "morelos",
+        "oaxaca",
+        "tlaxcala",
+        "veracruz"
+      ],
+      "geo": "MEX_Puebla"
+    }
+  ],
+  "cartels": [
+    {
+      "id": "sinaloa",
+      "name": "Cártel de Sinaloa",
+      "color": "#7a1f1f",
+      "aiControlled": false,
+      "historicalNote": "Pese a la guerra generalizada, logra mantener el control del noroeste del país y expandir su influencia internacional. Cargos no documentados públicamente son ficticios.",
+      "resources": {
+        "money": 32000000,
+        "armySize": 2200,
+        "corruptGov": 60,
+        "corruptPolice": 60,
+        "publicImage": 42,
+        "heat": 45
+      },
+      "roles": {
+        "leader": "chapo_guzman_06",
+        "underboss": "mayo_zambada_06",
+        "corruptionGovChief": "damaso_lopez",
+        "sicariosChief": "sin06_sicarios_chief",
+        "militaryChief": "sin06_military_chief",
+        "financeChief": "sin06_finance_chief",
+        "traffickingChief": "sin06_trafficking_chief",
+        "corruptionPoliceChief": "sin06_police_chief"
+      }
+    },
+    {
+      "id": "zetas",
+      "name": "Los Zetas",
+      "color": "#1f1f1f",
+      "aiControlled": true,
+      "historicalNote": "Fundados por exmilitares de élite como brazo armado del Golfo, rompen relaciones en 2010 y se convierten en cártel independiente, tristemente célebres por su brutalidad.",
+      "resources": {
+        "money": 20000000,
+        "armySize": 2400,
+        "corruptGov": 35,
+        "corruptPolice": 45,
+        "publicImage": 12,
+        "heat": 75
+      },
+      "roles": {
+        "leader": "lazcano_06",
+        "underboss": "z40_trevino",
+        "militaryChief": "z42_trevino",
+        "sicariosChief": "zetas_sicarios_chief",
+        "financeChief": "zetas_finance_chief"
+      }
+    },
+    {
+      "id": "golfo",
+      "name": "Cártel del Golfo",
+      "color": "#2e5a8a",
+      "aiControlled": true,
+      "historicalNote": "Debilitado tras la ruptura con Los Zetas, entra en una guerra abierta por el control de Tamaulipas.",
+      "resources": {
+        "money": 9000000,
+        "armySize": 900,
+        "corruptGov": 30,
+        "corruptPolice": 35,
+        "publicImage": 30,
+        "heat": 55
+      },
+      "roles": {
+        "leader": "el_coss",
+        "underboss": "golfo06_underboss",
+        "sicariosChief": "golfo06_sicarios_chief",
+        "financeChief": "golfo06_finance_chief"
+      }
+    },
+    {
+      "id": "familia_michoacana",
+      "name": "La Familia Michoacana",
+      "color": "#4f7a2e",
+      "aiControlled": true,
+      "historicalNote": "Organización con retórica pseudo-religiosa fundada por Nazario Moreno; tras su presunta muerte en 2010 (luego confirmada en 2014), una facción se escindiría como Caballeros Templarios.",
+      "resources": {
+        "money": 7000000,
+        "armySize": 650,
+        "corruptGov": 25,
+        "corruptPolice": 30,
+        "publicImage": 38,
+        "heat": 50
+      },
+      "roles": {
+        "leader": "nazario_moreno",
+        "underboss": "la_tuta",
+        "sicariosChief": "familia_sicarios_chief",
+        "financeChief": "familia_finance_chief"
+      }
+    },
+    {
+      "id": "beltran_leyva",
+      "name": "Organización Beltrán Leyva",
+      "color": "#8a4f2e",
+      "aiControlled": true,
+      "historicalNote": "Escindida del Cártel de Sinaloa en 2008 tras la detención de Alfredo Beltrán Leyva; entra en guerra abierta contra sus antiguos socios.",
+      "resources": {
+        "money": 11000000,
+        "armySize": 800,
+        "corruptGov": 35,
+        "corruptPolice": 40,
+        "publicImage": 28,
+        "heat": 60
+      },
+      "roles": {
+        "leader": "arturo_beltran_leyva",
+        "underboss": "hector_beltran_leyva",
+        "sicariosChief": "bl_sicarios_chief",
+        "financeChief": "bl_finance_chief"
+      }
+    },
+    {
+      "id": "juarez",
+      "name": "Cártel de Juárez",
+      "color": "#2e6b4f",
+      "aiControlled": true,
+      "historicalNote": "Bajo Vicente Carrillo Fuentes, hermano y sucesor de Amado Carrillo Fuentes, mantiene el control de Chihuahua hasta que Sinaloa se lo disputa desde 2008 en la sangrienta guerra por Ciudad Juárez, una de las más violentas del país en esta era.",
+      "resources": {
+        "money": 14000000,
+        "armySize": 1100,
+        "corruptGov": 40,
+        "corruptPolice": 45,
+        "publicImage": 30,
+        "heat": 50
+      },
+      "roles": {
+        "leader": "vicente_carrillo_06",
+        "underboss": "juarez06_underboss",
+        "sicariosChief": "juarez06_sicarios_chief",
+        "financeChief": "juarez06_finance_chief"
+      }
+    },
+    {
+      "id": "lorenzana",
+      "name": "Organización Lorenzana (Guatemala)",
+      "color": "#a0662d",
+      "aiControlled": true,
+      "historicalNote": "Organización real guatemalteca con base en Zacapa, encabezada por Waldemar Lorenzana Lima, 'El Patriarca', con vínculos reales documentados con el Cártel de Sinaloa. La expansión de Los Zetas hacia Guatemala desde 2008 generó fricciones y violencia real con las redes locales de trasiego como esta. Waldemar Lorenzana Lima fue extraditado a EE.UU. en 2014 y se declaró culpable en 2016; su hijo Waldemar Lorenzana Cordón corrió la misma suerte. En el juego ambos se representan activos al frente de la organización. Los cargos secundarios no documentados públicamente son ficticios.",
+      "resources": {
+        "money": 6000000,
+        "armySize": 550,
+        "corruptGov": 35,
+        "corruptPolice": 40,
+        "publicImage": 20,
+        "heat": 45
+      },
+      "roles": {
+        "leader": "lorenzana_padre",
+        "underboss": "lorenzana_hijo",
+        "sicariosChief": "lorenzana_sicarios_chief",
+        "intelChief": "lorenzana_intel_chief",
+        "militaryChief": "lorenzana_military_chief",
+        "diplomatChief": "lorenzana_diplomat_chief",
+        "financeChief": "lorenzana_finance_chief",
+        "traffickingChief": "lorenzana_trafficking_chief",
+        "corruptionGovChief": "lorenzana_gov_chief",
+        "corruptionPoliceChief": "lorenzana_police_chief",
+        "productionChief": "lorenzana_production_chief",
+        "prChief": "lorenzana_pr_chief"
+      }
+    },
+    {
+      "id": "soles",
+      "name": "Cartel de los Soles (Venezuela)",
+      "color": "#7a1f4a",
+      "aiControlled": true,
+      "historicalNote": "'Cartel de los Soles' es el término real para la red de corrupción dentro de la Guardia Nacional y las fuerzas armadas venezolanas que facilita el narcotráfico a cambio de sobornos, documentado desde principios de los 90 y ya consolidado como un fenómeno de largo plazo para esta época. El auge de la militarización de la lucha antidroga mexicana en estos años (ver el resto de esta partida) coincide con el fortalecimiento real de las rutas venezolanas como alternativa de trasiego hacia el Caribe y África Occidental. Igual que en las demás apariciones de esta red, el personaje al mando es un oficial ficticio, no una figura política real.",
+      "resources": {
+        "money": 12000000,
+        "armySize": 650,
+        "corruptGov": 72,
+        "corruptPolice": 62,
+        "publicImage": 22,
+        "heat": 38,
+        "internationalReputation": 12,
+        "launderedMoney": 0
+      },
+      "roles": {
+        "leader": "soles_leader_06",
+        "underboss": "soles_underboss_06",
+        "sicariosChief": "soles_sicarios_chief_06",
+        "intelChief": "soles_intel_chief_06",
+        "militaryChief": "soles_military_chief_06",
+        "diplomatChief": "soles_diplomat_chief_06",
+        "financeChief": "soles_finance_chief_06",
+        "traffickingChief": "soles_trafficking_chief_06",
+        "corruptionGovChief": "soles_gov_chief_06",
+        "corruptionPoliceChief": "soles_police_chief_06",
+        "productionChief": "soles_production_chief_06",
+        "prChief": "soles_pr_chief_06"
+      }
+    },
+    {
+      "id": "mogilevich_org",
+      "name": "Organización de Semion Mogilevich",
+      "color": "#5a5a7a",
+      "aiControlled": true,
+      "historicalNote": "Bajo el mando real de Semion Mogilevich, con base principal en Moscú, una de las figuras más poderosas y documentadas del crimen organizado ruso/euroasiático de las últimas décadas, señalada por autoridades occidentales por una red de actividades criminales muy diversa — tráfico de armas, extorsión, fraude financiero a gran escala y contrabando — y por sus fuertes conexiones políticas que durante años lo protegieron de cualquier extradición real a Estados Unidos, pese a figurar en la lista de los diez más buscados del FBI durante buena parte de esta época (fue retirado de esa lista precisamente en 2015, al final del rango de esta época, al prescribir los cargos originales del caso real que lo llevó a ella). A diferencia de los cárteles latinoamericanos ya presentes en el juego, su poder real se apoyaba tanto en el crimen organizado como en una red de protección política de alto nivel — un matiz distinto, no solo una cuestión de fuerza armada. En el juego su destino depende de tus decisiones.",
+      "resources": {
+        "money": 175000000,
+        "armySize": 700,
+        "corruptGov": 85,
+        "corruptPolice": 70,
+        "publicImage": 30,
+        "heat": 35
+      },
+      "roles": {
+        "leader": "sm_leader",
+        "underboss": "sm_underboss",
+        "sicariosChief": "sm_sicarios_chief",
+        "intelChief": "sm_intel_chief",
+        "militaryChief": "sm_military_chief",
+        "diplomatChief": "sm_diplomat_chief",
+        "financeChief": "sm_finance_chief",
+        "traffickingChief": "sm_trafficking_chief",
+        "corruptionGovChief": "sm_gov_chief",
+        "corruptionPoliceChief": "sm_police_chief",
+        "productionChief": "sm_production_chief",
+        "prChief": "sm_pr_chief"
+      }
+    },
+    {
+      "id": "kompania_bello",
+      "name": "Kompania Bello (Dritan Rexhepi)",
+      "color": "#c23b3b",
+      "aiControlled": true,
+      "historicalNote": "Bajo el mando real de Dritan Rexhepi, la red apodada por investigadores italianos y españoles \"Kompania Bello\" conectaba el tráfico de cocaína sudamericana (con una base real de operaciones en Ecuador) con el mercado europeo, sobre todo a través de España e Italia — parte del fenómeno real, muy documentado, del creciente papel de redes albanesas como intermediarias mayoristas de cocaína en Europa desde los años 2000. El episodio real más notorio de Rexhepi ocurrió precisamente dentro de esta época: en noviembre de 2013 se fugó de la prisión de Rebibbia, en Roma, en un helicóptero secuestrado por un cómplice que se hizo pasar por técnico de mantenimiento, una fuga ampliamente cubierta por la prensa internacional. Fue recapturado tiempo después. En el juego su destino depende de tus decisiones.",
+      "resources": {
+        "money": 85000000,
+        "armySize": 480,
+        "corruptGov": 50,
+        "corruptPolice": 55,
+        "publicImage": 25,
+        "heat": 60
+      },
+      "roles": {
+        "leader": "dr_leader",
+        "underboss": "dr_underboss",
+        "sicariosChief": "dr_sicarios_chief",
+        "intelChief": "dr_intel_chief",
+        "militaryChief": "dr_military_chief",
+        "diplomatChief": "dr_diplomat_chief",
+        "financeChief": "dr_finance_chief",
+        "traffickingChief": "dr_trafficking_chief",
+        "corruptionGovChief": "dr_gov_chief",
+        "corruptionPoliceChief": "dr_police_chief",
+        "productionChief": "dr_production_chief",
+        "prChief": "dr_pr_chief"
+      }
+    },
+    {
+      "id": "na_tchuto_network",
+      "name": "Red de Bubo Na Tchuto",
+      "color": "#2b6b4a",
+      "aiControlled": true,
+      "historicalNote": "Bajo la sombra real del contraalmirante José Américo Bubo Na Tchuto, exjefe de la marina de Guinea-Bisáu, este territorio refleja el fenómeno real y muy documentado del \"narcoestado\" en el que se convirtió el país durante estos años: la inestabilidad política (varios golpes y asesinatos reales de altos mandos militares en este periodo) lo transformó en un punto de tránsito clave para la cocaína sudamericana camino de Europa, con protección directa de mandos militares y políticos. El propio Na Tchuto fue detenido en una operación real de la DEA en 2013 — atraído a un barco en aguas internacionales bajo pretexto de una reunión de negocios — y se declaró culpable años después ante un tribunal federal de EE. UU. de conspiración para el narcotráfico. Dado que se trata de un excargo militar de alto rango de un país real y no solo de un capo criminal, el personaje al mando de esta facción es un oficial ficticio que representa a esa red de protección castrense al narcotráfico, en vez de convertir al propio Na Tchuto en un personaje jugable con estadísticas propias — el mismo criterio ya usado con las Fuerzas de Defensa de Panamá bajo Noriega.",
+      "resources": {
+        "money": 45000000,
+        "armySize": 350,
+        "corruptGov": 78,
+        "corruptPolice": 65,
+        "publicImage": 22,
+        "heat": 45
+      },
+      "roles": {
+        "leader": "nt_leader",
+        "underboss": "nt_underboss",
+        "sicariosChief": "nt_sicarios_chief",
+        "intelChief": "nt_intel_chief",
+        "militaryChief": "nt_military_chief",
+        "diplomatChief": "nt_diplomat_chief",
+        "financeChief": "nt_finance_chief",
+        "traffickingChief": "nt_trafficking_chief",
+        "corruptionGovChief": "nt_gov_chief",
+        "corruptionPoliceChief": "nt_police_chief",
+        "productionChief": "nt_production_chief",
+        "prChief": "nt_pr_chief"
+      }
+    },
+    {
+      "id": "casalesi",
+      "name": "Clan de los Casalesi (Camorra)",
+      "color": "#3a4a2f",
+      "aiControlled": true,
+      "historicalNote": "El clan de los Casalesi, con base real en Casal di Principe (provincia de Caserta, Campania), es una de las facciones históricas de la Camorra napolitana y, según estimaciones de la fiscalía italiana de la época, una de las organizaciones criminales más ricas de Europa: además del narcotráfico, controlaba de forma real la extorsión sistemática a la construcción en la región y el vertido ilegal masivo de residuos tóxicos (el fenómeno real conocido como \"Terra dei Fuochi\"). Tras la condena real a cadena perpetua de su fundador, Francesco \"Sandokan\" Schiavone, en el histórico macroproceso \"Spartacus\" (sentencia de apelación en 2008), la organización quedó bajo el mando conjunto real de Michele Zagaria y Antonio Iovine, ambos fugitivos durante años antes de esta época. El periodista real Roberto Saviano, autor de \"Gomorra\" (2006), documentó a fondo esta organización y recibió amenazas de muerte reales del clan, viviendo desde entonces bajo escolta policial permanente. En el juego, como con el resto de figuras históricas, el destino de sus líderes depende de tus decisiones y de la simulación, no está fijado de antemano.",
+      "resources": {
+        "money": 160000000,
+        "armySize": 750,
+        "corruptGov": 60,
+        "corruptPolice": 55,
+        "publicImage": 20,
+        "heat": 40
+      },
+      "roles": {
+        "leader": "cas_leader",
+        "underboss": "cas_underboss",
+        "sicariosChief": "cas_sicarios_chief",
+        "intelChief": "cas_intel_chief",
+        "militaryChief": "cas_military_chief",
+        "diplomatChief": "cas_diplomat_chief",
+        "financeChief": "cas_finance_chief",
+        "traffickingChief": "cas_trafficking_chief",
+        "corruptionGovChief": "cas_gov_chief",
+        "corruptionPoliceChief": "cas_police_chief",
+        "productionChief": "cas_production_chief",
+        "prChief": "cas_pr_chief"
+      }
+    },
+    {
+      "id": "palazzolo_org",
+      "name": "Red de Vito Roberto Palazzolo",
+      "color": "#5a4a6a",
+      "aiControlled": true,
+      "historicalNote": "Vito Roberto Palazzolo (también conocido por el alias real Robert von Palace Kolbatschenko), nacido en Terrasini (Sicilia) en 1947, fue durante años uno de los banqueros de más confianza real de Cosa Nostra: en 1982 fundó en Lugano (Suiza) la financiera Consultfin SA junto a Franco Della Torre, un cauce real usado para blanquear, según estimaciones reales de investigadores italianos y estadounidenses, más de 1.600 millones de dólares del narcotráfico de heroína de la mafia siciliana. Huido de la justicia italiana, se instaló de forma real en Sudáfrica a mediados de los 80, donde construyó durante décadas un imperio real de negocios (diamantes, propiedades de lujo y patrimonio en el extranjero) con conexiones reales documentadas en los círculos empresariales y políticos locales. En 2009 un tribunal italiano lo condenó en ausencia a nueve años de cárcel por asociación mafiosa — una condena real que cae justo dentro de esta época — pero Sudáfrica, donde la asociación mafiosa no era delito extraditable, se negó reiteradamente a entregarlo; fue precisamente su intento real de abandonar el país (fue detenido por Interpol en marzo de 2012 al aterrizar en Bangkok, Tailandia, tras una vigilancia real de sus redes sociales por parte de los carabineros italianos) lo que finalmente permitió su extradición a Italia. En el juego, como con el resto de figuras históricas, su destino depende de tus decisiones y de la simulación, no está fijado de antemano.",
+      "resources": {
+        "money": 195000000,
+        "armySize": 380,
+        "corruptGov": 62,
+        "corruptPolice": 45,
+        "publicImage": 35,
+        "heat": 38
+      },
+      "supplyChainRole": "distribuidor",
+      "roles": {
+        "leader": "vp_leader",
+        "underboss": "vp_underboss",
+        "sicariosChief": "vp_sicarios_chief",
+        "intelChief": "vp_intel_chief",
+        "militaryChief": "vp_military_chief",
+        "diplomatChief": "vp_diplomat_chief",
+        "financeChief": "vp_finance_chief",
+        "traffickingChief": "vp_trafficking_chief",
+        "corruptionGovChief": "vp_gov_chief",
+        "corruptionPoliceChief": "vp_police_chief",
+        "productionChief": "vp_production_chief",
+        "prChief": "vp_pr_chief"
+      }
+    }
+  ],
+  "characters": [
+    {
+      "id": "chapo_guzman_06",
+      "name": "Joaquín Guzmán Loera \"El Chapo\"",
+      "sex": "M",
+      "birthYear": 1957,
+      "alive": true,
+      "cartelId": "sinaloa",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 70,
+        "business": 88,
+        "charisma": 72,
+        "intrigue": 96,
+        "loyaltyInspiring": 78,
+        "stealth": 90
+      },
+      "traits": [
+        "fugitivo nato",
+        "estratega"
+      ],
+      "notes": "Tras su fuga de 2001, consolida a Sinaloa como el cártel más poderoso de México. En la vida real sería recapturado en 2014, se fugaría de nuevo en 2015 y sería finalmente extraditado a EE.UU. en 2017. En el juego su destino depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": [
+        "chapo_hijo_1_06",
+        "chapo_hijo_2_06"
+      ]
+    },
+    {
+      "id": "chapo_hijo_1_06",
+      "name": "Iván Archivaldo Guzmán",
+      "sex": "M",
+      "birthYear": 1983,
+      "alive": true,
+      "cartelId": "sinaloa",
+      "role": null,
+      "historical": true,
+      "stats": {
+        "violence": 72,
+        "business": 68,
+        "charisma": 62,
+        "intrigue": 72,
+        "loyaltyInspiring": 58,
+        "stealth": 55
+      },
+      "traits": [
+        "heredero",
+        "Los Chapitos"
+      ],
+      "notes": "Hijo mayor de El Chapo, en la vida real figura central de 'Los Chapitos'.",
+      "parents": [
+        "chapo_guzman_06"
+      ],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "chapo_hijo_2_06",
+      "name": "Jesús Alfredo Guzmán Salazar",
+      "sex": "M",
+      "birthYear": 1989,
+      "alive": true,
+      "cartelId": "sinaloa",
+      "role": null,
+      "historical": true,
+      "stats": {
+        "violence": 68,
+        "business": 62,
+        "charisma": 55,
+        "intrigue": 68,
+        "loyaltyInspiring": 52,
+        "stealth": 55
+      },
+      "traits": [
+        "heredero",
+        "Los Chapitos"
+      ],
+      "notes": "Hijo de El Chapo.",
+      "parents": [
+        "chapo_guzman_06"
+      ],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "mayo_zambada_06",
+      "name": "Ismael Zambada García \"El Mayo\"",
+      "sex": "M",
+      "birthYear": 1948,
+      "alive": true,
+      "cartelId": "sinaloa",
+      "role": "underboss",
+      "historical": true,
+      "stats": {
+        "violence": 60,
+        "business": 90,
+        "charisma": 65,
+        "intrigue": 93,
+        "loyaltyInspiring": 80,
+        "stealth": 88
+      },
+      "traits": [
+        "discreto",
+        "pragmático"
+      ],
+      "notes": "Socio histórico de El Chapo; en la vida real seguiría en libertad hasta su detención en 2024, ya en la siguiente era.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "damaso_lopez",
+      "name": "Dámaso López Núñez \"El Licenciado\"",
+      "sex": "M",
+      "birthYear": 1962,
+      "alive": true,
+      "cartelId": "sinaloa",
+      "role": "corruptionGovChief",
+      "historical": true,
+      "stats": {
+        "violence": 55,
+        "business": 75,
+        "charisma": 65,
+        "intrigue": 85,
+        "loyaltyInspiring": 60,
+        "stealth": 65
+      },
+      "traits": [],
+      "notes": "Exfuncionario penitenciario y hombre de confianza de El Chapo, ligado a su fuga de 2001.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sin06_sicarios_chief",
+      "name": "Gonzalo \"El Macho Prieto\" Inzunza",
+      "sex": "M",
+      "birthYear": 1972,
+      "alive": true,
+      "cartelId": "sinaloa",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 90,
+        "business": 35,
+        "charisma": 45,
+        "intrigue": 55,
+        "loyaltyInspiring": 60,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sin06_military_chief",
+      "name": "Ovidio \"El Gordo\" Salcido",
+      "sex": "M",
+      "birthYear": 1968,
+      "alive": true,
+      "cartelId": "sinaloa",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 82,
+        "business": 45,
+        "charisma": 45,
+        "intrigue": 60,
+        "loyaltyInspiring": 62,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sin06_finance_chief",
+      "name": "Herminia Castro",
+      "sex": "F",
+      "birthYear": 1963,
+      "alive": true,
+      "cartelId": "sinaloa",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 88,
+        "charisma": 55,
+        "intrigue": 62,
+        "loyaltyInspiring": 48,
+        "stealth": 50
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sin06_trafficking_chief",
+      "name": "Alonso \"El Piloto\" Beraza",
+      "sex": "M",
+      "birthYear": 1962,
+      "alive": true,
+      "cartelId": "sinaloa",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 40,
+        "business": 77,
+        "charisma": 55,
+        "intrigue": 72,
+        "loyaltyInspiring": 50,
+        "stealth": 66
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sin06_police_chief",
+      "name": "Comandante Justino Reyes",
+      "sex": "M",
+      "birthYear": 1960,
+      "alive": true,
+      "cartelId": "sinaloa",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 35,
+        "business": 52,
+        "charisma": 55,
+        "intrigue": 76,
+        "loyaltyInspiring": 45,
+        "stealth": 70
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "lazcano_06",
+      "name": "Heriberto Lazcano \"El Lazca\"",
+      "sex": "M",
+      "birthYear": 1974,
+      "alive": true,
+      "cartelId": "zetas",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 94,
+        "business": 55,
+        "charisma": 42,
+        "intrigue": 70,
+        "loyaltyInspiring": 70,
+        "stealth": 68
+      },
+      "traits": [
+        "exmilitar de élite",
+        "fundador"
+      ],
+      "notes": "Exmilitar fundador de Los Zetas; en la vida real moriría en un enfrentamiento con la Marina en 2012.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "z40_trevino",
+      "name": "Miguel Ángel Treviño Morales \"Z-40\"",
+      "sex": "M",
+      "birthYear": 1973,
+      "alive": true,
+      "cartelId": "zetas",
+      "role": "underboss",
+      "historical": true,
+      "stats": {
+        "violence": 98,
+        "business": 60,
+        "charisma": 35,
+        "intrigue": 72,
+        "loyaltyInspiring": 55,
+        "stealth": 60
+      },
+      "traits": [
+        "extremadamente violento"
+      ],
+      "notes": "Uno de los líderes más temidos de Los Zetas; en la vida real sería detenido en 2013.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "z42_trevino",
+      "name": "Omar Treviño Morales \"Z-42\"",
+      "sex": "M",
+      "birthYear": 1978,
+      "alive": true,
+      "cartelId": "zetas",
+      "role": "militaryChief",
+      "historical": true,
+      "stats": {
+        "violence": 90,
+        "business": 55,
+        "charisma": 35,
+        "intrigue": 65,
+        "loyaltyInspiring": 55,
+        "stealth": 62
+      },
+      "traits": [],
+      "notes": "Hermano de Miguel Ángel Treviño; en la vida real asumiría el liderazgo del grupo tras la caída de su hermano.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "zetas_sicarios_chief",
+      "name": "Iván \"El Taliban\" Velázquez",
+      "sex": "M",
+      "birthYear": 1976,
+      "alive": true,
+      "cartelId": "zetas",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 92,
+        "business": 30,
+        "charisma": 35,
+        "intrigue": 55,
+        "loyaltyInspiring": 55,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "zetas_finance_chief",
+      "name": "Norberto \"El Contador\" Villagómez",
+      "sex": "M",
+      "birthYear": 1970,
+      "alive": true,
+      "cartelId": "zetas",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 25,
+        "business": 75,
+        "charisma": 45,
+        "intrigue": 60,
+        "loyaltyInspiring": 40,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "el_coss",
+      "name": "Jorge Eduardo Costilla Sánchez \"El Coss\"",
+      "sex": "M",
+      "birthYear": 1971,
+      "alive": true,
+      "cartelId": "golfo",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 70,
+        "business": 70,
+        "charisma": 55,
+        "intrigue": 72,
+        "loyaltyInspiring": 60,
+        "stealth": 58
+      },
+      "traits": [],
+      "notes": "Líder del Cártel del Golfo tras la ruptura con Los Zetas; en la vida real sería detenido en 2012.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "golfo06_underboss",
+      "name": "Eugenio \"El Metro\" Sandoval",
+      "sex": "M",
+      "birthYear": 1965,
+      "alive": true,
+      "cartelId": "golfo",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 65,
+        "business": 55,
+        "charisma": 50,
+        "intrigue": 58,
+        "loyaltyInspiring": 55,
+        "stealth": 52
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "golfo06_sicarios_chief",
+      "name": "Baltazar \"El Halcón\" Rivas Jr.",
+      "sex": "M",
+      "birthYear": 1970,
+      "alive": true,
+      "cartelId": "golfo",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 80,
+        "business": 30,
+        "charisma": 40,
+        "intrigue": 52,
+        "loyaltyInspiring": 55,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "golfo06_finance_chief",
+      "name": "Reynaldo Cavazos Jr.",
+      "sex": "M",
+      "birthYear": 1968,
+      "alive": true,
+      "cartelId": "golfo",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 70,
+        "charisma": 48,
+        "intrigue": 55,
+        "loyaltyInspiring": 42,
+        "stealth": 48
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "nazario_moreno",
+      "name": "Nazario Moreno González \"El Chayo\" / \"El Más Loco\"",
+      "sex": "M",
+      "birthYear": 1970,
+      "alive": true,
+      "cartelId": "familia_michoacana",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 75,
+        "business": 65,
+        "charisma": 78,
+        "intrigue": 70,
+        "loyaltyInspiring": 82,
+        "stealth": 60
+      },
+      "traits": [
+        "fundador",
+        "pseudo-religioso"
+      ],
+      "notes": "Fundador de La Familia Michoacana con una retórica pseudo-mística propia. En la vida real su muerte fue reportada en 2010 y confirmada oficialmente en 2014.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "la_tuta",
+      "name": "Servando Gómez Martínez \"La Tuta\"",
+      "sex": "M",
+      "birthYear": 1966,
+      "alive": true,
+      "cartelId": "familia_michoacana",
+      "role": "underboss",
+      "historical": true,
+      "stats": {
+        "violence": 55,
+        "business": 65,
+        "charisma": 80,
+        "intrigue": 78,
+        "loyaltyInspiring": 70,
+        "stealth": 55
+      },
+      "traits": [
+        "exmaestro",
+        "portavoz"
+      ],
+      "notes": "Exmaestro rural convertido en líder mediático de La Familia y luego de los Caballeros Templarios.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "familia_sicarios_chief",
+      "name": "Wenceslao \"El Wencho\" Álvarez",
+      "sex": "M",
+      "birthYear": 1972,
+      "alive": true,
+      "cartelId": "familia_michoacana",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 82,
+        "business": 30,
+        "charisma": 45,
+        "intrigue": 50,
+        "loyaltyInspiring": 55,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "familia_finance_chief",
+      "name": "Rutilo Campos",
+      "sex": "M",
+      "birthYear": 1965,
+      "alive": true,
+      "cartelId": "familia_michoacana",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 68,
+        "charisma": 50,
+        "intrigue": 55,
+        "loyaltyInspiring": 45,
+        "stealth": 48
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "arturo_beltran_leyva",
+      "name": "Arturo Beltrán Leyva \"El Barbas\"",
+      "sex": "M",
+      "birthYear": 1961,
+      "alive": true,
+      "cartelId": "beltran_leyva",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 82,
+        "business": 75,
+        "charisma": 60,
+        "intrigue": 78,
+        "loyaltyInspiring": 65,
+        "stealth": 55
+      },
+      "traits": [
+        "fundador"
+      ],
+      "notes": "Antiguo aliado de El Chapo, rompe con Sinaloa en 2008 tras la detención de su hermano Alfredo. En la vida real moriría en un operativo de la Marina en diciembre de 2009.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "hector_beltran_leyva",
+      "name": "Héctor Beltrán Leyva \"El H\"",
+      "sex": "M",
+      "birthYear": 1965,
+      "alive": true,
+      "cartelId": "beltran_leyva",
+      "role": "underboss",
+      "historical": true,
+      "stats": {
+        "violence": 60,
+        "business": 72,
+        "charisma": 62,
+        "intrigue": 74,
+        "loyaltyInspiring": 58,
+        "stealth": 58
+      },
+      "traits": [
+        "heredero"
+      ],
+      "notes": "Hermano de Arturo; en la vida real asumiría el liderazgo de la organización tras su muerte.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "bl_sicarios_chief",
+      "name": "Édgar \"La Barbie\" Valdez",
+      "sex": "M",
+      "birthYear": 1973,
+      "alive": true,
+      "cartelId": "beltran_leyva",
+      "role": "sicariosChief",
+      "historical": true,
+      "stats": {
+        "violence": 88,
+        "business": 45,
+        "charisma": 55,
+        "intrigue": 60,
+        "loyaltyInspiring": 50,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Jefe de sicarios estadounidense de origen texano de la organización Beltrán Leyva.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "bl_finance_chief",
+      "name": "Aureliano Guzmán Solís",
+      "sex": "M",
+      "birthYear": 1963,
+      "alive": true,
+      "cartelId": "beltran_leyva",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 25,
+        "business": 70,
+        "charisma": 50,
+        "intrigue": 58,
+        "loyaltyInspiring": 45,
+        "stealth": 50
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "vicente_carrillo_06",
+      "name": "Vicente Carrillo Fuentes \"El Viceroy\"",
+      "sex": "M",
+      "birthYear": 1962,
+      "alive": true,
+      "cartelId": "juarez",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 62,
+        "business": 68,
+        "charisma": 50,
+        "intrigue": 65,
+        "loyaltyInspiring": 55,
+        "stealth": 60
+      },
+      "traits": [
+        "heredero",
+        "asediado"
+      ],
+      "notes": "Hermano y sucesor de Amado Carrillo Fuentes al frente del Cártel de Juárez; libra una guerra abierta contra Sinaloa por el control de Ciudad Juárez desde 2008. Su destino en el juego depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "juarez06_underboss",
+      "name": "Juan Pablo \"El Ingeniero\" Ledezma",
+      "sex": "M",
+      "birthYear": 1965,
+      "alive": true,
+      "cartelId": "juarez",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 65,
+        "business": 55,
+        "charisma": 45,
+        "intrigue": 58,
+        "loyaltyInspiring": 55,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "juarez06_sicarios_chief",
+      "name": "Gonzalo \"El Kilo\" Reyes",
+      "sex": "M",
+      "birthYear": 1970,
+      "alive": true,
+      "cartelId": "juarez",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 85,
+        "business": 30,
+        "charisma": 35,
+        "intrigue": 50,
+        "loyaltyInspiring": 55,
+        "stealth": 58
+      },
+      "traits": [
+        "sanguinario"
+      ],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "juarez06_finance_chief",
+      "name": "Adriana Bustillos",
+      "sex": "F",
+      "birthYear": 1968,
+      "alive": true,
+      "cartelId": "juarez",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 72,
+        "charisma": 50,
+        "intrigue": 60,
+        "loyaltyInspiring": 40,
+        "stealth": 52
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "lorenzana_padre",
+      "name": "Waldemar Lorenzana Lima \"El Patriarca\"",
+      "sex": "M",
+      "birthYear": 1938,
+      "alive": true,
+      "cartelId": "lorenzana",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 45,
+        "business": 75,
+        "charisma": 55,
+        "intrigue": 65,
+        "loyaltyInspiring": 60,
+        "stealth": 50
+      },
+      "traits": [
+        "fundador",
+        "hacendado"
+      ],
+      "notes": "Terrateniente ganadero de Zacapa reconvertido en cabeza de una red real de trasiego de cocaína, con vínculos documentados con el Cártel de Sinaloa. En la vida real fue extraditado a EE.UU. en 2014 y se declaró culpable en 2016. En el juego su destino depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": [
+        "lorenzana_hijo"
+      ]
+    },
+    {
+      "id": "lorenzana_hijo",
+      "name": "Waldemar Lorenzana Cordón",
+      "sex": "M",
+      "birthYear": 1968,
+      "alive": true,
+      "cartelId": "lorenzana",
+      "role": "underboss",
+      "historical": true,
+      "stats": {
+        "violence": 50,
+        "business": 62,
+        "charisma": 48,
+        "intrigue": 55,
+        "loyaltyInspiring": 48,
+        "stealth": 52
+      },
+      "traits": [],
+      "notes": "Hijo de Waldemar Lorenzana Lima, también extraditado a EE.UU. y condenado por narcotráfico.",
+      "parents": [
+        "lorenzana_padre"
+      ],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "lorenzana_sicarios_chief",
+      "name": "Byron \"El Zope\" Morales",
+      "sex": "M",
+      "birthYear": 1975,
+      "alive": true,
+      "cartelId": "lorenzana",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 70,
+        "business": 30,
+        "charisma": 35,
+        "intrigue": 50,
+        "loyaltyInspiring": 45,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de la seguridad armada de la organización en Zacapa frente al avance de Los Zetas.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "lorenzana_intel_chief",
+      "name": "Estela Reyes Barrios",
+      "sex": "F",
+      "birthYear": 1965,
+      "alive": true,
+      "cartelId": "lorenzana",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 25,
+        "business": 55,
+        "charisma": 50,
+        "intrigue": 72,
+        "loyaltyInspiring": 45,
+        "stealth": 62
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de la red de contactos e informantes de la organización en Zacapa.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "lorenzana_military_chief",
+      "name": "Byron Cordón Recinos",
+      "sex": "M",
+      "birthYear": 1962,
+      "alive": true,
+      "cartelId": "lorenzana",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 68,
+        "business": 42,
+        "charisma": 48,
+        "intrigue": 45,
+        "loyaltyInspiring": 55,
+        "stealth": 35
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de las cuadrillas armadas que custodian las fincas y bodegas de la organización en Zacapa.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "lorenzana_diplomat_chief",
+      "name": "Consuelo Barrientos Mejía",
+      "sex": "F",
+      "birthYear": 1960,
+      "alive": true,
+      "cartelId": "lorenzana",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 18,
+        "business": 55,
+        "charisma": 65,
+        "intrigue": 48,
+        "loyaltyInspiring": 50,
+        "stealth": 30
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de las negociaciones con el Cártel de Sinaloa y otros socios mexicanos que usan Zacapa como corredor.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "lorenzana_finance_chief",
+      "name": "Alba Cordón Recinos",
+      "sex": "F",
+      "birthYear": 1958,
+      "alive": true,
+      "cartelId": "lorenzana",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 12,
+        "business": 72,
+        "charisma": 44,
+        "intrigue": 40,
+        "loyaltyInspiring": 45,
+        "stealth": 45
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, encargada de lavar las ganancias de la organización a través de fincas agrícolas y ganaderas en Zacapa.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_leader_06",
+      "name": "General Argenis Tovar Mendoza",
+      "sex": "M",
+      "birthYear": 1955,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "leader",
+      "historical": false,
+      "stats": {
+        "violence": 55,
+        "business": 68,
+        "charisma": 58,
+        "intrigue": 72,
+        "loyaltyInspiring": 58,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los mandos de la Guardia Nacional venezolana que facilitaban el narcotráfico a cambio de sobornos, el fenómeno real conocido como 'Cartel de los Soles'.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_underboss_06",
+      "name": "Coronel Deivis Aponte",
+      "sex": "M",
+      "birthYear": 1960,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 50,
+        "business": 55,
+        "charisma": 48,
+        "intrigue": 60,
+        "loyaltyInspiring": 50,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_sicarios_chief_06",
+      "name": "Mayor Yosmar Belisario",
+      "sex": "M",
+      "birthYear": 1965,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 65,
+        "business": 35,
+        "charisma": 42,
+        "intrigue": 58,
+        "loyaltyInspiring": 48,
+        "stealth": 52
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de la seguridad armada de los envíos que cruzan la frontera con La Guajira.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_intel_chief_06",
+      "name": "Capitán Carilú Andrade",
+      "sex": "F",
+      "birthYear": 1966,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 32,
+        "business": 50,
+        "charisma": 50,
+        "intrigue": 78,
+        "loyaltyInspiring": 45,
+        "stealth": 68
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, oficial de inteligencia militar a cargo de vigilar tanto a rivales como a posibles informantes dentro de la propia red.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_military_chief_06",
+      "name": "Comandante Néstor Guaramato",
+      "sex": "M",
+      "birthYear": 1962,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 70,
+        "business": 36,
+        "charisma": 50,
+        "intrigue": 50,
+        "loyaltyInspiring": 52,
+        "stealth": 38
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, oficial de la Guardia Nacional a cargo de las tropas que custodian la ruta de trasiego por la frontera con La Guajira.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_diplomat_chief_06",
+      "name": "Coronela Yulimar Peraza",
+      "sex": "F",
+      "birthYear": 1964,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 52,
+        "charisma": 68,
+        "intrigue": 48,
+        "loyaltyInspiring": 50,
+        "stealth": 32
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, oficial de enlace a cargo de las negociaciones con los cárteles mexicanos y colombianos que trasiegan por la frontera con La Guajira.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_finance_chief_06",
+      "name": "Ana Yulitza Rondón",
+      "sex": "F",
+      "birthYear": 1968,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 12,
+        "business": 70,
+        "charisma": 46,
+        "intrigue": 42,
+        "loyaltyInspiring": 42,
+        "stealth": 45
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, encargada de lavar las ganancias de la red a través de negocios de importación y cambio de divisas en Maracaibo.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "lorenzana_trafficking_chief",
+      "name": "Hugo Recinos Barrientos",
+      "sex": "M",
+      "birthYear": 1958,
+      "alive": true,
+      "cartelId": "lorenzana",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 34,
+        "business": 60,
+        "charisma": 42,
+        "intrigue": 64,
+        "loyaltyInspiring": 46,
+        "stealth": 58
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de coordinar el trasiego de cargamentos colombianos a través de Zacapa hacia México.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_trafficking_chief_06",
+      "name": "Teniente Coronel Ovidio Camejo",
+      "sex": "M",
+      "birthYear": 1963,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 36,
+        "business": 58,
+        "charisma": 44,
+        "intrigue": 66,
+        "loyaltyInspiring": 48,
+        "stealth": 60
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, oficial a cargo de coordinar el trasiego de cargamentos por la frontera con La Guajira.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "lorenzana_gov_chief",
+      "name": "Herminia Cordón Recinos",
+      "sex": "F",
+      "birthYear": 1955,
+      "alive": true,
+      "cartelId": "lorenzana",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 16,
+        "business": 58,
+        "charisma": 60,
+        "intrigue": 58,
+        "loyaltyInspiring": 44,
+        "stealth": 42
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de mantener los contactos políticos regionales de la organización en Zacapa.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_gov_chief_06",
+      "name": "Marisela Gamboa",
+      "sex": "F",
+      "birthYear": 1958,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 18,
+        "business": 55,
+        "charisma": 60,
+        "intrigue": 58,
+        "loyaltyInspiring": 44,
+        "stealth": 42
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, contacto civil a cargo de extender la red de sobornos del Cartel de los Soles a funcionarios civiles regionales, más allá de la propia Guardia Nacional.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "lorenzana_police_chief",
+      "name": "Comisario Aroldo Barillas",
+      "sex": "M",
+      "birthYear": 1958,
+      "alive": true,
+      "cartelId": "lorenzana",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 38,
+        "business": 50,
+        "charisma": 46,
+        "intrigue": 56,
+        "loyaltyInspiring": 44,
+        "stealth": 46
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de sobornar a la policía nacional civil guatemalteca en Zacapa.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_police_chief_06",
+      "name": "Comisario Argenis Loyo",
+      "sex": "M",
+      "birthYear": 1960,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 38,
+        "business": 48,
+        "charisma": 48,
+        "intrigue": 54,
+        "loyaltyInspiring": 44,
+        "stealth": 44
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, contacto dentro de los cuerpos policiales venezolanos, en paralelo a la propia corrupción castrense del Cartel de los Soles.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "lorenzana_production_chief",
+      "name": "Aroldo Cordón",
+      "sex": "M",
+      "birthYear": 1960,
+      "alive": true,
+      "cartelId": "lorenzana",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 26,
+        "business": 58,
+        "charisma": 40,
+        "intrigue": 46,
+        "loyaltyInspiring": 42,
+        "stealth": 40
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de inspeccionar y reempacar los cargamentos en tránsito por las fincas de la organización en Zacapa.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_production_chief_06",
+      "name": "Sargento Ramón Contreras",
+      "sex": "M",
+      "birthYear": 1958,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 26,
+        "business": 55,
+        "charisma": 40,
+        "intrigue": 46,
+        "loyaltyInspiring": 42,
+        "stealth": 40
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de reempacar y verificar la calidad de los cargamentos antes de continuar su ruta a través de la frontera con La Guajira.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "lorenzana_pr_chief",
+      "name": "Alba Lima Recinos",
+      "sex": "F",
+      "birthYear": 1962,
+      "alive": true,
+      "cartelId": "lorenzana",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 14,
+        "business": 45,
+        "charisma": 62,
+        "intrigue": 50,
+        "loyaltyInspiring": 52,
+        "stealth": 36
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de cultivar la imagen de terratenientes respetables de la familia Lorenzana en Zacapa.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "soles_pr_chief_06",
+      "name": "Capitana Yolanda Uzcátegui",
+      "sex": "F",
+      "birthYear": 1958,
+      "alive": true,
+      "cartelId": "soles",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 16,
+        "business": 45,
+        "charisma": 60,
+        "intrigue": 52,
+        "loyaltyInspiring": 50,
+        "stealth": 36
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, oficial a cargo de negar públicamente cualquier vínculo entre la Guardia Nacional y el narcotráfico.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sm_leader",
+      "name": "Semion Mogilevich",
+      "sex": "M",
+      "birthYear": 1946,
+      "alive": true,
+      "cartelId": "mogilevich_org",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 60,
+        "business": 92,
+        "charisma": 62,
+        "intrigue": 90,
+        "loyaltyInspiring": 65,
+        "stealth": 85
+      },
+      "traits": [
+        "intrigante",
+        "fundador"
+      ],
+      "notes": "Figura real y muy documentada del crimen organizado ruso/euroasiático, con base principal en Moscú. Estuvo en la lista de los diez más buscados del FBI durante buena parte de esta época, protegido durante años de una extradición real gracias a sus conexiones políticas. En el juego su destino depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sm_underboss",
+      "name": "Arkady Volkov",
+      "sex": "M",
+      "birthYear": 1950,
+      "alive": true,
+      "cartelId": "mogilevich_org",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 55,
+        "business": 70,
+        "charisma": 55,
+        "intrigue": 72,
+        "loyaltyInspiring": 58,
+        "stealth": 68
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los mandos de la organización más cercanos a Mogilevich.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sm_sicarios_chief",
+      "name": "Yuri Pavlenko",
+      "sex": "M",
+      "birthYear": 1955,
+      "alive": true,
+      "cartelId": "mogilevich_org",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 88,
+        "business": 40,
+        "charisma": 40,
+        "intrigue": 55,
+        "loyaltyInspiring": 48,
+        "stealth": 65
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los ejecutores de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sm_intel_chief",
+      "name": "Irina Sokolova",
+      "sex": "F",
+      "birthYear": 1958,
+      "alive": true,
+      "cartelId": "mogilevich_org",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 35,
+        "business": 60,
+        "charisma": 55,
+        "intrigue": 85,
+        "loyaltyInspiring": 50,
+        "stealth": 88
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la extensa red de información e inteligencia real que rodeaba a la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sm_military_chief",
+      "name": "Dmitri Orlov",
+      "sex": "M",
+      "birthYear": 1952,
+      "alive": true,
+      "cartelId": "mogilevich_org",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 78,
+        "business": 48,
+        "charisma": 45,
+        "intrigue": 58,
+        "loyaltyInspiring": 60,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa las redes reales de tráfico de armas asociadas a la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sm_diplomat_chief",
+      "name": "Boris Kalinin",
+      "sex": "M",
+      "birthYear": 1948,
+      "alive": true,
+      "cartelId": "mogilevich_org",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 25,
+        "business": 68,
+        "charisma": 75,
+        "intrigue": 72,
+        "loyaltyInspiring": 55,
+        "stealth": 60
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red real de conexiones políticas de alto nivel que protegía a la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sm_finance_chief",
+      "name": "Lev Rudenko",
+      "sex": "M",
+      "birthYear": 1954,
+      "alive": true,
+      "cartelId": "mogilevich_org",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 90,
+        "charisma": 55,
+        "intrigue": 65,
+        "loyaltyInspiring": 45,
+        "stealth": 62
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa el real y extenso entramado de fraude financiero internacional (incluidas empresas fachada bursátiles) vinculado a la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sm_trafficking_chief",
+      "name": "Pavel Zhukov",
+      "sex": "M",
+      "birthYear": 1957,
+      "alive": true,
+      "cartelId": "mogilevich_org",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 60,
+        "business": 65,
+        "charisma": 42,
+        "intrigue": 60,
+        "loyaltyInspiring": 48,
+        "stealth": 65
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa las rutas de contrabando de la organización a través de Europa del Este.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sm_gov_chief",
+      "name": "Ministro Anatoly Fomin",
+      "sex": "M",
+      "birthYear": 1945,
+      "alive": true,
+      "cartelId": "mogilevich_org",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 65,
+        "charisma": 70,
+        "intrigue": 78,
+        "loyaltyInspiring": 50,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red real de protección política de alto nivel de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sm_police_chief",
+      "name": "Coronel Gennady Popov",
+      "sex": "M",
+      "birthYear": 1951,
+      "alive": true,
+      "cartelId": "mogilevich_org",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 30,
+        "business": 52,
+        "charisma": 45,
+        "intrigue": 68,
+        "loyaltyInspiring": 42,
+        "stealth": 65
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa complicidades dentro de las fuerzas de seguridad rusas.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sm_production_chief",
+      "name": "Andrei Melnik",
+      "sex": "M",
+      "birthYear": 1960,
+      "alive": true,
+      "cartelId": "mogilevich_org",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 40,
+        "business": 60,
+        "charisma": 38,
+        "intrigue": 50,
+        "loyaltyInspiring": 40,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa las operaciones industriales/logísticas de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sm_pr_chief",
+      "name": "Ekaterina Volskaya",
+      "sex": "F",
+      "birthYear": 1962,
+      "alive": true,
+      "cartelId": "mogilevich_org",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 55,
+        "charisma": 65,
+        "intrigue": 55,
+        "loyaltyInspiring": 52,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la fachada empresarial legítima que la organización cultivaba de puertas afuera.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "dr_leader",
+      "name": "Dritan Rexhepi",
+      "sex": "M",
+      "birthYear": 1978,
+      "alive": true,
+      "cartelId": "kompania_bello",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 65,
+        "business": 78,
+        "charisma": 60,
+        "intrigue": 82,
+        "loyaltyInspiring": 58,
+        "stealth": 75
+      },
+      "traits": [
+        "fugitivo",
+        "fundador"
+      ],
+      "notes": "Figura real del crimen organizado albanés. En la vida real protagonizó una fuga de prisión en helicóptero desde Rebibbia (Roma) en noviembre de 2013, ampliamente cubierta por la prensa internacional, y fue recapturado tiempo después. En el juego su destino depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "dr_underboss",
+      "name": "Agron Berisha",
+      "sex": "M",
+      "birthYear": 1975,
+      "alive": true,
+      "cartelId": "kompania_bello",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 62,
+        "business": 65,
+        "charisma": 52,
+        "intrigue": 68,
+        "loyaltyInspiring": 55,
+        "stealth": 65
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los mandos de la organización más cercanos a Rexhepi.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "dr_sicarios_chief",
+      "name": "Ilir Krasniqi",
+      "sex": "M",
+      "birthYear": 1980,
+      "alive": true,
+      "cartelId": "kompania_bello",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 82,
+        "business": 35,
+        "charisma": 40,
+        "intrigue": 50,
+        "loyaltyInspiring": 45,
+        "stealth": 62
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los ejecutores de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "dr_intel_chief",
+      "name": "Vjosa Hoxha",
+      "sex": "F",
+      "birthYear": 1982,
+      "alive": true,
+      "cartelId": "kompania_bello",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 35,
+        "business": 55,
+        "charisma": 50,
+        "intrigue": 75,
+        "loyaltyInspiring": 45,
+        "stealth": 78
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red de información e inteligencia de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "dr_military_chief",
+      "name": "Blerim Shala",
+      "sex": "M",
+      "birthYear": 1976,
+      "alive": true,
+      "cartelId": "kompania_bello",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 75,
+        "business": 42,
+        "charisma": 45,
+        "intrigue": 52,
+        "loyaltyInspiring": 55,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los mandos armados de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "dr_diplomat_chief",
+      "name": "Genc Mustafa",
+      "sex": "M",
+      "birthYear": 1970,
+      "alive": true,
+      "cartelId": "kompania_bello",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 28,
+        "business": 62,
+        "charisma": 70,
+        "intrigue": 60,
+        "loyaltyInspiring": 50,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa los canales de negociación con proveedores sudamericanos y otras redes europeas.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "dr_finance_chief",
+      "name": "Arben Gashi",
+      "sex": "M",
+      "birthYear": 1974,
+      "alive": true,
+      "cartelId": "kompania_bello",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 78,
+        "charisma": 50,
+        "intrigue": 58,
+        "loyaltyInspiring": 42,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa el blanqueo de dinero de la organización a través de negocios en Europa.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "dr_trafficking_chief",
+      "name": "Fatmir Doda",
+      "sex": "M",
+      "birthYear": 1979,
+      "alive": true,
+      "cartelId": "kompania_bello",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 55,
+        "business": 70,
+        "charisma": 42,
+        "intrigue": 62,
+        "loyaltyInspiring": 46,
+        "stealth": 68
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la ruta real de cocaína desde Ecuador hacia España e Italia operada por la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "dr_gov_chief",
+      "name": "Petrit Buja",
+      "sex": "M",
+      "birthYear": 1965,
+      "alive": true,
+      "cartelId": "kompania_bello",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 58,
+        "charisma": 62,
+        "intrigue": 68,
+        "loyaltyInspiring": 45,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa complicidades políticas locales.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "dr_police_chief",
+      "name": "Comisario Adnan Curri",
+      "sex": "M",
+      "birthYear": 1968,
+      "alive": true,
+      "cartelId": "kompania_bello",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 30,
+        "business": 48,
+        "charisma": 42,
+        "intrigue": 62,
+        "loyaltyInspiring": 40,
+        "stealth": 60
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa complicidades policiales locales.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "dr_production_chief",
+      "name": "Xhevdet Meta",
+      "sex": "M",
+      "birthYear": 1981,
+      "alive": true,
+      "cartelId": "kompania_bello",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 35,
+        "business": 52,
+        "charisma": 35,
+        "intrigue": 45,
+        "loyaltyInspiring": 38,
+        "stealth": 50
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la logística de almacenamiento y distribución de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "dr_pr_chief",
+      "name": "Elira Krasniqi",
+      "sex": "F",
+      "birthYear": 1984,
+      "alive": true,
+      "cartelId": "kompania_bello",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 18,
+        "business": 45,
+        "charisma": 60,
+        "intrigue": 48,
+        "loyaltyInspiring": 50,
+        "stealth": 45
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la fachada empresarial de la organización de puertas afuera.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "nt_leader",
+      "name": "Contraalmirante Sanhá Balde",
+      "sex": "M",
+      "birthYear": 1958,
+      "alive": true,
+      "cartelId": "na_tchuto_network",
+      "role": "leader",
+      "historical": false,
+      "stats": {
+        "violence": 65,
+        "business": 62,
+        "charisma": 60,
+        "intrigue": 72,
+        "loyaltyInspiring": 58,
+        "stealth": 65
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los mandos militares de alto rango que, según fuentes reales, protegían el tránsito de cocaína sudamericana por Guinea-Bisáu durante estos años — un patrón encarnado en la vida real por el contraalmirante José Américo Bubo Na Tchuto, exjefe de la marina, detenido en una operación real de la DEA en 2013 y luego condenado en EE. UU. por conspiración para el narcotráfico.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "nt_underboss",
+      "name": "Coronel Iaia Djaló",
+      "sex": "M",
+      "birthYear": 1962,
+      "alive": true,
+      "cartelId": "na_tchuto_network",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 60,
+        "business": 55,
+        "charisma": 50,
+        "intrigue": 62,
+        "loyaltyInspiring": 55,
+        "stealth": 60
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los mandos cercanos a la cúpula militar de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "nt_sicarios_chief",
+      "name": "Mamadu Sanha",
+      "sex": "M",
+      "birthYear": 1970,
+      "alive": true,
+      "cartelId": "na_tchuto_network",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 80,
+        "business": 35,
+        "charisma": 40,
+        "intrigue": 50,
+        "loyaltyInspiring": 45,
+        "stealth": 58
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los ejecutores de la organización, en un contexto real marcado por varios asesinatos políticos y militares de esta misma época.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "nt_intel_chief",
+      "name": "Fatumata Camará",
+      "sex": "F",
+      "birthYear": 1968,
+      "alive": true,
+      "cartelId": "na_tchuto_network",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 32,
+        "business": 50,
+        "charisma": 48,
+        "intrigue": 72,
+        "loyaltyInspiring": 45,
+        "stealth": 75
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red de información e inteligencia de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "nt_military_chief",
+      "name": "General Tumane Baldé",
+      "sex": "M",
+      "birthYear": 1955,
+      "alive": true,
+      "cartelId": "na_tchuto_network",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 72,
+        "business": 42,
+        "charisma": 50,
+        "intrigue": 55,
+        "loyaltyInspiring": 60,
+        "stealth": 50
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los mandos armados de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "nt_diplomat_chief",
+      "name": "Embaixador Rui Có",
+      "sex": "M",
+      "birthYear": 1950,
+      "alive": true,
+      "cartelId": "na_tchuto_network",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 58,
+        "charisma": 70,
+        "intrigue": 65,
+        "loyaltyInspiring": 50,
+        "stealth": 52
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa los canales reales de negociación con proveedores sudamericanos y compradores europeos.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "nt_finance_chief",
+      "name": "Aliu Seidi",
+      "sex": "M",
+      "birthYear": 1963,
+      "alive": true,
+      "cartelId": "na_tchuto_network",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 18,
+        "business": 72,
+        "charisma": 52,
+        "intrigue": 58,
+        "loyaltyInspiring": 42,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa el blanqueo de dinero de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "nt_trafficking_chief",
+      "name": "Capitão Braima Turé",
+      "sex": "M",
+      "birthYear": 1966,
+      "alive": true,
+      "cartelId": "na_tchuto_network",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 55,
+        "business": 65,
+        "charisma": 42,
+        "intrigue": 60,
+        "loyaltyInspiring": 46,
+        "stealth": 68
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa las rutas reales de trasbordo de cocaína sudamericana hacia Europa a través de Guinea-Bisáu.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "nt_gov_chief",
+      "name": "Ministro Malam Bacai",
+      "sex": "M",
+      "birthYear": 1952,
+      "alive": true,
+      "cartelId": "na_tchuto_network",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 12,
+        "business": 60,
+        "charisma": 65,
+        "intrigue": 70,
+        "loyaltyInspiring": 48,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red real de protección política de alto nivel de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "nt_police_chief",
+      "name": "Comissário Idrissa Djaló",
+      "sex": "M",
+      "birthYear": 1964,
+      "alive": true,
+      "cartelId": "na_tchuto_network",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 30,
+        "business": 45,
+        "charisma": 42,
+        "intrigue": 58,
+        "loyaltyInspiring": 40,
+        "stealth": 60
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa complicidades reales dentro de las fuerzas de seguridad del país.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "nt_production_chief",
+      "name": "Umaro Sissoco",
+      "sex": "M",
+      "birthYear": 1971,
+      "alive": true,
+      "cartelId": "na_tchuto_network",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 35,
+        "business": 50,
+        "charisma": 35,
+        "intrigue": 45,
+        "loyaltyInspiring": 38,
+        "stealth": 50
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la logística de almacenamiento en tránsito de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "nt_pr_chief",
+      "name": "Adama Có",
+      "sex": "F",
+      "birthYear": 1974,
+      "alive": true,
+      "cartelId": "na_tchuto_network",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 45,
+        "charisma": 60,
+        "intrigue": 48,
+        "loyaltyInspiring": 50,
+        "stealth": 45
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la fachada institucional de la organización de puertas afuera.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cas_leader",
+      "name": "Michele Zagaria",
+      "sex": "M",
+      "birthYear": 1958,
+      "alive": true,
+      "cartelId": "casalesi",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 85,
+        "business": 82,
+        "charisma": 55,
+        "intrigue": 88,
+        "loyaltyInspiring": 68,
+        "stealth": 92
+      },
+      "traits": [
+        "fundador"
+      ],
+      "notes": "Jefe real del clan de los Casalesi junto a Antonio Iovine tras la condena de Francesco \"Sandokan\" Schiavone. Permaneció fugitivo desde los años 90; en la vida real fue detenido en un búnker subterráneo en Casapesenna en diciembre de 2011. En el juego su destino depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cas_underboss",
+      "name": "Antonio Iovine",
+      "sex": "M",
+      "birthYear": 1964,
+      "alive": true,
+      "cartelId": "casalesi",
+      "role": "underboss",
+      "historical": true,
+      "stats": {
+        "violence": 78,
+        "business": 75,
+        "charisma": 58,
+        "intrigue": 80,
+        "loyaltyInspiring": 62,
+        "stealth": 88
+      },
+      "traits": [],
+      "notes": "Cojefe real del clan junto a Michele Zagaria, apodado \"o' Ninno\". En la vida real fue detenido en noviembre de 2010 tras años fugitivo, y posteriormente colaboró con la justicia italiana como arrepentido.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cas_sicarios_chief",
+      "name": "Giuseppe Setola",
+      "sex": "M",
+      "birthYear": 1967,
+      "alive": true,
+      "cartelId": "casalesi",
+      "role": "sicariosChief",
+      "historical": true,
+      "stats": {
+        "violence": 96,
+        "business": 35,
+        "charisma": 40,
+        "intrigue": 55,
+        "loyaltyInspiring": 45,
+        "stealth": 60
+      },
+      "traits": [],
+      "notes": "Sicario real del clan, responsable de una ola real de asesinatos en la zona de Castel Volturno en 2008 tras escapar de arresto domiciliario. En la vida real fue detenido en enero de 2009.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cas_intel_chief",
+      "name": "Franco Bidognetti",
+      "sex": "M",
+      "birthYear": 1952,
+      "alive": true,
+      "cartelId": "casalesi",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 50,
+        "business": 58,
+        "charisma": 52,
+        "intrigue": 74,
+        "loyaltyInspiring": 48,
+        "stealth": 76
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a la red de vigilancia e información interna de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cas_military_chief",
+      "name": "Rocco Schiavone",
+      "sex": "M",
+      "birthYear": 1960,
+      "alive": true,
+      "cartelId": "casalesi",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 80,
+        "business": 42,
+        "charisma": 38,
+        "intrigue": 52,
+        "loyaltyInspiring": 58,
+        "stealth": 48
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los mandos armados del clan.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cas_diplomat_chief",
+      "name": "Avv. Peppe Nocerino",
+      "sex": "M",
+      "birthYear": 1955,
+      "alive": true,
+      "cartelId": "casalesi",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 35,
+        "business": 62,
+        "charisma": 68,
+        "intrigue": 66,
+        "loyaltyInspiring": 50,
+        "stealth": 58
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa los canales reales de negociación del clan con otras facciones de la Camorra y con la política local.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cas_finance_chief",
+      "name": "Ciro Esposito",
+      "sex": "M",
+      "birthYear": 1958,
+      "alive": true,
+      "cartelId": "casalesi",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 28,
+        "business": 84,
+        "charisma": 48,
+        "intrigue": 62,
+        "loyaltyInspiring": 44,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red real de empresas de fachada en el sector de la construcción usada para blanquear el dinero del clan.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cas_trafficking_chief",
+      "name": "Vincenzo Letizia",
+      "sex": "M",
+      "birthYear": 1963,
+      "alive": true,
+      "cartelId": "casalesi",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 58,
+        "business": 70,
+        "charisma": 46,
+        "intrigue": 60,
+        "loyaltyInspiring": 48,
+        "stealth": 64
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red real de distribución de cocaína del clan en el centro y sur de Italia.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cas_gov_chief",
+      "name": "On. Aldo Fusco",
+      "sex": "M",
+      "birthYear": 1950,
+      "alive": true,
+      "cartelId": "casalesi",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 65,
+        "charisma": 70,
+        "intrigue": 72,
+        "loyaltyInspiring": 46,
+        "stealth": 62
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red real de complicidades políticas locales documentadas en distintos procesos contra el clan, especialmente en torno a la adjudicación de obra pública.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cas_police_chief",
+      "name": "Maresciallo Enzo Diana",
+      "sex": "M",
+      "birthYear": 1957,
+      "alive": true,
+      "cartelId": "casalesi",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 30,
+        "business": 52,
+        "charisma": 48,
+        "intrigue": 66,
+        "loyaltyInspiring": 44,
+        "stealth": 68
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red real de complicidades dentro de las fuerzas del orden de la región de Caserta.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cas_production_chief",
+      "name": "Aniello Bardellino",
+      "sex": "M",
+      "birthYear": 1961,
+      "alive": true,
+      "cartelId": "casalesi",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 40,
+        "business": 60,
+        "charisma": 38,
+        "intrigue": 48,
+        "loyaltyInspiring": 40,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa el negocio real del vertido ilegal de residuos tóxicos que hizo del clan una de las organizaciones más ricas de Europa (el fenómeno real conocido como \"Terra dei Fuochi\").",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "cas_pr_chief",
+      "name": "Don Gennaro Verde",
+      "sex": "M",
+      "birthYear": 1948,
+      "alive": true,
+      "cartelId": "casalesi",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 25,
+        "business": 48,
+        "charisma": 62,
+        "intrigue": 50,
+        "loyaltyInspiring": 58,
+        "stealth": 50
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa el manejo real de la legitimidad social del clan dentro de su comunidad de origen, en fuerte contraste con la exposición mediática real que le supuso el libro \"Gomorra\" de Roberto Saviano.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "vp_leader",
+      "name": "Vito Roberto Palazzolo",
+      "sex": "M",
+      "birthYear": 1947,
+      "alive": true,
+      "cartelId": "palazzolo_org",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 35,
+        "business": 96,
+        "charisma": 68,
+        "intrigue": 90,
+        "loyaltyInspiring": 55,
+        "stealth": 88
+      },
+      "traits": [
+        "fundador"
+      ],
+      "notes": "Banquero real de Cosa Nostra huido a Sudáfrica a mediados de los 80, condenado en ausencia por Italia en 2009 por asociación mafiosa. Sudáfrica se negó durante años a extraditarlo; fue detenido por Interpol en Bangkok en 2012 al intentar salir del país. En el juego su destino depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "vp_underboss",
+      "name": "Franco Della Torre (rama sudafricana, ficticio)",
+      "sex": [],
+      "birthYear": 1950,
+      "alive": true,
+      "cartelId": "palazzolo_org",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 30,
+        "business": 80,
+        "charisma": 58,
+        "intrigue": 72,
+        "loyaltyInspiring": 50,
+        "stealth": 75
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la extensión sudafricana de la red financiera suiza real de Palazzolo (Consultfin SA), sin implicar al Della Torre real, que operó desde Lugano y no desde Sudáfrica.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "vp_sicarios_chief",
+      "name": "Hendrik Botha (ficticio)",
+      "sex": [],
+      "birthYear": 1962,
+      "alive": true,
+      "cartelId": "palazzolo_org",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 82,
+        "business": 35,
+        "charisma": 30,
+        "intrigue": 55,
+        "loyaltyInspiring": 48,
+        "stealth": 68
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la seguridad privada de la organización en Sudáfrica.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "vp_intel_chief",
+      "name": "Marié van Rensburg (ficticia)",
+      "sex": "F",
+      "birthYear": 1965,
+      "alive": true,
+      "cartelId": "palazzolo_org",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 28,
+        "business": 60,
+        "charisma": 52,
+        "intrigue": 78,
+        "loyaltyInspiring": 46,
+        "stealth": 82
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red real de contactos e información que permitió a la organización anticiparse durante años a los intentos de extradición.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "vp_military_chief",
+      "name": "Deon Pretorius (ficticio)",
+      "sex": [],
+      "birthYear": 1960,
+      "alive": true,
+      "cartelId": "palazzolo_org",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 75,
+        "business": 40,
+        "charisma": 38,
+        "intrigue": 50,
+        "loyaltyInspiring": 52,
+        "stealth": 60
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa el brazo armado de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "vp_diplomat_chief",
+      "name": "Advocaat Pieter de Wet (ficticio)",
+      "sex": [],
+      "birthYear": 1955,
+      "alive": true,
+      "cartelId": "palazzolo_org",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 70,
+        "charisma": 74,
+        "intrigue": 68,
+        "loyaltyInspiring": 48,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa el real y extenso equipo legal sudafricano que litigó durante años contra las peticiones de extradición italianas.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "vp_finance_chief",
+      "name": "Isabella Conti (ficticia)",
+      "sex": "F",
+      "birthYear": 1958,
+      "alive": true,
+      "cartelId": "palazzolo_org",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 12,
+        "business": 92,
+        "charisma": 55,
+        "intrigue": 70,
+        "loyaltyInspiring": 44,
+        "stealth": 65
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la gestión real del patrimonio diversificado de la organización (diamantes, propiedades de lujo, cuentas en el extranjero).",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "vp_trafficking_chief",
+      "name": "Nomvula Dlamini (ficticia)",
+      "sex": "F",
+      "birthYear": 1963,
+      "alive": true,
+      "cartelId": "palazzolo_org",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 45,
+        "business": 68,
+        "charisma": 50,
+        "intrigue": 60,
+        "loyaltyInspiring": 46,
+        "stealth": 66
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa las rutas de distribución de la organización dentro de Sudáfrica y hacia mercados vecinos.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "vp_gov_chief",
+      "name": "Senador Willem Joubert (ficticio)",
+      "sex": [],
+      "birthYear": 1948,
+      "alive": true,
+      "cartelId": "palazzolo_org",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 10,
+        "business": 62,
+        "charisma": 70,
+        "intrigue": 74,
+        "loyaltyInspiring": 42,
+        "stealth": 58
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa las conexiones reales y documentadas de Palazzolo con círculos políticos y empresariales sudafricanos.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "vp_police_chief",
+      "name": "Comisario Sipho Nkosi (ficticio)",
+      "sex": [],
+      "birthYear": 1957,
+      "alive": true,
+      "cartelId": "palazzolo_org",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 34,
+        "business": 50,
+        "charisma": 44,
+        "intrigue": 64,
+        "loyaltyInspiring": 40,
+        "stealth": 68
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red de complicidades dentro de las fuerzas del orden sudafricanas.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "vp_production_chief",
+      "name": "Jacobus Kruger (ficticio)",
+      "sex": [],
+      "birthYear": 1959,
+      "alive": true,
+      "cartelId": "palazzolo_org",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 25,
+        "business": 58,
+        "charisma": 34,
+        "intrigue": 46,
+        "loyaltyInspiring": 40,
+        "stealth": 52
+      },
+      "traits": [],
+      "notes": "Personaje ficticio; la organización no produce droga propia (es una red financiera y de distribución, no un cártel productor), así que este cargo representa la logística de recepción de mercancía ya producida.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "vp_pr_chief",
+      "name": "Charlize Human (ficticia)",
+      "sex": "F",
+      "birthYear": 1966,
+      "alive": true,
+      "cartelId": "palazzolo_org",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 14,
+        "business": 48,
+        "charisma": 66,
+        "intrigue": 50,
+        "loyaltyInspiring": 50,
+        "stealth": 48
+      },
+      "traits": [],
+      "notes": "Personaje ficticia que representa el manejo real de la imagen pública de Palazzolo como empresario respetable de Ciudad del Cabo, una fachada que sostuvo durante casi tres décadas.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    }
+  ],
+  "newCartelTerritories": [
+    "baja_california",
+    "jalisco"
+  ]
+}

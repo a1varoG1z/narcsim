@@ -1,0 +1,12 @@
+{
+  "name": "narcsim",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Narcosim: simulador de estrategia por turnos sobre la historia del narcotráfico (sitio estático, sin build).",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "test": "node --test tests/*.test.js",
+    "simulate": "node scripts/simulate-balance.mjs"
+  }
+}

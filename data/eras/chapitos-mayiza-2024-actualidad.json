@@ -1,0 +1,4322 @@
+{
+  "id": "chapitos-mayiza-2024-actualidad",
+  "name": "Los Chapitos contra La Mayiza",
+  "period": "2024 – actualidad",
+  "startYear": 2024,
+  "endYear": 2035,
+  "turnMonths": 6,
+  "description": "El 25 de julio de 2024, Joaquín Guzmán López entrega a Ismael 'El Mayo' Zambada a las autoridades de Estados Unidos. La traición fractura al Cártel de Sinaloa en una guerra civil abierta: 'Los Chapitos' (los hijos de El Chapo) contra 'La Mayiza' (los leales al Mayo, liderados por su hijo Ismael Zambada Sicairos). Culiacán se convierte en un campo de batalla urbano. Mientras tanto, el CJNG de 'El Mencho' observa y explota cada oportunidad para expandirse a costa de ambos bandos.",
+  "territories": [
+    {
+      "id": "baja_california",
+      "name": "Baja California",
+      "controllerId": "chapitos",
+      "value": 16,
+      "adj": [
+        "baja_california_sur",
+        "california",
+        "sonora"
+      ],
+      "geo": "MEX_BajaCalifornia"
+    },
+    {
+      "id": "sonora",
+      "name": "Sonora",
+      "controllerId": "chapitos",
+      "value": 13,
+      "adj": [
+        "arizona",
+        "baja_california",
+        "chihuahua",
+        "costa_sinaloa",
+        "culiacan"
+      ],
+      "geo": "MEX_Sonora"
+    },
+    {
+      "id": "chihuahua",
+      "name": "Chihuahua",
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "coahuila",
+        "costa_sinaloa",
+        "culiacan",
+        "durango",
+        "new_mexico",
+        "sonora",
+        "texas"
+      ],
+      "geo": "MEX_Chihuahua",
+      "specialization": "cultivo"
+    },
+    {
+      "id": "culiacan",
+      "name": "Culiacán (capital)",
+      "controllerId": "chapitos",
+      "value": 24,
+      "adj": [
+        "chihuahua",
+        "costa_sinaloa",
+        "durango",
+        "nayarit",
+        "sonora"
+      ],
+      "geo": "MEX_Sinaloa_Culiacan",
+      "specialization": "cultivo"
+    },
+    {
+      "id": "durango",
+      "name": "Durango",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "chihuahua",
+        "coahuila",
+        "costa_sinaloa",
+        "culiacan",
+        "jalisco",
+        "nayarit",
+        "zacatecas"
+      ],
+      "geo": "MEX_Durango",
+      "specialization": "cultivo"
+    },
+    {
+      "id": "costa_sinaloa",
+      "name": "Costa de Sinaloa",
+      "controllerId": "mayiza",
+      "value": 18,
+      "adj": [
+        "chihuahua",
+        "culiacan",
+        "durango",
+        "jalisco",
+        "nayarit",
+        "sonora"
+      ],
+      "geo": "MEX_Sinaloa_Costa",
+      "specialization": "cultivo"
+    },
+    {
+      "id": "jalisco",
+      "name": "Jalisco",
+      "controllerId": "cjng",
+      "value": 22,
+      "adj": [
+        "aguascalientes",
+        "colima",
+        "costa_sinaloa",
+        "durango",
+        "guanajuato",
+        "michoacan",
+        "nayarit",
+        "zacatecas"
+      ],
+      "geo": "MEX_Jalisco"
+    },
+    {
+      "id": "michoacan",
+      "name": "Michoacán",
+      "controllerId": "cjng",
+      "value": 15,
+      "adj": [
+        "colima",
+        "estado_de_mexico",
+        "guanajuato",
+        "guerrero",
+        "jalisco",
+        "queretaro"
+      ],
+      "geo": "MEX_Michoacan",
+      "specialization": "cultivo"
+    },
+    {
+      "id": "guerrero",
+      "name": "Guerrero",
+      "controllerId": "guerreros_unidos",
+      "value": 12,
+      "adj": [
+        "estado_de_mexico",
+        "guatemala",
+        "michoacan",
+        "morelos",
+        "oaxaca",
+        "puebla"
+      ],
+      "geo": "MEX_Guerrero",
+      "specialization": "cultivo"
+    },
+    {
+      "id": "guatemala",
+      "name": "Guatemala (expansión del CJNG)",
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "guerrero",
+        "honduras",
+        "el_salvador",
+        "belize",
+        "chiapas"
+      ],
+      "geo": "COUNTRY_GTM"
+    },
+    {
+      "id": "honduras",
+      "name": "Honduras",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "guatemala",
+        "el_salvador",
+        "nicaragua"
+      ],
+      "geo": "COUNTRY_HND"
+    },
+    {
+      "id": "el_salvador",
+      "name": "El Salvador",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "guatemala",
+        "honduras"
+      ],
+      "geo": "COUNTRY_SLV"
+    },
+    {
+      "id": "nicaragua",
+      "name": "Nicaragua",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "honduras",
+        "costa_rica"
+      ],
+      "geo": "COUNTRY_NIC"
+    },
+    {
+      "id": "costa_rica",
+      "name": "Costa Rica",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "nicaragua",
+        "panama"
+      ],
+      "geo": "COUNTRY_CRI"
+    },
+    {
+      "id": "panama",
+      "name": "Panamá",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "costa_rica",
+        "colombia"
+      ],
+      "geo": "COUNTRY_PAN"
+    },
+    {
+      "id": "colombia",
+      "name": "Colombia",
+      "controllerId": null,
+      "value": 16,
+      "adj": [
+        "panama",
+        "venezuela",
+        "ecuador",
+        "peru",
+        "resto_brasil"
+      ],
+      "geo": "COUNTRY_COL"
+    },
+    {
+      "id": "venezuela",
+      "name": "Venezuela",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "colombia",
+        "resto_brasil",
+        "guyana"
+      ],
+      "geo": "COUNTRY_VEN"
+    },
+    {
+      "id": "peru",
+      "name": "Perú",
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "ecuador",
+        "colombia",
+        "resto_brasil",
+        "bolivia",
+        "chile"
+      ],
+      "geo": "COUNTRY_PER"
+    },
+    {
+      "id": "bolivia",
+      "name": "Bolivia",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "peru",
+        "resto_brasil",
+        "paraguay",
+        "argentina",
+        "chile"
+      ],
+      "geo": "COUNTRY_BOL"
+    },
+    {
+      "id": "brasil",
+      "name": "São Paulo (Brasil)",
+      "controllerId": "pcc",
+      "value": 15,
+      "adj": [
+        "resto_brasil"
+      ],
+      "geo": "BRA_SaoPaulo"
+    },
+    {
+      "id": "resto_brasil",
+      "name": "Resto de Brasil",
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "colombia",
+        "venezuela",
+        "peru",
+        "bolivia",
+        "paraguay",
+        "uruguay",
+        "francia",
+        "guyana",
+        "suriname",
+        "brasil"
+      ],
+      "geo": "BRA_Resto"
+    },
+    {
+      "id": "paraguay",
+      "name": "Paraguay",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "bolivia",
+        "resto_brasil",
+        "argentina"
+      ],
+      "geo": "COUNTRY_PRY"
+    },
+    {
+      "id": "argentina",
+      "name": "Argentina",
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "bolivia",
+        "paraguay",
+        "uruguay",
+        "chile"
+      ],
+      "geo": "COUNTRY_ARG"
+    },
+    {
+      "id": "uruguay",
+      "name": "Uruguay",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "resto_brasil",
+        "argentina"
+      ],
+      "geo": "COUNTRY_URY"
+    },
+    {
+      "id": "chile",
+      "name": "Chile",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "peru",
+        "bolivia",
+        "argentina"
+      ],
+      "geo": "COUNTRY_CHL"
+    },
+    {
+      "id": "ecuador",
+      "name": "Guayas (Ecuador)",
+      "controllerId": "choneros",
+      "value": 14,
+      "adj": [
+        "colombia",
+        "peru"
+      ],
+      "geo": "COUNTRY_ECU"
+    },
+    {
+      "id": "canada",
+      "name": "Canadá",
+      "controllerId": null,
+      "value": 18,
+      "adj": [
+        "resto_eeuu"
+      ],
+      "geo": "WORLD_CANADA"
+    },
+    {
+      "id": "belize",
+      "name": "Belice",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "guatemala"
+      ],
+      "geo": "WORLD_BELIZE"
+    },
+    {
+      "id": "cuba",
+      "name": "Cuba",
+      "controllerId": null,
+      "value": 12,
+      "adj": [],
+      "geo": "WORLD_CUBA"
+    },
+    {
+      "id": "jamaica",
+      "name": "Jamaica",
+      "controllerId": null,
+      "value": 10,
+      "adj": [],
+      "geo": "WORLD_JAMAICA"
+    },
+    {
+      "id": "haiti",
+      "name": "Haití",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "republica_dominicana"
+      ],
+      "geo": "WORLD_HAITI"
+    },
+    {
+      "id": "republica_dominicana",
+      "name": "República Dominicana",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "haiti"
+      ],
+      "geo": "WORLD_REPUBLICA_DOMINICANA"
+    },
+    {
+      "id": "bahamas",
+      "name": "Bahamas",
+      "controllerId": null,
+      "value": 8,
+      "adj": [],
+      "geo": "WORLD_BAHAMAS"
+    },
+    {
+      "id": "trinidad_tobago",
+      "name": "Trinidad y Tobago",
+      "controllerId": null,
+      "value": 9,
+      "adj": [],
+      "geo": "WORLD_TRINIDAD_TOBAGO"
+    },
+    {
+      "id": "barbados",
+      "name": "Barbados",
+      "controllerId": null,
+      "value": 7,
+      "adj": [],
+      "geo": "WORLD_BARBADOS"
+    },
+    {
+      "id": "antigua_barbuda",
+      "name": "Antigua y Barbuda",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_ANTIGUA_BARBUDA"
+    },
+    {
+      "id": "dominica",
+      "name": "Dominica",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_DOMINICA"
+    },
+    {
+      "id": "grenada",
+      "name": "Granada",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "san_vicente_granadinas"
+      ],
+      "geo": "WORLD_GRENADA"
+    },
+    {
+      "id": "san_cristobal_nieves",
+      "name": "San Cristóbal y Nieves",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_SAN_CRISTOBAL_NIEVES"
+    },
+    {
+      "id": "santa_lucia",
+      "name": "Santa Lucía",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_SANTA_LUCIA"
+    },
+    {
+      "id": "san_vicente_granadinas",
+      "name": "San Vicente y las Granadinas",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "grenada"
+      ],
+      "geo": "WORLD_SAN_VICENTE_GRANADINAS"
+    },
+    {
+      "id": "guyana",
+      "name": "Guyana",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "resto_brasil",
+        "suriname",
+        "venezuela"
+      ],
+      "geo": "WORLD_GUYANA"
+    },
+    {
+      "id": "suriname",
+      "name": "Surinam",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "resto_brasil",
+        "francia",
+        "guyana"
+      ],
+      "geo": "WORLD_SURINAME"
+    },
+    {
+      "id": "francia",
+      "name": "Francia",
+      "controllerId": null,
+      "value": 20,
+      "adj": [
+        "andorra",
+        "belgica",
+        "resto_brasil",
+        "suiza",
+        "alemania",
+        "espana",
+        "italia",
+        "luxemburgo",
+        "monaco",
+        "suriname"
+      ],
+      "geo": "WORLD_FRANCIA"
+    },
+    {
+      "id": "alemania",
+      "name": "Alemania",
+      "controllerId": null,
+      "value": 20,
+      "adj": [
+        "austria",
+        "belgica",
+        "suiza",
+        "chequia",
+        "dinamarca",
+        "francia",
+        "luxemburgo",
+        "holanda",
+        "polonia"
+      ],
+      "geo": "WORLD_ALEMANIA"
+    },
+    {
+      "id": "reino_unido",
+      "name": "Reino Unido",
+      "controllerId": null,
+      "value": 19,
+      "adj": [
+        "irlanda"
+      ],
+      "geo": "WORLD_REINO_UNIDO"
+    },
+    {
+      "id": "italia",
+      "name": "Italia",
+      "controllerId": null,
+      "value": 18,
+      "adj": [
+        "austria",
+        "suiza",
+        "francia",
+        "san_marino",
+        "eslovenia",
+        "vaticano"
+      ],
+      "geo": "WORLD_ITALIA"
+    },
+    {
+      "id": "espana",
+      "name": "España",
+      "controllerId": null,
+      "value": 16,
+      "adj": [
+        "andorra",
+        "francia",
+        "marruecos",
+        "portugal"
+      ],
+      "geo": "WORLD_ESPANA"
+    },
+    {
+      "id": "portugal",
+      "name": "Portugal",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "espana"
+      ],
+      "geo": "WORLD_PORTUGAL"
+    },
+    {
+      "id": "holanda",
+      "name": "Países Bajos",
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "belgica",
+        "alemania"
+      ],
+      "geo": "WORLD_HOLANDA"
+    },
+    {
+      "id": "belgica",
+      "name": "Bélgica",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "alemania",
+        "francia",
+        "luxemburgo",
+        "holanda"
+      ],
+      "geo": "WORLD_BELGICA"
+    },
+    {
+      "id": "luxemburgo",
+      "name": "Luxemburgo",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "belgica",
+        "alemania",
+        "francia"
+      ],
+      "geo": "WORLD_LUXEMBURGO"
+    },
+    {
+      "id": "suiza",
+      "name": "Suiza",
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "austria",
+        "alemania",
+        "francia",
+        "italia",
+        "liechtenstein"
+      ],
+      "geo": "WORLD_SUIZA"
+    },
+    {
+      "id": "austria",
+      "name": "Austria",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "suiza",
+        "chequia",
+        "alemania",
+        "hungria",
+        "italia",
+        "liechtenstein",
+        "eslovaquia",
+        "eslovenia"
+      ],
+      "geo": "WORLD_AUSTRIA"
+    },
+    {
+      "id": "irlanda",
+      "name": "Irlanda",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "reino_unido"
+      ],
+      "geo": "WORLD_IRLANDA"
+    },
+    {
+      "id": "monaco",
+      "name": "Mónaco",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "francia"
+      ],
+      "geo": "WORLD_MONACO"
+    },
+    {
+      "id": "andorra",
+      "name": "Andorra",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "espana",
+        "francia"
+      ],
+      "geo": "WORLD_ANDORRA"
+    },
+    {
+      "id": "liechtenstein",
+      "name": "Liechtenstein",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "austria",
+        "suiza"
+      ],
+      "geo": "WORLD_LIECHTENSTEIN"
+    },
+    {
+      "id": "san_marino",
+      "name": "San Marino",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "italia"
+      ],
+      "geo": "WORLD_SAN_MARINO"
+    },
+    {
+      "id": "vaticano",
+      "name": "Vaticano",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "italia"
+      ],
+      "geo": "WORLD_VATICANO"
+    },
+    {
+      "id": "malta",
+      "name": "Malta",
+      "controllerId": null,
+      "value": 7,
+      "adj": [],
+      "geo": "WORLD_MALTA"
+    },
+    {
+      "id": "dinamarca",
+      "name": "Dinamarca",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "alemania",
+        "suecia"
+      ],
+      "geo": "WORLD_DINAMARCA"
+    },
+    {
+      "id": "suecia",
+      "name": "Suecia",
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "dinamarca",
+        "finlandia",
+        "noruega"
+      ],
+      "geo": "WORLD_SUECIA"
+    },
+    {
+      "id": "noruega",
+      "name": "Noruega",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "finlandia",
+        "rusia",
+        "suecia"
+      ],
+      "geo": "WORLD_NORUEGA"
+    },
+    {
+      "id": "finlandia",
+      "name": "Finlandia",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "noruega",
+        "rusia",
+        "suecia"
+      ],
+      "geo": "WORLD_FINLANDIA"
+    },
+    {
+      "id": "islandia",
+      "name": "Islandia",
+      "controllerId": null,
+      "value": 7,
+      "adj": [],
+      "geo": "WORLD_ISLANDIA"
+    },
+    {
+      "id": "polonia",
+      "name": "Polonia",
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "bielorrusia",
+        "chequia",
+        "alemania",
+        "lituania",
+        "rusia",
+        "eslovaquia",
+        "ucrania"
+      ],
+      "geo": "WORLD_POLONIA"
+    },
+    {
+      "id": "chequia",
+      "name": "Chequia",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "austria",
+        "alemania",
+        "polonia",
+        "eslovaquia"
+      ],
+      "geo": "WORLD_CHEQUIA"
+    },
+    {
+      "id": "eslovaquia",
+      "name": "Eslovaquia",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "austria",
+        "chequia",
+        "hungria",
+        "polonia",
+        "ucrania"
+      ],
+      "geo": "WORLD_ESLOVAQUIA"
+    },
+    {
+      "id": "hungria",
+      "name": "Hungría",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "austria",
+        "croacia",
+        "rumania",
+        "serbia",
+        "eslovaquia",
+        "eslovenia",
+        "ucrania"
+      ],
+      "geo": "WORLD_HUNGRIA"
+    },
+    {
+      "id": "rumania",
+      "name": "Rumanía",
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "bulgaria",
+        "hungria",
+        "moldavia",
+        "serbia",
+        "ucrania"
+      ],
+      "geo": "WORLD_RUMANIA"
+    },
+    {
+      "id": "bulgaria",
+      "name": "Bulgaria",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "grecia",
+        "macedonia_norte",
+        "rumania",
+        "serbia",
+        "turquia"
+      ],
+      "geo": "WORLD_BULGARIA"
+    },
+    {
+      "id": "ucrania",
+      "name": "Ucrania",
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "bielorrusia",
+        "hungria",
+        "moldavia",
+        "polonia",
+        "rumania",
+        "rusia",
+        "eslovaquia"
+      ],
+      "geo": "WORLD_UCRANIA"
+    },
+    {
+      "id": "bielorrusia",
+      "name": "Bielorrusia",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "lituania",
+        "letonia",
+        "polonia",
+        "rusia",
+        "ucrania"
+      ],
+      "geo": "WORLD_BIELORRUSIA"
+    },
+    {
+      "id": "moldavia",
+      "name": "Moldavia",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "rumania",
+        "ucrania"
+      ],
+      "geo": "WORLD_MOLDAVIA"
+    },
+    {
+      "id": "rusia",
+      "name": "Rusia",
+      "controllerId": null,
+      "value": 22,
+      "adj": [
+        "azerbaiyan",
+        "bielorrusia",
+        "china",
+        "estonia",
+        "finlandia",
+        "georgia",
+        "kazajistan",
+        "lituania",
+        "letonia",
+        "mongolia",
+        "noruega",
+        "polonia",
+        "corea_norte",
+        "ucrania"
+      ],
+      "geo": "WORLD_RUSIA"
+    },
+    {
+      "id": "grecia",
+      "name": "Grecia",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "albania",
+        "bulgaria",
+        "macedonia_norte",
+        "turquia"
+      ],
+      "geo": "WORLD_GRECIA"
+    },
+    {
+      "id": "albania",
+      "name": "Albania",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "grecia",
+        "kosovo",
+        "macedonia_norte",
+        "montenegro"
+      ],
+      "geo": "WORLD_ALBANIA"
+    },
+    {
+      "id": "serbia",
+      "name": "Serbia",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "bulgaria",
+        "bosnia",
+        "croacia",
+        "hungria",
+        "kosovo",
+        "macedonia_norte",
+        "montenegro",
+        "rumania"
+      ],
+      "geo": "WORLD_SERBIA"
+    },
+    {
+      "id": "croacia",
+      "name": "Croacia",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "bosnia",
+        "hungria",
+        "montenegro",
+        "serbia",
+        "eslovenia"
+      ],
+      "geo": "WORLD_CROACIA"
+    },
+    {
+      "id": "bosnia",
+      "name": "Bosnia y Herzegovina",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "croacia",
+        "montenegro",
+        "serbia"
+      ],
+      "geo": "WORLD_BOSNIA"
+    },
+    {
+      "id": "montenegro",
+      "name": "Montenegro",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "albania",
+        "bosnia",
+        "croacia",
+        "kosovo",
+        "serbia"
+      ],
+      "geo": "WORLD_MONTENEGRO"
+    },
+    {
+      "id": "macedonia_norte",
+      "name": "Macedonia del Norte",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "albania",
+        "bulgaria",
+        "grecia",
+        "kosovo",
+        "serbia"
+      ],
+      "geo": "WORLD_MACEDONIA_NORTE"
+    },
+    {
+      "id": "eslovenia",
+      "name": "Eslovenia",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "austria",
+        "croacia",
+        "hungria",
+        "italia"
+      ],
+      "geo": "WORLD_ESLOVENIA"
+    },
+    {
+      "id": "kosovo",
+      "name": "Kosovo",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "albania",
+        "macedonia_norte",
+        "montenegro",
+        "serbia"
+      ],
+      "geo": "WORLD_KOSOVO"
+    },
+    {
+      "id": "chipre",
+      "name": "Chipre",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "chipre_norte"
+      ],
+      "geo": "WORLD_CHIPRE"
+    },
+    {
+      "id": "chipre_norte",
+      "name": "Chipre del Norte",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "chipre"
+      ],
+      "geo": "WORLD_CHIPRE_NORTE"
+    },
+    {
+      "id": "lituania",
+      "name": "Lituania",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "bielorrusia",
+        "letonia",
+        "polonia",
+        "rusia"
+      ],
+      "geo": "WORLD_LITUANIA"
+    },
+    {
+      "id": "letonia",
+      "name": "Letonia",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "bielorrusia",
+        "estonia",
+        "lituania",
+        "rusia"
+      ],
+      "geo": "WORLD_LETONIA"
+    },
+    {
+      "id": "estonia",
+      "name": "Estonia",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "letonia",
+        "rusia"
+      ],
+      "geo": "WORLD_ESTONIA"
+    },
+    {
+      "id": "georgia",
+      "name": "Georgia",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "armenia",
+        "azerbaiyan",
+        "rusia",
+        "turquia"
+      ],
+      "geo": "WORLD_GEORGIA"
+    },
+    {
+      "id": "armenia",
+      "name": "Armenia",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "azerbaiyan",
+        "georgia",
+        "iran",
+        "turquia"
+      ],
+      "geo": "WORLD_ARMENIA"
+    },
+    {
+      "id": "azerbaiyan",
+      "name": "Azerbaiyán",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "armenia",
+        "georgia",
+        "iran",
+        "rusia",
+        "turquia"
+      ],
+      "geo": "WORLD_AZERBAIYAN"
+    },
+    {
+      "id": "kazajistan",
+      "name": "Kazajistán",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "china",
+        "kirguistan",
+        "rusia",
+        "turkmenistan",
+        "uzbekistan"
+      ],
+      "geo": "WORLD_KAZAJISTAN"
+    },
+    {
+      "id": "uzbekistan",
+      "name": "Uzbekistán",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "afganistan",
+        "kazajistan",
+        "kirguistan",
+        "tayikistan",
+        "turkmenistan"
+      ],
+      "geo": "WORLD_UZBEKISTAN"
+    },
+    {
+      "id": "turkmenistan",
+      "name": "Turkmenistán",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "afganistan",
+        "iran",
+        "kazajistan",
+        "uzbekistan"
+      ],
+      "geo": "WORLD_TURKMENISTAN"
+    },
+    {
+      "id": "tayikistan",
+      "name": "Tayikistán",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "afganistan",
+        "china",
+        "kirguistan",
+        "uzbekistan"
+      ],
+      "geo": "WORLD_TAYIKISTAN"
+    },
+    {
+      "id": "kirguistan",
+      "name": "Kirguistán",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "china",
+        "kazajistan",
+        "tayikistan",
+        "uzbekistan"
+      ],
+      "geo": "WORLD_KIRGUISTAN"
+    },
+    {
+      "id": "mongolia",
+      "name": "Mongolia",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "china",
+        "rusia"
+      ],
+      "geo": "WORLD_MONGOLIA"
+    },
+    {
+      "id": "turquia",
+      "name": "Turquía",
+      "controllerId": "peker_org",
+      "value": 17,
+      "adj": [
+        "armenia",
+        "azerbaiyan",
+        "bulgaria",
+        "georgia",
+        "grecia",
+        "iran",
+        "irak",
+        "siria"
+      ],
+      "geo": "WORLD_TURQUIA"
+    },
+    {
+      "id": "siria",
+      "name": "Siria",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "irak",
+        "israel",
+        "jordania",
+        "libano",
+        "turquia"
+      ],
+      "geo": "WORLD_SIRIA"
+    },
+    {
+      "id": "libano",
+      "name": "Líbano",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "israel",
+        "siria"
+      ],
+      "geo": "WORLD_LIBANO"
+    },
+    {
+      "id": "israel",
+      "name": "Israel",
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "egipto",
+        "jordania",
+        "libano",
+        "palestina",
+        "siria"
+      ],
+      "geo": "WORLD_ISRAEL"
+    },
+    {
+      "id": "palestina",
+      "name": "Palestina",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "egipto",
+        "israel",
+        "jordania"
+      ],
+      "geo": "WORLD_PALESTINA"
+    },
+    {
+      "id": "jordania",
+      "name": "Jordania",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "irak",
+        "israel",
+        "palestina",
+        "arabia_saudita",
+        "siria"
+      ],
+      "geo": "WORLD_JORDANIA"
+    },
+    {
+      "id": "irak",
+      "name": "Irak",
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "iran",
+        "jordania",
+        "kuwait",
+        "arabia_saudita",
+        "siria",
+        "turquia"
+      ],
+      "geo": "WORLD_IRAK"
+    },
+    {
+      "id": "iran",
+      "name": "Irán",
+      "controllerId": null,
+      "value": 17,
+      "adj": [
+        "afganistan",
+        "armenia",
+        "azerbaiyan",
+        "irak",
+        "pakistan",
+        "turkmenistan",
+        "turquia"
+      ],
+      "geo": "WORLD_IRAN"
+    },
+    {
+      "id": "arabia_saudita",
+      "name": "Arabia Saudita",
+      "controllerId": null,
+      "value": 16,
+      "adj": [
+        "emiratos_arabes",
+        "irak",
+        "jordania",
+        "kuwait",
+        "oman",
+        "qatar",
+        "yemen"
+      ],
+      "geo": "WORLD_ARABIA_SAUDITA"
+    },
+    {
+      "id": "yemen",
+      "name": "Yemen",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "oman",
+        "arabia_saudita"
+      ],
+      "geo": "WORLD_YEMEN"
+    },
+    {
+      "id": "oman",
+      "name": "Omán",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "emiratos_arabes",
+        "arabia_saudita",
+        "yemen"
+      ],
+      "geo": "WORLD_OMAN"
+    },
+    {
+      "id": "emiratos_arabes",
+      "name": "Emiratos Árabes Unidos",
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "oman",
+        "arabia_saudita"
+      ],
+      "geo": "WORLD_EMIRATOS_ARABES"
+    },
+    {
+      "id": "qatar",
+      "name": "Catar",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "bahrein",
+        "arabia_saudita"
+      ],
+      "geo": "WORLD_QATAR"
+    },
+    {
+      "id": "kuwait",
+      "name": "Kuwait",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "irak",
+        "arabia_saudita"
+      ],
+      "geo": "WORLD_KUWAIT"
+    },
+    {
+      "id": "bahrein",
+      "name": "Baréin",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "qatar"
+      ],
+      "geo": "WORLD_BAHREIN"
+    },
+    {
+      "id": "afganistan",
+      "name": "Afganistán",
+      "controllerId": null,
+      "value": 16,
+      "adj": [
+        "china",
+        "iran",
+        "pakistan",
+        "tayikistan",
+        "turkmenistan",
+        "uzbekistan"
+      ],
+      "geo": "WORLD_AFGANISTAN"
+    },
+    {
+      "id": "pakistan",
+      "name": "Pakistán",
+      "controllerId": null,
+      "value": 18,
+      "adj": [
+        "afganistan",
+        "china",
+        "india",
+        "iran"
+      ],
+      "geo": "WORLD_PAKISTAN"
+    },
+    {
+      "id": "india",
+      "name": "India",
+      "controllerId": null,
+      "value": 22,
+      "adj": [
+        "bangladesh",
+        "bhutan",
+        "china",
+        "myanmar",
+        "nepal",
+        "pakistan"
+      ],
+      "geo": "WORLD_INDIA"
+    },
+    {
+      "id": "nepal",
+      "name": "Nepal",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "china",
+        "india"
+      ],
+      "geo": "WORLD_NEPAL"
+    },
+    {
+      "id": "bhutan",
+      "name": "Bután",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "china",
+        "india"
+      ],
+      "geo": "WORLD_BHUTAN"
+    },
+    {
+      "id": "bangladesh",
+      "name": "Bangladés",
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "india",
+        "myanmar"
+      ],
+      "geo": "WORLD_BANGLADESH"
+    },
+    {
+      "id": "sri_lanka",
+      "name": "Sri Lanka",
+      "controllerId": null,
+      "value": 10,
+      "adj": [],
+      "geo": "WORLD_SRI_LANKA"
+    },
+    {
+      "id": "maldivas",
+      "name": "Maldivas",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_MALDIVAS"
+    },
+    {
+      "id": "china",
+      "name": "China",
+      "controllerId": null,
+      "value": 22,
+      "adj": [
+        "afganistan",
+        "bhutan",
+        "hong_kong",
+        "india",
+        "kazajistan",
+        "kirguistan",
+        "laos",
+        "macao",
+        "myanmar",
+        "mongolia",
+        "nepal",
+        "pakistan",
+        "corea_norte",
+        "rusia",
+        "tayikistan",
+        "vietnam"
+      ],
+      "geo": "WORLD_CHINA"
+    },
+    {
+      "id": "corea_norte",
+      "name": "Corea del Norte",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "china",
+        "corea_sur",
+        "rusia"
+      ],
+      "geo": "WORLD_COREA_NORTE"
+    },
+    {
+      "id": "corea_sur",
+      "name": "Corea del Sur",
+      "controllerId": null,
+      "value": 17,
+      "adj": [
+        "corea_norte"
+      ],
+      "geo": "WORLD_COREA_SUR"
+    },
+    {
+      "id": "japon",
+      "name": "Japón",
+      "controllerId": null,
+      "value": 19,
+      "adj": [],
+      "geo": "WORLD_JAPON"
+    },
+    {
+      "id": "taiwan",
+      "name": "Taiwán",
+      "controllerId": null,
+      "value": 13,
+      "adj": [],
+      "geo": "WORLD_TAIWAN"
+    },
+    {
+      "id": "hong_kong",
+      "name": "Hong Kong",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "china"
+      ],
+      "geo": "WORLD_HONG_KONG"
+    },
+    {
+      "id": "macao",
+      "name": "Macao",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "china"
+      ],
+      "geo": "WORLD_MACAO"
+    },
+    {
+      "id": "myanmar",
+      "name": "Birmania",
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "bangladesh",
+        "china",
+        "india",
+        "laos",
+        "tailandia"
+      ],
+      "geo": "WORLD_MYANMAR",
+      "specialization": "cultivo"
+    },
+    {
+      "id": "tailandia",
+      "name": "Tailandia",
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "camboya",
+        "laos",
+        "myanmar",
+        "malasia"
+      ],
+      "geo": "WORLD_TAILANDIA"
+    },
+    {
+      "id": "laos",
+      "name": "Laos",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "china",
+        "camboya",
+        "myanmar",
+        "tailandia",
+        "vietnam"
+      ],
+      "geo": "WORLD_LAOS"
+    },
+    {
+      "id": "vietnam",
+      "name": "Vietnam",
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "china",
+        "camboya",
+        "laos"
+      ],
+      "geo": "WORLD_VIETNAM"
+    },
+    {
+      "id": "camboya",
+      "name": "Camboya",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "laos",
+        "tailandia",
+        "vietnam"
+      ],
+      "geo": "WORLD_CAMBOYA"
+    },
+    {
+      "id": "malasia",
+      "name": "Malasia",
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "brunei",
+        "indonesia",
+        "singapur",
+        "tailandia"
+      ],
+      "geo": "WORLD_MALASIA"
+    },
+    {
+      "id": "singapur",
+      "name": "Singapur",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "malasia"
+      ],
+      "geo": "WORLD_SINGAPUR"
+    },
+    {
+      "id": "indonesia",
+      "name": "Indonesia",
+      "controllerId": null,
+      "value": 19,
+      "adj": [
+        "malasia",
+        "papua_nueva_guinea",
+        "timor_oriental"
+      ],
+      "geo": "WORLD_INDONESIA"
+    },
+    {
+      "id": "filipinas",
+      "name": "Filipinas",
+      "controllerId": null,
+      "value": 15,
+      "adj": [],
+      "geo": "WORLD_FILIPINAS"
+    },
+    {
+      "id": "brunei",
+      "name": "Brunéi",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "malasia"
+      ],
+      "geo": "WORLD_BRUNEI"
+    },
+    {
+      "id": "timor_oriental",
+      "name": "Timor Oriental",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "indonesia"
+      ],
+      "geo": "WORLD_TIMOR_ORIENTAL"
+    },
+    {
+      "id": "australia",
+      "name": "Australia",
+      "controllerId": null,
+      "value": 17,
+      "adj": [
+        "papua_nueva_guinea"
+      ],
+      "geo": "WORLD_AUSTRALIA"
+    },
+    {
+      "id": "nueva_zelanda",
+      "name": "Nueva Zelanda",
+      "controllerId": null,
+      "value": 11,
+      "adj": [],
+      "geo": "WORLD_NUEVA_ZELANDA"
+    },
+    {
+      "id": "papua_nueva_guinea",
+      "name": "Papúa Nueva Guinea",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "australia",
+        "indonesia"
+      ],
+      "geo": "WORLD_PAPUA_NUEVA_GUINEA"
+    },
+    {
+      "id": "fiyi",
+      "name": "Fiyi",
+      "controllerId": null,
+      "value": 7,
+      "adj": [],
+      "geo": "WORLD_FIYI"
+    },
+    {
+      "id": "islas_salomon",
+      "name": "Islas Salomón",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_ISLAS_SALOMON"
+    },
+    {
+      "id": "vanuatu",
+      "name": "Vanuatu",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_VANUATU"
+    },
+    {
+      "id": "samoa",
+      "name": "Samoa",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_SAMOA"
+    },
+    {
+      "id": "kiribati",
+      "name": "Kiribati",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_KIRIBATI"
+    },
+    {
+      "id": "tonga",
+      "name": "Tonga",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_TONGA"
+    },
+    {
+      "id": "micronesia",
+      "name": "Micronesia",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_MICRONESIA"
+    },
+    {
+      "id": "islas_marshall",
+      "name": "Islas Marshall",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_ISLAS_MARSHALL"
+    },
+    {
+      "id": "palaos",
+      "name": "Palaos",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_PALAOS"
+    },
+    {
+      "id": "nauru",
+      "name": "Nauru",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_NAURU"
+    },
+    {
+      "id": "tuvalu",
+      "name": "Tuvalu",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_TUVALU"
+    },
+    {
+      "id": "marruecos",
+      "name": "Marruecos",
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "argelia",
+        "sahara_occidental",
+        "espana",
+        "mauritania"
+      ],
+      "geo": "WORLD_MARRUECOS"
+    },
+    {
+      "id": "sahara_occidental",
+      "name": "Sáhara Occidental",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "argelia",
+        "marruecos",
+        "mauritania"
+      ],
+      "geo": "WORLD_SAHARA_OCCIDENTAL"
+    },
+    {
+      "id": "argelia",
+      "name": "Argelia",
+      "controllerId": null,
+      "value": 16,
+      "adj": [
+        "sahara_occidental",
+        "libia",
+        "marruecos",
+        "mali",
+        "mauritania",
+        "niger",
+        "tunez"
+      ],
+      "geo": "WORLD_ARGELIA"
+    },
+    {
+      "id": "tunez",
+      "name": "Túnez",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "argelia",
+        "libia"
+      ],
+      "geo": "WORLD_TUNEZ"
+    },
+    {
+      "id": "libia",
+      "name": "Libia",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "argelia",
+        "egipto",
+        "niger",
+        "sudan",
+        "chad",
+        "tunez"
+      ],
+      "geo": "WORLD_LIBIA"
+    },
+    {
+      "id": "egipto",
+      "name": "Egipto",
+      "controllerId": null,
+      "value": 18,
+      "adj": [
+        "israel",
+        "libia",
+        "palestina",
+        "sudan"
+      ],
+      "geo": "WORLD_EGIPTO"
+    },
+    {
+      "id": "sudan",
+      "name": "Sudán",
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "republica_centroafricana",
+        "egipto",
+        "eritrea",
+        "etiopia",
+        "libia",
+        "sudan_sur",
+        "chad"
+      ],
+      "geo": "WORLD_SUDAN"
+    },
+    {
+      "id": "sudan_sur",
+      "name": "Sudán del Sur",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "republica_centroafricana",
+        "congo_kinshasa",
+        "etiopia",
+        "kenia",
+        "sudan",
+        "uganda"
+      ],
+      "geo": "WORLD_SUDAN_SUR"
+    },
+    {
+      "id": "mauritania",
+      "name": "Mauritania",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "argelia",
+        "sahara_occidental",
+        "marruecos",
+        "mali",
+        "senegal"
+      ],
+      "geo": "WORLD_MAURITANIA"
+    },
+    {
+      "id": "senegal",
+      "name": "Senegal",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "guinea",
+        "gambia",
+        "guinea_bisau",
+        "mali",
+        "mauritania"
+      ],
+      "geo": "WORLD_SENEGAL"
+    },
+    {
+      "id": "gambia",
+      "name": "Gambia",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "senegal"
+      ],
+      "geo": "WORLD_GAMBIA"
+    },
+    {
+      "id": "guinea_bisau",
+      "name": "Guinea-Bisáu",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "guinea",
+        "senegal"
+      ],
+      "geo": "WORLD_GUINEA_BISAU"
+    },
+    {
+      "id": "guinea",
+      "name": "Guinea",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "costa_marfil",
+        "guinea_bisau",
+        "liberia",
+        "mali",
+        "senegal",
+        "sierra_leona"
+      ],
+      "geo": "WORLD_GUINEA"
+    },
+    {
+      "id": "sierra_leona",
+      "name": "Sierra Leona",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "guinea",
+        "liberia"
+      ],
+      "geo": "WORLD_SIERRA_LEONA"
+    },
+    {
+      "id": "liberia",
+      "name": "Liberia",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "costa_marfil",
+        "guinea",
+        "sierra_leona"
+      ],
+      "geo": "WORLD_LIBERIA"
+    },
+    {
+      "id": "costa_marfil",
+      "name": "Costa de Marfil",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "burkina_faso",
+        "ghana",
+        "guinea",
+        "liberia",
+        "mali"
+      ],
+      "geo": "WORLD_COSTA_MARFIL"
+    },
+    {
+      "id": "mali",
+      "name": "Malí",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "burkina_faso",
+        "costa_marfil",
+        "argelia",
+        "guinea",
+        "mauritania",
+        "niger",
+        "senegal"
+      ],
+      "geo": "WORLD_MALI"
+    },
+    {
+      "id": "burkina_faso",
+      "name": "Burkina Faso",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "benin",
+        "costa_marfil",
+        "ghana",
+        "mali",
+        "niger",
+        "togo"
+      ],
+      "geo": "WORLD_BURKINA_FASO"
+    },
+    {
+      "id": "ghana",
+      "name": "Ghana",
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "burkina_faso",
+        "costa_marfil",
+        "togo"
+      ],
+      "geo": "WORLD_GHANA"
+    },
+    {
+      "id": "togo",
+      "name": "Togo",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "benin",
+        "burkina_faso",
+        "ghana"
+      ],
+      "geo": "WORLD_TOGO"
+    },
+    {
+      "id": "benin",
+      "name": "Benín",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "burkina_faso",
+        "niger",
+        "nigeria",
+        "togo"
+      ],
+      "geo": "WORLD_BENIN"
+    },
+    {
+      "id": "niger",
+      "name": "Níger",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "benin",
+        "burkina_faso",
+        "argelia",
+        "libia",
+        "mali",
+        "nigeria",
+        "chad"
+      ],
+      "geo": "WORLD_NIGER"
+    },
+    {
+      "id": "nigeria",
+      "name": "Nigeria",
+      "controllerId": null,
+      "value": 20,
+      "adj": [
+        "benin",
+        "camerun",
+        "niger",
+        "chad"
+      ],
+      "geo": "WORLD_NIGERIA"
+    },
+    {
+      "id": "cabo_verde",
+      "name": "Cabo Verde",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_CABO_VERDE"
+    },
+    {
+      "id": "camerun",
+      "name": "Camerún",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "republica_centroafricana",
+        "congo_brazzaville",
+        "gabon",
+        "guinea_ecuatorial",
+        "nigeria",
+        "chad"
+      ],
+      "geo": "WORLD_CAMERUN"
+    },
+    {
+      "id": "chad",
+      "name": "Chad",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "republica_centroafricana",
+        "camerun",
+        "libia",
+        "niger",
+        "nigeria",
+        "sudan"
+      ],
+      "geo": "WORLD_CHAD"
+    },
+    {
+      "id": "republica_centroafricana",
+      "name": "República Centroafricana",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "camerun",
+        "congo_kinshasa",
+        "congo_brazzaville",
+        "sudan",
+        "sudan_sur",
+        "chad"
+      ],
+      "geo": "WORLD_REPUBLICA_CENTROAFRICANA"
+    },
+    {
+      "id": "guinea_ecuatorial",
+      "name": "Guinea Ecuatorial",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "camerun",
+        "gabon"
+      ],
+      "geo": "WORLD_GUINEA_ECUATORIAL"
+    },
+    {
+      "id": "gabon",
+      "name": "Gabón",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "camerun",
+        "congo_brazzaville",
+        "guinea_ecuatorial"
+      ],
+      "geo": "WORLD_GABON"
+    },
+    {
+      "id": "congo_brazzaville",
+      "name": "República del Congo",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "angola",
+        "republica_centroafricana",
+        "camerun",
+        "congo_kinshasa",
+        "gabon"
+      ],
+      "geo": "WORLD_CONGO_BRAZZAVILLE"
+    },
+    {
+      "id": "congo_kinshasa",
+      "name": "República Democrática del Congo",
+      "controllerId": null,
+      "value": 15,
+      "adj": [
+        "angola",
+        "burundi",
+        "republica_centroafricana",
+        "congo_brazzaville",
+        "ruanda",
+        "sudan_sur",
+        "tanzania",
+        "uganda",
+        "zambia"
+      ],
+      "geo": "WORLD_CONGO_KINSHASA"
+    },
+    {
+      "id": "santo_tome_principe",
+      "name": "Santo Tomé y Príncipe",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_SANTO_TOME_PRINCIPE"
+    },
+    {
+      "id": "etiopia",
+      "name": "Etiopía",
+      "controllerId": null,
+      "value": 16,
+      "adj": [
+        "yibuti",
+        "eritrea",
+        "kenia",
+        "sudan",
+        "somalia",
+        "somalilandia",
+        "sudan_sur"
+      ],
+      "geo": "WORLD_ETIOPIA"
+    },
+    {
+      "id": "eritrea",
+      "name": "Eritrea",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "yibuti",
+        "etiopia",
+        "sudan"
+      ],
+      "geo": "WORLD_ERITREA"
+    },
+    {
+      "id": "yibuti",
+      "name": "Yibuti",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "eritrea",
+        "etiopia",
+        "somalilandia"
+      ],
+      "geo": "WORLD_YIBUTI"
+    },
+    {
+      "id": "somalia",
+      "name": "Somalia",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "etiopia",
+        "kenia",
+        "somalilandia"
+      ],
+      "geo": "WORLD_SOMALIA"
+    },
+    {
+      "id": "somalilandia",
+      "name": "Somalilandia",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "yibuti",
+        "etiopia",
+        "somalia"
+      ],
+      "geo": "WORLD_SOMALILANDIA"
+    },
+    {
+      "id": "kenia",
+      "name": "Kenia",
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "etiopia",
+        "somalia",
+        "sudan_sur",
+        "tanzania",
+        "uganda"
+      ],
+      "geo": "WORLD_KENIA"
+    },
+    {
+      "id": "uganda",
+      "name": "Uganda",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "congo_kinshasa",
+        "kenia",
+        "ruanda",
+        "sudan_sur",
+        "tanzania"
+      ],
+      "geo": "WORLD_UGANDA"
+    },
+    {
+      "id": "ruanda",
+      "name": "Ruanda",
+      "controllerId": null,
+      "value": 9,
+      "adj": [
+        "burundi",
+        "congo_kinshasa",
+        "tanzania",
+        "uganda"
+      ],
+      "geo": "WORLD_RUANDA"
+    },
+    {
+      "id": "burundi",
+      "name": "Burundi",
+      "controllerId": null,
+      "value": 7,
+      "adj": [
+        "congo_kinshasa",
+        "ruanda",
+        "tanzania"
+      ],
+      "geo": "WORLD_BURUNDI"
+    },
+    {
+      "id": "tanzania",
+      "name": "Tanzania",
+      "controllerId": null,
+      "value": 13,
+      "adj": [
+        "burundi",
+        "congo_kinshasa",
+        "kenia",
+        "mozambique",
+        "malaui",
+        "ruanda",
+        "uganda",
+        "zambia"
+      ],
+      "geo": "WORLD_TANZANIA"
+    },
+    {
+      "id": "mozambique",
+      "name": "Mozambique",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "malaui",
+        "esuatini",
+        "tanzania",
+        "sudafrica",
+        "zambia",
+        "zimbabue"
+      ],
+      "geo": "WORLD_MOZAMBIQUE"
+    },
+    {
+      "id": "malaui",
+      "name": "Malaui",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "mozambique",
+        "tanzania",
+        "zambia"
+      ],
+      "geo": "WORLD_MALAUI"
+    },
+    {
+      "id": "zambia",
+      "name": "Zambia",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "angola",
+        "botsuana",
+        "congo_kinshasa",
+        "mozambique",
+        "malaui",
+        "namibia",
+        "tanzania",
+        "zimbabue"
+      ],
+      "geo": "WORLD_ZAMBIA"
+    },
+    {
+      "id": "madagascar",
+      "name": "Madagascar",
+      "controllerId": null,
+      "value": 10,
+      "adj": [],
+      "geo": "WORLD_MADAGASCAR"
+    },
+    {
+      "id": "comoras",
+      "name": "Comoras",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_COMORAS"
+    },
+    {
+      "id": "mauricio",
+      "name": "Mauricio",
+      "controllerId": null,
+      "value": 7,
+      "adj": [],
+      "geo": "WORLD_MAURICIO"
+    },
+    {
+      "id": "seychelles",
+      "name": "Seychelles",
+      "controllerId": null,
+      "value": 6,
+      "adj": [],
+      "geo": "WORLD_SEYCHELLES"
+    },
+    {
+      "id": "angola",
+      "name": "Angola",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "congo_kinshasa",
+        "congo_brazzaville",
+        "namibia",
+        "zambia"
+      ],
+      "geo": "WORLD_ANGOLA"
+    },
+    {
+      "id": "namibia",
+      "name": "Namibia",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "angola",
+        "botsuana",
+        "sudafrica",
+        "zambia",
+        "zimbabue"
+      ],
+      "geo": "WORLD_NAMIBIA"
+    },
+    {
+      "id": "botsuana",
+      "name": "Botsuana",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "namibia",
+        "sudafrica",
+        "zambia",
+        "zimbabue"
+      ],
+      "geo": "WORLD_BOTSUANA"
+    },
+    {
+      "id": "zimbabue",
+      "name": "Zimbabue",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "botsuana",
+        "mozambique",
+        "namibia",
+        "sudafrica",
+        "zambia"
+      ],
+      "geo": "WORLD_ZIMBABUE"
+    },
+    {
+      "id": "sudafrica",
+      "name": "Sudáfrica",
+      "controllerId": null,
+      "value": 18,
+      "adj": [
+        "botsuana",
+        "lesoto",
+        "mozambique",
+        "namibia",
+        "esuatini",
+        "zimbabue"
+      ],
+      "geo": "WORLD_SUDAFRICA"
+    },
+    {
+      "id": "lesoto",
+      "name": "Lesoto",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "sudafrica"
+      ],
+      "geo": "WORLD_LESOTO"
+    },
+    {
+      "id": "esuatini",
+      "name": "Esuatini",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "mozambique",
+        "sudafrica"
+      ],
+      "geo": "WORLD_ESUATINI"
+    },
+    {
+      "id": "california",
+      "name": "California",
+      "controllerId": null,
+      "value": 20,
+      "adj": [
+        "arizona",
+        "resto_eeuu",
+        "baja_california"
+      ],
+      "geo": "USA_California"
+    },
+    {
+      "id": "arizona",
+      "name": "Arizona",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "california",
+        "new_mexico",
+        "resto_eeuu",
+        "sonora"
+      ],
+      "geo": "USA_Arizona"
+    },
+    {
+      "id": "new_mexico",
+      "name": "Nuevo México",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "arizona",
+        "texas",
+        "resto_eeuu",
+        "chihuahua"
+      ],
+      "geo": "USA_NewMexico"
+    },
+    {
+      "id": "texas",
+      "name": "Texas",
+      "controllerId": null,
+      "value": 20,
+      "adj": [
+        "new_mexico",
+        "resto_eeuu",
+        "chihuahua"
+      ],
+      "geo": "USA_Texas"
+    },
+    {
+      "id": "resto_eeuu",
+      "name": "Resto de Estados Unidos",
+      "controllerId": null,
+      "value": 26,
+      "adj": [
+        "california",
+        "arizona",
+        "new_mexico",
+        "texas",
+        "canada"
+      ],
+      "geo": "USA_RestoEEUU"
+    },
+    {
+      "id": "zacatecas",
+      "name": "Zacatecas",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "aguascalientes",
+        "coahuila",
+        "durango",
+        "guanajuato",
+        "jalisco",
+        "nayarit",
+        "nuevo_leon",
+        "san_luis_potosi"
+      ],
+      "geo": "MEX_Zacatecas"
+    },
+    {
+      "id": "chiapas",
+      "name": "Chiapas",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "oaxaca",
+        "tabasco",
+        "veracruz",
+        "guatemala"
+      ],
+      "geo": "MEX_Chiapas"
+    },
+    {
+      "id": "coahuila",
+      "name": "Coahuila",
+      "controllerId": null,
+      "value": 11,
+      "adj": [
+        "chihuahua",
+        "durango",
+        "nuevo_leon",
+        "san_luis_potosi",
+        "zacatecas"
+      ],
+      "geo": "MEX_Coahuila"
+    },
+    {
+      "id": "cdmx",
+      "name": "Ciudad de México",
+      "controllerId": null,
+      "value": 16,
+      "adj": [
+        "estado_de_mexico",
+        "morelos"
+      ],
+      "geo": "MEX_CDMX"
+    },
+    {
+      "id": "quintana_roo",
+      "name": "Quintana Roo",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "campeche",
+        "yucatan"
+      ],
+      "geo": "MEX_QuintanaRoo"
+    },
+    {
+      "id": "campeche",
+      "name": "Campeche",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "quintana_roo",
+        "tabasco",
+        "yucatan"
+      ],
+      "geo": "MEX_Campeche"
+    },
+    {
+      "id": "tamaulipas",
+      "name": "Tamaulipas",
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "nuevo_leon",
+        "san_luis_potosi",
+        "veracruz"
+      ],
+      "geo": "MEX_Tamaulipas"
+    },
+    {
+      "id": "morelos",
+      "name": "Morelos",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "cdmx",
+        "estado_de_mexico",
+        "guerrero",
+        "puebla"
+      ],
+      "geo": "MEX_Morelos"
+    },
+    {
+      "id": "nuevo_leon",
+      "name": "Nuevo León",
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "coahuila",
+        "san_luis_potosi",
+        "tamaulipas",
+        "zacatecas"
+      ],
+      "geo": "MEX_NuevoLeon"
+    },
+    {
+      "id": "oaxaca",
+      "name": "Oaxaca",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "chiapas",
+        "guerrero",
+        "puebla",
+        "veracruz"
+      ],
+      "geo": "MEX_Oaxaca"
+    },
+    {
+      "id": "baja_california_sur",
+      "name": "Baja California Sur",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "baja_california"
+      ],
+      "geo": "MEX_BajaCaliforniaSur"
+    },
+    {
+      "id": "tabasco",
+      "name": "Tabasco",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "campeche",
+        "chiapas",
+        "veracruz"
+      ],
+      "geo": "MEX_Tabasco"
+    },
+    {
+      "id": "estado_de_mexico",
+      "name": "Estado de México",
+      "controllerId": null,
+      "value": 14,
+      "adj": [
+        "cdmx",
+        "guerrero",
+        "hidalgo",
+        "michoacan",
+        "morelos",
+        "puebla",
+        "queretaro",
+        "tlaxcala"
+      ],
+      "geo": "MEX_EstadoDeMexico"
+    },
+    {
+      "id": "yucatan",
+      "name": "Yucatán",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "campeche",
+        "quintana_roo"
+      ],
+      "geo": "MEX_Yucatan"
+    },
+    {
+      "id": "veracruz",
+      "name": "Veracruz",
+      "controllerId": null,
+      "value": 12,
+      "adj": [
+        "chiapas",
+        "hidalgo",
+        "oaxaca",
+        "puebla",
+        "san_luis_potosi",
+        "tabasco",
+        "tamaulipas"
+      ],
+      "geo": "MEX_Veracruz"
+    },
+    {
+      "id": "colima",
+      "name": "Colima",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "jalisco",
+        "michoacan"
+      ],
+      "geo": "MEX_Colima"
+    },
+    {
+      "id": "nayarit",
+      "name": "Nayarit",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "costa_sinaloa",
+        "culiacan",
+        "durango",
+        "jalisco",
+        "zacatecas"
+      ],
+      "geo": "MEX_Nayarit"
+    },
+    {
+      "id": "guanajuato",
+      "name": "Guanajuato",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "jalisco",
+        "michoacan",
+        "queretaro",
+        "san_luis_potosi",
+        "zacatecas"
+      ],
+      "geo": "MEX_Guanajuato"
+    },
+    {
+      "id": "hidalgo",
+      "name": "Hidalgo",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "estado_de_mexico",
+        "puebla",
+        "queretaro",
+        "san_luis_potosi",
+        "tlaxcala",
+        "veracruz"
+      ],
+      "geo": "MEX_Hidalgo"
+    },
+    {
+      "id": "tlaxcala",
+      "name": "Tlaxcala",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "estado_de_mexico",
+        "hidalgo",
+        "puebla"
+      ],
+      "geo": "MEX_Tlaxcala"
+    },
+    {
+      "id": "aguascalientes",
+      "name": "Aguascalientes",
+      "controllerId": null,
+      "value": 6,
+      "adj": [
+        "jalisco",
+        "zacatecas"
+      ],
+      "geo": "MEX_Aguascalientes"
+    },
+    {
+      "id": "queretaro",
+      "name": "Querétaro",
+      "controllerId": null,
+      "value": 8,
+      "adj": [
+        "estado_de_mexico",
+        "guanajuato",
+        "hidalgo",
+        "michoacan",
+        "san_luis_potosi"
+      ],
+      "geo": "MEX_Queretaro"
+    },
+    {
+      "id": "san_luis_potosi",
+      "name": "San Luis Potosí",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "coahuila",
+        "guanajuato",
+        "hidalgo",
+        "nuevo_leon",
+        "queretaro",
+        "tamaulipas",
+        "veracruz",
+        "zacatecas"
+      ],
+      "geo": "MEX_SanLuisPotosi"
+    },
+    {
+      "id": "puebla",
+      "name": "Puebla",
+      "controllerId": null,
+      "value": 10,
+      "adj": [
+        "estado_de_mexico",
+        "guerrero",
+        "hidalgo",
+        "morelos",
+        "oaxaca",
+        "tlaxcala",
+        "veracruz"
+      ],
+      "geo": "MEX_Puebla"
+    }
+  ],
+  "cartels": [
+    {
+      "id": "chapitos",
+      "name": "Los Chapitos",
+      "color": "#8a1f1f",
+      "aiControlled": false,
+      "historicalNote": "Facción del Cártel de Sinaloa encabezada por los hijos de El Chapo, que controlaba buena parte del aparato del cártel al estallar la guerra civil interna en 2024. Los cargos secundarios no documentados públicamente son ficticios.",
+      "resources": {
+        "money": 35000000,
+        "armySize": 2200,
+        "corruptGov": 50,
+        "corruptPolice": 50,
+        "publicImage": 25,
+        "heat": 65,
+        "internationalReputation": 40,
+        "launderedMoney": 0
+      },
+      "roles": {
+        "leader": "ivan_archivaldo_24",
+        "underboss": "alfredo_24"
+      }
+    },
+    {
+      "id": "mayiza",
+      "name": "La Mayiza",
+      "color": "#25406b",
+      "aiControlled": true,
+      "historicalNote": "Facción leal a Ismael 'El Mayo' Zambada, liderada por su hijo Ismael Zambada Sicairos tras la entrega de su padre a EE.UU. Los cargos secundarios no documentados públicamente son ficticios.",
+      "resources": {
+        "money": 22000000,
+        "armySize": 1800,
+        "corruptGov": 40,
+        "corruptPolice": 45,
+        "publicImage": 35,
+        "heat": 55,
+        "internationalReputation": 25,
+        "launderedMoney": 0
+      },
+      "roles": {
+        "leader": "mayito_flaco_24"
+      }
+    },
+    {
+      "id": "cjng",
+      "name": "Cártel Jalisco Nueva Generación (CJNG)",
+      "color": "#0f6b3a",
+      "aiControlled": true,
+      "historicalNote": "Con Sinaloa fracturado por la guerra interna, el CJNG de Nemesio 'El Mencho' Oseguera aprovecha cada oportunidad para expandirse a costa de ambas facciones.",
+      "resources": {
+        "money": 45000000,
+        "armySize": 3200,
+        "corruptGov": 45,
+        "corruptPolice": 45,
+        "publicImage": 22,
+        "heat": 60,
+        "internationalReputation": 45,
+        "launderedMoney": 0
+      },
+      "roles": {
+        "leader": "mencho_24",
+        "financeChief": "rosalinda_24"
+      }
+    },
+    {
+      "id": "guerreros_unidos",
+      "name": "Guerreros Unidos",
+      "color": "#6b2e6b",
+      "aiControlled": true,
+      "historicalNote": "Organización real activa en Guerrero desde 2011, ligada al caso de los 43 normalistas desaparecidos de Ayotzinapa (2014); sigue operando de forma debilitada en la región. El liderazgo actual no está bien documentado públicamente, así que el nombre del líder es ficticio.",
+      "resources": {
+        "money": 3500000,
+        "armySize": 280,
+        "corruptGov": 20,
+        "corruptPolice": 30,
+        "publicImage": 12,
+        "heat": 55,
+        "internationalReputation": 8,
+        "launderedMoney": 0
+      },
+      "roles": {
+        "leader": "gu_leader_24",
+        "underboss": "gu_underboss_24",
+        "sicariosChief": "gu_sicarios_chief_24"
+      }
+    },
+    {
+      "id": "choneros",
+      "name": "Los Choneros (Ecuador)",
+      "color": "#1f7a7a",
+      "aiControlled": true,
+      "historicalNote": "Los Choneros son la organización criminal más grande y antigua de Ecuador, con fuertes vínculos históricos de exportación de cocaína hacia México a través del puerto de Guayaquil, incluida una relación real documentada con el Cártel de Sinaloa. Su líder real, José Adolfo Macías Villamar 'Fito', llevaba años dirigiendo la organización desde prisión cuando se fugó en enero de 2024, justo antes de un traslado; su fuga desencadenó la declaración de un 'conflicto armado interno' por el gobierno ecuatoriano y una ola de violencia sin precedentes. Aquí se representa activo y libre al inicio de la partida, reflejando su situación real justo tras la fuga. Los cargos secundarios no documentados públicamente son ficticios.",
+      "resources": {
+        "money": 6000000,
+        "armySize": 550,
+        "corruptGov": 35,
+        "corruptPolice": 60,
+        "publicImage": 15,
+        "heat": 45,
+        "internationalReputation": 20,
+        "launderedMoney": 0
+      },
+      "roles": {
+        "leader": "fito_24",
+        "underboss": "choneros_underboss_24",
+        "sicariosChief": "choneros_sicarios_chief_24",
+        "intelChief": "choneros_intel_chief_24",
+        "militaryChief": "choneros_military_chief_24",
+        "diplomatChief": "choneros_diplomat_chief_24",
+        "financeChief": "choneros_finance_chief_24",
+        "traffickingChief": "choneros_trafficking_chief_24",
+        "corruptionGovChief": "choneros_gov_chief_24",
+        "corruptionPoliceChief": "choneros_police_chief_24",
+        "productionChief": "choneros_production_chief_24",
+        "prChief": "choneros_pr_chief_24"
+      }
+    },
+    {
+      "id": "pcc",
+      "name": "Primeiro Comando da Capital (PCC)",
+      "color": "#c9a227",
+      "aiControlled": true,
+      "historicalNote": "El PCC, fundado en 1993 en el sistema penitenciario de São Paulo, sigue siendo hoy la organización criminal más grande y con mayor alcance internacional de Brasil, con rutas de cocaína documentadas hacia Europa a través de puertos como el de Santos. Marcos Willians Herbas Camacho, 'Marcola', es su histórico líder de referencia; en la vida real lleva encarcelado desde los años 90. En el juego se representa activo, igual que el resto de figuras históricas de esta lista. Los cargos secundarios no documentados públicamente son ficticios.",
+      "resources": {
+        "money": 14000000,
+        "armySize": 700,
+        "corruptGov": 40,
+        "corruptPolice": 50,
+        "publicImage": 20,
+        "heat": 40,
+        "internationalReputation": 30,
+        "launderedMoney": 0
+      },
+      "roles": {
+        "leader": "marcola_24",
+        "underboss": "pcc_underboss_24",
+        "sicariosChief": "pcc_sicarios_chief_24",
+        "intelChief": "pcc_intel_chief_24",
+        "militaryChief": "pcc_military_chief_24",
+        "diplomatChief": "pcc_diplomat_chief_24",
+        "financeChief": "pcc_finance_chief_24",
+        "traffickingChief": "pcc_trafficking_chief_24",
+        "corruptionGovChief": "pcc_gov_chief_24",
+        "corruptionPoliceChief": "pcc_police_chief_24",
+        "productionChief": "pcc_production_chief_24",
+        "prChief": "pcc_pr_chief_24"
+      }
+    },
+    {
+      "id": "peker_org",
+      "name": "Red de Sedat Peker",
+      "color": "#b3701a",
+      "aiControlled": true,
+      "historicalNote": "Sedat Peker es una figura real y muy mediática del crimen organizado turco, con una larga trayectoria criminal documentada desde los años 90 (varias condenas reales) y señalado durante años en la prensa internacional como una de las figuras más influyentes del hampa de Turquía, aunque él mismo se ha presentado públicamente como empresario y ha negado ser un \"jefe mafioso\" en el sentido estricto. Desde el exilio, en 2021 publicó una serie real de vídeos en YouTube con acusaciones detalladas de narcotráfico y corrupción que salpicaban a figuras del poder turco — un fenómeno mediático real, ampliamente cubierto por medios internacionales (BBC, Reuters, entre otros), que generó una crisis política real en Turquía. El juego no toma partido sobre la veracidad de esas acusaciones concretas contra terceros, ya que siguen siendo objeto de disputa pública; se representa aquí únicamente el hecho documentado de su propia trayectoria y de la repercusión real de sus revelaciones. En el juego su destino depende de tus decisiones.",
+      "resources": {
+        "money": 120000000,
+        "armySize": 600,
+        "corruptGov": 62,
+        "corruptPolice": 55,
+        "publicImage": 45,
+        "heat": 48
+      },
+      "roles": {
+        "leader": "sp_leader",
+        "underboss": "sp_underboss",
+        "sicariosChief": "sp_sicarios_chief",
+        "intelChief": "sp_intel_chief",
+        "militaryChief": "sp_military_chief",
+        "diplomatChief": "sp_diplomat_chief",
+        "financeChief": "sp_finance_chief",
+        "traffickingChief": "sp_trafficking_chief",
+        "corruptionGovChief": "sp_gov_chief",
+        "corruptionPoliceChief": "sp_police_chief",
+        "productionChief": "sp_production_chief",
+        "prChief": "sp_pr_chief"
+      }
+    }
+  ],
+  "characters": [
+    {
+      "id": "chapo_patriarca_24",
+      "name": "Joaquín Guzmán Loera \"El Chapo\"",
+      "sex": "M",
+      "birthYear": 1957,
+      "alive": true,
+      "cartelId": "chapitos",
+      "role": null,
+      "historical": true,
+      "stats": {
+        "violence": 60,
+        "business": 85,
+        "charisma": 60,
+        "intrigue": 90,
+        "loyaltyInspiring": 65,
+        "stealth": 55
+      },
+      "traits": [
+        "preso"
+      ],
+      "notes": "Extraditado a EE.UU. en 2017, cumple cadena perpetua. Patriarca de la familia Guzmán; su rol es puramente genealógico en esta época.",
+      "imprisoned": {
+        "sinceTurn": 0,
+        "releaseTurn": null,
+        "lifeSentence": true
+      },
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": [
+        "ivan_archivaldo_24",
+        "alfredo_24",
+        "ovidio_lopez_24",
+        "joaquin_lopez_24"
+      ]
+    },
+    {
+      "id": "ivan_archivaldo_24",
+      "name": "Iván Archivaldo Guzmán Salazar",
+      "sex": "M",
+      "birthYear": 1983,
+      "alive": true,
+      "cartelId": "chapitos",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 72,
+        "business": 72,
+        "charisma": 65,
+        "intrigue": 78,
+        "loyaltyInspiring": 62,
+        "stealth": 55
+      },
+      "traits": [
+        "Los Chapitos",
+        "líder"
+      ],
+      "notes": "Hijo mayor de El Chapo; principal referente de 'Los Chapitos' en la guerra civil interna de Sinaloa desde 2024.",
+      "parents": [
+        "chapo_patriarca_24"
+      ],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "alfredo_24",
+      "name": "Jesús Alfredo Guzmán Salazar",
+      "sex": "M",
+      "birthYear": 1989,
+      "alive": true,
+      "cartelId": "chapitos",
+      "role": "underboss",
+      "historical": true,
+      "stats": {
+        "violence": 68,
+        "business": 62,
+        "charisma": 55,
+        "intrigue": 68,
+        "loyaltyInspiring": 52,
+        "stealth": 55
+      },
+      "traits": [
+        "Los Chapitos"
+      ],
+      "notes": "Hijo de El Chapo, figura clave de 'Los Chapitos'.",
+      "parents": [
+        "chapo_patriarca_24"
+      ],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "ovidio_lopez_24",
+      "name": "Ovidio Guzmán López",
+      "sex": "M",
+      "birthYear": 1990,
+      "alive": true,
+      "cartelId": "chapitos",
+      "role": null,
+      "historical": true,
+      "stats": {
+        "violence": 70,
+        "business": 58,
+        "charisma": 50,
+        "intrigue": 62,
+        "loyaltyInspiring": 55,
+        "stealth": 50
+      },
+      "traits": [
+        "preso"
+      ],
+      "notes": "Hijo de El Chapo, detenido en 2023 y extraditado a EE.UU., donde se declaró culpable en 2025. Personaje inactivo por su situación legal.",
+      "imprisoned": {
+        "sinceTurn": 0,
+        "releaseTurn": null,
+        "lifeSentence": true
+      },
+      "parents": [
+        "chapo_patriarca_24"
+      ],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "joaquin_lopez_24",
+      "name": "Joaquín Guzmán López",
+      "sex": "M",
+      "birthYear": 1992,
+      "alive": true,
+      "cartelId": "chapitos",
+      "role": null,
+      "historical": true,
+      "stats": {
+        "violence": 55,
+        "business": 60,
+        "charisma": 55,
+        "intrigue": 72,
+        "loyaltyInspiring": 40,
+        "stealth": 65
+      },
+      "traits": [
+        "preso"
+      ],
+      "notes": "Hijo de El Chapo; en la vida real entregó a El Mayo Zambada a las autoridades de EE.UU. el 25 de julio de 2024 y fue detenido de inmediato al aterrizar. Su proceso legal seguía en curso al momento de escribir esto; se representa aquí como inactivo por su situación legal.",
+      "imprisoned": {
+        "sinceTurn": 0,
+        "releaseTurn": null,
+        "lifeSentence": true
+      },
+      "parents": [
+        "chapo_patriarca_24"
+      ],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "mayo_patriarca_24",
+      "name": "Ismael Zambada García \"El Mayo\"",
+      "sex": "M",
+      "birthYear": 1948,
+      "alive": true,
+      "cartelId": "mayiza",
+      "role": null,
+      "historical": true,
+      "stats": {
+        "violence": 55,
+        "business": 92,
+        "charisma": 65,
+        "intrigue": 95,
+        "loyaltyInspiring": 82,
+        "stealth": 90
+      },
+      "traits": [
+        "preso",
+        "fundador"
+      ],
+      "notes": "Cofundador histórico del Cártel de Sinaloa. Entregado a las autoridades de EE.UU. el 25 de julio de 2024 por Joaquín Guzmán López; se declaró culpable en 2025. Patriarca de 'La Mayiza', inactivo por su situación legal.",
+      "imprisoned": {
+        "sinceTurn": 0,
+        "releaseTurn": null,
+        "lifeSentence": true
+      },
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": [
+        "mayito_flaco_24"
+      ]
+    },
+    {
+      "id": "mayito_flaco_24",
+      "name": "Ismael Zambada Sicairos \"Mayito Flaco\"",
+      "sex": "M",
+      "birthYear": 1982,
+      "alive": true,
+      "cartelId": "mayiza",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 70,
+        "business": 78,
+        "charisma": 58,
+        "intrigue": 80,
+        "loyaltyInspiring": 68,
+        "stealth": 68
+      },
+      "traits": [
+        "La Mayiza",
+        "líder"
+      ],
+      "notes": "Hijo de El Mayo Zambada; en la vida real es el principal referente público de 'La Mayiza' en la guerra interna de Sinaloa desde 2024.",
+      "parents": [
+        "mayo_patriarca_24"
+      ],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "mencho_24",
+      "name": "Nemesio Oseguera Cervantes \"El Mencho\"",
+      "sex": "M",
+      "birthYear": 1966,
+      "alive": true,
+      "cartelId": "cjng",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 85,
+        "business": 85,
+        "charisma": 58,
+        "intrigue": 80,
+        "loyaltyInspiring": 72,
+        "stealth": 75
+      },
+      "traits": [
+        "fundador",
+        "expansionista"
+      ],
+      "notes": "Fundador y líder del CJNG, aprovecha la guerra civil de Sinaloa para expandirse. Su destino en el juego depende de tus decisiones.",
+      "parents": [],
+      "spouseId": "rosalinda_24",
+      "childrenIds": []
+    },
+    {
+      "id": "rosalinda_24",
+      "name": "Rosalinda González Valencia",
+      "sex": "F",
+      "birthYear": 1970,
+      "alive": true,
+      "cartelId": "cjng",
+      "role": "financeChief",
+      "historical": true,
+      "stats": {
+        "violence": 20,
+        "business": 88,
+        "charisma": 55,
+        "intrigue": 70,
+        "loyaltyInspiring": 55,
+        "stealth": 60
+      },
+      "traits": [],
+      "notes": "Esposa de El Mencho, señalada públicamente por su presunto papel en el manejo financiero del cártel.",
+      "parents": [],
+      "spouseId": "mencho_24",
+      "childrenIds": []
+    },
+    {
+      "id": "gu_leader_24",
+      "name": "Rutilo \"El Rulo\" Campos",
+      "sex": "M",
+      "birthYear": 1980,
+      "alive": true,
+      "cartelId": "guerreros_unidos",
+      "role": "leader",
+      "historical": false,
+      "stats": {
+        "violence": 65,
+        "business": 45,
+        "charisma": 42,
+        "intrigue": 52,
+        "loyaltyInspiring": 48,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio; el liderazgo real de Guerreros Unidos en esta etapa no está bien documentado públicamente.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "gu_underboss_24",
+      "name": "Herminio \"El Tigre\" Solano",
+      "sex": "M",
+      "birthYear": 1984,
+      "alive": true,
+      "cartelId": "guerreros_unidos",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 60,
+        "business": 42,
+        "charisma": 40,
+        "intrigue": 48,
+        "loyaltyInspiring": 45,
+        "stealth": 50
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "gu_sicarios_chief_24",
+      "name": "Praxedis \"El Duende\" Nava",
+      "sex": "M",
+      "birthYear": 1988,
+      "alive": true,
+      "cartelId": "guerreros_unidos",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 70,
+        "business": 30,
+        "charisma": 38,
+        "intrigue": 48,
+        "loyaltyInspiring": 42,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de los pistoleros de la organización en Iguala y el resto de Guerrero.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "fito_24",
+      "name": "José Adolfo Macías Villamar \"Fito\"",
+      "sex": "M",
+      "birthYear": 1980,
+      "alive": true,
+      "cartelId": "choneros",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 68,
+        "business": 70,
+        "charisma": 60,
+        "intrigue": 78,
+        "loyaltyInspiring": 60,
+        "stealth": 62
+      },
+      "traits": [
+        "fundador",
+        "fugitivo"
+      ],
+      "notes": "Líder de Los Choneros, la mayor organización criminal de Ecuador. En la vida real llevaba años dirigiéndola desde prisión hasta su fuga en enero de 2024, poco antes de un traslado programado; su fuga desencadenó la declaración de un conflicto armado interno en Ecuador. En el juego su destino depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "choneros_underboss_24",
+      "name": "Bryan \"El Patrón\" Vera",
+      "sex": "M",
+      "birthYear": 1985,
+      "alive": true,
+      "cartelId": "choneros",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 62,
+        "business": 50,
+        "charisma": 45,
+        "intrigue": 55,
+        "loyaltyInspiring": 48,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "choneros_sicarios_chief_24",
+      "name": "Kevin \"El Titi\" Zambrano",
+      "sex": "M",
+      "birthYear": 1988,
+      "alive": true,
+      "cartelId": "choneros",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 72,
+        "business": 35,
+        "charisma": 42,
+        "intrigue": 55,
+        "loyaltyInspiring": 48,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo del brazo armado de la organización en medio del conflicto armado interno declarado en 2024.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "choneros_intel_chief_24",
+      "name": "Gabriela Intriago",
+      "sex": "F",
+      "birthYear": 1985,
+      "alive": true,
+      "cartelId": "choneros",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 30,
+        "business": 55,
+        "charisma": 50,
+        "intrigue": 75,
+        "loyaltyInspiring": 48,
+        "stealth": 62
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de la red de contactos e informantes de la organización en medio del conflicto armado interno declarado en 2024.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "choneros_military_chief_24",
+      "name": "Wellington Zambrano Cedeño",
+      "sex": "M",
+      "birthYear": 1988,
+      "alive": true,
+      "cartelId": "choneros",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 74,
+        "business": 38,
+        "charisma": 48,
+        "intrigue": 46,
+        "loyaltyInspiring": 55,
+        "stealth": 36
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de las células armadas de la organización en las cárceles y puertos de Guayas durante el conflicto armado interno declarado en 2024.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "choneros_diplomat_chief_24",
+      "name": "Ximena Alcívar Loor",
+      "sex": "F",
+      "birthYear": 1990,
+      "alive": true,
+      "cartelId": "choneros",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 55,
+        "charisma": 62,
+        "intrigue": 48,
+        "loyaltyInspiring": 50,
+        "stealth": 32
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de las negociaciones con socios mexicanos para la exportación de cocaína vía el puerto de Guayaquil.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "choneros_finance_chief_24",
+      "name": "Karina Vera Zambrano",
+      "sex": "F",
+      "birthYear": 1987,
+      "alive": true,
+      "cartelId": "choneros",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 70,
+        "charisma": 46,
+        "intrigue": 42,
+        "loyaltyInspiring": 42,
+        "stealth": 45
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, encargada de lavar las ganancias de la organización a través de negocios de importación y bienes raíces en Guayaquil.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "marcola_24",
+      "name": "Marcos Willians Herbas Camacho \"Marcola\"",
+      "sex": "M",
+      "birthYear": 1968,
+      "alive": true,
+      "cartelId": "pcc",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 65,
+        "business": 78,
+        "charisma": 60,
+        "intrigue": 85,
+        "loyaltyInspiring": 75,
+        "stealth": 60
+      },
+      "traits": [
+        "fundador",
+        "calculador"
+      ],
+      "notes": "Líder histórico de referencia del PCC. En la vida real lleva encarcelado desde los años 90; en el juego se representa activo. Su destino en el juego depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pcc_underboss_24",
+      "name": "Anderson \"Cabeça Branca\" Nunes",
+      "sex": "M",
+      "birthYear": 1972,
+      "alive": true,
+      "cartelId": "pcc",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 60,
+        "business": 65,
+        "charisma": 50,
+        "intrigue": 62,
+        "loyaltyInspiring": 55,
+        "stealth": 58
+      },
+      "traits": [],
+      "notes": "Personaje ficticio.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pcc_sicarios_chief_24",
+      "name": "Ederson \"Cara de Fogo\" Alves",
+      "sex": "M",
+      "birthYear": 1980,
+      "alive": true,
+      "cartelId": "pcc",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 70,
+        "business": 35,
+        "charisma": 45,
+        "intrigue": 58,
+        "loyaltyInspiring": 55,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, encargado de la disciplina armada del PCC dentro y fuera del sistema penitenciario.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pcc_intel_chief_24",
+      "name": "Fernanda Lins",
+      "sex": "F",
+      "birthYear": 1975,
+      "alive": true,
+      "cartelId": "pcc",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 25,
+        "business": 58,
+        "charisma": 52,
+        "intrigue": 78,
+        "loyaltyInspiring": 55,
+        "stealth": 62
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de la red de contactos e informantes del PCC dentro y fuera del sistema penitenciario.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pcc_military_chief_24",
+      "name": "Anderson Feitosa Lima",
+      "sex": "M",
+      "birthYear": 1980,
+      "alive": true,
+      "cartelId": "pcc",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 72,
+        "business": 40,
+        "charisma": 50,
+        "intrigue": 48,
+        "loyaltyInspiring": 58,
+        "stealth": 38
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de las células armadas del PCC que operan tanto dentro como fuera de las prisiones brasileñas.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pcc_diplomat_chief_24",
+      "name": "Cristiane Bezerra Motta",
+      "sex": "F",
+      "birthYear": 1982,
+      "alive": true,
+      "cartelId": "pcc",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 22,
+        "business": 55,
+        "charisma": 62,
+        "intrigue": 50,
+        "loyaltyInspiring": 52,
+        "stealth": 32
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de las negociaciones del PCC con proveedores y socios mexicanos para las rutas de exportación vía Santos.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pcc_finance_chief_24",
+      "name": "Rosana Guedes Farias",
+      "sex": "F",
+      "birthYear": 1978,
+      "alive": true,
+      "cartelId": "pcc",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 72,
+        "charisma": 48,
+        "intrigue": 45,
+        "loyaltyInspiring": 45,
+        "stealth": 48
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, encargada de lavar las ganancias del PCC a través de empresas de fachada y el llamado 'fundo de pensão' de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pcc_trafficking_chief_24",
+      "name": "Rogério \"Estivador\" Nascimento",
+      "sex": "M",
+      "birthYear": 1975,
+      "alive": true,
+      "cartelId": "pcc",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 30,
+        "business": 64,
+        "charisma": 46,
+        "intrigue": 68,
+        "loyaltyInspiring": 45,
+        "stealth": 60
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de coordinar las rutas de exportación de cocaína del PCC vía el puerto de Santos hacia Europa.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "choneros_trafficking_chief_24",
+      "name": "Ronny Macías",
+      "sex": "M",
+      "birthYear": 1982,
+      "alive": true,
+      "cartelId": "choneros",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 32,
+        "business": 60,
+        "charisma": 44,
+        "intrigue": 65,
+        "loyaltyInspiring": 45,
+        "stealth": 58
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de coordinar las rutas de exportación de cocaína de la organización vía el puerto de Guayaquil hacia México.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pcc_gov_chief_24",
+      "name": "Leandro Bittencourt",
+      "sex": "M",
+      "birthYear": 1970,
+      "alive": true,
+      "cartelId": "pcc",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 22,
+        "business": 58,
+        "charisma": 60,
+        "intrigue": 62,
+        "loyaltyInspiring": 44,
+        "stealth": 46
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de sobornar a funcionarios del sistema penitenciario y autoridades locales, reflejando casos reales y documentados de corrupción carcelaria ligados al PCC.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "choneros_gov_chief_24",
+      "name": "Katiuska Zambrano",
+      "sex": "F",
+      "birthYear": 1978,
+      "alive": true,
+      "cartelId": "choneros",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 18,
+        "business": 55,
+        "charisma": 58,
+        "intrigue": 60,
+        "loyaltyInspiring": 44,
+        "stealth": 44
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de sobornar a funcionarios del sistema penitenciario ecuatoriano — el propio Fito dirigió la organización desde prisión durante años hasta su fuga real de enero de 2024, un caso real y muy documentado de corrupción carcelaria.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pcc_police_chief_24",
+      "name": "Delegado Adilson Vasconcelos",
+      "sex": "M",
+      "birthYear": 1972,
+      "alive": true,
+      "cartelId": "pcc",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 40,
+        "business": 52,
+        "charisma": 48,
+        "intrigue": 58,
+        "loyaltyInspiring": 44,
+        "stealth": 48
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de sobornar a agentes de policía y del sistema penitenciario, reflejando casos reales y documentados de corrupción policial ligados al PCC en São Paulo.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "choneros_police_chief_24",
+      "name": "Comisario Édison Palma",
+      "sex": "M",
+      "birthYear": 1980,
+      "alive": true,
+      "cartelId": "choneros",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 38,
+        "business": 50,
+        "charisma": 46,
+        "intrigue": 56,
+        "loyaltyInspiring": 44,
+        "stealth": 46
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de sobornar a la policía nacional ecuatoriana en el puerto y las calles de Guayaquil.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pcc_production_chief_24",
+      "name": "Wagner Souza Lima",
+      "sex": "M",
+      "birthYear": 1975,
+      "alive": true,
+      "cartelId": "pcc",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 24,
+        "business": 60,
+        "charisma": 38,
+        "intrigue": 48,
+        "loyaltyInspiring": 42,
+        "stealth": 42
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de verificar la pureza y reempacar los cargamentos antes de su exportación a Europa vía el puerto de Santos.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "choneros_production_chief_24",
+      "name": "Freddy Cedeño",
+      "sex": "M",
+      "birthYear": 1982,
+      "alive": true,
+      "cartelId": "choneros",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 24,
+        "business": 58,
+        "charisma": 38,
+        "intrigue": 48,
+        "loyaltyInspiring": 42,
+        "stealth": 42
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de verificar la pureza y reempacar los cargamentos antes de su exportación hacia México vía el puerto de Guayaquil.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "pcc_pr_chief_24",
+      "name": "Vanessa Aparecida Souza",
+      "sex": "F",
+      "birthYear": 1978,
+      "alive": true,
+      "cartelId": "pcc",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 14,
+        "business": 45,
+        "charisma": 62,
+        "intrigue": 55,
+        "loyaltyInspiring": 55,
+        "stealth": 38
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de sostener el papel real y documentado del PCC como autoridad de facto en algunas favelas de São Paulo, mediando conflictos vecinales e imponiendo su propio código de conducta.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "choneros_pr_chief_24",
+      "name": "Doménica Vera",
+      "sex": "F",
+      "birthYear": 1985,
+      "alive": true,
+      "cartelId": "choneros",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 14,
+        "business": 42,
+        "charisma": 60,
+        "intrigue": 52,
+        "loyaltyInspiring": 52,
+        "stealth": 36
+      },
+      "traits": [],
+      "notes": "Personaje ficticio, a cargo de cultivar la lealtad de la comunidad en los barrios de Guayaquil bajo influencia de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sp_leader",
+      "name": "Sedat Peker",
+      "sex": "M",
+      "birthYear": 1971,
+      "alive": true,
+      "cartelId": "peker_org",
+      "role": "leader",
+      "historical": true,
+      "stats": {
+        "violence": 62,
+        "business": 80,
+        "charisma": 82,
+        "intrigue": 78,
+        "loyaltyInspiring": 65,
+        "stealth": 60
+      },
+      "traits": [
+        "mediático",
+        "fundador"
+      ],
+      "notes": "Figura real del crimen organizado turco, con una larga trayectoria criminal documentada desde los años 90. Sus vídeos reales de 2021 desde el exilio, con acusaciones de narcotráfico y corrupción, provocaron una crisis mediática y política real en Turquía. En el juego su destino depende de tus decisiones.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sp_underboss",
+      "name": "Hakan Yildiz",
+      "sex": "M",
+      "birthYear": 1968,
+      "alive": true,
+      "cartelId": "peker_org",
+      "role": "underboss",
+      "historical": false,
+      "stats": {
+        "violence": 60,
+        "business": 68,
+        "charisma": 58,
+        "intrigue": 65,
+        "loyaltyInspiring": 60,
+        "stealth": 62
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los mandos de la organización más cercanos a Peker.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sp_sicarios_chief",
+      "name": "Cengiz Aydin",
+      "sex": "M",
+      "birthYear": 1975,
+      "alive": true,
+      "cartelId": "peker_org",
+      "role": "sicariosChief",
+      "historical": false,
+      "stats": {
+        "violence": 85,
+        "business": 38,
+        "charisma": 42,
+        "intrigue": 52,
+        "loyaltyInspiring": 48,
+        "stealth": 60
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los ejecutores de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sp_intel_chief",
+      "name": "Derya Kaplan",
+      "sex": "F",
+      "birthYear": 1978,
+      "alive": true,
+      "cartelId": "peker_org",
+      "role": "intelChief",
+      "historical": false,
+      "stats": {
+        "violence": 35,
+        "business": 55,
+        "charisma": 55,
+        "intrigue": 78,
+        "loyaltyInspiring": 48,
+        "stealth": 80
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red de información e inteligencia de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sp_military_chief",
+      "name": "Mehmet Aksoy",
+      "sex": "M",
+      "birthYear": 1970,
+      "alive": true,
+      "cartelId": "peker_org",
+      "role": "militaryChief",
+      "historical": false,
+      "stats": {
+        "violence": 75,
+        "business": 45,
+        "charisma": 48,
+        "intrigue": 55,
+        "loyaltyInspiring": 58,
+        "stealth": 52
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa a los mandos armados de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sp_diplomat_chief",
+      "name": "Emre Sahin",
+      "sex": "M",
+      "birthYear": 1965,
+      "alive": true,
+      "cartelId": "peker_org",
+      "role": "diplomatChief",
+      "historical": false,
+      "stats": {
+        "violence": 25,
+        "business": 65,
+        "charisma": 75,
+        "intrigue": 68,
+        "loyaltyInspiring": 55,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa los canales de negociación de la organización con otras redes de la ruta balcánica.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sp_finance_chief",
+      "name": "Baris Yavuz",
+      "sex": "M",
+      "birthYear": 1972,
+      "alive": true,
+      "cartelId": "peker_org",
+      "role": "financeChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 82,
+        "charisma": 55,
+        "intrigue": 60,
+        "loyaltyInspiring": 45,
+        "stealth": 58
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red de empresas fachada usada para blanquear el dinero de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sp_trafficking_chief",
+      "name": "Onur Demirtas",
+      "sex": "M",
+      "birthYear": 1980,
+      "alive": true,
+      "cartelId": "peker_org",
+      "role": "traffickingChief",
+      "historical": false,
+      "stats": {
+        "violence": 58,
+        "business": 68,
+        "charisma": 45,
+        "intrigue": 60,
+        "loyaltyInspiring": 48,
+        "stealth": 65
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la posición real de Turquía como corredor de tránsito de heroína afgana hacia Europa por la ruta balcánica.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sp_gov_chief",
+      "name": "Necati Aslan",
+      "sex": "M",
+      "birthYear": 1960,
+      "alive": true,
+      "cartelId": "peker_org",
+      "role": "corruptionGovChief",
+      "historical": false,
+      "stats": {
+        "violence": 15,
+        "business": 62,
+        "charisma": 68,
+        "intrigue": 75,
+        "loyaltyInspiring": 50,
+        "stealth": 55
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa la red de conexiones políticas de la organización, tema central de las acusaciones reales y aún disputadas hechas públicas por Peker en 2021.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sp_police_chief",
+      "name": "Comisario Fatih Ozturk",
+      "sex": "M",
+      "birthYear": 1969,
+      "alive": true,
+      "cartelId": "peker_org",
+      "role": "corruptionPoliceChief",
+      "historical": false,
+      "stats": {
+        "violence": 30,
+        "business": 50,
+        "charisma": 45,
+        "intrigue": 65,
+        "loyaltyInspiring": 42,
+        "stealth": 62
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa complicidades dentro de las fuerzas de seguridad turcas.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sp_production_chief",
+      "name": "Ilker Coskun",
+      "sex": "M",
+      "birthYear": 1974,
+      "alive": true,
+      "cartelId": "peker_org",
+      "role": "productionChief",
+      "historical": false,
+      "stats": {
+        "violence": 38,
+        "business": 55,
+        "charisma": 40,
+        "intrigue": 48,
+        "loyaltyInspiring": 40,
+        "stealth": 52
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa las operaciones logísticas de la organización.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    },
+    {
+      "id": "sp_pr_chief",
+      "name": "Aylin Demir",
+      "sex": "F",
+      "birthYear": 1982,
+      "alive": true,
+      "cartelId": "peker_org",
+      "role": "prChief",
+      "historical": false,
+      "stats": {
+        "violence": 20,
+        "business": 50,
+        "charisma": 78,
+        "intrigue": 58,
+        "loyaltyInspiring": 55,
+        "stealth": 48
+      },
+      "traits": [],
+      "notes": "Personaje ficticio que representa el manejo real, muy activo, de la imagen pública de Peker en redes sociales y medios.",
+      "parents": [],
+      "spouseId": null,
+      "childrenIds": []
+    }
+  ],
+  "newCartelTerritories": [
+    "chihuahua",
+    "durango"
+  ]
+}

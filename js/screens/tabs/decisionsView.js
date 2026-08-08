@@ -1,0 +1,404 @@
+import { getPlayerCartel, currentYear } from "../../state.js";
+import { applyAction, getActionsRemaining, ACTIONS_PER_TURN, ACTION_COSTS, MONEY_SCALE, getDrugProfile, getDrugProfiles, getMarketProfiles, getMarketPriceIndex } from "../../turnEngine.js";
+import { showModal, closeModal } from "../../ui/modal.js";
+import { escapeHtml } from "../../ui/components.js";
+import { fmtMoney } from "../../utils/text.js";
+
+const ACTIONS = [
+  { type: "invest_production", label: "Invertir en producción", desc: "Financia laboratorios y cultivos. Riesgo de decomiso." },
+  { type: "traffic_shipment", label: "Enviar cargamento", desc: "Mueve mercancía por tus rutas. Mayor riesgo y recompensa." },
+  { type: "extort_territory", label: "Extorsionar un territorio", desc: "Cobro forzoso a comerciantes locales: dinero inmediato sin coste, a cambio de imagen pública y algo de heat." },
+  { type: "corrupt_gov", label: "Sobornar al gobierno", desc: "Aumenta tu corrupción política y reduce el heat." },
+  { type: "corrupt_police", label: "Sobornar a la policía", desc: "Aumenta tu corrupción policial y reduce el heat." },
+  { type: "recruit_army", label: "Reclutar sicarios", desc: "Aumenta tu ejército." },
+  { type: "lay_low", label: "Bajar el perfil", desc: "Reduce fuertemente el heat de inmediato." },
+];
+
+const LAUNDER_AMOUNTS = [500 * MONEY_SCALE, 2000 * MONEY_SCALE, 10000 * MONEY_SCALE];
+
+const INVESTMENTS = [
+  { type: "invest_property", label: "Comprar propiedades", desc: "Ingreso pasivo permanente cada turno, a cambio del capital inicial." },
+  { type: "invest_art", label: "Invertir en arte y coleccionables", desc: "Una vía clásica de lavado: el valor se revaloriza solo mientras lo conserves. Véndelo cuando quieras." },
+  { type: "invest_business", label: "Montar un negocio de fachada", desc: "Ingreso pasivo permanente y reduce el heat de inmediato: una tapadera legítima." },
+  { type: "invest_weapons", label: "Armar y equipar a tu gente", desc: "Bonificación de combate permanente y acumulable (hasta un máximo), a cambio de heat." },
+  { type: "invest_security", label: "Seguridad privada para el líder", desc: "Reduce de forma permanente y acumulable (hasta un máximo) la probabilidad de que un atentado contra tu líder tenga éxito. Sin coste de heat." },
+  { type: "invest_hideout", label: "Refugio con vías de escape", desc: "Mejora de forma permanente y acumulable (hasta un máximo) tus probabilidades personales de esquivar una redada policial y de fugarte con éxito de prisión. Sin coste de heat." },
+  { type: "invest_trade_route", label: "Establecer una ruta comercial internacional", desc: "Sube de forma permanente y acumulable (hasta un máximo) lo que rinde cada 'Enviar cargamento' futuro — tu propia red de distribución exterior, no un envío suelto." },
+];
+
+function describeDrugProfile(drug) {
+  const margin = drug.payoutMult > 1.2 ? "muy rentable" : drug.payoutMult > 1.05 ? "rentable" : drug.payoutMult < 0.95 ? "de margen modesto" : "de margen normal";
+  const heat = drug.heatMult > 1.2 ? "atrae muchísima atención internacional" : drug.heatMult > 1.05 ? "atrae bastante atención" : drug.heatMult < 0.95 ? "genera menos escándalo de lo habitual" : "genera la atención habitual";
+  const seizure = drug.seizureMult < 0.95 ? "más fácil de esconder de lo habitual" : drug.seizureMult > 1.05 ? "más difícil de esconder de lo habitual" : "con un riesgo de decomiso normal";
+  return `Un negocio ${margin}, que ${heat} y es ${seizure}. Afecta a "Invertir en producción" y "Enviar cargamento".`;
+}
+
+export function render(container, app) {
+  const game = app.game;
+  const cartel = getPlayerCartel(game);
+  const remaining = getActionsRemaining(game);
+  const exhausted = remaining <= 0;
+  const drug = getDrugProfile(game, cartel);
+  const otherDrugs = getDrugProfiles(game).filter((p) => p.id !== drug.id);
+  const switchCost = ACTION_COSTS.switch_drug;
+
+  container.innerHTML = `
+    <div class="card">
+      <h2>Decisiones de este turno</h2>
+      <p class="text-dim small">Tienes <strong>${remaining}/${ACTIONS_PER_TURN}</strong> acciones disponibles antes de avanzar el turno. Las decisiones diplomáticas y militares no gastan acciones.</p>
+      <p class="small">📦 <strong>${escapeHtml(drug.name)}</strong></p>
+      <p class="text-dim small">${escapeHtml(describeDrugProfile(drug))}</p>
+      ${otherDrugs.length ? otherDrugs.map((d) => {
+        const locked = d.availableFromYear && currentYear(game) < d.availableFromYear;
+        return `<button class="block tight" data-switch-drug="${d.id}" ${locked || cartel.resources.money < switchCost ? "disabled" : ""}>
+          Establecer conexión: ${escapeHtml(d.name)} — ${fmtMoney(switchCost)}
+          <div class="small text-dim">${locked ? `Todavía no hay una conexión real para esto (no antes de ${d.availableFromYear}).` : "Cambia a qué negocio se dedica tu cártel de ahora en adelante."}</div>
+        </button>`;
+      }).join("") : ""}
+      ${ACTIONS.map((a) => {
+        const cost = ACTION_COSTS[a.type] || 0;
+        const noTerritories = a.type === "extort_territory" && !cartel.territories.length;
+        const noProduction = a.type === "invest_production" && cartel.supplyChainRole === "distribuidor";
+        return `
+        <button class="block" data-action="${a.type}" ${cartel.resources.money < cost || exhausted || noTerritories || noProduction ? "disabled" : ""}>
+          <strong>${a.label}</strong> ${cost ? `— ${fmtMoney(cost)}` : ""}
+          <div class="small text-dim">${noProduction ? "Tu organización no produce nada propio: es puramente distribuidora. Compra el producto ya hecho enviando un cargamento." : a.desc}</div>
+        </button>
+      `;
+      }).join("")}
+    </div>
+    <div class="card">
+      <h3>Desarrollo de territorio</h3>
+      <p class="text-dim small">Invierte en infraestructura y rutas para un territorio tuyo, subiendo su valor económico de forma permanente (hasta un máximo). Es una inversión de crecimiento, no gasta acciones del turno.</p>
+      <button class="block" id="develop-btn" ${!cartel.territories.length ? "disabled" : ""}>Desarrollar un territorio</button>
+    </div>
+    <div class="card">
+      <h3>Inversiones</h3>
+      <p class="text-dim small">Formas de diversificar el capital del cártel más allá del narcotráfico directo.</p>
+      ${cartel.resources.propertyIncome ? `<p class="small text-success">Ingreso pasivo por propiedades: +${fmtMoney(cartel.resources.propertyIncome)}/turno</p>` : ""}
+      ${cartel.resources.businessIncome ? `<p class="small text-success">Ingreso pasivo por negocios: +${fmtMoney(cartel.resources.businessIncome)}/turno</p>` : ""}
+      ${cartel.resources.weaponsBonus ? `<p class="small text-success">Bonificación de combate: +${Math.round(cartel.resources.weaponsBonus * 100)}%</p>` : ""}
+      ${cartel.resources.securityBonus ? `<p class="small text-success">Seguridad del líder: -${Math.round(cartel.resources.securityBonus * 100)}% de probabilidad de atentado exitoso</p>` : ""}
+      ${cartel.resources.hideoutBonus ? `<p class="small text-success">Refugio con vías de escape: +${Math.round(cartel.resources.hideoutBonus * 100)}% en tus probabilidades de esquivar una redada o fugarte con éxito</p>` : ""}
+      ${cartel.resources.tradeRouteBonus ? `<p class="small text-success">Rutas comerciales internacionales: +${Math.round(cartel.resources.tradeRouteBonus * 100)}% en el rendimiento de cada envío</p>` : ""}
+      ${INVESTMENTS.map((a) => {
+        const cost = ACTION_COSTS[a.type] || 0;
+        return `
+        <button class="block" data-action="${a.type}" ${cartel.resources.money < cost || exhausted ? "disabled" : ""}>
+          <strong>${a.label}</strong> — ${fmtMoney(cost)}
+          <div class="small text-dim">${a.desc}</div>
+        </button>
+      `;
+      }).join("")}
+      ${cartel.resources.artValue ? `
+        <button class="block" id="sell-art-btn" ${exhausted ? "disabled" : ""}>Vender la colección de arte (${fmtMoney(cartel.resources.artValue)})</button>
+      ` : ""}
+    </div>
+    <div class="card">
+      <h3>Lavado de dinero</h3>
+      <p class="text-dim small">Convierte dinero caliente en dinero limpio a través de negocios legales. Se cobra una comisión (menor cuanto mejor sea tu jefe económico) y reduce el heat.</p>
+      <div class="btn-row">
+        ${LAUNDER_AMOUNTS.map((amount) => `
+          <button data-launder="${amount}" ${cartel.resources.money < amount || exhausted ? "disabled" : ""}>Lavar ${fmtMoney(amount)}</button>
+        `).join("")}
+      </div>
+      <p class="small text-dim mt-1">Total lavado hasta ahora: ${fmtMoney(cartel.resources.launderedMoney || 0)}</p>
+    </div>
+  `;
+
+  container.querySelectorAll("[data-switch-drug]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const result = applyAction(game, cartel.id, "switch_drug", { drugId: btn.dataset.switchDrug });
+      app.setGame(game);
+      if (!result.ok) alert(result.message);
+      app.render();
+    });
+  });
+
+  container.querySelectorAll("[data-action]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      if (btn.dataset.action === "traffic_shipment") {
+        showTrafficModal(app, game, cartel);
+        return;
+      }
+      if (btn.dataset.action === "invest_production") {
+        showProductionModal(app, game, cartel);
+        return;
+      }
+      if (btn.dataset.action === "extort_territory") {
+        showExtortModal(app, game, cartel);
+        return;
+      }
+      if (btn.dataset.action === "corrupt_gov" || btn.dataset.action === "corrupt_police") {
+        showCorruptApproachModal(app, game, cartel, btn.dataset.action);
+        return;
+      }
+      if (btn.dataset.action === "recruit_army") {
+        showRecruitApproachModal(app, game, cartel);
+        return;
+      }
+      applyAction(game, cartel.id, btn.dataset.action);
+      app.setGame(game);
+      app.render();
+    });
+  });
+
+  container.querySelectorAll("[data-launder]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      applyAction(game, cartel.id, "launder_money", { amount: Number(btn.dataset.launder) });
+      app.setGame(game);
+      app.render();
+    });
+  });
+
+  container.querySelector("#develop-btn")?.addEventListener("click", () => {
+    showDevelopModal(app, game, cartel);
+  });
+
+  container.querySelector("#sell-art-btn")?.addEventListener("click", () => {
+    const result = applyAction(game, cartel.id, "sell_art");
+    app.setGame(game);
+    if (!result.ok) alert(result.message);
+    else if (result.seized) alert(`Decomiso parcial: recibes ${fmtMoney(result.received)} tras perder ${fmtMoney(result.seized)}.`);
+    else alert(`Vendes tu colección por ${fmtMoney(result.received)}.`);
+    app.render();
+  });
+}
+
+function showExtortModal(app, game, cartel) {
+  const territories = cartel.territories.map((id) => game.territories[id]).filter(Boolean);
+  showModal(`
+    <h2>Extorsionar un territorio</h2>
+    <p class="small text-dim">Elige qué territorio presionar. El pago es inmediato, pero daña tu imagen pública y sube el heat.</p>
+    ${territories.map((t) => `
+      <button class="block" data-territory="${t.id}">
+        ${escapeHtml(t.name)}
+        <div class="small text-dim">Valor económico: ${t.value}</div>
+      </button>
+    `).join("")}
+    <button class="ghost block" id="close-btn">Cancelar</button>
+  `);
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.querySelectorAll("[data-territory]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      showExtortApproachModal(app, game, cartel, btn.dataset.territory);
+    });
+  });
+}
+
+function showExtortApproachModal(app, game, cartel, territoryId) {
+  const territory = game.territories[territoryId];
+
+  const apply = (approach) => {
+    const result = applyAction(game, cartel.id, "extort_territory", { territoryId, approach });
+    app.setGame(game);
+    closeModal();
+    if (!result.ok) alert(result.message);
+    app.render();
+  };
+
+  showModal(`
+    <h2>¿Cómo presionas a ${escapeHtml(territory.name)}?</h2>
+    <p class="small text-dim">El método cambia cuánto sacas y cuánto te cuesta en heat e imagen.</p>
+    <button class="block" data-approach="lenient">
+      Cobro discreto y moderado
+      <div class="small text-dim">Menos dinero, pero el heat casi no sube y hasta puede mejorar algo tu imagen.</div>
+    </button>
+    <button class="block" data-approach="discreet">
+      Cobro forzoso normal
+      <div class="small text-dim">El equilibrio de siempre entre dinero, heat e imagen.</div>
+    </button>
+    <button class="danger block" data-approach="brutal">
+      Amenazas abiertas y violencia visible
+      <div class="small text-dim">Mucho más dinero, pero el heat y el golpe a tu imagen son severos, y el negocio local puede resentirse más.</div>
+    </button>
+    <button class="ghost block mt-1" id="close-btn">Cancelar</button>
+  `);
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.querySelectorAll("[data-approach]").forEach((btn) => {
+    btn.addEventListener("click", () => apply(btn.dataset.approach));
+  });
+}
+
+function showCorruptApproachModal(app, game, cartel, actionType) {
+  const isGov = actionType === "corrupt_gov";
+  const noun = isGov ? "funcionarios del gobierno" : "mandos policiales";
+
+  const apply = (approach) => {
+    const result = applyAction(game, cartel.id, actionType, { approach });
+    app.setGame(game);
+    closeModal();
+    if (!result.ok) alert(result.message);
+    else if (result.backfired) alert(`La presión se filtra: la maniobra se vuelve en tu contra.`);
+    app.render();
+  };
+
+  showModal(`
+    <h2>¿Cómo sobornas a ${escapeHtml(noun)}?</h2>
+    <p class="small text-dim">El método cambia cuánta corrupción ganas y cuánto te cuesta en heat.</p>
+    <button class="block" data-approach="quiet">
+      Red silenciosa y constante
+      <div class="small text-dim">Menos corrupción ganada, pero el heat baja mucho más: construyes la red sin llamar la atención.</div>
+    </button>
+    <button class="block" data-approach="standard">
+      Soborno directo
+      <div class="small text-dim">El equilibrio de siempre entre corrupción ganada y heat reducido.</div>
+    </button>
+    <button class="danger block" data-approach="aggressive">
+      Presión y amenazas veladas
+      <div class="small text-dim">Mucha más corrupción ganada de golpe, pero sube el heat en vez de bajarlo — y hay riesgo real de que se filtre y la maniobra se vuelva en tu contra.</div>
+    </button>
+    <button class="ghost block mt-1" id="close-btn">Cancelar</button>
+  `);
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.querySelectorAll("[data-approach]").forEach((btn) => {
+    btn.addEventListener("click", () => apply(btn.dataset.approach));
+  });
+}
+
+function showRecruitApproachModal(app, game, cartel) {
+  const apply = (approach) => {
+    const result = applyAction(game, cartel.id, "recruit_army", { approach });
+    app.setGame(game);
+    closeModal();
+    if (!result.ok) alert(result.message);
+    app.render();
+  };
+
+  showModal(`
+    <h2>¿Cómo reclutas más sicarios?</h2>
+    <p class="small text-dim">El método cambia cuántos hombres consigues y cuánto heat e imagen pública te cuesta.</p>
+    <button class="block" data-approach="quiet">
+      Reclutamiento discreto, de boca en boca
+      <div class="small text-dim">Menos hombres reclutados, pero no sube el heat en absoluto.</div>
+    </button>
+    <button class="block" data-approach="standard">
+      Reclutamiento estándar
+      <div class="small text-dim">El equilibrio de siempre entre hombres reclutados y heat.</div>
+    </button>
+    <button class="danger block" data-approach="forced">
+      Leva forzosa
+      <div class="small text-dim">Muchos más hombres de golpe, pero dispara el heat y daña tu imagen pública: la gente no olvida que os llevasteis a alguien a la fuerza.</div>
+    </button>
+    <button class="ghost block mt-1" id="close-btn">Cancelar</button>
+  `);
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.querySelectorAll("[data-approach]").forEach((btn) => {
+    btn.addEventListener("click", () => apply(btn.dataset.approach));
+  });
+}
+
+function showDevelopModal(app, game, cartel) {
+  const territories = cartel.territories.map((id) => game.territories[id]).filter(Boolean);
+  showModal(`
+    <h2>Desarrollar un territorio</h2>
+    <p class="small text-dim">El coste crece con el valor actual del territorio; el máximo desarrollable es 40.</p>
+    ${territories.map((t) => {
+      const cost = t.value * 20 * MONEY_SCALE;
+      const maxed = t.value >= 40;
+      return `<button class="block" data-territory="${t.id}" ${maxed || cartel.resources.money < cost ? "disabled" : ""}>
+        ${escapeHtml(t.name)}
+        <div class="small text-dim">Valor económico: ${t.value}${maxed ? " (máximo)" : ` · Coste: ${fmtMoney(cost)}`}</div>
+      </button>`;
+    }).join("")}
+    <button class="ghost block" id="close-btn">Cancelar</button>
+  `);
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.querySelectorAll("[data-territory]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const result = applyAction(game, cartel.id, "develop_territory", { territoryId: btn.dataset.territory });
+      app.setGame(game);
+      closeModal();
+      if (!result.ok) alert(result.message);
+      app.render();
+    });
+  });
+}
+
+function showProductionModal(app, game, cartel) {
+  const territories = cartel.territories.map((id) => game.territories[id]).filter(Boolean);
+  showModal(`
+    <h2>Invertir en producción</h2>
+    <p class="small text-dim">Los territorios de mayor valor económico rinden más por la misma inversión de ${fmtMoney(ACTION_COSTS.invest_production)}. Las zonas de cultivo históricas (🌱) rinden un 30% más todavía.</p>
+    ${territories.map((t) => `
+      <button class="block" data-territory="${t.id}">
+        ${t.specialization === "cultivo" ? "🌱 " : ""}${escapeHtml(t.name)}
+        <div class="small text-dim">Valor económico: ${t.value}${t.specialization === "cultivo" ? " · zona de cultivo histórica" : ""}</div>
+      </button>
+    `).join("")}
+    <button class="ghost block" id="close-btn">Cancelar</button>
+  `);
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.querySelectorAll("[data-territory]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const result = applyAction(game, cartel.id, "invest_production", { territoryId: btn.dataset.territory });
+      app.setGame(game);
+      closeModal();
+      if (!result.ok) alert(result.message);
+      app.render();
+    });
+  });
+}
+
+function showTrafficModal(app, game, cartel) {
+  const markets = getMarketProfiles(game);
+  if (markets.length > 1) {
+    showMarketModal(app, game, cartel, markets);
+  } else {
+    showPartnerModal(app, game, cartel, markets[0].id);
+  }
+}
+
+function showMarketModal(app, game, cartel, markets) {
+  showModal(`
+    <h2>Enviar cargamento</h2>
+    <p class="small text-dim">Paso 1 de 2: ¿a qué país o región de destino va este cargamento? Es una decisión de exportación real — cada mercado internacional paga un precio distinto por tu producto y tiene su propio riesgo de que las autoridades lo intercepten en el camino. El precio además fluctúa de verdad con lo que TODOS los cárteles llevan enviando allí últimamente, no solo tú: un mercado saturado de envíos recientes paga peor, uno tranquilo paga mejor — 📈/📉 lo indican. Tu "cuota de mercado" en la pestaña Economía se calcula por separado en cada uno: vender mucho a Europa no te hace más fuerte en EE. UU. si nunca mandas nada allí.</p>
+    ${markets.map((m) => {
+      const locked = m.availableFromYear && currentYear(game) < m.availableFromYear;
+      const priceIndex = getMarketPriceIndex(game, m.id);
+      const priceNote = priceIndex > 1.05 ? `📈 precio actual alto (×${priceIndex.toFixed(2)}, mercado poco trabajado últimamente)`
+        : priceIndex < 0.95 ? `📉 precio actual bajo (×${priceIndex.toFixed(2)}, mercado saturado de envíos recientes)`
+        : `precio actual normal (×${priceIndex.toFixed(2)})`;
+      return `<button class="block" data-market="${m.id}" ${locked ? "disabled" : ""}>
+        ${escapeHtml(m.name)}
+        <div class="small text-dim">${locked ? `Ruta todavía no establecida (no antes de ${m.availableFromYear}).` : `Rendimiento base ×${m.payoutMult.toFixed(2)} · ${priceNote} · riesgo de decomiso ${m.seizureMult > 1 ? "más alto" : m.seizureMult < 1 ? "más bajo" : "normal"} que el habitual.`}</div>
+      </button>`;
+    }).join("")}
+    <button class="ghost block" id="close-btn">Cancelar</button>
+  `);
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.querySelectorAll("[data-market]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      showPartnerModal(app, game, cartel, btn.dataset.market);
+    });
+  });
+}
+
+function showPartnerModal(app, game, cartel, marketId) {
+  const partners = Object.values(game.cartels).filter((c) => c.id !== cartel.id && !c.destroyed);
+  showModal(`
+    <h2>Enviar cargamento</h2>
+    <p class="small text-dim">Paso 2 de 2: ¿a quién le vendes este cargamento en concreto, una vez llega a destino? No es dónde va (eso ya lo elegiste) sino quién te lo compra allí. "Mercado abierto" es vender a compradores anónimos al precio normal, sin depender de nadie — la opción de siempre, siempre disponible. Venderle en cambio a un cártel concreto con el que ya tienes relación es un trato de distribución directo: si es tu aliado te paga de más porque confía en el trato; si estás en guerra con él, evidentemente no va a comprarte nada; si es neutral, ni sube ni baja el precio.</p>
+    <button class="block primary" data-partner="">Mercado abierto: vender a compradores anónimos al precio normal</button>
+    ${partners.map((p) => {
+      const status = cartel.relations[p.id]?.status || "neutral";
+      const label = status === "alliance" ? "Aliado — te compra a mejor precio que el mercado abierto" : status === "war" ? "En guerra — no puede comprarte nada" : "Neutral — mismo precio que el mercado abierto, pero es un trato directo con ellos";
+      return `<button class="block" data-partner="${p.id}" ${status === "war" ? "disabled" : ""}>
+        Venderle directamente a ${escapeHtml(p.name)}
+        <div class="small text-dim">${label}</div>
+      </button>`;
+    }).join("")}
+    <button class="ghost block" id="close-btn">Cancelar</button>
+  `);
+  document.getElementById("close-btn").addEventListener("click", closeModal);
+  document.querySelectorAll("[data-partner]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const partnerCartelId = btn.dataset.partner || undefined;
+      const result = applyAction(game, cartel.id, "traffic_shipment", { partnerCartelId, marketId });
+      app.setGame(game);
+      closeModal();
+      if (!result.ok) alert(result.message);
+      app.render();
+    });
+  });
+}
