@@ -4,97 +4,111 @@
     "file": "ley-seca-1925-1933.json",
     "name": "Ley Seca",
     "period": "1925 – 1933",
-    "blurb": "Chicago bajo la Prohibición: un joven Al Capone hereda el imperio de cerveceras clandestinas y protección política de Johnny Torrio, y libra una guerra abierta contra el North Side Gang de Bugs Moran."
+    "blurb": "Chicago bajo la Prohibición: un joven Al Capone hereda el imperio de cerveceras clandestinas y protección política de Johnny Torrio, y libra una guerra abierta contra el North Side Gang de Bugs Moran.",
+    "lifeType": "mafia_italoamericana"
   },
   {
     "id": "la-comision-1931-1958",
     "file": "la-comision-1931-1958.json",
     "name": "La Comisión",
     "period": "1931 – 1958",
-    "blurb": "Nueva York: Lucky Luciano funda la Comisión tras la Guerra de Castellammarese, repartiendo el poder entre familias -- un equilibrio que la ambición interna y una redada policial en 1957 pondrán a prueba."
+    "blurb": "Nueva York: Lucky Luciano funda la Comisión tras la Guerra de Castellammarese, repartiendo el poder entre familias -- un equilibrio que la ambición interna y una redada policial en 1957 pondrán a prueba.",
+    "lifeType": "mafia_italoamericana"
   },
   {
     "id": "yakuza-japon-1960-1993",
     "file": "yakuza-japon-1960-1993.json",
     "name": "Yamaguchi-gumi",
     "period": "1960 – 1993",
-    "blurb": "Kobe, Japón: Kazuo Taoka hace de la Yamaguchi-gumi el mayor sindicato yakuza del país, hasta que su muerte desata una guerra de sucesión interna y una nueva ley antibandas cambia las reglas del juego en 1992."
+    "blurb": "Kobe, Japón: Kazuo Taoka hace de la Yamaguchi-gumi el mayor sindicato yakuza del país, hasta que su muerte desata una guerra de sucesión interna y una nueva ley antibandas cambia las reglas del juego en 1992.",
+    "lifeType": "yakuza"
   },
   {
     "id": "triadas-hongkong-1950-1998",
     "file": "triadas-hongkong-1950-1998.json",
     "name": "Tríadas de Hong Kong",
     "period": "1950 – 1998",
-    "blurb": "Hong Kong colonial: la Tríada 14K crece desde el juego y la extorsión hasta el tráfico de heroína del Triángulo de Oro con Ng Sik-ho, hasta que la ICAC en 1974 y la retrocesión a China en 1997 cambian las reglas del juego."
+    "blurb": "Hong Kong colonial: la Tríada 14K crece desde el juego y la extorsión hasta el tráfico de heroína del Triángulo de Oro con Ng Sik-ho, hasta que la ICAC en 1974 y la retrocesión a China en 1997 cambian las reglas del juego.",
+    "lifeType": "triadas"
   },
   {
     "id": "guadalajara-1975-1989",
     "file": "guadalajara-1975-1989.json",
     "name": "El Cártel de Guadalajara",
     "period": "1975 – 1989",
-    "blurb": "El Cártel de Guadalajara controla gran parte del tráfico en México y sirve de puente para la cocaína colombiana hacia Estados Unidos."
+    "blurb": "El Cártel de Guadalajara controla gran parte del tráfico en México y sirve de puente para la cocaína colombiana hacia Estados Unidos.",
+    "lifeType": "narcotrafico"
   },
   {
     "id": "mafia-rusa-1991-2000",
     "file": "mafia-rusa-1991-2000.json",
     "name": "La mafia rusa",
     "period": "1991 – 2000",
-    "blurb": "Moscú, tras la caída de la URSS: Sergei Mikhailov y Viktor Averin convierten a la Hermandad de Solntsevo en una red criminal global, capaz de sobrevivir incluso a un arresto real en Suiza que pudo haber acabado con todo."
+    "blurb": "Moscú, tras la caída de la URSS: Sergei Mikhailov y Viktor Averin convierten a la Hermandad de Solntsevo en una red criminal global, capaz de sobrevivir incluso a un arresto real en Suiza que pudo haber acabado con todo.",
+    "lifeType": "mafia_postsovietica"
   },
   {
     "id": "narcotrafico-gallego-1975-1995",
     "file": "narcotrafico-gallego-1975-1995.json",
     "name": "Narcotráfico gallego",
     "period": "1975 – 1995",
-    "blurb": "De contrabandistas de tabaco en las rías gallegas a la puerta de entrada de la cocaína colombiana a Europa, hasta que la Operación Nécora de 1990 lo cambia todo."
+    "blurb": "De contrabandistas de tabaco en las rías gallegas a la puerta de entrada de la cocaína colombiana a Europa, hasta que la Operación Nécora de 1990 lo cambia todo.",
+    "lifeType": "narcotrafico"
   },
   {
     "id": "cabezas-de-serpiente-1984-2001",
     "file": "cabezas-de-serpiente-1984-2001.json",
     "name": "Cabezas de serpiente",
     "period": "1984 – 2001",
-    "blurb": "Chinatown, Nueva York: Sister Ping construye una red de contrabando de personas desde Fuzhou, China -- un negocio de personas, no de drogas -- hasta que el hundimiento del Golden Venture en 1993 la expone ante el mundo entero."
+    "blurb": "Chinatown, Nueva York: Sister Ping construye una red de contrabando de personas desde Fuzhou, China -- un negocio de personas, no de drogas -- hasta que el hundimiento del Golden Venture en 1993 la expone ante el mundo entero.",
+    "lifeType": "trata_personas"
   },
   {
     "id": "medellin-cali-1980-1995",
     "file": "medellin-cali-1980-1995.json",
     "name": "Medellín vs Cali",
     "period": "1980 – 1995",
-    "blurb": "El Cártel de Medellín, liderado por Pablo Escobar, y el Cártel de Cali dominan el mercado mundial de cocaína."
+    "blurb": "El Cártel de Medellín, liderado por Pablo Escobar, y el Cártel de Cali dominan el mercado mundial de cocaína.",
+    "lifeType": "narcotrafico"
   },
   {
     "id": "clan-del-golfo-2006-2022",
     "file": "clan-del-golfo-2006-2022.json",
     "name": "Clan del Golfo",
     "period": "2006 – 2022",
-    "blurb": "Urabá, Colombia: tras la desmovilización de las AUC, Don Mario y los hermanos Úsuga fundan los Urabeños, que con el tiempo se convierten en el Clan del Golfo -- la mayor y más duradera de las bandas criminales colombianas -- hasta la captura de Otoniel en 2021."
+    "blurb": "Urabá, Colombia: tras la desmovilización de las AUC, Don Mario y los hermanos Úsuga fundan los Urabeños, que con el tiempo se convierten en el Clan del Golfo -- la mayor y más duradera de las bandas criminales colombianas -- hasta la captura de Otoniel en 2021.",
+    "lifeType": "narcotrafico"
   },
   {
     "id": "mexico-rutas-1990-2006",
     "file": "mexico-rutas-1990-2006.json",
     "name": "Los herederos de las rutas",
     "period": "1990 – 2006",
-    "blurb": "Tras la caída de los grandes cárteles colombianos, los grupos mexicanos toman el control de las rutas hacia Estados Unidos: Sinaloa, Juárez, Tijuana y el Golfo."
+    "blurb": "Tras la caída de los grandes cárteles colombianos, los grupos mexicanos toman el control de las rutas hacia Estados Unidos: Sinaloa, Juárez, Tijuana y el Golfo.",
+    "lifeType": "narcotrafico"
   },
   {
     "id": "fragmentacion-2006-2015",
     "file": "fragmentacion-2006-2015.json",
     "name": "La guerra y la fragmentación",
     "period": "2006 – 2015",
-    "blurb": "La ofensiva del Estado mexicano provoca una fuerte fragmentación. Surgen organizaciones extremadamente violentas como Los Zetas, mientras Sinaloa mantiene gran influencia."
+    "blurb": "La ofensiva del Estado mexicano provoca una fuerte fragmentación. Surgen organizaciones extremadamente violentas como Los Zetas, mientras Sinaloa mantiene gran influencia.",
+    "lifeType": "narcotrafico"
   },
   {
     "id": "cjng-sinaloa-2015-actualidad",
     "file": "cjng-sinaloa-2015-actualidad.json",
     "name": "CJNG contra Sinaloa",
     "period": "2015 – actualidad",
-    "blurb": "El CJNG emerge como el principal rival del Cártel de Sinaloa. Ambos tienen presencia internacional junto a múltiples grupos escindidos y alianzas regionales."
+    "blurb": "El CJNG emerge como el principal rival del Cártel de Sinaloa. Ambos tienen presencia internacional junto a múltiples grupos escindidos y alianzas regionales.",
+    "lifeType": "narcotrafico"
   },
   {
     "id": "chapitos-mayiza-2024-actualidad",
     "file": "chapitos-mayiza-2024-actualidad.json",
     "name": "Los Chapitos contra La Mayiza",
     "period": "2024 – actualidad",
-    "blurb": "La entrega de El Mayo Zambada a EE.UU. en julio de 2024 fractura al Cártel de Sinaloa en una guerra civil abierta entre 'Los Chapitos' y 'La Mayiza', mientras el CJNG acecha desde fuera."
+    "blurb": "La entrega de El Mayo Zambada a EE.UU. en julio de 2024 fractura al Cártel de Sinaloa en una guerra civil abierta entre 'Los Chapitos' y 'La Mayiza', mientras el CJNG acecha desde fuera.",
+    "lifeType": "narcotrafico"
   }
 ]

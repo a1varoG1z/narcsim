@@ -23,7 +23,7 @@ export function render(container, app, { eraData }) {
     });
   });
   container.querySelector("#found-btn")?.addEventListener("click", () => app.navigate("characterCreate", { eraData }));
-  container.querySelector("#back-btn").addEventListener("click", () => app.navigate("eraSelect"));
+  container.querySelector("#back-btn").addEventListener("click", () => app.navigate("eraSelect", eraData.lifeType ? { lifeType: eraData.lifeType } : {}));
 }
 
 function renderCartelChoice(eraData, cartel) {
